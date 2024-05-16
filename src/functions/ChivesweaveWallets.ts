@@ -63,8 +63,6 @@ export async function generateNewMnemonicAndGetWalletData (mnemonic: string) {
             walletData.data ??= {}
             walletData.data.arweave = { key, publicKey }            
             
-            //console.log("walletData:", walletData)
-            
             //Write New Wallet Data to LocalStorage
             walletExists.push(walletData)
             window.localStorage.setItem(chivesWallets, JSON.stringify(walletExists))
@@ -109,7 +107,6 @@ export async function importWalletJsonFile (wallet: any) {
     const publicKey = walletData.jwk.n
     walletData.data ??= {}
     walletData.data.arweave = { key, publicKey }            
-    console.log("walletData:", walletData)
     
     //Write New Wallet Data to LocalStorage
     walletExists.push(walletData)
