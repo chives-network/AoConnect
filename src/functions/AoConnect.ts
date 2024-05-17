@@ -4,6 +4,27 @@ const MU_URL = "https://mu.ao-testnet.xyz"
 const CU_URL = "https://cu.ao-testnet.xyz"
 const GATEWAY_URL = "https://arweave.net"
 
+export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) => {
+    
+    const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+    const GetMyLastMsgResult = await message({
+        process: processTxId,
+        tags: [ { name: 'Action', value: 'Eval' } ],
+        signer: createDataItemSigner(currentWalletJwk),
+        data: 'Inbox[#Inbox].Data',
+      });
+    console.log("GetMyLastMsg GetMyLastMsg", GetMyLastMsgResult)
+    
+    if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
+        const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
+        return { id: GetMyLastMsgResult, msg: MsgContent };
+    }
+    else {
+        return { id: GetMyLastMsgResult };
+    }
+  
+}
 
 export const AoSendMsg = async (currentWalletJwk: any, processTxId: string, Msg: string, Tags: any[]) => {
     
@@ -15,7 +36,7 @@ export const AoSendMsg = async (currentWalletJwk: any, processTxId: string, Msg:
         signer: createDataItemSigner(currentWalletJwk),
         data: Msg,
       });
-    console.log("handleSendMsg sendMsgResult", sendMsgResult)
+    console.log("AoSendMsg sendMsgResult", sendMsgResult)
   
     return sendMsgResult;
 }
@@ -27,6 +48,17 @@ export const AoGetLastPage = async (processTxId: string, Sort: string = 'DESC', 
         process: processTxId,
         sort: Sort,
         limit: Limit,
+    });
+
+    return resultsOut
+}
+
+export const AoGetRecord = async (processTxId: string, messageTxId: string) => {
+
+    const { result } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+    let resultsOut = await result({
+        process: processTxId,
+        message: messageTxId
     });
 
     return resultsOut

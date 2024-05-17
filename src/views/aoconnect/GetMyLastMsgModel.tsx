@@ -25,9 +25,10 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoGetPageRecord } from 'src/functions/AoConnect'
+import { GetMyLastMsg } from 'src/functions/AoConnect'
+import { Typography } from '@mui/material'
 
-const AoGetPageRecordModel = () => {
+const GetMyLastMsgModel = () => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -70,10 +71,11 @@ const AoGetPageRecordModel = () => {
     setIsDisabledButton(true)
     setUploadingButton(`${t('Submitting...')}`)
 
-    const Result: any = await AoGetPageRecord(processTxId);
-    console.log("AoGetPageRecord Result", Result)
-    if(true) {
-      toast.success("AoGetPageRecord Success", { duration: 4000 })
+    const Result: any = await GetMyLastMsg(currentWallet.jwk, processTxId);
+    console.log("GetMyLastMsg Result", Result)
+    if(Result) {
+      setResultText(Result)
+      toast.success("GetMyLastMsg Success", { duration: 4000 })
       setIsDisabledButton(false)
       setUploadingButton(`${t('Submit')}`)
       //setprocessTxId("")
@@ -87,7 +89,7 @@ const AoGetPageRecordModel = () => {
   return (
     <Fragment>
         <Card>
-        <CardHeader title={`${t('Monitoring process')}`} />
+        <CardHeader title={`${t('Get My Last Msg')}`} />
         <CardContent>
             <Grid container spacing={5}>
                 <Grid item xs={12}>
@@ -117,7 +119,9 @@ const AoGetPageRecordModel = () => {
 
                 <Grid item xs={12} container justifyContent="flex-start">
                     <Link href={`https://www.ao.link/message/${resultText}`} target='_blank'>
-                        {resultText}
+                        <Typography variant='body2'>
+                            {resultText.id}
+                        </Typography>
                     </Link>
                 </Grid>
 
@@ -129,4 +133,4 @@ const AoGetPageRecordModel = () => {
   )
 }
 
-export default AoGetPageRecordModel
+export default GetMyLastMsgModel
