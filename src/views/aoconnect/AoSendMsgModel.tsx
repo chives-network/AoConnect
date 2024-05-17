@@ -27,6 +27,12 @@ import { useRouter } from 'next/router'
 
 import { AoSendMsg } from 'src/functions/AoConnect'
 
+function generateRandomNumber() {
+    const min = 100000;
+    const max = 999999;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const AoSendMsgModel = () => {
   // ** Hook
   const { t } = useTranslation()
@@ -43,7 +49,7 @@ const AoSendMsgModel = () => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
-  const [processTxId, setprocessTxId] = useState<string>("BH2r9Gi2EhErp4ktR_cT4E_ED7e5HCmngF74w1HUjXE")
+  const [processTxId, setprocessTxId] = useState<string>("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
   const [processTxIdError, setprocessTxIdError] = useState<string | null>(null)
   const handleprocessTxIdChange = (event: any) => {
     setprocessTxId(event.target.value);
@@ -57,7 +63,7 @@ const AoSendMsgModel = () => {
     console.log("processTxId", processTxId)
   };
   
-  const [message, setMessage] = useState<string>("Hello World!")
+  const [message, setMessage] = useState<string>("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
   const [messageError, setMessageError] = useState<string | null>(null)
   const handlemessageChange = (event: any) => {
     setMessage(event.target.value);
@@ -92,7 +98,7 @@ const AoSendMsgModel = () => {
       setIsDisabledButton(false)
       setUploadingButton(`${t('Submit')}`)
       //setprocessTxId("")
-      //setMessage("")
+      setMessage("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
       //setTags("")
     }
 
