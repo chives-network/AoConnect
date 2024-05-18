@@ -64,12 +64,12 @@ export const AoGetRecord = async (processTxId: string, messageTxId: string) => {
     return resultsOut
 }
 
-export const AoGetPageRecord = async (processTxId: string, Sort: string = 'DESC', Limit: number = 25, From: string = '') => {
+export const AoGetPageRecords = async (processTxId: string, Sort: string = 'DESC', Limit: number = 25, From: string = '') => {
 
     const { results } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
     let resultsOut = await results({
         process: processTxId,
-        from: From && From != '' ? From : undefined,
+        from: From && From != '' ? From : null,
         sort: Sort, 
         limit: Limit,
     });
