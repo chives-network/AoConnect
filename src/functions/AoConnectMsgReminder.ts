@@ -10,7 +10,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
     const NeedReminderMsg: string[] = []
     AoGetPageRecordsList && AoGetPageRecordsList.edges && AoGetPageRecordsList.edges.map((item: any, index: number)=>{
 
-        if(index == 30) {
+        if(index == 0) {
             window.localStorage.setItem(AoConnectLastCursor, item.cursor)
         }
         if(typeof item.node.Output.data === 'string' )  {
