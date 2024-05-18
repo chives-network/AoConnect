@@ -52,14 +52,22 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
     const intervalId = setInterval(async () => {
       const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
-      ReminderMsgAndStoreToLocalData && ReminderMsgAndStoreToLocalData.map((item: string)=>{
-        toast.success(item, {
-          duration: 2000
-        })
-      })
+
+      //Every msg delay one second to remind
+      const displayMessagesWithDelay = (messages: string[], index: number) => {
+        if (index < messages.length) {
+          setTimeout(() => {
+            toast.success(messages[index], {
+              duration: 3000
+            });
+            displayMessagesWithDelay(messages, index + 1);
+          }, 1000);
+        }
+      };
+      ReminderMsgAndStoreToLocalData && displayMessagesWithDelay(ReminderMsgAndStoreToLocalData, 0);
 
       console.log("ReminderMsgAndStoreToLocalData", ReminderMsgAndStoreToLocalData)
-    }, 10000);
+    }, 6000);
 
     return () => clearInterval(intervalId);
 
