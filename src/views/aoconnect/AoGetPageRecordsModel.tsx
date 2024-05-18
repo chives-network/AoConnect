@@ -37,10 +37,9 @@ import { useRouter } from 'next/router'
 import { AoGetPageRecords } from 'src/functions/AoConnectLib'
 
 const AnsiText = ({ text }: any) => {
+    
     // 正则表达式匹配 ANSI 转义码
     const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-  
-    // 将 ANSI 转义码替换为对应的 CSS 样式
     const formatText = text.replace(ansiRegex, '');
   
     return  <Box
@@ -98,7 +97,7 @@ const AoGetPageRecordsModel = () => {
     setIsDisabledButton(true)
     setUploadingButton(`${t('Submitting...')}`)
 
-    const Result: any = await AoGetPageRecords(processTxId, 'DESC', 5, 'eyJ0aW1lc3RhbXAiOjE3MTYwMTgyODU1MzIsIm9yZGluYXRlIjoiNjY5IiwiY3JvbiI6bnVsbCwic29ydCI6IkRFU0MifQ==');
+    const Result: any = await AoGetPageRecords(processTxId, 'DESC', 10, '');
     console.log("AoGetPageRecords Result", Result)
     if(true) {
       setresultRecords(Result)

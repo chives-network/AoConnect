@@ -43,7 +43,7 @@ export async function generateNewMnemonicAndGetWalletData (mnemonic: string) {
             //console.log("mnemonicToJwkValue:", mnemonicToJwkValue)
             
             //Get Wallet Data From LocalStorage
-            const chivesWalletsList = window.localStorage.getItem(chivesWallets)      
+            const chivesWalletsList = window.localStorage.getItem(chivesWallets)     
             const walletExists = chivesWalletsList ? JSON.parse(chivesWalletsList) : []
             
             //Get Wallet Max Id

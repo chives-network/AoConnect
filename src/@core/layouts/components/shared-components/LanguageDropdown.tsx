@@ -15,6 +15,12 @@ import { Settings } from 'src/@core/context/settingsContext'
 
 import { getChivesLanguage, setChivesLanguage } from 'src/functions/ChivesweaveWallets'
 
+
+import toast from 'react-hot-toast'
+
+import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
+
+
 interface Props {
   settings: Settings
   saveSettings: (values: Settings) => void
@@ -41,6 +47,24 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     }
     document.documentElement.setAttribute('lang', i18n.language)
   }, [i18n.language])
+
+  useEffect(() => {
+
+    const intervalId = setInterval(async () => {
+      const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
+      ReminderMsgAndStoreToLocalData && ReminderMsgAndStoreToLocalData.map((item: string)=>{
+        toast.success(item, {
+          duration: 2000
+        })
+      })
+
+      console.log("ReminderMsgAndStoreToLocalData", ReminderMsgAndStoreToLocalData)
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+
+  }, []);
+
 
   return (
     <OptionsMenu
