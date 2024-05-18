@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoSendMsg } from 'src/functions/AoConnect'
+import { AoSendMsg } from 'src/functions/AoConnectLib'
 
 function generateRandomNumber() {
     const min = 100000;

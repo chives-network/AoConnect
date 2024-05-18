@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { GetMyLastMsg } from 'src/functions/AoConnect'
+import { GetMyLastMsg } from 'src/functions/AoConnectLib'
 import { Typography } from '@mui/material'
 
 const GetMyLastMsgModel = () => {

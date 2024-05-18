@@ -69,7 +69,7 @@ export const AoGetPageRecords = async (processTxId: string, Sort: string = 'DESC
     const { results } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
     let resultsOut = await results({
         process: processTxId,
-        from: From && From != '' ? From : null,
+        from: From && From != '' ? From : undefined,
         sort: Sort, 
         limit: Limit,
     });

@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoCreateProcess } from 'src/functions/AoConnect'
+import { AoCreateProcess } from 'src/functions/AoConnectLib'
 
 const AoCreateProcessModel = () => {
   // ** Hook

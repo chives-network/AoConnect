@@ -34,7 +34,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoGetPageRecords } from 'src/functions/AoConnect'
+import { AoGetPageRecords } from 'src/functions/AoConnectLib'
 
 const AnsiText = ({ text }: any) => {
     // 正则表达式匹配 ANSI 转义码
@@ -98,7 +98,7 @@ const AoGetPageRecordsModel = () => {
     setIsDisabledButton(true)
     setUploadingButton(`${t('Submitting...')}`)
 
-    const Result: any = await AoGetPageRecords(processTxId);
+    const Result: any = await AoGetPageRecords(processTxId, 'DESC', 5, 'eyJ0aW1lc3RhbXAiOjE3MTYwMTgyODU1MzIsIm9yZGluYXRlIjoiNjY5IiwiY3JvbiI6bnVsbCwic29ydCI6IkRFU0MifQ==');
     console.log("AoGetPageRecords Result", Result)
     if(true) {
       setresultRecords(Result)
