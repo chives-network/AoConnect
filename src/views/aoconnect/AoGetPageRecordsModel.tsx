@@ -134,6 +134,9 @@ const AoGetPageRecordsModel = () => {
                 </Grid>
 
                 <Grid item xs={12} container justifyContent="flex-end">
+                    <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setresultRecords(null)} disabled={isDisabledButton} >
+                        {t('Cannel')}
+                    </Button>
                     <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
                         {uploadingButton}
                     </Button>
@@ -165,7 +168,7 @@ const AoGetPageRecordsModel = () => {
                                 if(typeof JsonData === 'string')  {
 
                                     return (
-                                        <TableRow>
+                                        <TableRow key={index}>
                                             <TableCell sx={{width: '5%'}}>
                                                 {index+1}
                                             </TableCell>
@@ -175,10 +178,25 @@ const AoGetPageRecordsModel = () => {
                                         </TableRow>
                                     )
                                 }
-                                else if(typeof JsonData === 'object' && Object.keys(JsonData).includes('json'))  {
+                                else if(typeof JsonData === 'object' && typeof JsonData.output == 'string')  {
 
                                     return (
-                                        <TableRow>
+                                        <TableRow key={index}>
+                                            <TableCell>
+                                                {index}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
+                                                    <AnsiText text={JsonData.output} />
+                                                </Typography>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                }
+                                else if(typeof JsonData === 'object' && Object.keys(JsonData).includes('output'))  {
+
+                                    return (
+                                        <TableRow key={index}>
                                             <TableCell>
                                                 {index}
                                             </TableCell>
