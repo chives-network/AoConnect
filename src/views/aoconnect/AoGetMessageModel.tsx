@@ -6,6 +6,7 @@ import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
+import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
@@ -119,14 +120,26 @@ const AoGetMessageModel = () => {
                             )
                         }}
                         error={!!processTxIdError}
-                        helperText={processTxIdError}
+                        helperText={
+                            <Fragment>
+                                <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
+                                    {'Process Concept'}
+                                </Link>
+                                <Link href={`https://www.ao.link/processes`} target='_blank' sx={{ml: 4}}>
+                                    {'All Processes'}
+                                </Link>
+                                <Link href={`https://www.ao.link/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
+                                    {'Detail on AOLink'}
+                                </Link>
+                            </Fragment>
+                            }
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
-                        label={`${t('Message')}`}
-                        placeholder={`${t('Message')}`}
+                        label={`${t('messageTxId')}`}
+                        placeholder={`${t('messageTxId')}`}
                         value={message}
                         onChange={handlemessageChange}
                         InputProps={{
@@ -137,7 +150,16 @@ const AoGetMessageModel = () => {
                             )
                         }}
                         error={!!messageError}
-                        helperText={messageError}
+                        helperText={
+                            <Fragment>
+                                <Link href={`https://cookbook_ao.g8way.io/concepts/messages.html`} target='_blank'>
+                                    {'Messages Concept'}
+                                </Link>
+                                <Link href={`https://www.ao.link/message/${message}`} target='_blank' sx={{ml: 4}}>
+                                    {'Detail on AOLink'}
+                                </Link>
+                            </Fragment>
+                            }
                     />
                 </Grid>
 

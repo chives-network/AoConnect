@@ -126,8 +126,21 @@ const AoSendMsgModel = () => {
                             )
                         }}
                         error={!!processTxIdError}
-                        helperText={processTxIdError}
+                        helperText={
+                            <Fragment>
+                                <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
+                                    {'Process Concept'}
+                                </Link>
+                                <Link href={`https://www.ao.link/processes`} target='_blank' sx={{ml: 4}}>
+                                    {'All Processes'}
+                                </Link>
+                                <Link href={`https://www.ao.link/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
+                                    {'Detail on AOLink'}
+                                </Link>
+                            </Fragment>
+                            }
                     />
+                    
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
@@ -144,7 +157,6 @@ const AoSendMsgModel = () => {
                             )
                         }}
                         error={!!messageError}
-                        helperText={messageError}
                     />
                 </Grid>
                 <Grid item xs={12}>
