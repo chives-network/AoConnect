@@ -2,6 +2,7 @@
 import { Fragment, useState } from 'react'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -10,6 +11,7 @@ import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import Typography from '@mui/material/Typography'
 import Table from '@mui/material/Table'
@@ -138,6 +140,11 @@ const AoGetPageRecordsModel = () => {
                     <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setresultRecords(null)} disabled={isDisabledButton} >
                         {t('Cannel')}
                     </Button>
+                    )}
+                    {isDisabledButton && (
+                        <Box sx={{ m: 0, pt:1 }}>
+                            <CircularProgress sx={{ mr: 5, mt: 0 }} />
+                        </Box>
                     )}
                     <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
                         {uploadingButton}

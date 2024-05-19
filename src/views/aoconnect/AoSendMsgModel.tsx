@@ -1,7 +1,9 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -10,6 +12,8 @@ import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
+import CircularProgress from '@mui/material/CircularProgress'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -108,6 +112,24 @@ const AoSendMsgModel = () => {
 
   }
 
+  useEffect(()=>{
+    
+    handleSendMsgTest()
+
+  }, [currentWallet])
+
+  const handleSendMsgTest = async () =>{
+    if(currentWallet && currentWallet.jwk)  {
+        const Result: any = await AoSendMsg(
+                currentWallet.jwk, 
+                'K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw', 
+                '',  
+                [ { name: 'Action', value: 'Eval' } ]
+        );
+        console.log("handleSendMsgTest", Result)
+    }
+  }
+
 
   return (
     <Fragment>
@@ -179,6 +201,11 @@ const AoSendMsgModel = () => {
                         {t('Cannel')}
                     </Button>
                     )}
+                    {isDisabledButton && (
+                        <Box sx={{ m: 0, pt:1 }}>
+                            <CircularProgress sx={{ mr: 5, mt: 0 }} />
+                        </Box>
+                    )}
                     <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
                         {uploadingButton}
                     </Button>
@@ -187,7 +214,9 @@ const AoSendMsgModel = () => {
                 <Grid item xs={12} container justifyContent="flex-start">
                     {t('Result')}:
                     <Link href={`https://www.ao.link/message/${resultText}`} target='_blank'>
-                        {resultText}
+                        <Typography variant='body2'>
+                            {resultText}
+                        </Typography>
                     </Link>
 
                 </Grid>
