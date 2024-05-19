@@ -5,11 +5,14 @@ import { Fragment, useState } from 'react'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
+import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
+import Typography from '@mui/material/Typography'
+
+import ReactJson from 'react-json-view';
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -25,10 +28,11 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { GetMyLastMsg } from 'src/functions/AoConnectLib'
-import { Typography } from '@mui/material'
+import { AoGetMessage } from 'src/functions/AoConnectLib'
+import AnsiText from './AnsiText'
 
-const GetMyLastMsgModel = () => {
+
+const AoGetMessageModel = () => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -38,7 +42,7 @@ const GetMyLastMsgModel = () => {
   const [uploadingButton, setUploadingButton] = useState<string>(`${t('Submit')}`)
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   
-  const [resultText, setResultText] = useState<string>("")
+  const [resultText, setResultText] = useState<any>()
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
@@ -57,6 +61,13 @@ const GetMyLastMsgModel = () => {
     
     console.log("processTxId", processTxId)
   };
+  
+  const [message, setMessage] = useState<string>("JQbi-qZBHWQCCl3BoPEwWOfGzNlYhxK0DmlwQlBb4cM")
+  const [messageError, setMessageError] = useState<string | null>(null)
+  const handlemessageChange = (event: any) => {
+    setMessage(event.target.value);
+    setMessageError("")
+  };
 
   const handleSubmit = async () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
@@ -71,17 +82,18 @@ const GetMyLastMsgModel = () => {
     setIsDisabledButton(true)
     setUploadingButton(`${t('Submitting...')}`)
 
-    const Result: any = await GetMyLastMsg(currentWallet.jwk, processTxId);
-    console.log("GetMyLastMsg Result", Result)
+    const Result: any = await AoGetMessage(processTxId, message);
+    console.log("AoGetMessage Result", Result)
     if(Result) {
       setResultText(Result)
-      toast.success("GetMyLastMsg Success", { duration: 4000 })
-      setIsDisabledButton(false)
-      setUploadingButton(`${t('Submit')}`)
+      console.log("AoGetMessageModel","handleSubmit","processTxId:", processTxId, "message:", message, "Result:", Result)
+      toast.success("AoGetMessage Success", { duration: 4000 })
       //setprocessTxId("")
       //setMessage("")
       //setTags("")
     }
+    setIsDisabledButton(false)
+    setUploadingButton(`${t('Submit')}`)
 
   }
 
@@ -110,6 +122,24 @@ const GetMyLastMsgModel = () => {
                         helperText={processTxIdError}
                     />
                 </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        label={`${t('Message')}`}
+                        placeholder={`${t('Message')}`}
+                        value={message}
+                        onChange={handlemessageChange}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                <Icon icon='mdi:account-outline' />
+                                </InputAdornment>
+                            )
+                        }}
+                        error={!!messageError}
+                        helperText={messageError}
+                    />
+                </Grid>
 
                 <Grid item xs={12} container justifyContent="flex-end">
                     <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
@@ -118,11 +148,25 @@ const GetMyLastMsgModel = () => {
                 </Grid>
 
                 <Grid item xs={12} container justifyContent="flex-start">
-                    <Link href={`https://www.ao.link/message/${resultText}`} target='_blank'>
-                        <Typography variant='body2'>
-                            {resultText.id}
-                        </Typography>
-                    </Link>
+                    <Typography variant='body2'>
+                        {resultText && resultText.Output && resultText.Output.data && resultText.Output.data.output && 
+                        (
+                            <AnsiText text={resultText.Output.data.output} />
+                        )
+                        }
+                        {resultText && 
+                        <Box
+                            sx={{
+                                borderRadius: '5px',
+                                padding: '8px',
+                                whiteSpace: 'pre-line',
+                                border: (theme: any) => `1px solid ${theme.palette.divider}`,
+                                borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)`
+                            }} >
+                            <ReactJson src={resultText} />
+                        </Box>
+                        }
+                    </Typography>
                 </Grid>
 
             </Grid>
@@ -133,4 +177,4 @@ const GetMyLastMsgModel = () => {
   )
 }
 
-export default GetMyLastMsgModel
+export default AoGetMessageModel

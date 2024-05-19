@@ -64,6 +64,17 @@ export const AoGetRecord = async (processTxId: string, messageTxId: string) => {
     return resultsOut
 }
 
+export const AoGetMessage = async (processTxId: string, messageTxId: string) => {
+
+    const { result } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+    let resultsOut = await result({
+        process: processTxId,
+        message: messageTxId
+    });
+
+    return resultsOut
+}
+
 export const AoGetPageRecords = async (processTxId: string, Sort: string = 'DESC', Limit: number = 25, From: string = '') => {
 
     const { results } = connect( { MU_URL, CU_URL, GATEWAY_URL } );

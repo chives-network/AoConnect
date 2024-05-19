@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid'
 import AoSendMsgModel from './AoSendMsgModel'
 import AoCreateProcessModel from './AoCreateProcessModel'
 import AoGetPageRecordsModel from './AoGetPageRecordsModel'
-import GetMyLastMsgModel from './GetMyLastMsgModel'
+import AoGetMessageModel from './AoGetMessageModel'
 
 
 
@@ -32,9 +32,9 @@ const Aoconnect = () => {
           <AoGetPageRecordsModel />
         </Card>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
-          <GetMyLastMsgModel />
+          <AoGetMessageModel />
         </Card>
       </Grid>
     </Grid>

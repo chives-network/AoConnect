@@ -50,6 +50,7 @@
     "clsx": "1.2.1",
     "crypto": "^1.0.1",
     "date-fns": "2.30.0",
+    "human-crypto-keys": "^0.1.4",
     "i18next": "22.4.15",
     "i18next-browser-languagedetector": "7.0.1",
     "i18next-http-backend": "2.2.0",

@@ -67,7 +67,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       ReminderMsgAndStoreToLocalData && displayMessagesWithDelay(ReminderMsgAndStoreToLocalData, 0);
 
       console.log("ReminderMsgAndStoreToLocalData", ReminderMsgAndStoreToLocalData)
-    }, 6000);
+    }, 1000 * 60 * 60);
 
     return () => clearInterval(intervalId);
 
