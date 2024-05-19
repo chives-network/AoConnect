@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
+import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
@@ -292,6 +293,8 @@ const AoSendMsgModel = () => {
                         }}>
                             Inbox[#Inbox].Data
                         </Button>
+
+
                         <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
                             .load-blueprint chat
                         </Button>
@@ -319,6 +322,60 @@ const AoSendMsgModel = () => {
                         }}>
                             Leave("Quests")
                         </Button>
+
+                        <Divider sx={{ mr:3, mb: 2 }} />
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('token')}>
+                            .load-blueprint token
+                        </Button>
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Handlers.list')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Handlers.list
+                        </Button>
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Send({ Target = ao.id, Action = "Info" })')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            {'Send({ Target = ao.id, Action = "Info" })'}
+                        </Button>
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            {'Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})'}
+                        </Button>
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            {'Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})'}
+                        </Button>
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Send({ Target = ao.id, Tags = { Action = "Balances" }})')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            {'Send({ Target = ao.id, Tags = { Action = "Balances" }})'}
+                        </Button>
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Send({ Target = ao.id, Tags = { Action = "Balance" }})')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            {'Send({ Target = ao.id, Tags = { Action = "Balance" }})'}
+                        </Button>
+
+                        
+
+                        
+
+
                     </Grid>
                 </Grid>
             </CardContent>
