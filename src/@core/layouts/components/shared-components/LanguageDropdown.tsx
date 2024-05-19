@@ -61,7 +61,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
 
       //Every msg delay one second to remind
-      const displayMessagesWithDelay = (messages: string[], index: number) => {
+      const displayMessagesWithDelay = (messages: any[], index: number) => {
         if (index < messages.length) {
           setTimeout(() => {
             //toast.success(messages[index], {

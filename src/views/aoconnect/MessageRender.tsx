@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import { Fragment } from 'react';
 import Typography from '@mui/material/Typography'
 import AnsiText from './AnsiText'
 
