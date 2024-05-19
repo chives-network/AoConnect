@@ -17,6 +17,13 @@ import { getChivesLanguage, setChivesLanguage } from 'src/functions/ChivesweaveW
 
 
 import toast from 'react-hot-toast'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Avatar from '@mui/material/Avatar'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+
+
 
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
@@ -57,9 +64,10 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       const displayMessagesWithDelay = (messages: string[], index: number) => {
         if (index < messages.length) {
           setTimeout(() => {
-            toast.success(messages[index], {
-              duration: 3000
-            });
+            //toast.success(messages[index], {
+            //  duration: 3000
+            //});
+            CustomToast(messages[index])
             displayMessagesWithDelay(messages, index + 1);
           }, 1000);
         }
@@ -67,11 +75,37 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       ReminderMsgAndStoreToLocalData && displayMessagesWithDelay(ReminderMsgAndStoreToLocalData, 0);
 
       console.log("ReminderMsgAndStoreToLocalData", ReminderMsgAndStoreToLocalData)
-    }, 1000 * 60 * 60);
+    }, 1000 * 6 * 1);
 
     return () => clearInterval(intervalId);
 
   }, []);
+
+  const CustomToast = (ContentList: string[]) => {
+    return toast(
+      t => (
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar alt='Victor Anderson' src='/images/avatars/3.png' sx={{ mr: 3, width: 40, height: 40 }} />
+            <div>
+              <Typography>{ContentList[0]}</Typography>
+              {ContentList && ContentList[1] && (
+                <Typography variant='caption'>{ContentList[1]}</Typography>
+              )}
+            </div>
+          </Box>
+          <IconButton onClick={() => toast.dismiss(t.id)}>
+            <Icon icon='mdi:close' fontSize={20} />
+          </IconButton>
+        </Box>
+      ),
+      {
+        style: {
+          minWidth: '300px'
+        }
+      }
+    )
+  }
 
 
   return (

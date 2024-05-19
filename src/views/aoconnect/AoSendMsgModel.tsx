@@ -291,6 +291,30 @@ const AoSendMsgModel = () => {
                         <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
                             .load-blueprint chat
                         </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('List()')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            List()
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Join("Quests", "Wang001")')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Join("Quests", "Wang001")
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Say("Hello everyone!", "Quests")')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Say("Hello everyone!", "Quests")
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Leave("Quests")')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Leave("Quests")
+                        </Button>
                     </Grid>
                 </Grid>
             </CardContent>
