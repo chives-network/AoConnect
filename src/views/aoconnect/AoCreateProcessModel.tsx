@@ -164,9 +164,11 @@ const AoCreateProcessModel = () => {
                 </Grid>
 
                 <Grid item xs={12} container justifyContent="flex-end">
+                    {resultText && (
                     <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setResultText('')} disabled={isDisabledButton} >
                         {t('Cannel')}
                     </Button>
+                    )}
                     <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
                         {uploadingButton}
                     </Button>

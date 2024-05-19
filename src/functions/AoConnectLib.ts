@@ -36,7 +36,7 @@ export const AoSendMsg = async (currentWalletJwk: any, processTxId: string, Msg:
         signer: createDataItemSigner(currentWalletJwk),
         data: Msg,
       });
-    console.log("AoSendMsg sendMsgResult", sendMsgResult)
+    console.log("AoSendMsg sendMsgResult", sendMsgResult, "Tags", Tags, "data", Msg)
   
     return sendMsgResult;
 }

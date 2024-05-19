@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 
 // ** MUI Imports
 import Button from '@mui/material/Button'
@@ -13,7 +13,7 @@ import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography'
 
-import ReactJson from 'react-json-view';
+import JSONTree from 'react-json-tree'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -98,6 +98,12 @@ const AoGetMessageModel = () => {
 
   }
 
+  const [isReactJson, setIsReactJson] = useState<boolean>(false)
+  useEffect(()=>{
+    setIsReactJson(false)
+  }, [])
+
+  
 
   return (
     <Fragment>
@@ -164,9 +170,11 @@ const AoGetMessageModel = () => {
                 </Grid>
 
                 <Grid item xs={12} container justifyContent="flex-end">
+                    {resultText && (
                     <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setResultText(null)} disabled={isDisabledButton} >
                         {t('Cannel')}
                     </Button>
+                    )}
                     <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
                         {uploadingButton}
                     </Button>
@@ -184,7 +192,7 @@ const AoGetMessageModel = () => {
                             <AnsiText text={resultText.Output.data} />
                         )
                         }
-                        {resultText && 
+                        {resultText && typeof resultText == 'object' && 
                         <Box
                             sx={{
                                 borderRadius: '5px',
@@ -194,7 +202,7 @@ const AoGetMessageModel = () => {
                                 border: (theme: any) => `1px solid ${theme.palette.divider}`,
                                 borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)`
                             }} >
-                            <ReactJson src={resultText} />
+                            <JSONTree data={{data: resultText}} />
                         </Box>
                         }
                     </Typography>
