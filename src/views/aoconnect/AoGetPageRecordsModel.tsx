@@ -86,12 +86,12 @@ const AoGetPageRecordsModel = () => {
     if(true) {
       setresultRecords(Result)
       toast.success("AoGetPageRecords Success", { duration: 4000 })
-      setIsDisabledButton(false)
-      setUploadingButton(`${t('Submit')}`)
       //setprocessTxId("")
       //setMessage("")
       //setTags("")
     }
+    setIsDisabledButton(false)
+    setUploadingButton(`${t('Submit')}`)
 
   }
 

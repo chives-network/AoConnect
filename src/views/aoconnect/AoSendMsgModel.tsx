@@ -68,6 +68,10 @@ const AoSendMsgModel = () => {
   const handlemessageChange = (event: any) => {
     setMessage(event.target.value);
     setMessageError("")
+    const Msg: string = event.target.value
+    if(Msg.startsWith("Inbox")) {
+        setTags('[ { "name": "Action", "value": "Eval" } ]');
+    }
   };
 
   const [tags, setTags] = useState<string>('[ \n{ "name": "Your-Tag-Name-Here", "value": "your-tag-value" }, \n{ "name": "Another-Tag", "value": "another-value" } \n]')
@@ -95,12 +99,12 @@ const AoSendMsgModel = () => {
     if(Result && Result.length == 43) {
       toast.success(Result, { duration: 4000 })
       setResultText(Result)
-      setIsDisabledButton(false)
-      setUploadingButton(`${t('Submit')}`)
       //setprocessTxId("")
-      setMessage("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
+      //setMessage("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
       //setTags("")
     }
+    setIsDisabledButton(false)
+    setUploadingButton(`${t('Submit')}`)
 
   }
 

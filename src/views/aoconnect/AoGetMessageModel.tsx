@@ -102,7 +102,7 @@ const AoGetMessageModel = () => {
   return (
     <Fragment>
         <Card>
-        <CardHeader title={`${t('Get My Last Msg')}`} />
+        <CardHeader title={`${t('Get Message')}`} />
         <CardContent>
             <Grid container spacing={5}>
                 <Grid item xs={12}>
@@ -176,11 +176,17 @@ const AoGetMessageModel = () => {
                             <AnsiText text={resultText.Output.data.output} />
                         )
                         }
+                        {resultText && resultText.Output && resultText.Output.data && typeof resultText.Output.data == 'string' && 
+                        (
+                            <AnsiText text={resultText.Output.data} />
+                        )
+                        }
                         {resultText && 
                         <Box
                             sx={{
                                 borderRadius: '5px',
                                 padding: '8px',
+                                marginTop: '5px',
                                 whiteSpace: 'pre-line',
                                 border: (theme: any) => `1px solid ${theme.palette.divider}`,
                                 borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)`
