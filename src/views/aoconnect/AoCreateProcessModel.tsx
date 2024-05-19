@@ -77,7 +77,8 @@ const AoCreateProcessModel = () => {
   const handleSubmit = async () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
         toast.success(t(`Please create a wallet first`), {
-          duration: 4000
+            position: 'top-center',
+            duration: 4000
         })
         router.push("/mywallets");
         
@@ -90,7 +91,7 @@ const AoCreateProcessModel = () => {
     const processId: any = await AoCreateProcess(currentWallet.jwk, moduleTxId, String(scheduler), JSON.parse(tags));
 
     if(processId && processId.length == 43) {
-      toast.success(processId, { duration: 4000 })
+      toast.success(processId, { position: 'top-center', duration: 4000 })
       setResultText(processId)
       //setmoduleTxId("")
       //setScheduler("")

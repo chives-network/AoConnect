@@ -99,7 +99,8 @@ const AoSendMsgModel = () => {
   const handleSubmit = async () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
         toast.success(t(`Please create a wallet first`), {
-          duration: 4000
+            position: 'top-center',
+            duration: 4000
         })
         router.push("/mywallets");
         
@@ -114,7 +115,10 @@ const AoSendMsgModel = () => {
     const Result: any = await AoSendMsg(currentWallet.jwk, processTxId, String(message), JSON.parse(tags));
 
     if(Result && Result.length == 43) {
-      toast.success(Result, { duration: 4000 })
+      toast.success(Result, { 
+        position: 'top-center', 
+        duration: 4000 
+        })
       setResultText(Result)
       //setprocessTxId("")
       //setMessage("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
@@ -151,7 +155,7 @@ const AoSendMsgModel = () => {
         if(Result) {
             setResultText2(Result)
             console.log("AoGetMessageModel","handleSubmit","processTxId:", processTxId, "message:", resultText, "Result:", Result)
-            toast.success("AoGetMessage Success", { duration: 4000 })
+            toast.success("AoGetMessage Success", { position: 'top-center', duration: 4000 })
         }
         setIsDisabledButton2(false)
     }

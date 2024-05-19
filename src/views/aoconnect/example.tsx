@@ -1,6 +1,3 @@
-// ** React Imports
-import { useState, useEffect, Fragment, SyntheticEvent } from 'react'
-
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -12,7 +9,7 @@ import AoGetMessageModel from './AoGetMessageModel'
 
 
 
-const Aoconnect = () => {
+const Example = () => {
   // ** Hook
 
   return (
@@ -43,4 +40,4 @@ const Aoconnect = () => {
 }
 
 
-export default Aoconnect
+export default Example

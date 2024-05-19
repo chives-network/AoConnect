@@ -1,10 +1,9 @@
-import ExampleModel from 'src/views/aoconnect/example';
+import ExampleModel from 'src/views/aoconnect/Example';
 
 const Example = () => {
 
-  const activeTab = "example"; 
 
-  return <ExampleModel activeTab={activeTab} />
+  return <ExampleModel />
 
 }
 
