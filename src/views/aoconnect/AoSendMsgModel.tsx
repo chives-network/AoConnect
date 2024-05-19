@@ -14,6 +14,8 @@ import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import CircularProgress from '@mui/material/CircularProgress'
 
+import axios from 'axios'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -155,6 +157,13 @@ const AoSendMsgModel = () => {
     }
   }
 
+  const handleLuaFromGithub = async (module: string) => {
+    const Data = await axios.get('https://raw.githubusercontent.com/permaweb/aos/main/blueprints/' + module + '.lua', { headers: { }, params: { } }).then(res => res.data)
+    setMessage(Data)
+    setTags('[ { "name": "Action", "value": "Eval" } ]')
+    setResultText('')
+    setResultText2('')
+  }
 
   return (
     <Fragment>
@@ -267,17 +276,20 @@ const AoSendMsgModel = () => {
             <CardContent>
                 <Grid container spacing={5}>
                     <Grid item xs={12}>
-                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>{
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
                             setMessage('Inbox[#Inbox]')
                             setTags('[ { "name": "Action", "value": "Eval" } ]')
                         }}>
                             Inbox[#Inbox]
                         </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>{
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
                             setMessage('Inbox[#Inbox].Data')
                             setTags('[ { "name": "Action", "value": "Eval" } ]')
                         }}>
                             Inbox[#Inbox].Data
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
+                            .load-blueprint chat
                         </Button>
                     </Grid>
                 </Grid>
@@ -286,7 +298,7 @@ const AoSendMsgModel = () => {
       </Grid>
     </Grid>
 
-        
+    
         
     </Fragment>
   )
