@@ -13,7 +13,7 @@ import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography'
 
-import JSONTree from 'react-json-tree'
+import ReactJson from 'react-json-view'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -192,7 +192,7 @@ const AoGetMessageModel = () => {
                             <AnsiText text={resultText.Output.data} />
                         )
                         }
-                        {resultText && typeof resultText == 'object' && 
+                        {resultText && isReactJson && typeof resultText == 'object' && 
                         <Box
                             sx={{
                                 borderRadius: '5px',
@@ -202,7 +202,7 @@ const AoGetMessageModel = () => {
                                 border: (theme: any) => `1px solid ${theme.palette.divider}`,
                                 borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)`
                             }} >
-                            <JSONTree data={{data: resultText}} />
+                            
                         </Box>
                         }
                     </Typography>
@@ -215,5 +215,7 @@ const AoGetMessageModel = () => {
     </Fragment>
   )
 }
+
+//<ReactJson src={resultText} />
 
 export default AoGetMessageModel

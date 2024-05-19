@@ -149,17 +149,12 @@ const AoSendMsgModel = () => {
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
+                        multiline
+                        rows={4}
                         label={`${t('Message')}`}
                         placeholder={`${t('Message')}`}
                         value={message}
                         onChange={handlemessageChange}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                <Icon icon='mdi:account-outline' />
-                                </InputAdornment>
-                            )
-                        }}
                         error={!!messageError}
                     />
                 </Grid>
@@ -170,14 +165,7 @@ const AoSendMsgModel = () => {
                         minRows={3}
                         label={`${t('Tags')}`}
                         placeholder={`${t('Tags')}`}
-                        sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                <Icon icon='mdi:message-outline' />
-                                </InputAdornment>
-                            )
-                        }}                        
+                        sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}                 
                         value={tags}
                         onChange={handleTagsChange}
                         error={!!tagsError}
