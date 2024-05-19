@@ -17,14 +17,9 @@ const Aoconnect = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
           <AoSendMsgModel />
-        </Card>
-      </Grid>
-      <Grid item xs={6}>
-        <Card sx={{ padding: '0 8px' }}>
-          <AoCreateProcessModel />
         </Card>
       </Grid>
       <Grid item xs={12}>
@@ -35,6 +30,11 @@ const Aoconnect = () => {
       <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
           <AoGetMessageModel />
+        </Card>
+      </Grid>
+      <Grid item xs={6}>
+        <Card sx={{ padding: '0 8px' }}>
+          <AoCreateProcessModel />
         </Card>
       </Grid>
     </Grid>

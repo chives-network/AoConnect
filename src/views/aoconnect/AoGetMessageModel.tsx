@@ -31,7 +31,8 @@ import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 
 import { AoGetMessage } from 'src/functions/AoConnectLib'
-import AnsiText from './AnsiText'
+
+import MessageRender from './MessageRender'
 
 
 const AoGetMessageModel = () => {
@@ -187,31 +188,7 @@ const AoGetMessageModel = () => {
                 </Grid>
 
                 <Grid item xs={12} container justifyContent="flex-start">
-                    <Typography variant='body2'>
-                        {resultText && resultText.Output && resultText.Output.data && resultText.Output.data.output && 
-                        (
-                            <AnsiText text={resultText.Output.data.output} />
-                        )
-                        }
-                        {resultText && resultText.Output && resultText.Output.data && typeof resultText.Output.data == 'string' && 
-                        (
-                            <AnsiText text={resultText.Output.data} />
-                        )
-                        }
-                        {resultText && isReactJson && typeof resultText == 'object' && 
-                        <Box
-                            sx={{
-                                borderRadius: '5px',
-                                padding: '8px',
-                                marginTop: '5px',
-                                whiteSpace: 'pre-line',
-                                border: (theme: any) => `1px solid ${theme.palette.divider}`,
-                                borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)`
-                            }} >
-                            
-                        </Box>
-                        }
-                    </Typography>
+                    <MessageRender resultText={resultText} />
                 </Grid>
 
             </Grid>

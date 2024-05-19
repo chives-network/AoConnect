@@ -29,7 +29,9 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoSendMsg } from 'src/functions/AoConnectLib'
+import { AoSendMsg, AoGetMessage } from 'src/functions/AoConnectLib'
+
+import MessageRender from './MessageRender'
 
 function generateRandomNumber() {
     const min = 100000;
@@ -46,8 +48,10 @@ const AoSendMsgModel = () => {
   // ** State
   const [uploadingButton, setUploadingButton] = useState<string>(`${t('Submit')}`)
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
+  const [isDisabledButton2, setIsDisabledButton2] = useState<boolean>(false)
   
-  const [resultText, setResultText] = useState<string>("")
+  const [resultText, setResultText] = useState<string>("t5b-PAESehavwV1IZ78qS04X2VDwAIkasgsn27vX0OA")
+  const [resultText2, setResultText2] = useState<any>()
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
@@ -69,12 +73,17 @@ const AoSendMsgModel = () => {
   
   const [message, setMessage] = useState<string>("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
   const [messageError, setMessageError] = useState<string | null>(null)
+  const [messageHelp, setMessageHelp] = useState<string | null>(null)
   const handlemessageChange = (event: any) => {
     setMessage(event.target.value);
     setMessageError("")
     const Msg: string = event.target.value
     if(Msg.startsWith("Inbox")) {
-        setTags('[ { "name": "Action", "value": "Eval" } ]');
+        setMessageHelp('Command')
+        setTags('[ { "name": "Action", "value": "Eval" } ]')
+    }
+    else {
+        setMessageHelp('Data')
     }
   };
 
@@ -95,6 +104,8 @@ const AoSendMsgModel = () => {
         return
     }
 
+    setResultText('')
+    setResultText2('')
     setIsDisabledButton(true)
     setUploadingButton(`${t('Submitting...')}`)
 
@@ -130,100 +141,152 @@ const AoSendMsgModel = () => {
     }
   }
 
+  const handleGetMsgContent = async () => {
+    if(processTxId && resultText && resultText.length == 43)  {
+        setIsDisabledButton2(true)
+        const Result: any = await AoGetMessage(processTxId, resultText);
+        console.log("AoGetMessage Result", Result)
+        if(Result) {
+            setResultText2(Result)
+            console.log("AoGetMessageModel","handleSubmit","processTxId:", processTxId, "message:", resultText, "Result:", Result)
+            toast.success("AoGetMessage Success", { duration: 4000 })
+        }
+        setIsDisabledButton2(false)
+    }
+  }
+
 
   return (
     <Fragment>
+
+    <Grid container spacing={6}>
+      <Grid item xs={6}>
         <Card>
-        <CardHeader title={`${t('Send Message')}`} />
-        <CardContent>
-            <Grid container spacing={5}>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label={`${t('processTxId')}`}
-                        placeholder={`${t('processTxId')}`}
-                        value={processTxId}
-                        onChange={handleprocessTxIdChange}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                <Icon icon='mdi:account-outline' />
-                                </InputAdornment>
-                            )
-                        }}
-                        error={!!processTxIdError}
-                        helperText={
-                            <Fragment>
-                                <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
-                                    {'Process Concept'}
-                                </Link>
-                                <Link href={`https://www.ao.link/processes`} target='_blank' sx={{ml: 4}}>
-                                    {'All Processes'}
-                                </Link>
-                                <Link href={`https://www.ao.link/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
-                                    {'Detail on AOLink'}
-                                </Link>
-                            </Fragment>
-                            }
-                    />
-                    
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        label={`${t('Message')}`}
-                        placeholder={`${t('Message')}`}
-                        value={message}
-                        onChange={handlemessageChange}
-                        error={!!messageError}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        multiline
-                        minRows={3}
-                        label={`${t('Tags')}`}
-                        placeholder={`${t('Tags')}`}
-                        sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}                 
-                        value={tags}
-                        onChange={handleTagsChange}
-                        error={!!tagsError}
-                        helperText={tagsError}
-                    />
-                </Grid>
+            <CardHeader title={`${t('Send Message')}`} />
+            <CardContent>
+                <Grid container spacing={5}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label={`${t('processTxId')}`}
+                            placeholder={`${t('processTxId')}`}
+                            value={processTxId}
+                            onChange={handleprocessTxIdChange}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                            error={!!processTxIdError}
+                            helperText={
+                                <Fragment>
+                                    <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
+                                        {'Process Concept'}
+                                    </Link>
+                                    <Link href={`https://www.ao.link/processes`} target='_blank' sx={{ml: 4}}>
+                                        {'All Processes'}
+                                    </Link>
+                                    <Link href={`https://www.ao.link/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
+                                        {'Detail on AOLink'}
+                                    </Link>
+                                </Fragment>
+                                }
+                        />
+                        
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            multiline
+                            rows={4}
+                            label={`${t('Message')}`}
+                            placeholder={`${t('Message')}`}
+                            value={message}
+                            onChange={handlemessageChange}
+                            error={!!messageError}
+                            helperText={messageHelp}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            multiline
+                            minRows={3}
+                            label={`${t('Tags')}`}
+                            placeholder={`${t('Tags')}`}
+                            sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}                 
+                            value={tags}
+                            onChange={handleTagsChange}
+                            error={!!tagsError}
+                            helperText={tagsError}
+                        />
+                    </Grid>
 
-                <Grid item xs={12} container justifyContent="flex-end">
-                    {resultText && (
-                    <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setResultText('')} disabled={isDisabledButton} >
-                        {t('Cannel')}
-                    </Button>
-                    )}
-                    {isDisabledButton && (
-                        <Box sx={{ m: 0, pt:1 }}>
-                            <CircularProgress sx={{ mr: 5, mt: 0 }} />
-                        </Box>
-                    )}
-                    <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
-                        {uploadingButton}
-                    </Button>
+                    <Grid item xs={12} container justifyContent="flex-end">
+                        {resultText && (
+                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>{
+                            setResultText('')
+                            setResultText2('')
+                        }} disabled={isDisabledButton} >
+                            {t('Cannel')}
+                        </Button>
+                        )}
+                        {isDisabledButton && (
+                            <Box sx={{ m: 0, pt:1 }}>
+                                <CircularProgress sx={{ mr: 5, mt: 0 }} />
+                            </Box>
+                        )}
+                        <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
+                            {uploadingButton}
+                        </Button>
+                    </Grid>
+
+                    <Grid container justifyContent="flex-start" alignItems="center">
+                        <Link href={`https://www.ao.link/message/${resultText}`} target='_blank'>
+                            <Typography variant='body2' sx={{ml: 3, mt:2}}>
+                                {resultText}
+                            </Typography>
+                        </Link>
+                        {resultText && (
+                        <Button size="small" sx={{mt: 3, ml: 3}} variant='outlined' disabled={isDisabledButton2} onClick={handleGetMsgContent}>{t('Content')}</Button>
+                        )}
+                    </Grid>
+
+                    <MessageRender resultText={resultText2} />
+
+
                 </Grid>
-
-                <Grid item xs={12} container justifyContent="flex-start">
-                    {t('Result')}:
-                    <Link href={`https://www.ao.link/message/${resultText}`} target='_blank'>
-                        <Typography variant='body2'>
-                            {resultText}
-                        </Typography>
-                    </Link>
-
-                </Grid>
-
-            </Grid>
-        </CardContent>
+            </CardContent>
         </Card>
+      </Grid>
+      <Grid item xs={6}>
+        <Card>
+            <CardHeader title={`${t('Example')}`} />
+            <CardContent>
+                <Grid container spacing={5}>
+                    <Grid item xs={12}>
+                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>{
+                            setMessage('Inbox[#Inbox]')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Inbox[#Inbox]
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>{
+                            setMessage('Inbox[#Inbox].Data')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Inbox[#Inbox].Data
+                        </Button>
+                    </Grid>
+                </Grid>
+            </CardContent>
+        </Card>    
+      </Grid>
+    </Grid>
+
+        
         
     </Fragment>
   )
