@@ -294,6 +294,39 @@ const AoSendMsgModel = () => {
                             Inbox[#Inbox].Data
                         </Button>
 
+                        <Divider sx={{ mr:3, mb: 2 }} />
+
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
+                            .load-blueprint chatrom
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Handlers.list')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Handlers.list
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Send({ Target = ao.id, Action = "Register" })')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            {'Send({ Target = ao.id, Action = "Register" })'}
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Members')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            Members
+                        </Button>
+                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setMessage('Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
+                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        }}>
+                            {'Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })'}
+                        </Button>
+
+
+                        
+                        <Divider sx={{ mr:3, mb: 2 }} />
 
                         <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
                             .load-blueprint chat
@@ -365,10 +398,10 @@ const AoSendMsgModel = () => {
                         </Button>
 
                         <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({ Target = ao.id, Tags = { Action = "Balance" }})')
+                            setMessage('Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })')
                             setTags('[ { "name": "Action", "value": "Eval" } ]')
                         }}>
-                            {'Send({ Target = ao.id, Tags = { Action = "Balance" }})'}
+                            {'Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })'}
                         </Button>
 
                         
