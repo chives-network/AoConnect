@@ -27,13 +27,13 @@ const FooterContent = () => {
         </Box>
         {` by `}
         <LinkStyled target='_blank' href={authConfig.webSite}>
-        AoConnect Demo
+        AoConnect
         </LinkStyled>
       </Typography>
       {hidden ? null : (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', '& :not(:last-child)': { mr: 4 } }}>
-          <LinkStyled target='_blank' href='https://github.com/chives-network/AoConnectDemo'>
-            AoConnectDemo
+          <LinkStyled target='_blank' href='https://github.com/chives-network/AoConnect'>
+            AoConnect
           </LinkStyled>
           <LinkStyled target='_blank' href='https://discord.gg/CQ2QeMWP4e'>
             Discord
