@@ -112,7 +112,7 @@ const Customizer = () => {
             borderBottom: (theme: any) => `1px solid ${theme.palette.divider}`
           }}
         >
-          <Typography variant='h6' sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
+          <Typography variant='h6' sx={{ fontWeight: 600 }}>
             Theme Customizer
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>Customize & Preview in Real Time</Typography>
@@ -134,7 +134,7 @@ const Customizer = () => {
             <Typography
               component='p'
               variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
+              sx={{ mb: 4, color: 'text.disabled' }}
             >
               Theming
             </Typography>
@@ -240,7 +240,7 @@ const Customizer = () => {
             <Typography
               component='p'
               variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
+              sx={{ mb: 4, color: 'text.disabled' }}
             >
               Layout
             </Typography>
@@ -318,7 +318,7 @@ const Customizer = () => {
             <Typography
               component='p'
               variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
+              sx={{ mb: 4, color: 'text.disabled' }}
             >
               Menu
             </Typography>
