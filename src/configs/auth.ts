@@ -4,6 +4,7 @@ export default {
   backEndApi: 'https://arweave.net',
   AoConnectWebSite: "https://www.ao.link",
   AoConnectModule: '1PdCJiXhNafpJbvC-sjxWTeNzbf9Q_RfUNs84GYoPm0',
+  AoConnectScheduler: 'fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY',
   AoConnectGithub: 'https://github.com/chives-network/AoConnect',
 
   chivesWallets: 'ChivesWallets',

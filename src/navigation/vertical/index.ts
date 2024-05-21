@@ -16,9 +16,19 @@ const ARISNavMenus = [
     path: '/wallet/sendout'
   },
   {
-    title: 'AOConnect',
-    icon: 'streamline:hard-disk-solid',
-    path: '/aoconnect/example'
+    title: 'Learn Center',
+    icon: 'hugeicons:online-learning-01',
+    path: '/learncenter'
+  },
+  {
+    title: 'Chat Room',
+    icon: 'material-symbols:chat',
+    path: '/chatroom'
+  },
+  {
+    title: 'Token Cetner',
+    icon: 'material-symbols:token',
+    path: '/token'
   }
 ]
 

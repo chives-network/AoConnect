@@ -19,6 +19,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
+import authConfig from 'src/configs/auth'
 
 // ** Third Party Components
 import toast from 'react-hot-toast'
@@ -46,7 +47,7 @@ const AoCreateProcessModel = () => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
-  const [moduleTxId, setmoduleTxId] = useState<string>("jZDEO4iDcPj5WjdelJE6GeHaWM6ZuPGFHI55eYvBdaU")
+  const [moduleTxId, setmoduleTxId] = useState<string>(authConfig.AoConnectModule)
   const [moduleTxIdError, setmoduleTxIdError] = useState<string | null>(null)
   const handlemoduleTxIdChange = (event: any) => {
     setmoduleTxId(event.target.value);
@@ -60,7 +61,7 @@ const AoCreateProcessModel = () => {
     console.log("moduleTxId", moduleTxId)
   };
   
-  const [scheduler, setScheduler] = useState<string>("fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY")
+  const [scheduler, setScheduler] = useState<string>(authConfig.AoConnectScheduler)
   const [schedulerError, setSchedulerError] = useState<string | null>(null)
   const handleschedulerChange = (event: any) => {
     setScheduler(event.target.value);
