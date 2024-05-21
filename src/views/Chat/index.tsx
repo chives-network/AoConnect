@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState, Fragment } from 'react'
+import { useEffect, useState, Fragment, memo } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -19,14 +19,13 @@ import { useAuth } from 'src/hooks/useAuth'
 import { getAnonymousUserId } from 'src/functions/ChatBook'
 import { useTranslation } from 'react-i18next'
 
-const processTxId = "K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw"
+import { GetChatLogFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
 
 const Chat = (props: any) => {
   // ** States
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(0)
   const [app, setApp] = useState<any>(null)
 
-  
   // ** Hooks
   const { t } = useTranslation()
   const theme = useTheme()
@@ -34,26 +33,16 @@ const Chat = (props: any) => {
   const router = useRouter()
   const { id } = router.query
 
-  const [anonymousUserId, setAnonymousUserId] = useState<string>('')
-  const [userType, setUserType] = useState<string>('')
   useEffect(() => {
-    const tempId = getAnonymousUserId()
-    setAnonymousUserId(tempId)
-  }, [])
-
-  const getChatRoomFromGithub = async function () {
-    if(processTxId)   {
-      const RS = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/collection/chatroom.json', { headers: { 'Content-Type': 'application/json'} }).then(res=>res.data)
-      console.log("RS",RS)
-      setApp(RS)
+    if(id && id.length == 43) {
+      handlerGetChatLogFromIndexed(String(id))
     }
+  }, [id])
+
+  const handlerGetChatLogFromIndexed = async (id: string) => {
+    const GetChatLogFromIndexedDbData = await GetChatLogFromIndexedDb(String(id))
+    console.log("GetChatLogFromIndexedDb", GetChatLogFromIndexedDbData)
   }
-
-  useEffect(() => {
-
-    getChatRoomFromGithub()
-
-  }, [refreshChatCounter])
 
   // ** Vars
   const { skin } = settings
@@ -85,5 +74,5 @@ const Chat = (props: any) => {
   )
 }
 
-export default Chat
+export default memo(Chat)
 

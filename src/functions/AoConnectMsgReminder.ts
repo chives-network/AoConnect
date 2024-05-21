@@ -143,3 +143,49 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
     return NeedReminderMsg
 }
 
+
+
+export const GetChatLogFromIndexedDb = (processTxId: string) => {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(AoConnectIndexedDb, 1);
+
+        request.onerror = function(event: any) {
+            console.log('Database error: ' + event.target.errorCode);
+            reject('Database error');
+        };
+
+        request.onsuccess = function(event: any) {
+            const db = event.target.result;
+            
+            // 在成功打开数据库后，创建一个只读事务并获取存储对象
+            const transaction = db.transaction(['ReminderMsg'], 'readonly');
+            const objectStore = transaction.objectStore('ReminderMsg');
+            
+            // 定义分页参数
+            const pageSize = 5;
+            let pageNumber = 1;
+            let offset = 0;
+            
+            // 打开游标并获取指定页的数据
+            const cursorRequest = objectStore.openCursor(null, 'prev');
+
+            const Result: any[] = []
+        
+            cursorRequest.onsuccess = function(event: any) {
+                const cursor = event.target.result;
+                
+                if (cursor) {
+                    if (offset >= (pageNumber - 1) * pageSize && offset < pageNumber * pageSize) {
+                        console.log('Retrieved data:', cursor.value);
+                        Result.push(cursor.value);
+                    }
+                    offset++;
+                    cursor.continue();
+                } else {
+                    console.log('End of data', Result);
+                    resolve(Result);
+                }
+            };
+        };
+    });
+}
