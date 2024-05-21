@@ -1,4 +1,4 @@
-import ExampleModel from 'src/views/aoconnect/Example';
+import ExampleModel from 'src/views/LearnCenter/Example';
 
 const Example = () => {
 
