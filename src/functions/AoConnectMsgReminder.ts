@@ -1,6 +1,7 @@
 import { AoGetPageRecords } from './AoConnectLib'
 import { getMessageData, getMessagesData, getOutputData, getNoticeAction, parseNoticeData, getNoticeData, parseAmount } from './AoConnectUtils'
 
+const AoConnectIndexedDb: string = 'AoConnectDb'
 const AoConnectLastCursor: string = 'AoConnectLastCursor'
 const AoConnectAllMessages: string = 'AoConnectAllMessages'
 const AoConnectEveryTimeGetMsgCount: number = 10
@@ -19,8 +20,8 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
 
         //Output
         if(item.node && item.node.Output && item.node.Output.data && typeof item.node.Output.data === 'string' )  {
-            const Msg = item.node.Output.data.replace(ansiRegex, '');
-            //NeedReminderMsg.push([Msg, ''])
+            const Data = item.node.Output.data.replace(ansiRegex, '');
+            NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', FromProcess: null, Data, Ref_: null, Logo: null})
         }
 
         //Output
@@ -33,11 +34,11 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
         if(item.node && item.node.Messages && typeof item.node.Messages === 'object' && item.node.Messages.length > 0)  {
             const MessagesList = item.node.Messages;
             MessagesList && MessagesList.map((ItemMsg: any, Index: number)=>{
-                const Data = ItemMsg.Data.replace(ansiRegex, '')
+                const Data = ItemMsg?.Data?.replace(ansiRegex, '')
                 const Tags = ItemMsg.Tags
                 const Target = ItemMsg.Target
 
-                if( processTxId == Target )   {
+                if( Data || Target )   {
 
                     const TagsMap: any = {}
                     Tags.map((ItemTag: any)=>{
@@ -48,10 +49,17 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
                     const Type = TagsMap['Type']
                     const Action = TagsMap['Action']
                     const Ref_ = TagsMap['Ref_']
-                    
-                    //Messages
-                    NeedReminderMsg.push({Target, Action, Type, FromProcess, Data, Ref_})
+                    let Logo = null
+                    if(Action)  {
+                        Logo = "/images/apple-touch-icon.png"
+                    }
+                    else if(Data == 'Broadcasted.') {
+                        Logo = "/images/apple-touch-icon.png"
+                    }
 
+
+                    //Messages
+                    NeedReminderMsg.push({Target, Action, Type, FromProcess, Data, Ref_, Logo})
 
                     const TickerList = Tags.filter((item: any)=> item.name == 'Ticker')
                     if( TickerList && TickerList.length == 1 )  {
@@ -77,6 +85,60 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
         console.log("typeof item.node.Messages", typeof item.node.Messages, item.node.Messages)
 
     })
+
+    //Write Local Storage
+    console.log("NeedReminderMsg", NeedReminderMsg)
+    let db = null;
+    const request: any = indexedDB.open(AoConnectIndexedDb, 1);
+
+    request.onerror = function(event: any) {
+        console.log('Database error: ' + event.target.errorCode);
+    };
+    request.onsuccess = function(event: any) {
+        db = event.target.result;
+        console.log('Database opened successfully');
+        if (db) {
+            const transaction = db.transaction(['ReminderMsg'], 'readwrite');
+            const objectStore = transaction.objectStore('ReminderMsg');
+
+            NeedReminderMsg && NeedReminderMsg.map((ItemMsg: any, index: number)=>{
+
+                const {Target, Action, Type, FromProcess, Data, Ref_, Logo} = ItemMsg
+
+                objectStore.add({
+                    Target: Target,
+                    Action: Action,
+                    Type: Type,
+                    FromProcess: FromProcess,
+                    Data: Data,
+                    Ref_: Ref_,
+                    Logo: Logo
+                });
+
+            })
+
+            transaction.oncomplete = function() {
+                console.log('Data added successfully');
+            };
+        }
+    };
+    request.onupgradeneeded = function(event: any) {
+        db = event.target.result;
+        const objectStore = db.createObjectStore('ReminderMsg', { keyPath: 'id', autoIncrement: true });
+
+        objectStore.createIndex('Target', 'Target', { unique: false });
+        objectStore.createIndex('Action', 'Action', { unique: false });
+        objectStore.createIndex('Type', 'Type', { unique: false });
+        objectStore.createIndex('FromProcess', 'FromProcess', { unique: false });
+        objectStore.createIndex('Data', 'Data', { unique: false });
+        objectStore.createIndex('Ref_', 'Ref_', { unique: false });
+        objectStore.createIndex('Logo', 'Logo', { unique: false });
+
+    };
+
+    console.log("NeedReminderMsg", NeedReminderMsg, db);
+
+
 
     return NeedReminderMsg
 }

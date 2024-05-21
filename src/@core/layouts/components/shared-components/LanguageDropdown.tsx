@@ -85,7 +85,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       t => (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar alt='Victor Anderson' src='/images/avatars/3.png' sx={{ mr: 3, width: 40, height: 40 }} />
+            <Avatar alt='Victor Anderson' src={ ContentList['Logo'] || '/images/avatars/3.png' } sx={{ mr: 3, width: 40, height: 40 }} />
             <div>
               <Typography>{ContentList['Data']}</Typography>
               {ContentList && ContentList['Action'] == null && ContentList['FromProcess'] && (
