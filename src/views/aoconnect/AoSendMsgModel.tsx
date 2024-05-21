@@ -47,6 +47,8 @@ const AoSendMsgModel = () => {
   const { t } = useTranslation()
 
   const router = useRouter()
+
+  const [action, setAction] = useState<string>('Chat')
     
   // ** State
   const [uploadingButton, setUploadingButton] = useState<string>(`${t('Submit')}`)
@@ -277,137 +279,167 @@ const AoSendMsgModel = () => {
       </Grid>
       <Grid item xs={6}>
         <Card>
-            <CardHeader title={`${t('Example')}`} />
+            <CardHeader title={`${t('Command Example')}`} />
             <CardContent>
                 <Grid container spacing={5}>
                     <Grid item xs={12}>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Inbox[#Inbox]')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        <Button variant={action=='Chat'?'contained':'outlined'} size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setAction('Chat')
                         }}>
-                            Inbox[#Inbox]
+                            Chat Section
                         </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Inbox[#Inbox].Data')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
+                        <Button variant={action=='Token'?'contained':'outlined'} size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                            setAction('Token')
                         }}>
-                            Inbox[#Inbox].Data
+                            Token Section
                         </Button>
 
-                        <Divider sx={{ mr:3, mb: 2 }} />
+                        <Divider sx={{ mr:3, mb: 5 }} />
 
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
-                            .load-blueprint chatrom
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Handlers.list')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            Handlers.list
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({ Target = ao.id, Action = "Register" })')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            {'Send({ Target = ao.id, Action = "Register" })'}
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Members')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            Members
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            {'Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })'}
-                        </Button>
+                        {action && action == 'Chat' && (
+                            <Fragment>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Inbox[#Inbox]')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Inbox[#Inbox]
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Inbox[#Inbox].Data')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Inbox[#Inbox].Data
+                                </Button>
+
+                                <Divider sx={{ mr:3, mb: 2 }} />
+
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
+                                    .load-blueprint chatrom
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Handlers.list')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Handlers.list
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Send({ Target = ao.id, Action = "Register" })')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    {'Send({ Target = ao.id, Action = "Register" })'}
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Members')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Members
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    {'Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })'}
+                                </Button>
 
 
+                                
+                                <Divider sx={{ mr:3, mb: 2 }} />
+
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
+                                    .load-blueprint chat
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('List()')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    List()
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Join("Quests", "Wang001")')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Join("Quests", "Wang001")
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Say("Hello everyone!", "Quests")')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Say("Hello everyone!", "Quests")
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Leave("Quests")')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Leave("Quests")
+                                </Button>
+
+                            </Fragment>
+                        )}
                         
-                        <Divider sx={{ mr:3, mb: 2 }} />
+                        {action && action == 'Token' && (
+                            <Fragment>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Inbox[#Inbox]')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Inbox[#Inbox]
+                                </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Inbox[#Inbox].Data')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Inbox[#Inbox].Data
+                                </Button>
 
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
-                            .load-blueprint chat
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('List()')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            List()
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Join("Quests", "Wang001")')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            Join("Quests", "Wang001")
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Say("Hello everyone!", "Quests")')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            Say("Hello everyone!", "Quests")
-                        </Button>
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Leave("Quests")')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            Leave("Quests")
-                        </Button>
+                                <Divider sx={{ mr:3, mb: 2 }} />
+                                
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('token')}>
+                                    .load-blueprint token
+                                </Button>
 
-                        <Divider sx={{ mr:3, mb: 2 }} />
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Handlers.list')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    Handlers.list
+                                </Button>
 
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('token')}>
-                            .load-blueprint token
-                        </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Send({ Target = ao.id, Action = "Info" })')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    {'Send({ Target = ao.id, Action = "Info" })'}
+                                </Button>
 
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Handlers.list')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            Handlers.list
-                        </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    {'Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})'}
+                                </Button>
 
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({ Target = ao.id, Action = "Info" })')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            {'Send({ Target = ao.id, Action = "Info" })'}
-                        </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    {'Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})'}
+                                </Button>
 
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            {'Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})'}
-                        </Button>
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Send({ Target = ao.id, Tags = { Action = "Balances" }})')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    {'Send({ Target = ao.id, Tags = { Action = "Balances" }})'}
+                                </Button>
 
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            {'Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})'}
-                        </Button>
-
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({ Target = ao.id, Tags = { Action = "Balances" }})')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            {'Send({ Target = ao.id, Tags = { Action = "Balances" }})'}
-                        </Button>
-
-                        <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
-                            setMessage('Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })')
-                            setTags('[ { "name": "Action", "value": "Eval" } ]')
-                        }}>
-                            {'Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })'}
-                        </Button>
-
-                        
-
-                        
-
+                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    setMessage('Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })')
+                                    setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                }}>
+                                    {'Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })'}
+                                </Button>
+                            </Fragment>
+                        )}
 
                     </Grid>
                 </Grid>
