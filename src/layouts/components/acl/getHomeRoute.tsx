@@ -3,7 +3,7 @@
  */
 const getHomeRoute = (role: string) => {
   if (role === 'client') return '/acl'
-  else return '/aoconnect/example'
+  else return '/chat/room'
 }
 
 export default getHomeRoute

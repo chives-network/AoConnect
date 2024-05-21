@@ -13,8 +13,6 @@ import { getAnonymousUserId } from 'src/functions/ChatBook'
 const AllApp = () => {
 
   // ** Hook
-  const auth = useAuth()
-
   const [pageid, setPageid] = useState<number>(0)
   const [show, setShow] = useState<boolean>(false)
   const [loadingAllData, setLoadingAllData] = useState<boolean>(false)
@@ -27,8 +25,8 @@ const AllApp = () => {
   const [search, setSearch] = useState<string>("ALL")
 
   useEffect(() => {
-    getAppsPage(type, search)
-  }, [type, search])
+    getAppsPage()
+  }, [])
 
   const handleSearchFilter = async function (Item: string) {
     setPageid(0)
@@ -45,28 +43,19 @@ const AllApp = () => {
     setAnonymousUserId(tempId)
   }, [])
 
-  const getAppsPage = async function (type: string, search: string) {
-    console.log("loadingAllData", loadingAllData)
+  const getAppsPage = async function () {
     const pagesize = 20
-    let authorization = null
-    if(auth.user && auth.user.id && auth.user.email && auth.user.token)   {
-      authorization = auth.user.token
-    }
-    else {
-      authorization = anonymousUserId
-    }
 
-    if(loadingAllData == false && authorization)  {
+    if(loadingAllData == false)  {
       setLoading(true)
-      const RS = await axios.post(authConfig.backEndApiChatBook + '/api/getapppageall/' + pageid + '/' + pagesize, {type, search},  {
-        headers: { Authorization: authorization, 'Content-Type': 'application/json' },
-      }).then(res => res.data);
-      if(RS && RS.data) {
+      const RS = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/collection/chatroom.json', { headers: { 'Content-Type': 'application/json'} }).then(res=>res.data)
+      console.log("RSRSRSRSRS",RS)
+      if(RS) {
         const appInitial: string[] = []
-        RS.data.map((Item: any)=>{
+        RS.map((Item: any)=>{
           appInitial.push(Item)
         })
-        if(RS.data.length < pagesize && pageid >= 0) {
+        if(RS.length < pagesize && pageid >= 0) {
           setLoadingAllData(true)
         }
         setApp([...app, ...appInitial].filter((element) => element != null))
@@ -97,7 +86,8 @@ const AllApp = () => {
     const handleScroll = () => {
       if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
       setPageid(pageid + 1)
-      getAppsPage(type, search);
+
+      //getAppsPage();
     };
 
     window.addEventListener('scroll', handleScroll);

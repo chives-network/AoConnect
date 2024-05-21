@@ -64,12 +64,12 @@ const AppModel = (props: any) => {
                           <CardMedia image={`/images/cardmedia/cardmedia-${theme.palette.mode}.png`} sx={{ height: '11.25rem', objectFit: 'contain', borderRadius: 1 }}/>
                           <Box position="absolute" top={10} left={5} m={1} px={0.8} borderRadius={1}
                             onClick={()=>{
-                              router.push('/store/chat/' + item._id)
+                              router.push('/chat/chat/' + item.id)
                             }}
                             sx={{cursor: 'pointer'}}
                           >
                             <Box display="flex" alignItems="center">
-                            <Avatar src={authConfig.backEndApiChatBook + '/api/avatarforapp/' + item.avatar} sx={{ mr: 3, width: 35, height: 35 }} />
+                            <Avatar src={'/images/chives.png'} sx={{ mr: 3, width: 35, height: 35 }} />
                               <Typography 
                                   sx={{
                                       fontWeight: 500,
@@ -96,20 +96,20 @@ const AppModel = (props: any) => {
                               WebkitBoxOrient: 'vertical',
                             }}
                             onClick={()=>{
-                              router.push('/store/chat/' + item._id)
+                              router.push('/chat/chat/' + item.id)
                             }}
                             >
                             <Typography variant='caption'>{item.intro}</Typography>
                           </Box>
                           <Box position="absolute" bottom={0} left={1} m={1} px={0.8}>
-                            <Button disabled variant="text" size="small" startIcon={<Icon icon={item.permission == 'private' ? 'ri:git-repository-private-line' : 'material-symbols:share'} />} >
-                              {t(item.permission)}
+                            <Button disabled variant="text" size="small" startIcon={<Icon icon={'mdi:users-outline'} />} >
+                              {t('Members')}
                             </Button>
                           </Box>
                           <Box position="absolute" top={2} right={1} m={1} px={0.8}>
                             <Button variant="text" size="small" startIcon={<Icon icon='material-symbols:chat-outline' />} 
                               onClick={()=>{
-                                router.push('/store/chat/' + item._id)
+                                router.push('/chat/chat/' + item.id)
                               }}
                               >
                               {t('Chat')}
