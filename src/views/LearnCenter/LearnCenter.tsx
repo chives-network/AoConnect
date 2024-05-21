@@ -7,7 +7,7 @@ import AoCreateProcessModel from './AoCreateProcessModel'
 import AoGetPageRecordsModel from './AoGetPageRecordsModel'
 import AoGetMessageModel from './AoGetMessageModel'
 
-const Example = () => {
+const LearnCenter = () => {
   // ** Hook
 
   return (
@@ -38,4 +38,4 @@ const Example = () => {
 }
 
 
-export default Example
+export default LearnCenter
