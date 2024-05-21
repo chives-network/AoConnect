@@ -16,17 +16,17 @@ const ARISNavMenus = [
     path: '/wallet/sendout'
   },
   {
-    title: 'Learn Center',
+    title: 'Learn',
     icon: 'hugeicons:online-learning-01',
-    path: '/learncenter'
+    path: '/learn'
   },
   {
-    title: 'Chat Room',
+    title: 'Chat',
     icon: 'material-symbols:chat',
     path: '/chatroom'
   },
   {
-    title: 'Token Cetner',
+    title: 'Token',
     icon: 'material-symbols:token',
     path: '/token'
   }
