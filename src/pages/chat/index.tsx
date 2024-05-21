@@ -1,4 +1,4 @@
-import ChatModel from 'src/views/Chat/index';
+import ChatModel from 'src/views/Chatroom/index';
 
 const Chat = () => {
 
