@@ -1,11 +1,11 @@
-import LearnCenterModel from 'src/views/Learn/LearnCenter';
+import ChatModel from 'src/views/Chat/index';
 
-const LearnCenter = () => {
+const Chat = () => {
 
 
-  return <LearnCenterModel />
+  return <ChatModel />
 
 }
 
-export default LearnCenter
+export default Chat
 

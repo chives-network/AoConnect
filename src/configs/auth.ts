@@ -6,7 +6,8 @@ export default {
   AoConnectModule: '1PdCJiXhNafpJbvC-sjxWTeNzbf9Q_RfUNs84GYoPm0',
   AoConnectScheduler: 'fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY',
   AoConnectGithub: 'https://github.com/chives-network/AoConnect',
-
+  backEndApiChatBook: '',
+  
   chivesWallets: 'ChivesWallets',
   chivesCurrentWallet: 'ChivesCurrentWallet',
   chivesWalletNickname: 'ChivesWalletNickname',
