@@ -395,11 +395,11 @@ const ChatLog = (props: any) => {
             {item.messages.map((chat: ChatLogChatType, ChatIndex: number) => {
               let ChatMsgType = 'Chat'
               let ChatMsgContent: any
-              if(chat.msg.includes('"type":"image"')) {
+              if(chat.msg?.includes('"type":"image"')) {
                 ChatMsgType = 'Image'
                 ChatMsgContent = JSON.parse(chat.msg)
               }
-              if(chat.msg.includes('"type":"audio"')) {
+              if(chat.msg?.includes('"type":"audio"')) {
                 ChatMsgType = 'Audio'
                 ChatMsgContent = JSON.parse(chat.msg)
               }
@@ -425,7 +425,7 @@ const ChatLog = (props: any) => {
                           { /\[.*?\]/.test(chat.msg) ?
                             <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
                           :
-                            <ReactMarkdown>{chat.msg.replace('\n', '  \n')}</ReactMarkdown>
+                            <ReactMarkdown>{chat.msg?.replace('\n', '  \n')}</ReactMarkdown>
                           }
                           {GetQuestionGuideFromAppValue && !isSender && index == ChatItemMsgList.length - 1 && index>0 && questionGuide ?
                             <Box>

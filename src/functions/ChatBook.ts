@@ -246,10 +246,10 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string) {
 
     MsgList.map((Item: any)=>{
         ChatLogList.push({
-            "message": Item.send,
+            "message": Item.Data,
             "time": Item.timestamp,
             "senderId": Item.userId,
-            "chatlogId": Item._id,
+            "chatlogId": Item.id,
             "feedback": {
                 "isSent": true,
                 "isDelivered": true,
@@ -260,10 +260,10 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string) {
             "message": Item.received,
             "time": Item.timestamp,
             "senderId": 999999,
-            "history": JSON.parse(Item.history),
+            "history": JSON.parse(Item.history || "[]"),
             "responseTime": Item.responseTime,
-            "chatlogId": Item._id,
-            "question": Item.send,
+            "chatlogId": Item.id,
+            "question": Item.Data,
             "feedback": {
                 "isSent": true,
                 "isDelivered": true,

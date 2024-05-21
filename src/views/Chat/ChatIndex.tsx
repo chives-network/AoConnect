@@ -46,11 +46,11 @@ const AppChat = (props: any) => {
   const [historyCounter, setHistoryCounter] = useState<number>(0)
   const [stopMsg, setStopMsg] = useState<boolean>(false)
 
-  const getChatLogList = async function (appId: string, appTemplate: string) {
+  const getChatLogList = async function () {
     if(id && currentAddress) {
       const GetChatLogFromIndexedDbData = await GetChatLogFromIndexedDb(id)
       if(GetChatLogFromIndexedDbData)  {
-        const ChatChatInitList = ChatChatInit(GetChatLogFromIndexedDbData, appTemplate)
+        const ChatChatInitList = ChatChatInit(GetChatLogFromIndexedDbData, app.systemPrompt)
         setHistoryCounter(ChatChatInitList.length)
         const selectedChat = {
           "chat": {
@@ -195,6 +195,7 @@ const AppChat = (props: any) => {
       }
       setSendButtonText(t("Send") as string)
       setSendInputText(t("Your message...") as string)  
+      getChatLogList()
 
     }
   }, [t, app])
