@@ -13,6 +13,7 @@ import authConfig from 'src/configs/auth'
 import ChatLog from './ChatLog'
 import { useTranslation } from 'react-i18next'
 import SendMsgForm from 'src/views/Chat/SendMsgForm'
+import { GetAppAvatar } from 'src/functions/AoConnectMsgReminder'
 
 const ChatContent = (props: any) => {
   // ** Props
@@ -86,17 +87,17 @@ const ChatContent = (props: any) => {
                       }
                     >
                       <MuiAvatar
-                        src={app?.logo}
-                        alt={chatName}
+                        src={GetAppAvatar(app.logo)}
+                        alt={app.name}
                         sx={{ width: '2rem', height: '2rem' }}
                       />
                     </Badge>
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                        {chatName}
+                        {app.name}
                       </Typography>
                       <Typography variant='caption' sx={{ color: 'primary.secondary', ml: '8px', pt: 0.4 }}>
-                        {app?.id}
+                        {app.id}
                       </Typography>
                     </Box>
 
@@ -108,9 +109,9 @@ const ChatContent = (props: any) => {
               </Box>
 
               {store && store.selectedChat && store.userProfile ? 
-                <ChatLog hidden={hidden} data={{ ...store.selectedChat, userContact: store.userProfile }} chatId={chatId} chatName={chatName} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
+                <ChatLog hidden={hidden} data={{ ...store.selectedChat, userContact: store.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
               : 
-                <ChatLog hidden={hidden} data={{}} chatId={chatId} chatName={chatName} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
+                <ChatLog hidden={hidden} data={{}} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
               }
 
               <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows}/>

@@ -40,8 +40,10 @@ const Chat = (props: any) => {
       const AoConnectChatRoomData = window.localStorage.getItem(authConfig.AoConnectChatRoom) || '{}';
       const AoConnectChatRoomJson = JSON.parse(AoConnectChatRoomData)
       if(AoConnectChatRoomJson) {
-        setApp(AoConnectChatRoomJson)
-        console.log("AoConnectChatRoomJson", AoConnectChatRoomJson)
+        const AppNew = AoConnectChatRoomJson.filter((item: any)=>item.id == id)
+        if(AppNew && AppNew[0]) {
+          setApp(AppNew[0])
+        }
       }
     }
   }, [id])
@@ -56,7 +58,7 @@ const Chat = (props: any) => {
 
   return (
     <Fragment>
-      {id ?
+      {id && app?
       <Box
         className='app-chat'
         sx={{

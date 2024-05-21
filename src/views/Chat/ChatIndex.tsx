@@ -55,7 +55,7 @@ const AppChat = (props: any) => {
         const selectedChat = {
           "chat": {
               "id": 1,
-              "currentAddress": currentAddress,
+              "userId": currentAddress,
               "unseenMsgs": 0,
               "chat": ChatChatInitList
           }
@@ -81,7 +81,7 @@ const AppChat = (props: any) => {
       const selectedChat = {
         "chat": {
             "id": currentAddress,
-            "currentAddress": currentAddress,
+            "userId": currentAddress,
             "unseenMsgs": 0,
             "chat": []
         }
@@ -98,7 +98,7 @@ const AppChat = (props: any) => {
       setStore(storeInit)
 
       //Set system prompt
-      ChatChatInit([], GetWelcomeTextFromAppValue)
+      ChatChatInit([], "GetWelcomeTextFromAppValue")
       setHistoryCounter(0)
       setRefreshChatCounter(0)
       
@@ -168,7 +168,7 @@ const AppChat = (props: any) => {
       const selectedChat = {
         "chat": {
             "id": currentAddress,
-            "currentAddress": currentAddress,
+            "userId": currentAddress,
             "unseenMsgs": 0,
             "chat": ChatChatListValue
         }
@@ -195,16 +195,6 @@ const AppChat = (props: any) => {
       }
       setSendButtonText(t("Send") as string)
       setSendInputText(t("Your message...") as string)  
-
-      setChatId('ChatApp')
-      if(app && app.PublishApp && app.PublishApp.name) {
-        setChatName(app.PublishApp.name)
-        setChatId(app.id)
-      }
-      else {
-        setChatName(app.name)
-        setChatId(app.id)
-      }
 
     }
   }, [t, app])
@@ -267,9 +257,6 @@ const AppChat = (props: any) => {
         sendButtonLoading={sendButtonLoading}
         sendButtonText={sendButtonText}
         sendInputText={sendInputText}
-        chatId={chatId}
-        chatName={chatName}
-        email={auth?.user?.email}
         ClearButtonClick={ClearButtonClick}
         historyCounter={historyCounter}
         app={app}

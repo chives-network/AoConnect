@@ -183,3 +183,15 @@ export const GetChatLogFromIndexedDb = (processTxId: string) => {
         };
     });
 }
+
+export const GetAppAvatar = (logo: string) => {
+    if(logo && logo.length == 43) {
+
+        return "https://arweave.org/" + logo
+    }
+    else {
+
+        return "/images/chatroom/2.png"
+    }
+
+}

@@ -24,6 +24,8 @@ import ChatContextPreview from 'src/views/Chat/ChatContextPreview'
 
 import { ChatAiAudioV1 } from 'src/functions/ChatBook'
 
+import { GetAppAvatar } from 'src/functions/AoConnectMsgReminder'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -175,7 +177,7 @@ const TextToSpeech = ({ text, AudioType, app, userType }: any) => {
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { data, hidden, chatName, app, rowInMsg, maxRows, sendButtonDisable, GetSystemPromptFromAppValue, handleDeleteOneChatLogById, sendMsg, store, userType, questionGuide, GetQuestionGuideFromAppValue, GetTTSFromAppValue } = props
+  const { data, hidden, app, rowInMsg, maxRows, sendButtonDisable, GetSystemPromptFromAppValue, handleDeleteOneChatLogById, sendMsg, store, userType, questionGuide, GetQuestionGuideFromAppValue, GetTTSFromAppValue } = props
 
   const handleSendMsg = (msg: string) => {
     if (store && store.selectedChat && msg.trim().length) {
@@ -338,8 +340,8 @@ const ChatLog = (props: any) => {
                 fontSize: '0.875rem',
               }}
               {...{
-                src: app.avatar? authConfig.backEndApiChatBook + '/api/avatarforapp/' + app.avatar : '/images/avatars/1.png',
-                alt: chatName
+                src: GetAppAvatar(app.logo),
+                alt: app.name
               }}
             >
               {app.name}
