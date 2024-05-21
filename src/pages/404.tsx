@@ -62,7 +62,6 @@ const Error404 = () => {
           Back to Home
         </Button>
       </Box>
-      <FooterIllustrations image={<TreeIllustration alt='tree' src='/images/pages/tree.png' />} />
     </Box>
   )
 }
