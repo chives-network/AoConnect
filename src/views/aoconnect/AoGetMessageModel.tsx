@@ -75,7 +75,7 @@ const AoGetMessageModel = () => {
   const handleSubmit = async () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
         toast.success(t(`Please create a wallet first`), {
-            position: 'top-center', 
+            position: 'top-right', 
             duration: 4000
         })
         router.push("/mywallets");
@@ -91,7 +91,7 @@ const AoGetMessageModel = () => {
     if(Result) {
       setResultText(Result)
       console.log("AoGetMessageModel","handleSubmit","processTxId:", processTxId, "message:", message, "Result:", Result)
-      toast.success("AoGetMessage Success", { position: 'top-center', duration: 4000 })
+      toast.success("AoGetMessage Success", { position: 'top-right', duration: 4000 })
       //setprocessTxId("")
       //setMessage("")
       //setTags("")

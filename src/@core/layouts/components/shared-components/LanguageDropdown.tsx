@@ -64,9 +64,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       const displayMessagesWithDelay = (messages: any[], index: number) => {
         if (index < messages.length) {
           setTimeout(() => {
-            //toast.success(messages[index], {
-            //  duration: 3000
-            //});
             CustomToast(messages[index])
             displayMessagesWithDelay(messages, index + 1);
           }, 1000);
@@ -81,16 +78,21 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
   }, []);
 
-  const CustomToast = (ContentList: string[]) => {
+
+  //Message Format {Target, Action, Type, FromProcess, Data, Ref_}
+  const CustomToast = (ContentList: any) => {
     return toast(
       t => (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar alt='Victor Anderson' src='/images/avatars/3.png' sx={{ mr: 3, width: 40, height: 40 }} />
             <div>
-              <Typography>{ContentList[0]}</Typography>
-              {ContentList && ContentList[1] && (
-                <Typography variant='caption'>{ContentList[1]}</Typography>
+              <Typography>{ContentList['Data']}</Typography>
+              {ContentList && ContentList['Action'] == null && ContentList['FromProcess'] && (
+                <Typography variant='caption'>{ContentList['FromProcess']} Id: {ContentList['Ref_']}</Typography>
+              )}
+              {ContentList && ContentList['Action'] != null && (
+                <Typography variant='caption'>Action: {ContentList['Action']} Id: {ContentList['Ref_']}</Typography>
               )}
             </div>
           </Box>
@@ -101,8 +103,10 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       ),
       {
         style: {
-          minWidth: '300px'
-        }
+          minWidth: '550px'
+        },
+        position: 'top-center',
+        duration: 4000
       }
     )
   }

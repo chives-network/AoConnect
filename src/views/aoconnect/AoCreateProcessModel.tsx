@@ -91,7 +91,7 @@ const AoCreateProcessModel = () => {
     const processId: any = await AoCreateProcess(currentWallet.jwk, moduleTxId, String(scheduler), JSON.parse(tags));
 
     if(processId && processId.length == 43) {
-      toast.success(processId, { position: 'top-center', duration: 4000 })
+      toast.success(processId, { position: 'top-right', duration: 4000 })
       setResultText(processId)
       //setmoduleTxId("")
       //setScheduler("")

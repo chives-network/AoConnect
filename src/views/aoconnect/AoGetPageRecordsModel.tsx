@@ -73,7 +73,7 @@ const AoGetPageRecordsModel = () => {
   const handleSubmit = async () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
         toast.success(t(`Please create a wallet first`), {
-            position: 'top-center', 
+            position: 'top-right', 
             duration: 4000
         })
         router.push("/mywallets");
@@ -88,7 +88,7 @@ const AoGetPageRecordsModel = () => {
     console.log("AoGetPageRecords Result", Result)
     if(true) {
       setresultRecords(Result)
-      toast.success("AoGetPageRecords Success", { position: 'top-center', duration: 4000 })
+      toast.success("AoGetPageRecords Success", { position: 'top-right', duration: 4000 })
       //setprocessTxId("")
       //setMessage("")
       //setTags("")

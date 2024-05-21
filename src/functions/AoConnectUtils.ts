@@ -14,7 +14,7 @@ export const getMessagesData = (messages: any[]) => {
     for (let i = 0; i < messages.length; i++) {
         let target = messages[i].Target;
         let data = messages[i].Data;
-        let tags = Object.assign({}, ...messages[i]['Tags'].map((x) => ({[x.name]: x.value})));
+        let tags = Object.assign({}, ...messages[i]['Tags'].map((x: any) => ({[x.name]: x.value})));
         target_array.push(target)
         data_array.push(data)
         tags_array.push(tags)

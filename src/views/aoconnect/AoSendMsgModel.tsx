@@ -117,7 +117,7 @@ const AoSendMsgModel = () => {
 
     if(Result && Result.length == 43) {
       toast.success(Result, { 
-        position: 'top-center', 
+        position: 'top-right', 
         duration: 4000 
         })
       setResultText(Result)
@@ -156,7 +156,7 @@ const AoSendMsgModel = () => {
         if(Result) {
             setResultText2(Result)
             console.log("AoGetMessageModel","handleSubmit","processTxId:", processTxId, "message:", resultText, "Result:", Result)
-            toast.success("AoGetMessage Success", { position: 'top-center', duration: 4000 })
+            toast.success("AoGetMessage Success", { position: 'top-right', duration: 4000 })
         }
         setIsDisabledButton2(false)
     }
