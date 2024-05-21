@@ -10,6 +10,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import { useRouter } from 'next/router'
 import { getAnonymousUserId } from 'src/functions/ChatBook'
 
+
 const AllApp = () => {
 
   // ** Hook
@@ -60,6 +61,7 @@ const AllApp = () => {
         }
         setApp([...app, ...appInitial].filter((element) => element != null))
         setAppId("")
+        window.localStorage.setItem(authConfig.AoConnectChatRoom, JSON.stringify([...app, ...appInitial]))
       }
       const timer = setTimeout(() => {
         setLoading(false);

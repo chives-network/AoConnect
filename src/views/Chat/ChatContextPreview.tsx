@@ -3,8 +3,8 @@ import { useRef, Fragment, useEffect } from 'react'
 
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
-import { CheckPermission } from 'src/functions/ChatBook'
 import { useTranslation } from 'react-i18next'
+import Icon from 'src/@core/components/icon'
 
 // ** MUI Imports
 import Dialog from '@mui/material/Dialog'
@@ -26,15 +26,12 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { re
 
 const ChatContextPreview = (props: any) => {
     // ** Props
-    const {contextPreviewOpen, setContextPreviewOpen, contextPreviewData, GetSystemPromptFromAppValue } = props
+    const {contextPreviewOpen, setContextPreviewOpen, contextPreviewData } = props
 
     // ** Hook
     const { t } = useTranslation()
     const auth = useAuth()
     const router = useRouter()
-    useEffect(() => {
-        CheckPermission(auth, router, false)
-    }, [auth, router])
 
     const chatArea = useRef(null)
 
@@ -55,18 +52,6 @@ const ChatContextPreview = (props: any) => {
             </DialogTitle>
             <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false, suppressScrollX: true }}>
                 <Fragment>
-                    <Grid item xs={12}>
-                        <Card>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', pt: 4, px: 4, m: 0 }}>
-                                <Typography sx={{ fontSize: '0.875rem' }}>
-                                    {t('System')}
-                                </Typography>
-                                <Typography sx={{ color: 'action.active', fontSize: '0.8125rem' }}>
-                                    <ReactMarkdown>{GetSystemPromptFromAppValue.replace('\n', '  \n')}</ReactMarkdown>
-                                </Typography>
-                            </Box>
-                        </Card>
-                    </Grid>
                     {contextPreviewData && contextPreviewData.map((item: any, index: number)=>{
 
                         return (

@@ -16,7 +16,6 @@ import axios from 'axios'
 import authConfig from 'src/configs/auth'
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
-import { getAnonymousUserId } from 'src/functions/ChatBook'
 import { useTranslation } from 'react-i18next'
 
 import { GetChatLogFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
@@ -36,6 +35,14 @@ const Chat = (props: any) => {
   useEffect(() => {
     if(id && id.length == 43) {
       handlerGetChatLogFromIndexed(String(id))
+      
+      //Get Chatroom Detail
+      const AoConnectChatRoomData = window.localStorage.getItem(authConfig.AoConnectChatRoom) || '{}';
+      const AoConnectChatRoomJson = JSON.parse(AoConnectChatRoomData)
+      if(AoConnectChatRoomJson) {
+        setApp(AoConnectChatRoomJson)
+        console.log("AoConnectChatRoomJson", AoConnectChatRoomJson)
+      }
     }
   }, [id])
 
@@ -49,7 +56,7 @@ const Chat = (props: any) => {
 
   return (
     <Fragment>
-      {app ?
+      {id ?
       <Box
         className='app-chat'
         sx={{
@@ -64,8 +71,7 @@ const Chat = (props: any) => {
           ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
         }}
       >
-        <ChatIndex app={app} />
-
+        <ChatIndex id={id} app={app}/>
       </Box>
       :
       null

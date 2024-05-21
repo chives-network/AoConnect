@@ -29,14 +29,7 @@ const ChatContent = (props: any) => {
     ClearButtonClick,
     historyCounter,
     app,
-    GetSystemPromptFromAppValue,
-    handleDeleteOneChatLogById,
-    userType,
-    GetModelFromAppValue,
-    questionGuide,
-    GetQuestionGuideFromAppValue,
-    GetTTSFromAppValue,
-    setStopMsg
+    handleDeleteOneChatLogById
   } = props
 
   const { t } = useTranslation()
@@ -93,7 +86,7 @@ const ChatContent = (props: any) => {
                       }
                     >
                       <MuiAvatar
-                        src={authConfig.backEndApiChatBook + '/api/avatarforapp/' + app.avatar}
+                        src={app?.logo}
                         alt={chatName}
                         sx={{ width: '2rem', height: '2rem' }}
                       />
@@ -103,7 +96,7 @@ const ChatContent = (props: any) => {
                         {chatName}
                       </Typography>
                       <Typography variant='caption' sx={{ color: 'primary.secondary', ml: '8px', pt: 0.4 }}>
-                        {GetModelFromAppValue?.value}
+                        {app?.id}
                       </Typography>
                     </Box>
 
@@ -115,12 +108,12 @@ const ChatContent = (props: any) => {
               </Box>
 
               {store && store.selectedChat && store.userProfile ? 
-                <ChatLog hidden={hidden} data={{ ...store.selectedChat, userContact: store.userProfile }} chatId={chatId} chatName={chatName} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} GetSystemPromptFromAppValue={GetSystemPromptFromAppValue} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} userType={userType} questionGuide={questionGuide} GetQuestionGuideFromAppValue={GetQuestionGuideFromAppValue} GetTTSFromAppValue={GetTTSFromAppValue}/>
+                <ChatLog hidden={hidden} data={{ ...store.selectedChat, userContact: store.userProfile }} chatId={chatId} chatName={chatName} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
               : 
-                <ChatLog hidden={hidden} data={{}} chatId={chatId} chatName={chatName} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} GetSystemPromptFromAppValue={GetSystemPromptFromAppValue} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} userType={userType} questionGuide={questionGuide} GetQuestionGuideFromAppValue={GetQuestionGuideFromAppValue} GetTTSFromAppValue={GetTTSFromAppValue}/>
+                <ChatLog hidden={hidden} data={{}} chatId={chatId} chatName={chatName} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
               }
 
-              <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows} setStopMsg={setStopMsg}/>
+              <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows}/>
 
             </Box>
           )

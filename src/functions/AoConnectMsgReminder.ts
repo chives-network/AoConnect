@@ -143,8 +143,6 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
     return NeedReminderMsg
 }
 
-
-
 export const GetChatLogFromIndexedDb = (processTxId: string) => {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(AoConnectIndexedDb, 1);
@@ -166,14 +164,10 @@ export const GetChatLogFromIndexedDb = (processTxId: string) => {
             let pageNumber = 1;
             let offset = 0;
             
-            // 打开游标并获取指定页的数据
-            const cursorRequest = objectStore.openCursor(null, 'prev');
-
+            const cursorRequest = objectStore.openCursor(null, 'prev')
             const Result: any[] = []
-        
             cursorRequest.onsuccess = function(event: any) {
                 const cursor = event.target.result;
-                
                 if (cursor) {
                     if (offset >= (pageNumber - 1) * pageSize && offset < pageNumber * pageSize) {
                         console.log('Retrieved data:', cursor.value);
