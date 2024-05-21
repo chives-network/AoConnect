@@ -23,7 +23,7 @@ const ARISNavMenus = [
   {
     title: 'Chat',
     icon: 'material-symbols:chat',
-    path: '/chatroom'
+    path: '/chat'
   },
   {
     title: 'Token',
