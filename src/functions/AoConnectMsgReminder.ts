@@ -21,7 +21,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
         //Output
         if(item.node && item.node.Output && item.node.Output.data && typeof item.node.Output.data === 'string' )  {
             const Data = item.node.Output.data.replace(ansiRegex, '');
-            NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', FromProcess: null, Data, Ref_: null, Logo: null})
+            //NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', From: null, Data, Ref_: null, Logo: null})
         }
 
         //Output
@@ -45,7 +45,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
                         TagsMap[ItemTag.name] = ItemTag.value
                     })
 
-                    const FromProcess = TagsMap['From-Process']
+                    const From = TagsMap['From-Process']
                     const Type = TagsMap['Type']
                     const Action = TagsMap['Action']
                     const Ref_ = TagsMap['Ref_']
@@ -59,20 +59,20 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
 
 
                     //Messages
-                    NeedReminderMsg.push({Target, Action, Type, FromProcess, Data, Ref_, Logo})
+                    NeedReminderMsg.push({Target, Action, Type, From, Data, Ref_, Logo})
 
                     const TickerList = Tags.filter((item: any)=> item.name == 'Ticker')
                     if( TickerList && TickerList.length == 1 )  {
                         const Value = TickerList[0]['value']
                         const LogoList = Tags.filter((item: any)=> item.name == 'Logo')
                         const Logo = LogoList && LogoList[0] && LogoList[0]['value'] ? LogoList[0]['value'] : null
-                        const FromProcessList = Tags.filter((item: any)=> item.name == 'From-Process')
-                        const FromProcess = FromProcessList[0]['value']
+                        const FromList = Tags.filter((item: any)=> item.name == 'From-Process')
+                        const From = FromList[0]['value']
                         if(Data) {
                             NeedReminderMsg.push([Data.replace(ansiRegex, ''), Value.replace(ansiRegex, '') + " from " + Target, Logo])
                         }
                         else {
-                            NeedReminderMsg.push([Value.replace(ansiRegex, '') + " from " + Target, FromProcess])
+                            NeedReminderMsg.push([Value.replace(ansiRegex, '') + " from " + Target, From])
                         }
                     }
 
@@ -103,13 +103,13 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
 
             NeedReminderMsg && NeedReminderMsg.map((ItemMsg: any, index: number)=>{
 
-                const {Target, Action, Type, FromProcess, Data, Ref_, Logo} = ItemMsg
+                const {Target, Action, Type, From, Data, Ref_, Logo} = ItemMsg
 
                 objectStore.add({
                     Target: Target,
                     Action: Action,
                     Type: Type,
-                    FromProcess: FromProcess,
+                    From: From,
                     Data: Data,
                     Ref_: Ref_,
                     Logo: Logo
@@ -129,7 +129,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
         objectStore.createIndex('Target', 'Target', { unique: false });
         objectStore.createIndex('Action', 'Action', { unique: false });
         objectStore.createIndex('Type', 'Type', { unique: false });
-        objectStore.createIndex('FromProcess', 'FromProcess', { unique: false });
+        objectStore.createIndex('From', 'From', { unique: false });
         objectStore.createIndex('Data', 'Data', { unique: false });
         objectStore.createIndex('Ref_', 'Ref_', { unique: false });
         objectStore.createIndex('Logo', 'Logo', { unique: false });
