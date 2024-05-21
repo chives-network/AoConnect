@@ -2,10 +2,10 @@ export default {
   productName: 'AoConnect',
   tokenName: 'AR',
   backEndApi: 'https://arweave.net',
-  webSite: "https://www.ao.link",
-  deployBurnCoin: 1,
-  storageTokenKeyName: 'accessToken',
-  onTokenExpiration: 'refreshToken', // logout | refreshToken
+  AoConnectWebSite: "https://www.ao.link",
+  AoConnectModule: '1PdCJiXhNafpJbvC-sjxWTeNzbf9Q_RfUNs84GYoPm0',
+  AoConnectGithub: 'https://github.com/chives-network/AoConnect',
+
   chivesWallets: 'ChivesWallets',
   chivesCurrentWallet: 'ChivesCurrentWallet',
   chivesWalletNickname: 'ChivesWalletNickname',

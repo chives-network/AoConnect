@@ -266,12 +266,9 @@ const AoSendMsgModel = () => {
                             </Typography>
                         </Link>
                         {resultText && (
-                        <Button size="small" sx={{mt: 3, ml: 3}} variant='outlined' disabled={isDisabledButton2} onClick={handleGetMsgContent}>{t('Content')}</Button>
+                            <Button size="small" sx={{mt: 3, ml: 3}} variant='outlined' disabled={isDisabledButton2} onClick={handleGetMsgContent}>{t('Get Content')}</Button>
                         )}
                     </Grid>
-
-                    <MessageRender resultText={resultText2} />
-
 
                 </Grid>
             </CardContent>
@@ -283,12 +280,12 @@ const AoSendMsgModel = () => {
             <CardContent>
                 <Grid container spacing={5}>
                     <Grid item xs={12}>
-                        <Button variant={action=='Chat'?'contained':'outlined'} size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                        <Button variant={action=='Chat'?'contained':'outlined'} size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                             setAction('Chat')
                         }}>
                             Chat Section
                         </Button>
-                        <Button variant={action=='Token'?'contained':'outlined'} size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                        <Button variant={action=='Token'?'contained':'outlined'} size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                             setAction('Token')
                         }}>
                             Token Section
@@ -299,7 +296,7 @@ const AoSendMsgModel = () => {
                         {action && action == 'Chat' && (
                             <Fragment>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr: 3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -310,7 +307,7 @@ const AoSendMsgModel = () => {
                                     </Typography>
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr: 3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -324,16 +321,16 @@ const AoSendMsgModel = () => {
                                 <Divider sx={{ mr:3, mb: 2 }} />
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chatrom')}>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chatroom')}>
                                         .load-blueprint chatrom
                                     </Button>
                                     <Typography variant='body2' sx={{ mt: -2 }}>
-                                        Use the '.load-blueprint' command to loading the chatrom contract
+                                        Use the '.load-blueprint' to load the chatrom contract
                                     </Typography>
                                 </Box>
 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Handlers.list')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -346,7 +343,7 @@ const AoSendMsgModel = () => {
 
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Send({ Target = ao.id, Action = "Register" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -357,7 +354,7 @@ const AoSendMsgModel = () => {
                                     </Typography>
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Members')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -368,7 +365,7 @@ const AoSendMsgModel = () => {
                                     </Typography>
                                 </Box>
                                 
-                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                 }}>
@@ -378,16 +375,16 @@ const AoSendMsgModel = () => {
                                 <Divider sx={{ mr:3, mb: 2 }} />
 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
                                         .load-blueprint chat
                                     </Button>
                                     <Typography variant='body2' sx={{ mt: -2 }}>
-                                        Use the '.load-blueprint' command to loading the chat contract
+                                        Use the '.load-blueprint' to load the chat contract
                                     </Typography>
                                 </Box>
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('List()')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -400,7 +397,7 @@ const AoSendMsgModel = () => {
 
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Join("Quests", "Wang001")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -413,7 +410,7 @@ const AoSendMsgModel = () => {
 
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Say("Hello everyone!", "Quests")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -426,7 +423,7 @@ const AoSendMsgModel = () => {
 
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Leave("Quests")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -443,7 +440,7 @@ const AoSendMsgModel = () => {
                         {action && action == 'Token' && (
                             <Fragment>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr: 3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -454,7 +451,7 @@ const AoSendMsgModel = () => {
                                     </Typography>
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr: 3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -468,16 +465,16 @@ const AoSendMsgModel = () => {
                                 <Divider sx={{ mr:3, mb: 2 }} />
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('token')}>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('token')}>
                                         .load-blueprint token
                                     </Button>
                                     <Typography variant='body2' sx={{ mt: -2 }}>
-                                        Use the '.load-blueprint' command to loading the token contract
+                                        Use the '.load-blueprint' to load the token contract
                                     </Typography>
                                 </Box>
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Handlers.list')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -489,7 +486,7 @@ const AoSendMsgModel = () => {
                                 </Box>
 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Send({ Target = ao.id, Action = "Info" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
@@ -501,28 +498,28 @@ const AoSendMsgModel = () => {
                                 </Box>
 
                                 
-                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                 }}>
                                     {'Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})'}
                                 </Button>
 
-                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                 }}>
                                     {'Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})'}
                                 </Button>
 
-                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = ao.id, Tags = { Action = "Balances" }})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                 }}>
                                     {'Send({ Target = ao.id, Tags = { Action = "Balances" }})'}
                                 </Button>
 
-                                <Button variant='outlined' size='small' sx={{ mr:3, mb: 2 }} onClick={()=>{
+                                <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                 }}>
@@ -536,6 +533,19 @@ const AoSendMsgModel = () => {
             </CardContent>
         </Card>    
       </Grid>
+      {resultText2 && (
+        <Grid item xs={12}>
+            <Card>
+                <CardHeader title={`${t('Message Content')}`} />
+                <CardContent>
+                    <Grid container spacing={5}>
+                        <MessageRender resultText={resultText2} />
+                    </Grid>
+                </CardContent>
+            </Card>    
+        </Grid>
+      )}
+
     </Grid>
 
     

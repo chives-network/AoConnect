@@ -137,7 +137,7 @@ const HorizontalNavLink = (props: Props) => {
                 sx={{
                   height: 20,
                   fontWeight: 500,
-                  '& .MuiChip-label': { px: 1.5, textTransform: 'capitalize' }
+                  '& .MuiChip-label': { px: 1.5 }
                 }}
               />
             ) : null}

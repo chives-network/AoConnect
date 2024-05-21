@@ -66,7 +66,6 @@ const CalendarWrapper = styled(Box)<BoxProps>(({ theme }) => {
         },
         '& .fc-button-group': {
           '& .fc-button': {
-            textTransform: 'capitalize',
             '&:focus': {
               boxShadow: 'none'
             }
@@ -317,7 +316,6 @@ const CalendarWrapper = styled(Box)<BoxProps>(({ theme }) => {
           '&.fc-scrollgrid-shrink': {
             '& .fc-timegrid-axis-cushion': {
               fontSize: '.75rem',
-              textTransform: 'capitalize',
               color: theme.palette.text.disabled
             }
           }

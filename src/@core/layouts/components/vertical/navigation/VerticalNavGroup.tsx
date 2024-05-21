@@ -257,7 +257,7 @@ const VerticalNavGroup = (props: Props) => {
                       mr: 1.5,
                       height: 20,
                       fontWeight: 500,
-                      '& .MuiChip-label': { px: 1.5, textTransform: 'capitalize' }
+                      '& .MuiChip-label': { px: 1.5 }
                     }}
                   />
                 ) : null}
