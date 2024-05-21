@@ -30,8 +30,12 @@ import { CheckPermission } from 'src/functions/ChatBook'
 
 const AppChat = (props: any) => {
   // ** Hook
-  const { t } = useTranslation()
+
   const auth = useAuth()
+  const currentWallet = auth.currentWallet
+  const currentAddress = auth.currentAddress
+
+  const { t } = useTranslation()
   const router = useRouter()
   const { app, userType, publishId } = props
 

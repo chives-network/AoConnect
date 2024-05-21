@@ -58,7 +58,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   useEffect(() => {
 
     const intervalId = setInterval(async () => {
-      const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal("eT9mjVyx_LMZfzCX2C6KS4lSB2NSKjl2UZ9mA5kYsAg")
+      const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
 
       //Every msg delay one second to remind
       const displayMessagesWithDelay = (messages: any[], index: number) => {
