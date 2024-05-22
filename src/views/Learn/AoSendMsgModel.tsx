@@ -55,14 +55,14 @@ const AoSendMsgModel = () => {
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [isDisabledButton2, setIsDisabledButton2] = useState<boolean>(false)
   
-  const [resultText, setResultText] = useState<string>("t5b-PAESehavwV1IZ78qS04X2VDwAIkasgsn27vX0OA")
+  const [resultText, setResultText] = useState<string>("")
   const [resultText2, setResultText2] = useState<any>()
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
-  const [processTxId, setprocessTxId] = useState<string>("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
+  const [processTxId, setprocessTxId] = useState<string>("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
   const [processTxIdError, setprocessTxIdError] = useState<string | null>(null)
   const handleprocessTxIdChange = (event: any) => {
     setprocessTxId(event.target.value);
@@ -134,7 +134,7 @@ const AoSendMsgModel = () => {
 
   useEffect(()=>{
     
-    handleSendMsgTest()
+    //handleSendMsgTest()
 
   }, [currentWallet])
 
@@ -142,7 +142,7 @@ const AoSendMsgModel = () => {
     if(currentWallet && currentWallet.jwk)  {
         const Result: any = await AoSendMsg(
                 currentWallet.jwk, 
-                'K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw', 
+                'K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw', 
                 '',  
                 [ { name: 'Action', value: 'Eval' } ]
         );
@@ -411,14 +411,11 @@ const AoSendMsgModel = () => {
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                        setMessage('Say("Hello everyone!", "Quests")')
+                                        setMessage('Say("Hello everyone!", "K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     }}>
-                                        Say("Hello everyone!", "Quests")
+                                        Say("Hello everyone!", "K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
                                     </Button>
-                                    <Typography variant='body2' sx={{ mt: -2 }}>
-                                        Send a message in chat room
-                                    </Typography>
                                 </Box>
 
                                 

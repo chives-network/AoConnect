@@ -66,15 +66,21 @@ export const AoSendMsg = async (currentWalletJwk: any, processTxId: string, Msg:
     
     const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
-    const sendMsgResult = await message({
-        process: processTxId,
-        tags: Tags,
-        signer: createDataItemSigner(currentWalletJwk),
-        data: Msg,
-      });
-    console.log("AoSendMsg sendMsgResult", sendMsgResult, "Tags", Tags, "data", Msg)
-  
-    return sendMsgResult;
+    try {
+        const sendMsgResult = await message({
+            process: processTxId,
+            tags: Tags,
+            signer: createDataItemSigner(currentWalletJwk),
+            data: Msg,
+        });
+        console.log("AoSendMsg sendMsgResult", sendMsgResult, "Tags", Tags, "data", Msg)
+    
+        return sendMsgResult;
+    }
+    catch(Error: any) {
+
+        console.log("AoSendMsg Error", Error)
+    }
 }
 
 export const AoGetLastPage = async (processTxId: string, Sort: string = 'DESC', Limit: number = 25) => {

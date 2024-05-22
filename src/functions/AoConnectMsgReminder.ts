@@ -123,7 +123,6 @@ export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
                 })
 
                 transaction.oncomplete = function() {
-                    console.log('Data added successfully');
                     db.close();
                 };
             }
@@ -245,7 +244,6 @@ export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
 
                 })
                 transaction.oncomplete = function() {
-                    console.log('Data added successfully');
                     db.close();
                 };
             }
@@ -279,7 +277,8 @@ export const GetInboxMsgFromIndexedDb = (pageNumber: number, pageSize: number) =
                     const allRecords = event.target.result;
                     const allRecordsReverse = [...allRecords]
                     const Result = allRecordsReverse.reverse().slice(pageNumber * pageSize, (pageNumber+1) * pageSize)
-                    console.log("GetInboxMsgFromIndexedDb Result", Result)
+                    
+                    //console.log("GetInboxMsgFromIndexedDb Result", Result)
                     resolve({data: Result, total: allRecords.length});
                 };
 
