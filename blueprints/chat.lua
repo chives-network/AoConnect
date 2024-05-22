@@ -40,8 +40,7 @@ DevChat.add =
 
 List =
     function()
-        ao.send({ Target = DevChat.Router, Action = "Get-List" })
-        return(Colors.gray .. "Getting the room list from the DevChat index..." .. Colors.reset)
+        return DevChat.Rooms
     end
 
 Join =
