@@ -36,42 +36,45 @@ import { formatHash, formatTimestampDateTime } from 'src/configs/functions'
 import { GetMyInboxMsg, GetMyCurrentProcessTxId } from 'src/functions/AoConnectLib'
 import { GetInboxMsgFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
 
-const Inbox = (props: any) => {
+const Inbox = () => {
   // ** Hook
   const { t } = useTranslation()
   const router = useRouter()
-  const { datasetId } = props
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
+  const [isViewModel, setIsViewModel] = useState<boolean>(false)
+  const [viewInfo, setViewInfo] = useState<any>()
 
-  const [uploadProgress, setUploadProgress] = useState<any>({files: {}, csvs: {}})
 
   const isMobileData = isMobile()
   
   // ** State
   const [isLoading, setIsLoading] = useState(false);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 15 })
-  const [store, setStore] = useState<any>(null);
+  const [store, setStore] = useState<any>({data:[], total:0});
   const [counter, setCounter] = useState<number>(0)
 
   useEffect(() => {
+    setIsLoading(true)
     GetInboxMsgFromIndexedDbInbox(paginationModel)
     setIsLoading(false)
-  }, [paginationModel, counter, isMobileData, auth, datasetId])
+  }, [paginationModel, counter, isMobileData, auth])
 
-  const GetMyInboxMsgFromAoConnect = async function (paginationModel: any) {
+  const GetMyInboxMsgFromAoConnect = async function () {
+    setIsLoading(true)
+    setIsDisabledButton(true)
     const GetMyCurrentProcessTxIdData: string = GetMyCurrentProcessTxId(currentAddress, 0)
     if (currentAddress && GetMyCurrentProcessTxIdData) {
       const RS = await GetMyInboxMsg(currentWallet.jwk, GetMyCurrentProcessTxIdData)
       console.log("RS", RS, "GetMyCurrentProcessTxIdData", GetMyCurrentProcessTxIdData)
-      if(RS && RS.msg) {
-        setStore({data: RS.msg, total: RS.msg.length})
-      }
+      setCounter(counter+1)
     }
+    setIsLoading(false)
+    setIsDisabledButton(false)
   }
   
   const GetInboxMsgFromIndexedDbInbox = async function (paginationModel: any) {
@@ -83,7 +86,7 @@ const Inbox = (props: any) => {
 
   //Loading the all Inbox to IndexedDb
   useEffect(() => {
-    //GetMyInboxMsgFromAoConnect(paginationModel)
+    //GetMyInboxMsgFromAoConnect()
   }, [])
 
 
@@ -189,40 +192,17 @@ const Inbox = (props: any) => {
       headerName: t('Actions') as string,
       renderCell: ({ row }: any) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title={t('Delete')}>
+          <Tooltip title={t('View')}>
             <IconButton size='small' onClick={
-                        () => {  }
+                        () => { setIsViewModel(true); setViewInfo(row); }
                     }>
-              <Icon icon='mdi:delete-outline' fontSize={20} />
+              <Icon icon='mdi:eye-outline' fontSize={20} />
             </IconButton>
           </Tooltip>
         </Box>
       )
     }
   ]
-
-  const handleSubmit = async () => {
-
-    if (currentAddress) {
-      setIsDisabledButton(true)
-      const FormSubmit: any = await axios.post(authConfig.backEndApiChatBook + '/api/' + pageData.FormAction, pageData, { headers: { 'Content-Type': 'application/json'} }).then(res => res.data)
-      console.log("FormSubmit:", FormSubmit)
-      if(FormSubmit?.status == "ok") {
-          toast.success(t(FormSubmit.msg) as string, { duration: 4000, position: 'top-center' })
-          setPageData({openEdit: false, name: '', type: 'File', files: [], csvs: [], trainingMode: 'Chunk Split', processWay: 'Auto process', updateTime: 0, status: 100, expiredTime: '', authCheck: '', datasetId: datasetId})
-      }
-      else {
-          toast.error(t(FormSubmit.msg) as string, { duration: 4000, position: 'top-center' })
-          if(FormSubmit && FormSubmit.msg=='Token is invalid') {
-            
-            //CheckPermission(auth, router, true)
-          }
-      }
-      setCounter(counter + 1)
-      setIsDisabledButton(false)
-    }
-
-  }
 
   return (
     <Fragment>
@@ -234,10 +214,10 @@ const Inbox = (props: any) => {
             <Grid container>
                   <Grid item xs={12} lg={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography sx={{ my: 3, ml: 5 }}>{t('Dataset')}</Typography>
-                      <Button sx={{ my: 3, mr: 5 }} size="small" variant='outlined' onClick={
-                          () => {  }
+                      <Button sx={{ my: 3, mr: 5 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                          () => { GetMyInboxMsgFromAoConnect() }
                       }>
-                      {t("Add Data Source")}
+                      {t("Download Messages")}
                       </Button>
                   </Grid>
                   <DataGrid

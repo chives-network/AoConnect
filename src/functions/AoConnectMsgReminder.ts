@@ -1,7 +1,7 @@
 import { AoGetPageRecords } from './AoConnectLib'
 import { getMessageData, getMessagesData, getOutputData, getNoticeAction, parseNoticeData, getNoticeData, parseAmount } from './AoConnectUtils'
 
-const AoConnectIndexedDb: string = 'AoConnectDb12'
+const AoConnectIndexedDb: string = 'AoConnectDb13'
 const AoConnectLastCursor: string = 'AoConnectLastCursor'
 const AoConnectAllMessages: string = 'AoConnectAllMessages'
 const AoConnectEveryTimeGetMsgCount: number = 10
@@ -103,29 +103,31 @@ export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
         db = event.target.result;
         console.log('Database opened successfully');
         if (db) {
-            const transaction = db.transaction(['ReminderMsg'], 'readwrite');
-            const objectStore = transaction.objectStore('ReminderMsg');
+            if (db.objectStoreNames.contains('ReminderMsg')) {
+                const transaction = db.transaction(['ReminderMsg'], 'readwrite');
+                const objectStore = transaction.objectStore('ReminderMsg');
 
-            NeedReminderMsg && NeedReminderMsg.map((ItemMsg: any, index: number)=>{
+                NeedReminderMsg && NeedReminderMsg.map((ItemMsg: any, index: number)=>{
 
-                const {Target, Action, Type, From, Data, Ref_, Logo} = ItemMsg
+                    const {Target, Action, Type, From, Data, Ref_, Logo} = ItemMsg
 
-                objectStore.add({
-                    Target: Target,
-                    Action: Action,
-                    Type: Type,
-                    From: From,
-                    Data: Data,
-                    Ref_: Ref_,
-                    Logo: Logo
-                });
+                    objectStore.add({
+                        Target: Target,
+                        Action: Action,
+                        Type: Type,
+                        From: From,
+                        Data: Data,
+                        Ref_: Ref_,
+                        Logo: Logo
+                    });
 
-            })
+                })
 
-            transaction.oncomplete = function() {
-                console.log('Data added successfully');
-                db.close();
-            };
+                transaction.oncomplete = function() {
+                    console.log('Data added successfully');
+                    db.close();
+                };
+            }
         }
     };
     request.onupgradeneeded = function(event: any) {
@@ -145,30 +147,32 @@ export const GetChatLogFromIndexedDb = (processTxId: string) => {
             const db = event.target.result;
             
             // 在成功打开数据库后，创建一个只读事务并获取存储对象
-            const transaction = db.transaction(['ReminderMsg'], 'readonly');
-            const objectStore = transaction.objectStore('ReminderMsg');
-            
-            // 定义分页参数
-            const pageSize = 5;
-            let pageNumber = 1;
-            let offset = 0;
-            
-            const cursorRequest = objectStore.openCursor(null, 'prev')
-            const Result: any[] = []
-            cursorRequest.onsuccess = function(event: any) {
-                const cursor = event.target.result;
-                if (cursor) {
-                    if (offset >= (pageNumber - 1) * pageSize && offset < pageNumber * pageSize) {
-                        console.log('Retrieved data:', cursor.value);
-                        Result.push(cursor.value);
+            if (db.objectStoreNames.contains('ReminderMsg')) {
+                const transaction = db.transaction(['ReminderMsg'], 'readonly');
+                const objectStore = transaction.objectStore('ReminderMsg');
+                
+                // 定义分页参数
+                const pageSize = 5;
+                let pageNumber = 1;
+                let offset = 0;
+                
+                const cursorRequest = objectStore.openCursor(null, 'prev')
+                const Result: any[] = []
+                cursorRequest.onsuccess = function(event: any) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        if (offset >= (pageNumber - 1) * pageSize && offset < pageNumber * pageSize) {
+                            console.log('Retrieved data:', cursor.value);
+                            Result.push(cursor.value);
+                        }
+                        offset++;
+                        cursor.continue();
+                    } else {
+                        console.log('End of data', Result);
+                        resolve(Result);
                     }
-                    offset++;
-                    cursor.continue();
-                } else {
-                    console.log('End of data', Result);
-                    resolve(Result);
-                }
-            };
+                };
+            }
         };
     });
 }
@@ -218,32 +222,35 @@ export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
         db = event.target.result;
         console.log('Database opened successfully');
         if (db) {
-            const transaction = db.transaction(['InboxMsg'], 'readwrite');
-            const objectStore = transaction.objectStore('InboxMsg');
+            if (db.objectStoreNames.contains('InboxMsg')) {
+                const transaction = db.transaction(['InboxMsg'], 'readwrite');
+                const objectStore = transaction.objectStore('InboxMsg');
 
-            InboxMsgList && InboxMsgList.map((ItemMsg: any, index: number)=>{
-                
-                objectStore.add({
-                    BlockHeight: ItemMsg['Block-Height'], 
-                    From: ItemMsg.From,
-                    Target: ItemMsg.Target,
-                    HashId: ItemMsg.Id,
-                    Timestamp: ItemMsg.Timestamp,
-                    Data: ItemMsg.Data,
-                    Ref_: ItemMsg?.Tags?.Ref_,
-                    Module: ItemMsg.Module,
-                    Owner: ItemMsg.Owner,
-                    Cron: ItemMsg.Cron,
-                    ContentType: ItemMsg['Content-Type'], 
-                    HashChain: ItemMsg['Hash-Chain'], 
-                    ForwardedBy: ItemMsg['Forwarded-By']
-                });
+                InboxMsgList && InboxMsgList.map((ItemMsg: any, index: number)=>{
+                    
+                    objectStore.add({
+                        BlockHeight: ItemMsg['Block-Height'], 
+                        From: ItemMsg.From,
+                        Target: ItemMsg.Target,
+                        HashId: ItemMsg.Id,
+                        Timestamp: ItemMsg.Timestamp,
+                        Data: ItemMsg.Data,
+                        Type: ItemMsg?.Tags?.Type,
+                        Ref_: ItemMsg?.Tags?.Ref_,
+                        Module: ItemMsg.Module,
+                        Owner: ItemMsg.Owner,
+                        Cron: ItemMsg.Cron,
+                        ContentType: ItemMsg['Content-Type'], 
+                        HashChain: ItemMsg['Hash-Chain'], 
+                        ForwardedBy: ItemMsg['Forwarded-By']
+                    });
 
-            })
-            transaction.oncomplete = function() {
-                console.log('Data added successfully');
-                db.close();
-            };
+                })
+                transaction.oncomplete = function() {
+                    console.log('Data added successfully');
+                    db.close();
+                };
+            }
         }
     };
     request.onupgradeneeded = function(event: any) {
@@ -264,22 +271,24 @@ export const GetInboxMsgFromIndexedDb = (pageNumber: number, pageSize: number) =
             const db = event.target.result;
             
             // 在成功打开数据库后，创建一个只读事务并获取存储对象
-            const transaction = db.transaction(['InboxMsg'], 'readonly');
-            const objectStore = transaction.objectStore('InboxMsg');
-            
-            const getAllRequest = objectStore.getAll();
+            if (db.objectStoreNames.contains('InboxMsg')) {
+                const transaction = db.transaction(['InboxMsg'], 'readonly');
+                const objectStore = transaction.objectStore('InboxMsg');
+                
+                const getAllRequest = objectStore.getAll();
 
-            getAllRequest.onsuccess = function(event: any) {
-                const allRecords = event.target.result;
-                const allRecordsReverse = [...allRecords]
-                const Result = allRecordsReverse.reverse().slice(pageNumber * pageSize, (pageNumber+1) * pageSize)
-                console.log("GetInboxMsgFromIndexedDb Result", Result)
-                resolve({data: Result, total: allRecords.length});
-            };
+                getAllRequest.onsuccess = function(event: any) {
+                    const allRecords = event.target.result;
+                    const allRecordsReverse = [...allRecords]
+                    const Result = allRecordsReverse.reverse().slice(pageNumber * pageSize, (pageNumber+1) * pageSize)
+                    console.log("GetInboxMsgFromIndexedDb Result", Result)
+                    resolve({data: Result, total: allRecords.length});
+                };
 
-            getAllRequest.onerror = function(event: any) {
-                reject('GetInboxMsgFromIndexedDb Error in getting all records');
-            };
+                getAllRequest.onerror = function(event: any) {
+                    reject('GetInboxMsgFromIndexedDb Error in getting all records');
+                };
+            }
             
         };
     });
@@ -287,7 +296,7 @@ export const GetInboxMsgFromIndexedDb = (pageNumber: number, pageSize: number) =
 }
 
 const OpenDb = (reject: any = null) => {
-    const request = indexedDB.open(AoConnectIndexedDb, 2);
+    const request = indexedDB.open(AoConnectIndexedDb, 3);
     request.onerror = function(event: any) {
         console.log('Database error: ' + event.target.errorCode);
         if( reject ) {
@@ -315,6 +324,7 @@ const CreateDbTables = (db: any) => {
         objectStore.createIndex('ContentType', 'ContentType', { unique: false });
         objectStore.createIndex('HashChain', 'HashChain', { unique: false });
         objectStore.createIndex('ForwardedBy', 'ForwardedBy', { unique: false });
+        objectStore.createIndex('Type', 'Type', { unique: false });
     }
 
     if (!db.objectStoreNames.contains('ReminderMsg')) {
