@@ -1,7 +1,7 @@
 import { AoGetPageRecords } from './AoConnectLib'
 import { getMessageData, getMessagesData, getOutputData, getNoticeAction, parseNoticeData, getNoticeData, parseAmount } from './AoConnectUtils'
 
-const AoConnectIndexedDb: string = 'AoConnectDb'
+const AoConnectIndexedDb: string = 'AoConnectDb12'
 const AoConnectLastCursor: string = 'AoConnectLastCursor'
 const AoConnectAllMessages: string = 'AoConnectAllMessages'
 const AoConnectEveryTimeGetMsgCount: number = 10
@@ -86,9 +86,17 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
 
     })
 
-    //Write Local Storage
-    console.log("NeedReminderMsg", NeedReminderMsg)
-    let db = null;
+    //Write to IndexedDb
+    SaveMessagesIntoIndexedDb(NeedReminderMsg)
+    
+    console.log("ReminderMsgAndStoreToLocal NeedReminderMsg", NeedReminderMsg)
+
+    return NeedReminderMsg
+}
+
+export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
+
+    let db: any = null;
     const request: any = indexedDB.open(AoConnectIndexedDb, 1);
 
     request.onerror = function(event: any) {
@@ -119,6 +127,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
 
             transaction.oncomplete = function() {
                 console.log('Data added successfully');
+                db.close();
             };
         }
     };
@@ -134,13 +143,24 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
         objectStore.createIndex('Ref_', 'Ref_', { unique: false });
         objectStore.createIndex('Logo', 'Logo', { unique: false });
 
+        const objectStore2 = db.createObjectStore('InboxMsg', { keyPath: 'id', autoIncrement: true });
+
+        objectStore2.createIndex('BlockHeight', 'BlockHeight', { unique: false });
+        objectStore2.createIndex('From', 'From', { unique: false });
+        objectStore2.createIndex('Target', 'Target', { unique: false });
+        objectStore2.createIndex('HashId', 'HashId', { unique: true });
+        objectStore2.createIndex('Timestamp', 'Timestamp', { unique: false });
+        objectStore2.createIndex('Data', 'Data', { unique: false });
+        objectStore2.createIndex('Ref_', 'Ref_', { unique: false });
+        objectStore2.createIndex('Module', 'Module', { unique: false });
+        objectStore2.createIndex('Owner', 'Owner', { unique: false });
+        objectStore2.createIndex('Cron', 'Cron', { unique: false });
+        objectStore2.createIndex('ContentType', 'ContentType', { unique: false });
+        objectStore2.createIndex('HashChain', 'HashChain', { unique: false });
+        objectStore2.createIndex('ForwardedBy', 'ForwardedBy', { unique: false });
+
     };
 
-    console.log("NeedReminderMsg", NeedReminderMsg, db);
-
-
-
-    return NeedReminderMsg
 }
 
 export const GetChatLogFromIndexedDb = (processTxId: string) => {
@@ -182,6 +202,96 @@ export const GetChatLogFromIndexedDb = (processTxId: string) => {
             };
         };
     });
+}
+
+export function ConvertInboxMessageFormatToJson(input: string) {
+
+    // 这是一个非标准化的JSON格式, 源头是Inbox返回的结果, 需要做一下额外的处理才能转换为JSON对像
+    // This is a non-standardized JSON format. The source is the result returned by Inbox. Additional processing is required to convert it into a JSON object.
+
+    // 去除最外层的一对{},并且替换为[] Remove the outermost pair of {} and replace it with []
+    let adjustedData = "["+ input.replace(/\s+/g, ' ').trim().slice(1, -1) + "]";
+
+    // 将键值对中的键加上双引号 Enclose the key in the key-value pair in double quotes
+    adjustedData = adjustedData.replace(/(\w[\w-]*)\s*=\s*/g, '"$1": ')
+
+    // 将外层的大括号转换为标准 JSON 格式 Convert outer braces to standard JSON format
+    adjustedData = adjustedData.replace(/:\s*\{\s*\{/g, ': [ {')
+                               .replace(/\}\s*\},/g, '} ],')
+                               .replace(/\}\s*\}/g, '} ]');
+    try {
+        const InboxMsgList = JSON.parse(adjustedData);
+        //SaveInboxMsgIntoIndexedDb(InboxMsgList)
+
+        return InboxMsgList
+    }
+    catch(Error: any) {
+        console.log("ConvertInboxMessageFormatToJson Error", Error)
+        
+        return 
+    }
+}
+
+export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
+
+    let db: any = null;
+    const request: any = indexedDB.open(AoConnectIndexedDb, 1);
+
+    request.onerror = function(event: any) {
+        console.log('Database error: ' + event.target.errorCode);
+    };
+    request.onsuccess = function(event: any) {
+        db = event.target.result;
+        console.log('Database opened successfully');
+        if (db) {
+            const transaction = db.transaction(['InboxMsg'], 'readwrite');
+            const objectStore = transaction.objectStore('InboxMsg');
+
+            InboxMsgList && InboxMsgList.map((ItemMsg: any, index: number)=>{
+                
+                objectStore.add({
+                    BlockHeight: ItemMsg['Block-Height'], 
+                    From: ItemMsg.From,
+                    Target: ItemMsg.Target,
+                    HashId: ItemMsg.Id,
+                    Timestamp: ItemMsg.Timestamp,
+                    Data: ItemMsg.Data,
+                    Ref_: ItemMsg?.Tags?.Ref_,
+                    Module: ItemMsg.Module,
+                    Owner: ItemMsg.Owner,
+                    Cron: ItemMsg.Cron,
+                    ContentType: ItemMsg['Content-Type'], 
+                    HashChain: ItemMsg['Hash-Chain'], 
+                    ForwardedBy: ItemMsg['Forwarded-By']
+                });
+
+            })
+            transaction.oncomplete = function() {
+                console.log('Data added successfully');
+                db.close();
+            };
+        }
+    };
+    request.onupgradeneeded = function(event: any) {
+        db = event.target.result;
+        const objectStore = db.createObjectStore('InboxMsg', { keyPath: 'id', autoIncrement: true });
+
+        objectStore.createIndex('BlockHeight', 'BlockHeight', { unique: false });
+        objectStore.createIndex('From', 'From', { unique: false });
+        objectStore.createIndex('Target', 'Target', { unique: false });
+        objectStore.createIndex('HashId', 'HashId', { unique: true });
+        objectStore.createIndex('Timestamp', 'Timestamp', { unique: false });
+        objectStore.createIndex('Data', 'Data', { unique: false });
+        objectStore.createIndex('Ref_', 'Ref_', { unique: false });
+        objectStore.createIndex('Module', 'Module', { unique: false });
+        objectStore.createIndex('Owner', 'Owner', { unique: false });
+        objectStore.createIndex('Cron', 'Cron', { unique: false });
+        objectStore.createIndex('ContentType', 'ContentType', { unique: false });
+        objectStore.createIndex('HashChain', 'HashChain', { unique: false });
+        objectStore.createIndex('ForwardedBy', 'ForwardedBy', { unique: false });
+
+    };
+
 }
 
 export const GetAppAvatar = (logo: string) => {

@@ -1,8 +1,41 @@
-import { connect, createDataItemSigner } from "@permaweb/aoconnect";
+import { connect, createDataItemSigner } from "@permaweb/aoconnect"
+import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from './AoConnectMsgReminder'
 
 const MU_URL = "https://mu.ao-testnet.xyz"
 const CU_URL = "https://cu.ao-testnet.xyz"
 const GATEWAY_URL = "https://arweave.net"
+
+export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) => {
+    
+    const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+    const GetMyInboxMsgResult = await message({
+        process: processTxId,
+        tags: [ { name: 'Action', value: 'Eval' } ],
+        signer: createDataItemSigner(currentWalletJwk),
+        data: 'Inbox',
+      });
+    console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult)
+
+    if(GetMyInboxMsgResult && GetMyInboxMsgResult.length == 43) {
+        const MsgContent = await AoGetMessage(processTxId, GetMyInboxMsgResult)
+        if(MsgContent && MsgContent.Output && MsgContent.Output.data && MsgContent.Output.data.output) {
+            const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+            const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
+            const InboxMsgList: any[] = ConvertInboxMessageFormatToJson(formatText)
+            
+            console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
+            return { id: GetMyInboxMsgResult, msg: InboxMsgList };
+        }
+        else {
+            return { id: GetMyInboxMsgResult };
+        }
+    }
+    else {
+        return { id: GetMyInboxMsgResult };
+    }
+    
+}
 
 export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) => {
     

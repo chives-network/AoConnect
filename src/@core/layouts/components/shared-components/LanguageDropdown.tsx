@@ -15,6 +15,7 @@ import { Settings } from 'src/@core/context/settingsContext'
 
 import { getChivesLanguage, setChivesLanguage } from 'src/functions/ChivesweaveWallets'
 
+import { useAuth } from 'src/hooks/useAuth'
 
 import toast from 'react-hot-toast'
 import Box from '@mui/material/Box'
@@ -23,9 +24,8 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
-
-
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
+import { GetMyInboxMsg } from 'src/functions/AoConnectLib'
 
 
 interface Props {
@@ -45,6 +45,10 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     setChivesLanguage(lang)
   }
 
+  const auth = useAuth()
+  const currentWallet = auth.currentWallet
+  const currentAddress = auth.currentAddress
+
   // ** Change html `lang` attribute when changing locale
   useEffect(() => {
     const localLanguage = getChivesLanguage()
@@ -58,6 +62,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   useEffect(() => {
 
     const intervalId = setInterval(async () => {
+      await GetMyInboxMsg(currentWallet.jwk, "K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
       const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
 
       //Every msg delay one second to remind
