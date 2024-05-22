@@ -24,7 +24,7 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
             const InboxMsgList: any[] = ConvertInboxMessageFormatToJson(formatText)
             
-            console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
+            
             return { id: GetMyInboxMsgResult, msg: InboxMsgList };
         }
         else {
@@ -181,4 +181,9 @@ export const AoUnMonitor = async (currentWalletJwk: any, processTxId: string) =>
     console.log("AoUnMonitor result", result)
   
     return result;
+}
+
+export const GetMyCurrentProcessTxId = (Address: string, Index: number) => {
+
+    return 'K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw'
 }

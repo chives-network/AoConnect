@@ -25,7 +25,7 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
-import { GetMyInboxMsg } from 'src/functions/AoConnectLib'
+import { GetMyCurrentProcessTxId } from 'src/functions/AoConnectLib'
 
 
 interface Props {
@@ -62,9 +62,8 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   useEffect(() => {
 
     const intervalId = setInterval(async () => {
-      await GetMyInboxMsg(currentWallet.jwk, "K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
-      const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
-
+      const GetMyCurrentProcessTxIdData: string = GetMyCurrentProcessTxId(currentAddress, 0)
+      const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal(GetMyCurrentProcessTxIdData)
       //Every msg delay one second to remind
       const displayMessagesWithDelay = (messages: any[], index: number) => {
         if (index < messages.length) {
@@ -75,8 +74,8 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
         }
       };
       ReminderMsgAndStoreToLocalData && displayMessagesWithDelay(ReminderMsgAndStoreToLocalData, 0);
-
       console.log("ReminderMsgAndStoreToLocalData", ReminderMsgAndStoreToLocalData)
+      
     }, 1000 * 6 * 1);
 
     return () => clearInterval(intervalId);

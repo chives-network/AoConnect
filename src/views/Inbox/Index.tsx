@@ -32,9 +32,7 @@ import { useTranslation } from 'react-i18next'
 import { isMobile } from 'src/configs/functions'
 import { CheckPermission } from 'src/functions/ChatBook'
 
-import { GetMyInboxMsg } from 'src/functions/AoConnectLib'
-
-const processTxId = "K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw"
+import { GetMyInboxMsg, GetMyCurrentProcessTxId } from 'src/functions/AoConnectLib'
 
 const Inbox = (props: any) => {
   // ** Hook
@@ -45,7 +43,6 @@ const Inbox = (props: any) => {
   const auth = useAuth()
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
-
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [pageData, setPageData] = useState<any>({name: '', type: 'File', files: [], csvs: [], trainingMode: 'Chunk Split', processWay: 'Auto process', datasetId: datasetId, FormAction: 'addInbox', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/imgs/modal/shareFill.svg', openEdit: false, openDelete: false })
@@ -66,10 +63,11 @@ const Inbox = (props: any) => {
   }, [paginationModel, counter, isMobileData, auth, datasetId])
 
   const fetchData = async function (paginationModel: any) {
-    if (currentAddress && processTxId) {
-      //const RS = await GetMyInboxMsg(currentWallet.jwk, processTxId)
-      //console.log("RS", RS)
-      //setStore(RS)  
+    const GetMyCurrentProcessTxIdData: string = GetMyCurrentProcessTxId(currentAddress, 0)
+    if (currentAddress && GetMyCurrentProcessTxIdData) {
+      const RS = await GetMyInboxMsg(currentWallet.jwk, GetMyCurrentProcessTxIdData)
+      console.log("RS", RS, "GetMyCurrentProcessTxIdData", GetMyCurrentProcessTxIdData)
+      setStore(RS)  
     }
   }
   

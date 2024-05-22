@@ -133,32 +133,9 @@ export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
     };
     request.onupgradeneeded = function(event: any) {
         db = event.target.result;
-        const objectStore = db.createObjectStore('ReminderMsg', { keyPath: 'id', autoIncrement: true });
-
-        objectStore.createIndex('Target', 'Target', { unique: false });
-        objectStore.createIndex('Action', 'Action', { unique: false });
-        objectStore.createIndex('Type', 'Type', { unique: false });
-        objectStore.createIndex('From', 'From', { unique: false });
-        objectStore.createIndex('Data', 'Data', { unique: false });
-        objectStore.createIndex('Ref_', 'Ref_', { unique: false });
-        objectStore.createIndex('Logo', 'Logo', { unique: false });
-
-        const objectStore2 = db.createObjectStore('InboxMsg', { keyPath: 'id', autoIncrement: true });
-
-        objectStore2.createIndex('BlockHeight', 'BlockHeight', { unique: false });
-        objectStore2.createIndex('From', 'From', { unique: false });
-        objectStore2.createIndex('Target', 'Target', { unique: false });
-        objectStore2.createIndex('HashId', 'HashId', { unique: true });
-        objectStore2.createIndex('Timestamp', 'Timestamp', { unique: false });
-        objectStore2.createIndex('Data', 'Data', { unique: false });
-        objectStore2.createIndex('Ref_', 'Ref_', { unique: false });
-        objectStore2.createIndex('Module', 'Module', { unique: false });
-        objectStore2.createIndex('Owner', 'Owner', { unique: false });
-        objectStore2.createIndex('Cron', 'Cron', { unique: false });
-        objectStore2.createIndex('ContentType', 'ContentType', { unique: false });
-        objectStore2.createIndex('HashChain', 'HashChain', { unique: false });
-        objectStore2.createIndex('ForwardedBy', 'ForwardedBy', { unique: false });
-
+        if(db) {
+            CreateDbTables(db)
+        }
     };
 
 }
@@ -219,9 +196,13 @@ export function ConvertInboxMessageFormatToJson(input: string) {
     adjustedData = adjustedData.replace(/:\s*\{\s*\{/g, ': [ {')
                                .replace(/\}\s*\},/g, '} ],')
                                .replace(/\}\s*\}/g, '} ]');
+
     try {
         const InboxMsgList = JSON.parse(adjustedData);
-        //SaveInboxMsgIntoIndexedDb(InboxMsgList)
+
+        SaveInboxMsgIntoIndexedDb(InboxMsgList)
+
+        console.log("ConvertInboxMessageFormatToJson SaveInboxMsgIntoIndexedDb", InboxMsgList)
 
         return InboxMsgList
     }
@@ -235,7 +216,7 @@ export function ConvertInboxMessageFormatToJson(input: string) {
 export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
 
     let db: any = null;
-    const request: any = indexedDB.open(AoConnectIndexedDb, 1);
+    const request: any = indexedDB.open(AoConnectIndexedDb, 2);
 
     request.onerror = function(event: any) {
         console.log('Database error: ' + event.target.errorCode);
@@ -274,8 +255,17 @@ export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
     };
     request.onupgradeneeded = function(event: any) {
         db = event.target.result;
-        const objectStore = db.createObjectStore('InboxMsg', { keyPath: 'id', autoIncrement: true });
+        if(db) {
+            CreateDbTables(db)
+        }
+    };
 
+}
+
+const CreateDbTables = (db: any) => {
+
+    if (!db.objectStoreNames.contains('InboxMsg')) {
+        const objectStore = db.createObjectStore('InboxMsg', { keyPath: 'id', autoIncrement: true });
         objectStore.createIndex('BlockHeight', 'BlockHeight', { unique: false });
         objectStore.createIndex('From', 'From', { unique: false });
         objectStore.createIndex('Target', 'Target', { unique: false });
@@ -289,8 +279,18 @@ export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
         objectStore.createIndex('ContentType', 'ContentType', { unique: false });
         objectStore.createIndex('HashChain', 'HashChain', { unique: false });
         objectStore.createIndex('ForwardedBy', 'ForwardedBy', { unique: false });
+    }
 
-    };
+    if (!db.objectStoreNames.contains('ReminderMsg')) {
+        const objectStore2 = db.createObjectStore('ReminderMsg', { keyPath: 'id', autoIncrement: true });
+        objectStore2.createIndex('Target', 'Target', { unique: false });
+        objectStore2.createIndex('Action', 'Action', { unique: false });
+        objectStore2.createIndex('Type', 'Type', { unique: false });
+        objectStore2.createIndex('From', 'From', { unique: false });
+        objectStore2.createIndex('Data', 'Data', { unique: false });
+        objectStore2.createIndex('Ref_', 'Ref_', { unique: false });
+        objectStore2.createIndex('Logo', 'Logo', { unique: false });
+    }
 
 }
 
