@@ -14,8 +14,6 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 
-import ReactJson from 'react-json-view'
-
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -199,7 +197,5 @@ const AoGetMessageModel = () => {
     </Fragment>
   )
 }
-
-//<ReactJson src={resultText} />
 
 export default AoGetMessageModel
