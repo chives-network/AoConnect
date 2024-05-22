@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import AnsiText from './AnsiText'
 
-import dynamic from "next/dynamic"
-const DynamicReactJson = dynamic(import('react-json-view'), { ssr: false })
+//import dynamic from "next/dynamic"
+//const DynamicReactJson = dynamic(import('react-json-view'), { ssr: false })
 
 const MessageRender = ({ resultText }: any) => {
 
@@ -30,11 +30,12 @@ const MessageRender = ({ resultText }: any) => {
                                 border: (theme: any) => `1px solid ${theme.palette.divider}`,
                                 borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)`
                             }} >
-                            <DynamicReactJson src={resultText} theme="rjv-default" />
                         </Box>
                         }
                     </Typography>
     )
 };
+
+//<DynamicReactJson src={resultText} theme="rjv-default" />
 
 export default MessageRender
