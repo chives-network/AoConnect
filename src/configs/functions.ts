@@ -53,8 +53,26 @@ export function formatSecondToMinute(miningTime: number): string {
   return timeMemo;
 }
 
+export function formatTimestampDateTime(timestamp: number): string {
+  const date = String(timestamp).length == 10 ? new Date(timestamp * 1000) : new Date(timestamp)
+  const currentDate = new Date();
+  const timeDifference = (currentDate.getTime() - date.getTime()) / 1000;
+  if(timestamp == undefined) return ""
+
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const formattedDate = `${month} ${day}, ${year} ${hours}:${minutes}:${seconds}`;
+
+  return formattedDate;
+}
+
 export function formatTimestampMemo(timestamp: number): string {
-  const date = new Date(timestamp * 1000);
+  const date = String(timestamp).length == 10 ? new Date(timestamp * 1000) : new Date(timestamp)
   const currentDate = new Date();
   const timeDifference = (currentDate.getTime() - date.getTime()) / 1000;
   if(timestamp == undefined) return ""
@@ -86,7 +104,7 @@ export function formatTimestampMemo(timestamp: number): string {
 }
 
 export function formatTimestampAge(timestamp: number): string {
-  const date = new Date(timestamp * 1000);
+  const date = String(timestamp).length == 10 ? new Date(timestamp * 1000) : new Date(timestamp)
   const currentDate = new Date();
   const timeDifference = (currentDate.getTime() - date.getTime()) / 1000;
   if(timestamp == undefined) return ""
@@ -108,8 +126,8 @@ export function formatTimestampAge(timestamp: number): string {
 }
 
 export function formatTimestamp(timestamp: number): string {
-  const date = new Date(timestamp * 1000);
   if(timestamp == undefined) return ""
+  const date = String(timestamp).length == 10 ? new Date(timestamp * 1000) : new Date(timestamp)
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const month = months[date.getMonth()];
   const day = date.getDate();

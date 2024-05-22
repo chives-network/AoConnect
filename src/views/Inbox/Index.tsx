@@ -32,7 +32,9 @@ import { useTranslation } from 'react-i18next'
 import { isMobile } from 'src/configs/functions'
 import { CheckPermission } from 'src/functions/ChatBook'
 
+import { formatHash, formatTimestampDateTime } from 'src/configs/functions'
 import { GetMyInboxMsg, GetMyCurrentProcessTxId } from 'src/functions/AoConnectLib'
+import { GetInboxMsgFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
 
 const Inbox = (props: any) => {
   // ** Hook
@@ -45,7 +47,6 @@ const Inbox = (props: any) => {
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [pageData, setPageData] = useState<any>({name: '', type: 'File', files: [], csvs: [], trainingMode: 'Chunk Split', processWay: 'Auto process', datasetId: datasetId, FormAction: 'addInbox', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/imgs/modal/shareFill.svg', openEdit: false, openDelete: false })
 
   const [uploadProgress, setUploadProgress] = useState<any>({files: {}, csvs: {}})
 
@@ -58,91 +59,130 @@ const Inbox = (props: any) => {
   const [counter, setCounter] = useState<number>(0)
 
   useEffect(() => {
-    fetchData(paginationModel)
+    GetInboxMsgFromIndexedDbInbox(paginationModel)
     setIsLoading(false)
   }, [paginationModel, counter, isMobileData, auth, datasetId])
 
-  const fetchData = async function (paginationModel: any) {
+  const GetMyInboxMsgFromAoConnect = async function (paginationModel: any) {
     const GetMyCurrentProcessTxIdData: string = GetMyCurrentProcessTxId(currentAddress, 0)
     if (currentAddress && GetMyCurrentProcessTxIdData) {
       const RS = await GetMyInboxMsg(currentWallet.jwk, GetMyCurrentProcessTxIdData)
       console.log("RS", RS, "GetMyCurrentProcessTxIdData", GetMyCurrentProcessTxIdData)
-      setStore(RS)  
+      if(RS && RS.msg) {
+        setStore({data: RS.msg, total: RS.msg.length})
+      }
     }
   }
   
+  const GetInboxMsgFromIndexedDbInbox = async function (paginationModel: any) {
+    const GetInboxMsgFromIndexedDbData = await GetInboxMsgFromIndexedDb(paginationModel.page, paginationModel.pageSize)
+    console.log("GetInboxMsgFromIndexedDbData", GetInboxMsgFromIndexedDbData, paginationModel)
+    setStore(GetInboxMsgFromIndexedDbData)
+  }
+
+
+  //Loading the all Inbox to IndexedDb
   useEffect(() => {
-
-
-  }, [pageData])
+    //GetMyInboxMsgFromAoConnect(paginationModel)
+  }, [])
 
 
   
   const columns: GridColDef[] = [
     {
-      flex: 0.3,
+      flex: 10,
       minWidth: 50,
-      field: 'name',
-      headerName: `${t(`Name`)}`,
+      field: 'From',
+      headerName: `${t(`From`)}`,
       sortable: false,
       filterable: false,
       renderCell: ({ row }: any) => {
         
         return (
           <Typography noWrap variant='body2' >
-            {row.name}
+            {formatHash(row.From, 8)}
           </Typography>
         )
       }
     },
     {
-      flex: 0.1,
+      flex: 6,
       minWidth: 100,
-      field: 'dataTotal',
-      headerName: `${t(`DataTotal`)}`,
+      field: 'BlockHeight',
+      headerName: `${t(`BlockHeight`)}`,
       sortable: false,
       filterable: false,
       renderCell: ({ row }: any) => {
         
         return (
           <Typography noWrap variant='body2' >
-            {row.dataTotal}
+            {row['BlockHeight']}
           </Typography>
         )
       }
     },
     {
-      flex: 0.1,
+      flex: 20,
       minWidth: 100,
-      field: 'updateTime',
-      headerName: `${t(`UpdateTime`)}`,
+      field: 'Data',
+      headerName: `${t(`Data`)}`,
       sortable: false,
       filterable: false,
       renderCell: ({ row }: any) => {
         return (
           <Typography noWrap variant='body2' >
-            {row.updateTime}
+            {row.Data}
           </Typography>
         )
       }
     },
     {
-      flex: 0.1,
+      flex: 10,
       minWidth: 100,
-      field: 'status',
-      headerName: `${t(`Status`)}`,
+      field: 'Timestamp',
+      headerName: `${t(`Timestamp`)}`,
       sortable: false,
       filterable: false,
       renderCell: ({ row }: any) => {
         return (
           <Typography noWrap variant='body2' >
-            {row.status}
+            {formatTimestampDateTime(row.Timestamp)}
           </Typography>
         )
       }
     },
     {
-      flex: 0.05,
+      flex: 6,
+      minWidth: 100,
+      field: 'Type',
+      headerName: `${t(`Type`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: any) => {
+        return (
+          <Typography noWrap variant='body2' >
+            {row.Type}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 6,
+      minWidth: 100,
+      field: 'Ref',
+      headerName: `${t(`Ref`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: any) => {
+        return (
+          <Typography noWrap variant='body2' >
+            {row.Ref_}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 6,
       minWidth: 130,
       sortable: false,
       field: 'actions',
@@ -151,7 +191,7 @@ const Inbox = (props: any) => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title={t('Delete')}>
             <IconButton size='small' onClick={
-                        () => { setPageData( () => ({ ...row, openEdit: false, openDelete: true, FormAction: 'deleteInbox', FormTitle: 'Delete', FormSubmit: 'Confirm', FormTitleIcon: '/imgs/modal/shareFill.svg' }) ) }
+                        () => {  }
                     }>
               <Icon icon='mdi:delete-outline' fontSize={20} />
             </IconButton>
@@ -191,12 +231,11 @@ const Inbox = (props: any) => {
       {store && store.data != undefined ?
         <Grid item xs={12}>
           <Card>
-            {pageData.openEdit == false ?
-              <Grid container>
+            <Grid container>
                   <Grid item xs={12} lg={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography sx={{ my: 3, ml: 5 }}>{t('Dataset')}</Typography>
                       <Button sx={{ my: 3, mr: 5 }} size="small" variant='outlined' onClick={
-                          () => { setPageData( (prevState: any) => ({ ...prevState, openEdit: true, FormAction: 'addInbox', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/imgs/modal/shareFill.svg' }) ) }
+                          () => {  }
                       }>
                       {t("Add Data Source")}
                       </Button>
@@ -216,10 +255,7 @@ const Inbox = (props: any) => {
                       onPaginationModelChange={setPaginationModel}
                       disableColumnMenu={true}
                   />
-              </Grid>
-            : 
-              <Fragment></Fragment>
-            }
+            </Grid>
 
           </Card>
         </Grid>

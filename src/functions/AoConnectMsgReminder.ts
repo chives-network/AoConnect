@@ -97,11 +97,8 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
 export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
 
     let db: any = null;
-    const request: any = indexedDB.open(AoConnectIndexedDb, 1);
+    const request = OpenDb();
 
-    request.onerror = function(event: any) {
-        console.log('Database error: ' + event.target.errorCode);
-    };
     request.onsuccess = function(event: any) {
         db = event.target.result;
         console.log('Database opened successfully');
@@ -142,12 +139,7 @@ export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
 
 export const GetChatLogFromIndexedDb = (processTxId: string) => {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open(AoConnectIndexedDb, 1);
-
-        request.onerror = function(event: any) {
-            console.log('Database error: ' + event.target.errorCode);
-            reject('Database error');
-        };
+        const request = OpenDb(reject);
 
         request.onsuccess = function(event: any) {
             const db = event.target.result;
@@ -197,14 +189,18 @@ export function ConvertInboxMessageFormatToJson(input: string) {
                                .replace(/\}\s*\},/g, '} ],')
                                .replace(/\}\s*\}/g, '} ]');
 
+
     try {
         const InboxMsgList = JSON.parse(adjustedData);
 
-        SaveInboxMsgIntoIndexedDb(InboxMsgList)
+        const InboxMsgListNew = InboxMsgList.map((Item: any, Index: number)=>{
 
-        console.log("ConvertInboxMessageFormatToJson SaveInboxMsgIntoIndexedDb", InboxMsgList)
+            return {...Item, id: Index}
+        })
 
-        return InboxMsgList
+        console.log("ConvertInboxMessageFormatToJson SaveInboxMsgIntoIndexedDb", InboxMsgListNew)
+
+        return InboxMsgListNew
     }
     catch(Error: any) {
         console.log("ConvertInboxMessageFormatToJson Error", Error)
@@ -216,11 +212,8 @@ export function ConvertInboxMessageFormatToJson(input: string) {
 export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
 
     let db: any = null;
-    const request: any = indexedDB.open(AoConnectIndexedDb, 2);
+    const request = OpenDb();
 
-    request.onerror = function(event: any) {
-        console.log('Database error: ' + event.target.errorCode);
-    };
     request.onsuccess = function(event: any) {
         db = event.target.result;
         console.log('Database opened successfully');
@@ -260,6 +253,49 @@ export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
         }
     };
 
+}
+
+export const GetInboxMsgFromIndexedDb = (pageNumber: number, pageSize: number) => {
+
+    return new Promise((resolve, reject) => {
+        const request = OpenDb(reject);
+
+        request.onsuccess = function(event: any) {
+            const db = event.target.result;
+            
+            // 在成功打开数据库后，创建一个只读事务并获取存储对象
+            const transaction = db.transaction(['InboxMsg'], 'readonly');
+            const objectStore = transaction.objectStore('InboxMsg');
+            
+            const getAllRequest = objectStore.getAll();
+
+            getAllRequest.onsuccess = function(event: any) {
+                const allRecords = event.target.result;
+                const allRecordsReverse = [...allRecords]
+                const Result = allRecordsReverse.reverse().slice(pageNumber * pageSize, (pageNumber+1) * pageSize)
+                console.log("GetInboxMsgFromIndexedDb Result", Result)
+                resolve({data: Result, total: allRecords.length});
+            };
+
+            getAllRequest.onerror = function(event: any) {
+                reject('GetInboxMsgFromIndexedDb Error in getting all records');
+            };
+            
+        };
+    });
+
+}
+
+const OpenDb = (reject: any = null) => {
+    const request = indexedDB.open(AoConnectIndexedDb, 2);
+    request.onerror = function(event: any) {
+        console.log('Database error: ' + event.target.errorCode);
+        if( reject ) {
+            reject('Database error');
+        }
+    };  
+    
+    return request
 }
 
 const CreateDbTables = (db: any) => {

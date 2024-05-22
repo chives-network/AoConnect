@@ -23,7 +23,10 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
             const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
             const InboxMsgList: any[] = ConvertInboxMessageFormatToJson(formatText)
-            
+
+            if(InboxMsgList) {
+                SaveInboxMsgIntoIndexedDb(InboxMsgList)
+            }
             
             return { id: GetMyInboxMsgResult, msg: InboxMsgList };
         }
