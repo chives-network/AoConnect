@@ -276,40 +276,6 @@ const Customizer = () => {
               </RadioGroup>
             </Box>
 
-            {/* Footer */}
-            <Box sx={{ mb: 4 }}>
-              <Typography>Footer Type</Typography>
-              <RadioGroup
-                row
-                value={footer}
-                onChange={e => handleChange('footer', e.target.value as Settings['footer'])}
-                sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
-              >
-                <FormControlLabel value='fixed' label='Fixed' control={<Radio />} />
-                <FormControlLabel value='static' label='Static' control={<Radio />} />
-                <FormControlLabel value='hidden' label='Hidden' control={<Radio />} />
-              </RadioGroup>
-            </Box>
-
-            {/* AppBar Blur */}
-            <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography>AppBar Blur</Typography>
-              <Switch
-                name='appBarBlur'
-                checked={appBarBlur}
-                onChange={e => handleChange('appBarBlur', e.target.checked)}
-              />
-            </Box>
-
-            {/* RTL */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography>RTL</Typography>
-              <Switch
-                name='direction'
-                checked={direction === 'rtl'}
-                onChange={e => handleChange('direction', e.target.checked ? 'rtl' : 'ltr')}
-              />
-            </Box>
           </CustomizerSpacing>
 
           <Divider sx={{ m: '0 !important' }} />
@@ -352,18 +318,7 @@ const Customizer = () => {
                 />
               </Box>
             )}
-
-            {/* Menu Hidden */}
-            {layout === 'horizontal' && appBar === 'hidden' ? null : (
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Typography>Menu Hidden</Typography>
-                <Switch
-                  name='navHidden'
-                  checked={navHidden}
-                  onChange={e => handleChange('navHidden', e.target.checked)}
-                />
-              </Box>
-            )}
+            
           </CustomizerSpacing>
         </PerfectScrollbar>
       </Drawer>
