@@ -4,10 +4,6 @@ import { useState, useEffect, Fragment } from 'react'
 // ** Next Imports
 import Button from '@mui/material/Button'
 
-// ** Axios Imports
-import axios from 'axios'
-import authConfig from 'src/configs/auth'
-
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -18,14 +14,10 @@ import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Next Import
-import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Third Party Components
-import toast from 'react-hot-toast'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -40,7 +32,6 @@ import ViewMessage from './ViewMessage'
 const Inbox = () => {
   // ** Hook
   const { t } = useTranslation()
-  const router = useRouter()
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
@@ -49,7 +40,6 @@ const Inbox = () => {
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [isViewModel, setIsViewModel] = useState<boolean>(false)
   const [viewInfo, setViewInfo] = useState<any>()
-
 
   const isMobileData = isMobile()
   
@@ -84,14 +74,12 @@ const Inbox = () => {
     setStore(GetInboxMsgFromIndexedDbData)
   }
 
-
   //Loading the all Inbox to IndexedDb
   useEffect(() => {
     //GetMyInboxMsgFromAoConnect()
   }, [])
 
 
-  
   const columns: GridColDef[] = [
     {
       flex: 10,
@@ -156,7 +144,7 @@ const Inbox = () => {
       }
     },
     {
-      flex: 6,
+      flex: 2,
       minWidth: 100,
       field: 'Type',
       headerName: `${t(`Type`)}`,
@@ -171,7 +159,7 @@ const Inbox = () => {
       }
     },
     {
-      flex: 6,
+      flex: 2,
       minWidth: 100,
       field: 'Ref',
       headerName: `${t(`Ref`)}`,
@@ -186,8 +174,8 @@ const Inbox = () => {
       }
     },
     {
-      flex: 6,
-      minWidth: 130,
+      flex: 2,
+      minWidth: 100,
       sortable: false,
       field: 'actions',
       headerName: t('Actions') as string,

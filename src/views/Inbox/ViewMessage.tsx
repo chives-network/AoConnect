@@ -1,9 +1,6 @@
 // ** React Imports
-import { useRef, Fragment, useEffect } from 'react'
+import { useRef, Fragment } from 'react'
 
-import { useRouter } from 'next/router'
-import { useAuth } from 'src/hooks/useAuth'
-import { CheckPermission } from 'src/functions/ChatBook'
 import { useTranslation } from 'react-i18next'
 
 // ** MUI Imports
@@ -16,7 +13,6 @@ import Typography from '@mui/material/Typography'
 import Icon from 'src/@core/components/icon'
 import IconButton from '@mui/material/IconButton'
 import Card from '@mui/material/Card'
-import ReactMarkdown from 'react-markdown'
 import { styled } from '@mui/material/styles'
 import PerfectScrollbarComponent, { ScrollBarProps } from 'react-perfect-scrollbar'
 
@@ -31,7 +27,7 @@ const ViewMessage = (props: any) => {
 
     // ** Hook
     const { t } = useTranslation()
-    
+
     const chatArea = useRef(null)
 
     return (

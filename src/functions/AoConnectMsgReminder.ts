@@ -101,7 +101,6 @@ export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
 
     request.onsuccess = function(event: any) {
         db = event.target.result;
-        console.log('Database opened successfully');
         if (db) {
             if (db.objectStoreNames.contains('ReminderMsg')) {
                 const transaction = db.transaction(['ReminderMsg'], 'readwrite');
@@ -220,7 +219,6 @@ export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
 
     request.onsuccess = function(event: any) {
         db = event.target.result;
-        console.log('Database opened successfully');
         if (db) {
             if (db.objectStoreNames.contains('InboxMsg')) {
                 const transaction = db.transaction(['InboxMsg'], 'readwrite');
