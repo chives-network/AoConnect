@@ -200,7 +200,7 @@ export function ConvertInboxMessageFormatToJson(input: string) {
             return {...Item, id: Index}
         })
 
-        console.log("ConvertInboxMessageFormatToJson SaveInboxMsgIntoIndexedDb", InboxMsgListNew)
+        console.log("ConvertInboxMessageFormatToJson SaveInboxMsgIntoIndexedDb", InboxMsgListNew.reverse())
 
         return InboxMsgListNew
     }

@@ -382,6 +382,15 @@ const AoSendMsgModel = () => {
                                         Use the '.load-blueprint' to load the chat contract
                                     </Typography>
                                 </Box>
+
+                                <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chiveschat')}>
+                                        .load-blueprint chiveschat
+                                    </Button>
+                                    <Typography variant='body2' sx={{ mt: -2 }}>
+                                        Use the '.load-blueprint' to load the chiveschat contract
+                                    </Typography>
+                                </Box>
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
