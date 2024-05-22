@@ -30,11 +30,12 @@ import toast from 'react-hot-toast'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 import { isMobile } from 'src/configs/functions'
-import { CheckPermission } from 'src/functions/ChatBook'
 
 import { formatHash, formatTimestampDateTime } from 'src/configs/functions'
 import { GetMyInboxMsg, GetMyCurrentProcessTxId } from 'src/functions/AoConnectLib'
 import { GetInboxMsgFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
+
+import ViewMessage from './ViewMessage'
 
 const Inbox = () => {
   // ** Hook
@@ -235,6 +236,7 @@ const Inbox = () => {
                       onPaginationModelChange={setPaginationModel}
                       disableColumnMenu={true}
                   />
+                  {isViewModel && <ViewMessage viewInfo={viewInfo} isViewModel={isViewModel} setIsViewModel={setIsViewModel} /> }
             </Grid>
 
           </Card>
