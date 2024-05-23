@@ -33,6 +33,8 @@ import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 
 import { AoSendMsg, AoGetMessage } from 'src/functions/AoConnectLib'
+import { SetAoConnectReminderProcessTxId, GetAoConnectReminderProcessTxId, SetAoConnectReminderChatroomTxId, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnectMsgReminder'
+
 
 import MessageRender from './MessageRender'
 
@@ -62,7 +64,7 @@ const AoSendMsgModel = () => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
-  const [chatroomId, setChatroomId] = useState<string>("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
+  const [chatroomId, setChatroomId] = useState<string>("")
   const [chatroomIdError, setChatroomIdError] = useState<string | null>(null)
   const handleChatroomIdChange = (event: any) => {
     setChatroomId(event.target.value);
@@ -76,7 +78,21 @@ const AoSendMsgModel = () => {
     console.log("ChatroomId", chatroomId)
   };
 
-  const [processTxId, setProcessTxId] = useState<string>("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
+  const [myProcessTxId, setMyProcessTxId] = useState<string>("")
+  const [myProcessTxIdError, setMyProcessTxIdError] = useState<string | null>(null)
+  const handleMyProcessTxIdChange = (event: any) => {
+    setMyProcessTxId(event.target.value);
+    if(event.target.value.length != 43) {
+        setMyProcessTxIdError(`${t('myProcessTxId length must be 43')}`)
+    }
+    else {
+        setMyProcessTxIdError("")
+    }
+    
+    console.log("myProcessTxId", myProcessTxId)
+  };
+
+  const [processTxId, setProcessTxId] = useState<string>("")
   const [processTxIdError, setprocessTxIdError] = useState<string | null>(null)
   const handleprocessTxIdChange = (event: any) => {
     setProcessTxId(event.target.value);
@@ -89,6 +105,11 @@ const AoSendMsgModel = () => {
     
     console.log("processTxId", processTxId)
   };
+
+  useEffect(()=>{
+    setChatroomId(GetAoConnectReminderChatroomTxId())
+    setMyProcessTxId(GetAoConnectReminderProcessTxId())
+  }, [])
   
   const [message, setMessage] = useState<string>("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
   const [messageError, setMessageError] = useState<string | null>(null)
@@ -113,6 +134,15 @@ const AoSendMsgModel = () => {
     setTagsError("")
   };
 
+  const handleSaveLocalStorage = () => {
+    SetAoConnectReminderChatroomTxId(chatroomId);
+    SetAoConnectReminderProcessTxId(myProcessTxId);
+    toast.success('Save Success', { 
+        position: 'top-right', 
+        duration: 4000 
+    })
+  }
+
   const handleSubmit = async () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
         toast.success(t(`Please create a wallet first`), {
@@ -135,7 +165,7 @@ const AoSendMsgModel = () => {
       toast.success(Result, { 
         position: 'top-right', 
         duration: 4000 
-        })
+      })
       setResultText(Result)
       //setProcessTxId("")
       //setMessage("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
@@ -219,9 +249,9 @@ const AoSendMsgModel = () => {
                         <TextField
                             fullWidth
                             label={`${t('My Wallet Process TxId')}`}
-                            placeholder={`${t('processTxId')}`}
-                            value={processTxId}
-                            onChange={handleprocessTxIdChange}
+                            placeholder={`${t('myProcessTxId')}`}
+                            value={myProcessTxId}
+                            onChange={handleMyProcessTxIdChange}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -229,22 +259,12 @@ const AoSendMsgModel = () => {
                                     </InputAdornment>
                                 )
                             }}
-                            error={!!processTxIdError}
-                            helperText={processTxIdError}
+                            error={!!myProcessTxIdError}
+                            helperText={myProcessTxIdError}
                         />
                     </Grid>
-                    <Grid item xs={2} container justifyContent="flex-end">
-                        {resultText && (
-                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setResultText('')} disabled={isDisabledButton} >
-                            {t('Cannel')}
-                        </Button>
-                        )}
-                        {isDisabledButton && (
-                            <Box sx={{ m: 0, pt:1 }}>
-                                <CircularProgress sx={{ mr: 5, mt: 0 }} />
-                            </Box>
-                        )}
-                        <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
+                    <Grid item xs={2} justifyContent="flex-end">
+                        <Button type='submit' sx={{mt: 1}} variant='contained' size='large' onClick={handleSaveLocalStorage} >
                             {uploadingButton}
                         </Button>
                     </Grid>
@@ -437,7 +457,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Send({ Target = "' + chatroomId + '", Action = "Register" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('1 Send({ Target = [ChatroomTxId], Action = "Register" }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(chatroomId)
+                                        setProcessTxId(myProcessTxId)
                                     }}>
                                         {'Send({ Target = ao.id, Action = "Register" })'}
                                     </Button>
@@ -463,7 +483,7 @@ const AoSendMsgModel = () => {
                                     setMessage('Send({Target = "' + chatroomId + '", Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     setMessageHelp('1 Send({ Target = [ChatroomTxId], ... }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                    setProcessTxId(chatroomId)
+                                    setProcessTxId(myProcessTxId)
                                 }}>
                                     {'Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })'}
                                 </Button>
@@ -592,8 +612,9 @@ const AoSendMsgModel = () => {
 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                        setMessage('Send({ Target = ao.id, Action = "Info" })')
+                                        setMessage('Send({ Target = "' + chatroomId + '", Action = "Info" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setProcessTxId(myProcessTxId)
                                     }}>
                                         {'Send({ Target = ao.id, Action = "Info" })'}
                                     </Button>
@@ -604,31 +625,35 @@ const AoSendMsgModel = () => {
 
                                 
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                    setMessage('Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})')
+                                    setMessage('Send({ Target = "' + chatroomId + '", Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                    setProcessTxId(myProcessTxId)
                                 }}>
                                     {'Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})'}
                                 </Button>
 
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                    setMessage('Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})')
+                                    setMessage('Send({ Target = "' + chatroomId + '", Tags = { Action = "Mint", Quantity = "2222" }})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                    setProcessTxId(myProcessTxId)
                                 }}>
                                     {'Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})'}
                                 </Button>
 
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                    setMessage('Send({ Target = ao.id, Tags = { Action = "Balances" }})')
+                                    setMessage('Send({ Target = "' + chatroomId + '", Tags = { Action = "Balances" }})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                    setProcessTxId(myProcessTxId)
                                 }}>
                                     {'Send({ Target = ao.id, Tags = { Action = "Balances" }})'}
                                 </Button>
 
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                    setMessage('Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })')
+                                    setMessage('Send({ Target = "' + chatroomId + '", Action = "Balance", Tags = { Target = ao.id } })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                    setProcessTxId(myProcessTxId)
                                 }}>
-                                    {'Send({ Target = "Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Balance", Tags = { Target = ao.id } })'}
+                                    {'Send({ Target = ao.id, Action = "Balance", Tags = { Target = ao.id } })'}
                                 </Button>
                             </Fragment>
                         )}

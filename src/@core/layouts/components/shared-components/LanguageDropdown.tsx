@@ -62,7 +62,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
     const intervalId = setInterval(async () => {
       const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
-      const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal(GetMyCurrentProcessTxIdData)
+      const ReminderMsgAndStoreToLocalData = GetMyCurrentProcessTxIdData && GetMyCurrentProcessTxIdData.length == 43 ? await ReminderMsgAndStoreToLocal(GetMyCurrentProcessTxIdData) : null
       //Every msg delay one second to remind
       const displayMessagesWithDelay = (messages: any[], index: number) => {
         if (index < messages.length) {

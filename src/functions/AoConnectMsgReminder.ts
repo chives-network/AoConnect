@@ -5,7 +5,19 @@ const AoConnectIndexedDb: string = 'AoConnectDb13'
 const AoConnectLastCursor: string = 'AoConnectLastCursor'
 const AoConnectAllMessages: string = 'AoConnectAllMessages'
 const AoConnectReminderProcessTxId: string = 'AoConnectReminderProcessTxId'
+const AoConnectReminderChatroomTxId: string = 'AoConnectReminderChatroomTxId'
 const AoConnectEveryTimeGetMsgCount: number = 10
+
+export const SetAoConnectReminderChatroomTxId = (chatroomTxId: string) => {
+    window.localStorage.setItem(AoConnectReminderChatroomTxId, chatroomTxId)
+
+    return window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? ''
+}
+
+export const GetAoConnectReminderChatroomTxId = () => {
+
+    return window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? ''
+}
 
 export const SetAoConnectReminderProcessTxId = (processTxId: string) => {
     window.localStorage.setItem(AoConnectReminderProcessTxId, processTxId)
