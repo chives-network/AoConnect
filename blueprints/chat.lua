@@ -1,6 +1,6 @@
 DevChat = {}
 
-DevChat.Router = "K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw"
+DevChat.Router = "Mcm3cIGOh-Xgdzz5osEfhGzw-zEfxn1CylhmlwjIU3M"
 DevChat.InitRoom = "6I1JBBc9SOMtqFxlX7OoYgsMh7QeZk2fFwUCHTUqshg"
 DevChat.LastSend = DevChat.LastSend or DevChat.InitRoom
 
@@ -10,7 +10,10 @@ DevChat.LastReceive = {
 }
 
 DevChat.InitRooms = {   [DevChat.InitRoom] = "Getting-Started",
-                        ["UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8"] = "Chives-Test-Chat"                        
+                        ["UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8"] = "Chives-Test-UREzA",
+                        ["YeIgn_CImXg4UPHOg7-rbylVv9su6FKXY2LIHwWFB5g"] = "Chives-Test-YeIgn",
+                        ["K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw"] = "Chives-Test-K4kzm",
+                        ["5eur6q2fgaVqHPrTn8HFxrK0Yl-e58h-95u3KI8_sgw"] = "Chives-Test-5eur6"                         
                     }
 
 DevChat.Rooms = DevChat.Rooms or DevChat.InitRooms

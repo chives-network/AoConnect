@@ -14,9 +14,9 @@ Handlers.add(
     
     if not found then
       table.insert(Members, msg.From)
-      Handlers.utils.reply("Registered.")(msg)
+      Handlers.utils.reply("Registered. " .. msg.From )(msg)
     else
-      Handlers.utils.reply("Already registered.")(msg)
+      Handlers.utils.reply("Already registered. " .. msg.From )(msg)
     end
   end
 )
@@ -29,13 +29,13 @@ Handlers.add(
     for i, v in ipairs(Members) do
         if v == msg.From then
             table.remove(Members, i)
-            Handlers.utils.reply("Unregistered")(msg)
+            Handlers.utils.reply("Unregistered. " .. msg.From )(msg)
             found = true
             break
         end
     end
     if not found then
-        Handlers.utils.reply("Not registered")(msg)
+        Handlers.utils.reply("Not registered " .. msg.From )(msg)
     end
   end
 )
@@ -47,7 +47,7 @@ Handlers.add(
     local haveSentRecords = {}
     for _, recipient in ipairs(Members) do
       if not haveSentRecords[recipient] then
-        ao.send({Target = recipient, Data = msg.Data, Sender = msg.From, Timestamp = Msg.Timestamp})
+        ao.send({Target = recipient, Data = msg.Data})
         haveSentRecords[recipient] = true
       end
     end

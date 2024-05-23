@@ -20,6 +20,11 @@ const MessageRender = ({ resultText }: any) => {
                             <AnsiText text={resultText.Output.data} />
                         )
                         }
+                        {resultText && resultText.Error && typeof resultText.Error == 'string' && 
+                        (
+                            <AnsiText text={resultText.Error} />
+                        )
+                        }
                     </Typography>
     )
 };
