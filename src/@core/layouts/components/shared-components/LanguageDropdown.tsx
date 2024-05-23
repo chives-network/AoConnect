@@ -60,7 +60,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
   useEffect(() => {
 
-    const timeoutId = setTimeout(async () => {
+    const intervalId = setInterval(async () => {
       const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
       const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal(GetMyCurrentProcessTxIdData)
       //Every msg delay one second to remind
@@ -77,7 +77,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       
     }, 1000 * 6 * 1);
 
-    return () => clearTimeout(timeoutId);
+    return () => clearInterval(intervalId);
 
   }, []);
 
