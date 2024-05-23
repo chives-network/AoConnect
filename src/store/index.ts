@@ -1,10 +1,10 @@
 // ** Toolkit imports
 import { configureStore } from '@reduxjs/toolkit'
-
-// ** Reducers
+import knowledge from 'src/store/apps/knowledge'
 
 export const store = configureStore({
   reducer: {
+    knowledge
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -6,7 +6,6 @@ import AoSendMsgModel from './AoSendMsgModel'
 import AoCreateProcessModel from './AoCreateProcessModel'
 import AoGetPageRecordsModel from './AoGetPageRecordsModel'
 import AoGetMessageModel from './AoGetMessageModel'
-import AoSetProcessReminderModel from './AoSetProcessReminderModel'
 
 const LearnCenter = () => {
   // ** Hook
