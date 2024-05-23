@@ -24,8 +24,7 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
-import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
-import { GetMyCurrentProcessTxId } from 'src/functions/AoConnectLib'
+import { ReminderMsgAndStoreToLocal, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnectMsgReminder'
 
 
 interface Props {
@@ -62,7 +61,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   useEffect(() => {
 
     const timeoutId = setTimeout(async () => {
-      const GetMyCurrentProcessTxIdData: string = GetMyCurrentProcessTxId(currentAddress, 0)
+      const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
       const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal(GetMyCurrentProcessTxIdData)
       //Every msg delay one second to remind
       const displayMessagesWithDelay = (messages: any[], index: number) => {

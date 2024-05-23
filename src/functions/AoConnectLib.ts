@@ -192,7 +192,3 @@ export const AoUnMonitor = async (currentWalletJwk: any, processTxId: string) =>
     return result;
 }
 
-export const GetMyCurrentProcessTxId = (Address: string, Index: number) => {
-
-    return 'YeIgn_CImXg4UPHOg7-rbylVv9su6FKXY2LIHwWFB5g'
-}

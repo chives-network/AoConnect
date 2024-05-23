@@ -24,8 +24,8 @@ import { useTranslation } from 'react-i18next'
 import { isMobile } from 'src/configs/functions'
 
 import { formatHash, formatTimestampDateTime } from 'src/configs/functions'
-import { GetMyInboxMsg, GetMyCurrentProcessTxId } from 'src/functions/AoConnectLib'
-import { GetInboxMsgFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
+import { GetMyInboxMsg } from 'src/functions/AoConnectLib'
+import { GetInboxMsgFromIndexedDb, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnectMsgReminder'
 
 import ViewMessage from './ViewMessage'
 
@@ -58,7 +58,7 @@ const Inbox = () => {
   const GetMyInboxMsgFromAoConnect = async function () {
     setIsLoading(true)
     setIsDisabledButton(true)
-    const GetMyCurrentProcessTxIdData: string = GetMyCurrentProcessTxId(currentAddress, 0)
+    const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
     if (currentAddress && GetMyCurrentProcessTxIdData) {
       const RS = await GetMyInboxMsg(currentWallet.jwk, GetMyCurrentProcessTxIdData)
       console.log("RS", RS, "GetMyCurrentProcessTxIdData", GetMyCurrentProcessTxIdData)
