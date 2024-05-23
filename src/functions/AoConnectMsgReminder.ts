@@ -4,7 +4,18 @@ import { getMessageData, getMessagesData, getOutputData, getNoticeAction, parseN
 const AoConnectIndexedDb: string = 'AoConnectDb13'
 const AoConnectLastCursor: string = 'AoConnectLastCursor'
 const AoConnectAllMessages: string = 'AoConnectAllMessages'
+const AoConnectReminderProcessTxId: string = 'AoConnectReminderProcessTxId'
 const AoConnectEveryTimeGetMsgCount: number = 10
+
+export const SetAoConnectReminderProcessTxId = (processTxId: string) => {
+    window.localStorage.setItem(AoConnectReminderProcessTxId, processTxId)
+
+    return window.localStorage.getItem(AoConnectReminderProcessTxId)
+}
+
+export const GetAoConnectReminderProcessTxId = () => {
+    return window.localStorage.getItem(AoConnectReminderProcessTxId)
+}
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 

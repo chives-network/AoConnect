@@ -6,6 +6,7 @@ import AoSendMsgModel from './AoSendMsgModel'
 import AoCreateProcessModel from './AoCreateProcessModel'
 import AoGetPageRecordsModel from './AoGetPageRecordsModel'
 import AoGetMessageModel from './AoGetMessageModel'
+import AoSetProcessReminderModel from './AoSetProcessReminderModel'
 
 const LearnCenter = () => {
   // ** Hook
@@ -30,6 +31,11 @@ const LearnCenter = () => {
       <Grid item xs={6}>
         <Card sx={{ padding: '0 8px' }}>
           <AoCreateProcessModel />
+        </Card>
+      </Grid>
+      <Grid item xs={6}>
+        <Card sx={{ padding: '0 8px' }}>
+          <AoSetProcessReminderModel />
         </Card>
       </Grid>
     </Grid>

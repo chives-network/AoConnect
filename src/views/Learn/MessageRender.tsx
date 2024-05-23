@@ -20,18 +20,6 @@ const MessageRender = ({ resultText }: any) => {
                             <AnsiText text={resultText.Output.data} />
                         )
                         }
-                        {resultText && typeof resultText == 'object' && 
-                        <Box
-                            sx={{
-                                borderRadius: '5px',
-                                padding: '8px',
-                                marginTop: '5px',
-                                whiteSpace: 'pre-line',
-                                border: (theme: any) => `1px solid ${theme.palette.divider}`,
-                                borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)`
-                            }} >
-                        </Box>
-                        }
                     </Typography>
     )
 };

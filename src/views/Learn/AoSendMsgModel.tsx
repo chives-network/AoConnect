@@ -133,10 +133,10 @@ const AoSendMsgModel = () => {
   }
 
   useEffect(()=>{
-    
-    //handleSendMsgTest()
-
-  }, [currentWallet])
+    if(resultText && resultText!='') {
+        handleGetMsgContent()
+    }
+  }, [resultText])
 
   const handleSendMsgTest = async () =>{
     if(currentWallet && currentWallet.jwk)  {
