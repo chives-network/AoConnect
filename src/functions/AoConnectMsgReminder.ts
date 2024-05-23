@@ -14,7 +14,7 @@ export const SetAoConnectReminderProcessTxId = (processTxId: string) => {
 }
 
 export const GetAoConnectReminderProcessTxId = () => {
-    
+
     return window.localStorage.getItem(AoConnectReminderProcessTxId) ?? ''
 }
 
@@ -30,13 +30,13 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
             window.localStorage.setItem(AoConnectLastCursor, item.cursor)
         }
 
-        //Output
+        //Output From Chatroom Msg Reminder
         if(item.node && item.node.Output && item.node.Output.data && typeof item.node.Output.data === 'string' )  {
             const Data = item.node.Output.data.replace(ansiRegex, '');
-            //NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', From: null, Data, Ref_: null, Logo: null})
+            NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', From: null, Data, Ref_: null, Logo: null})
         }
 
-        //Output
+        //Output From Chatroom Msg Reminder
         if(item.node && item.node.Output && item.node.Output.data && item.node.Output.data.output && typeof item.node.Output.data.output === 'string' )  {
             const Msg = item.node.Output.data.output.replace(ansiRegex, '');
             //NeedReminderMsg.push([Msg, ''])

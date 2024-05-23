@@ -62,6 +62,20 @@ const AoSendMsgModel = () => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
+  const [chatroomId, setChatroomId] = useState<string>("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
+  const [chatroomIdError, setChatroomIdError] = useState<string | null>(null)
+  const handleChatroomIdChange = (event: any) => {
+    setChatroomId(event.target.value);
+    if(event.target.value.length != 43) {
+        setChatroomIdError(`${t('ChatroomId length must be 43')}`)
+    }
+    else {
+        setChatroomIdError("")
+    }
+    
+    console.log("ChatroomId", chatroomId)
+  };
+
   const [processTxId, setprocessTxId] = useState<string>("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
   const [processTxIdError, setprocessTxIdError] = useState<string | null>(null)
   const handleprocessTxIdChange = (event: any) => {
@@ -178,9 +192,35 @@ const AoSendMsgModel = () => {
     <Grid container spacing={6}>
       <Grid item xs={6}>
         <Card>
-            <CardHeader title={`${t('Send Message')}`} />
+            <CardHeader title={`${t('Save your chatroom id')}`} />
             <CardContent>
                 <Grid container spacing={5}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label={`${t('ChatroomId')}`}
+                            placeholder={`${t('ChatroomId')}`}
+                            value={chatroomId}
+                            onChange={handleChatroomIdChange}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                            error={!!chatroomIdError}
+                            helperText={
+                                <Fragment>
+                                    Need .load-blueprint chatroom and .load-blueprint chat firstly
+                                </Fragment>
+                                }
+                        />
+                        
+                    </Grid>
+
+                    <CardHeader title={`${t('Send Message')}`} sx={{m: 0, px: 5}}/>
+
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
@@ -198,6 +238,9 @@ const AoSendMsgModel = () => {
                             error={!!processTxIdError}
                             helperText={
                                 <Fragment>
+                                    <Typography variant='body2' sx={{}}>
+                                        {messageHelp}
+                                    </Typography>
                                     <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
                                         {'Process Concept'}
                                     </Link>
@@ -299,6 +342,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
                                     }}>
                                         Inbox[#Inbox]
                                     </Button>
@@ -310,6 +354,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
                                     }}>
                                         Inbox[#Inbox].Data
                                     </Button>
@@ -321,7 +366,10 @@ const AoSendMsgModel = () => {
                                 <Divider sx={{ mr:3, mb: 2 }} />
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chatroom')}>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
+                                        handleLuaFromGithub('chatroom')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
+                                    }}>
                                         .load-blueprint chatrom
                                     </Button>
                                     <Typography variant='body2' sx={{ mt: -2 }}>
@@ -333,6 +381,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Handlers.list')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
                                     }}>
                                         Handlers.list
                                     </Button>
@@ -344,8 +393,9 @@ const AoSendMsgModel = () => {
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                        setMessage('Send({ Target = ao.id, Action = "Register" })')
+                                        setMessage('Send({ Target = "' + chatroomId + '", Action = "Register" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('1 Send({ Target = [ChatroomTxId], Action = "Register" }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
                                     }}>
                                         {'Send({ Target = ao.id, Action = "Register" })'}
                                     </Button>
@@ -357,6 +407,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Members')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
                                     }}>
                                         Members
                                     </Button>
@@ -366,8 +417,9 @@ const AoSendMsgModel = () => {
                                 </Box>
                                 
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
-                                    setMessage('Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
+                                    setMessage('Send({Target = "' + chatroomId + '", Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                    setMessageHelp('1 Send({ Target = [ChatroomTxId], ... }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
                                 }}>
                                     {'Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })'}
                                 </Button>
@@ -375,7 +427,10 @@ const AoSendMsgModel = () => {
                                 <Divider sx={{ mr:3, mb: 2 }} />
 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chat')}>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
+                                        handleLuaFromGithub('chat')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        }}>
                                         .load-blueprint chat
                                     </Button>
                                     <Typography variant='body2' sx={{ mt: -2 }}>
@@ -384,23 +439,16 @@ const AoSendMsgModel = () => {
                                 </Box>
 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('chiveschat')}>
-                                        .load-blueprint chiveschat
-                                    </Button>
-                                    <Typography variant='body2' sx={{ mt: -2 }}>
-                                        Use the '.load-blueprint' to load the chiveschat contract
-                                    </Typography>
-                                </Box>
-                                
-                                <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('List()')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setprocessTxId(chatroomId)
                                     }}>
                                         List()
                                     </Button>
                                     <Typography variant='body2' sx={{ mt: -2 }}>
-                                        List all messages (Not worked)
+                                        List all messages
                                     </Typography>
                                 </Box>
 
@@ -409,6 +457,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Join("Quests", "Wang001")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
                                     }}>
                                         Join("Quests", "Wang001")
                                     </Button>
@@ -422,6 +471,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Say("Hello everyone!", "YeIgn_CImXg4UPHOg7-rbylVv9su6FKXY2LIHwWFB5g")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
                                     }}>
                                         Say("Hello everyone!", "YeIgn_CImXg4UPHOg7-rbylVv9su6FKXY2LIHwWFB5g")
                                     </Button>
@@ -432,6 +482,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Leave("Quests")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
                                     }}>
                                         Leave("Quests")
                                     </Button>
