@@ -129,7 +129,7 @@ const Inbox = () => {
       }
     },
     {
-      flex: 10,
+      flex: 12,
       minWidth: 100,
       field: 'Timestamp',
       headerName: `${t(`Timestamp`)}`,

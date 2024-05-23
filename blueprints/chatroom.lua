@@ -47,10 +47,10 @@ Handlers.add(
     local haveSentRecords = {}
     for _, recipient in ipairs(Members) do
       if not haveSentRecords[recipient] then
-        ao.send({Target = recipient, Data = msg.Data})
+        ao.send({Target = recipient, Data = msg.Data, Sender = msg.From, Timestamp = Msg.Timestamp})
         haveSentRecords[recipient] = true
       end
     end
-    Handlers.utils.reply("Broadcasted....")(msg)
+    Handlers.utils.reply("Broadcasted...." .. msg.From)(msg)
   end
 )
