@@ -61,7 +61,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
   useEffect(() => {
 
-    const intervalId = setInterval(async () => {
+    const timeoutId = setTimeout(async () => {
       const GetMyCurrentProcessTxIdData: string = GetMyCurrentProcessTxId(currentAddress, 0)
       const ReminderMsgAndStoreToLocalData = await ReminderMsgAndStoreToLocal(GetMyCurrentProcessTxIdData)
       //Every msg delay one second to remind
@@ -78,7 +78,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       
     }, 1000 * 6 * 1);
 
-    return () => clearInterval(intervalId);
+    return () => clearTimeout(timeoutId);
 
   }, []);
 
