@@ -296,18 +296,22 @@ const AoSendMsgModel = () => {
                             error={!!processTxIdError}
                             helperText={
                                 <Fragment>
-                                    <Typography variant='body2' sx={{}}>
+                                    {myProcessTxId && (
+                                    <>
+                                        <Typography variant='body2' sx={{}}>
                                         {messageHelp}
-                                    </Typography>
-                                    <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
-                                        {'Process Concept'}
-                                    </Link>
-                                    <Link href={`https://www.ao.link/processes`} target='_blank' sx={{ml: 4}}>
-                                        {'All Processes'}
-                                    </Link>
-                                    <Link href={`https://www.ao.link/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
-                                        {'Detail on AOLink'}
-                                    </Link>
+                                        </Typography>
+                                        <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
+                                            {'Process Concept'}
+                                        </Link>
+                                        <Link href={`https://www.ao.link/processes`} target='_blank' sx={{ml: 4}}>
+                                            {'All Processes'}
+                                        </Link>
+                                        <Link href={`https://www.ao.link/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
+                                            {'Detail on AOLink'}
+                                        </Link>
+                                    </>
+                                    )}
                                 </Fragment>
                                 }
                         />
