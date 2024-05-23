@@ -49,7 +49,6 @@ const AoSetProcessReminderModel = () => {
 
   //GetAoConnectReminderProcessTxId()
 
-
   const [processTxId, setprocessTxId] = useState<string>("")
   const [processTxIdError, setprocessTxIdError] = useState<string | null>(null)
   const handleprocessTxIdChange = (event: any) => {
@@ -62,6 +61,20 @@ const AoSetProcessReminderModel = () => {
     }
     
     console.log("processTxId", processTxId)
+  };
+
+  const [chatroomId, setchatroomId] = useState<string>("")
+  const [chatroomIdError, setchatroomIdError] = useState<string | null>(null)
+  const handlechatroomIdChange = (event: any) => {
+    setchatroomId(event.target.value);
+    if(event.target.value.length != 43) {
+        setchatroomIdError(`${t('chatroomId length must be 43')}`)
+    }
+    else {
+        setchatroomIdError("")
+    }
+    
+    console.log("chatroomId", chatroomId)
   };
 
   useEffect(()=>{
@@ -87,9 +100,6 @@ const AoSetProcessReminderModel = () => {
     if(processId && processId.length == 43) {
       toast.success(processId, { position: 'top-right', duration: 4000 })
       setResultText(processId)
-      //setprocessTxId("")
-      //setScheduler("")
-      //setTags("")
     }
     setIsDisabledButton(false)
     setUploadingButton(`${t('Submit')}`)
@@ -100,46 +110,63 @@ const AoSetProcessReminderModel = () => {
   return (
     <Fragment>
         <Card>
-        <CardHeader title={`${t('Set ProcessTxId Reminder')}`} />
-        <CardContent>
-            <Grid container spacing={5}>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label={`${t('processTxId')}`}
-                        placeholder={`${t('processTxId')}`}
-                        value={processTxId}
-                        onChange={handleprocessTxIdChange}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                <Icon icon='mdi:account-outline' />
-                                </InputAdornment>
-                            )
-                        }}
-                        error={!!processTxIdError}
-                        helperText={processTxIdError}
-                    />
-                </Grid>
+            <CardHeader title={`${t('Set chatroomId and processTxId')}`} />
+            <CardContent>
+                <Grid container spacing={5}>
+                    <Grid item xs={5}>
+                        <TextField
+                            fullWidth
+                            label={`${t('chatroomId')}`}
+                            placeholder={`${t('chatroomId')}`}
+                            value={chatroomId}
+                            onChange={handlechatroomIdChange}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                            error={!!chatroomIdError}
+                            helperText={chatroomIdError}
+                        />
+                    </Grid>
+                    <Grid item xs={5}>
+                        <TextField
+                            fullWidth
+                            label={`${t('processTxId')}`}
+                            placeholder={`${t('processTxId')}`}
+                            value={processTxId}
+                            onChange={handleprocessTxIdChange}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                            error={!!processTxIdError}
+                            helperText={processTxIdError}
+                        />
+                    </Grid>
+                    <Grid item xs={2} container justifyContent="flex-end">
+                        {resultText && (
+                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setResultText('')} disabled={isDisabledButton} >
+                            {t('Cannel')}
+                        </Button>
+                        )}
+                        {isDisabledButton && (
+                            <Box sx={{ m: 0, pt:1 }}>
+                                <CircularProgress sx={{ mr: 5, mt: 0 }} />
+                            </Box>
+                        )}
+                        <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
+                            {uploadingButton}
+                        </Button>
+                    </Grid>
 
-                <Grid item xs={12} container justifyContent="flex-end">
-                    {resultText && (
-                    <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setResultText('')} disabled={isDisabledButton} >
-                        {t('Cannel')}
-                    </Button>
-                    )}
-                    {isDisabledButton && (
-                        <Box sx={{ m: 0, pt:1 }}>
-                            <CircularProgress sx={{ mr: 5, mt: 0 }} />
-                        </Box>
-                    )}
-                    <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
-                        {uploadingButton}
-                    </Button>
                 </Grid>
-
-            </Grid>
-        </CardContent>
+            </CardContent>
         </Card>
         
     </Fragment>

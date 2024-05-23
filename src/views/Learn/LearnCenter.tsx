@@ -33,11 +33,6 @@ const LearnCenter = () => {
           <AoCreateProcessModel />
         </Card>
       </Grid>
-      <Grid item xs={6}>
-        <Card sx={{ padding: '0 8px' }}>
-          <AoSetProcessReminderModel />
-        </Card>
-      </Grid>
     </Grid>
   );
   

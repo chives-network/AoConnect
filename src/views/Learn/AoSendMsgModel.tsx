@@ -76,10 +76,10 @@ const AoSendMsgModel = () => {
     console.log("ChatroomId", chatroomId)
   };
 
-  const [processTxId, setprocessTxId] = useState<string>("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
+  const [processTxId, setProcessTxId] = useState<string>("K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw")
   const [processTxIdError, setprocessTxIdError] = useState<string | null>(null)
   const handleprocessTxIdChange = (event: any) => {
-    setprocessTxId(event.target.value);
+    setProcessTxId(event.target.value);
     if(event.target.value.length != 43) {
         setprocessTxIdError(`${t('processTxId length must be 43')}`)
     }
@@ -137,7 +137,7 @@ const AoSendMsgModel = () => {
         duration: 4000 
         })
       setResultText(Result)
-      //setprocessTxId("")
+      //setProcessTxId("")
       //setMessage("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
       //setTags("")
     }
@@ -188,18 +188,16 @@ const AoSendMsgModel = () => {
 
   return (
     <Fragment>
-
-    <Grid container spacing={6}>
-      <Grid item xs={6}>
-        <Card>
-            <CardHeader title={`${t('Save your chatroom id')}`} />
+    
+    <Card>
+            <CardHeader title={`${t('Set chatroomId and processTxId')}`} />
             <CardContent>
                 <Grid container spacing={5}>
-                    <Grid item xs={12}>
+                    <Grid item xs={5}>
                         <TextField
                             fullWidth
-                            label={`${t('ChatroomId')}`}
-                            placeholder={`${t('ChatroomId')}`}
+                            label={`${t('chatroomId')}`}
+                            placeholder={`${t('chatroomId')}`}
                             value={chatroomId}
                             onChange={handleChatroomIdChange}
                             InputProps={{
@@ -216,11 +214,51 @@ const AoSendMsgModel = () => {
                                 </Fragment>
                                 }
                         />
-                        
+                    </Grid>
+                    <Grid item xs={5}>
+                        <TextField
+                            fullWidth
+                            label={`${t('My Wallet Process TxId')}`}
+                            placeholder={`${t('processTxId')}`}
+                            value={processTxId}
+                            onChange={handleprocessTxIdChange}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                            error={!!processTxIdError}
+                            helperText={processTxIdError}
+                        />
+                    </Grid>
+                    <Grid item xs={2} container justifyContent="flex-end">
+                        {resultText && (
+                        <Button variant='outlined' size='small' sx={{ mr:3 }} onClick={()=>setResultText('')} disabled={isDisabledButton} >
+                            {t('Cannel')}
+                        </Button>
+                        )}
+                        {isDisabledButton && (
+                            <Box sx={{ m: 0, pt:1 }}>
+                                <CircularProgress sx={{ mr: 5, mt: 0 }} />
+                            </Box>
+                        )}
+                        <Button type='submit' variant='contained' size='large' onClick={handleSubmit} disabled={isDisabledButton} >
+                            {uploadingButton}
+                        </Button>
                     </Grid>
 
-                    <CardHeader title={`${t('Send Message')}`} sx={{m: 0, px: 5}}/>
+                </Grid>
+            </CardContent>
+        </Card>
 
+    <Grid container spacing={6}>
+      <Grid item xs={6}>
+        <Card>
+            <CardHeader title={`${t('Send Message')}`} />
+            <CardContent>
+                <Grid container spacing={5}>
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
@@ -343,6 +381,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         Inbox[#Inbox]
                                     </Button>
@@ -355,6 +394,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         Inbox[#Inbox].Data
                                     </Button>
@@ -382,6 +422,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Handlers.list')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         Handlers.list
                                     </Button>
@@ -396,6 +437,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Send({ Target = "' + chatroomId + '", Action = "Register" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('1 Send({ Target = [ChatroomTxId], Action = "Register" }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         {'Send({ Target = ao.id, Action = "Register" })'}
                                     </Button>
@@ -408,6 +450,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Members')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         Members
                                     </Button>
@@ -420,6 +463,7 @@ const AoSendMsgModel = () => {
                                     setMessage('Send({Target = "' + chatroomId + '", Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     setMessageHelp('1 Send({ Target = [ChatroomTxId], ... }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
+                                    setProcessTxId(chatroomId)
                                 }}>
                                     {'Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })'}
                                 </Button>
@@ -430,6 +474,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         handleLuaFromGithub('chat')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
                                         }}>
                                         .load-blueprint chat
                                     </Button>
@@ -443,7 +488,7 @@ const AoSendMsgModel = () => {
                                         setMessage('List()')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
-                                        setprocessTxId(chatroomId)
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         List()
                                     </Button>
@@ -458,6 +503,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Join("Quests", "Wang001")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         Join("Quests", "Wang001")
                                     </Button>
@@ -472,6 +518,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Say("Hello everyone!", "YeIgn_CImXg4UPHOg7-rbylVv9su6FKXY2LIHwWFB5g")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         Say("Hello everyone!", "YeIgn_CImXg4UPHOg7-rbylVv9su6FKXY2LIHwWFB5g")
                                     </Button>
@@ -483,6 +530,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Leave("Quests")')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         Leave("Quests")
                                     </Button>
