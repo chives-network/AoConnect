@@ -1,6 +1,8 @@
 // ** React Imports
 import { useState, useEffect, Fragment } from 'react'
 
+import { BigNumber } from 'bignumber.js';
+
 // ** Next Imports
 import Button from '@mui/material/Button'
 
@@ -23,7 +25,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoLoadBlueprintChat, GetTokenMembers, RegisterTokenMember, SendMessageToToken } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -144,6 +146,14 @@ const Inbox = () => {
     setIsDisabledButton(true)
     setToolInfo(null)
 
+    const TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+    if(TokenProcessTxId) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        TokenProcessTxId: TokenProcessTxId
+      }))
+    }
+
     const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserOne) {
       setToolInfo((prevState: any)=>({
@@ -167,66 +177,64 @@ const Inbox = () => {
         UserThree: UserThree
       }))
     }
-    
-    const TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
-    if(TokenProcessTxId) {
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        TokenProcessTxId: TokenProcessTxId
-      }))
+
+    const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId)
+    if(LoadBlueprintToken) {
+      console.log("LoadBlueprintToken", LoadBlueprintToken)
+      if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
+        const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          LoadBlueprintToken: formatText
+        }))
+      }
     }
+    console.log("LoadBlueprintToken", LoadBlueprintToken)
 
     setTimeout(async () => {
-      
-      //Delay 5s code begin
 
-      const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId)
-      if(LoadBlueprintToken) {
-        console.log("LoadBlueprintToken", LoadBlueprintToken)
-        if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
-          const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            LoadBlueprintToken: formatText
-          }))
-        }
-      }
-      console.log("LoadBlueprintToken", LoadBlueprintToken)
-
-      const LoadBlueprintChat = await AoLoadBlueprintChat(currentWallet.jwk, TokenProcessTxId)
-      if(LoadBlueprintChat) {
-        console.log("LoadBlueprintChat", LoadBlueprintChat)
-        if(LoadBlueprintChat?.msg?.Output?.data?.output)  {
-          const formatText = LoadBlueprintChat?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            LoadBlueprintChat: formatText
-          }))
-        }
-      }
-
-      const TokenMembers1st = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
-      if(TokenMembers1st) {
-        console.log("TokenMembers1st", TokenMembers1st)
-        if(TokenMembers1st?.msg?.Output?.data?.output)  {
-          const formatText = TokenMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenMembers1st: formatText
-          }))
-        }
-      }
-
-      const UserOneRegisterData = await RegisterTokenMember(currentWallet.jwk, TokenProcessTxId, UserOne)
-      if(UserOneRegisterData) {
-        console.log("UserOneRegisterData", UserOneRegisterData)
-        if(UserOneRegisterData?.msg?.Output?.data?.output)  {
-          const formatText = UserOneRegisterData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const TokenBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId)
+      if(TokenBalanceData) {
+        console.log("TokenBalanceData", TokenBalanceData)
+        if(TokenBalanceData?.msg?.Output?.data?.output)  {
+          const formatText = TokenBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              UserOneRegister: formatText
+              TokenBalance: formatText
+            }))
+
+            //Read message from inbox
+            const TokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+            if(TokenInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = TokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  TokenBalance: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
+    }, 1000);
+
+    setTimeout(async () => {
+      const SendTokenToUserOneData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserOne, 1001)
+      if(SendTokenToUserOneData) {
+        console.log("SendTokenToUserOneData", SendTokenToUserOneData)
+        if(SendTokenToUserOneData?.msg?.Output?.data?.output)  {
+          const formatText = SendTokenToUserOneData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              SendUserOne1001: formatText
             }))
 
             //Read message from inbox
@@ -236,7 +244,36 @@ const Inbox = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  UserOneRegister: formatText2
+                  SendUserOne1001: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+    
+      const UserOneBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserOne)
+      if(UserOneBalanceData) {
+        console.log("UserOneBalanceData", UserOneBalanceData)
+        if(UserOneBalanceData?.msg?.Output?.data?.output)  {
+          const formatText = UserOneBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              UserOneBalance: formatText
+            }))
+
+            //Read message from inbox
+            const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserOne)
+            if(UserOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  UserOneBalance: formatText2
                 }))
               }
             }
@@ -246,28 +283,19 @@ const Inbox = () => {
         }
       }
 
-      const TokenMembers2nd = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
-      if(TokenMembers2nd) {
-        console.log("TokenMembers2nd", TokenMembers2nd)
-        if(TokenMembers2nd?.msg?.Output?.data?.output)  {
-          const formatText = TokenMembers2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenMembers2nd: formatText
-          }))
-        }
-      }
-
-      const UserTwoRegisterData = await RegisterTokenMember(currentWallet.jwk, TokenProcessTxId, UserTwo)
-      if(UserTwoRegisterData) {
-        console.log("UserTwoRegisterData", UserTwoRegisterData)
-        if(UserTwoRegisterData?.msg?.Output?.data?.output)  {
-          const formatText = UserTwoRegisterData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+    }, 5000);
+    
+    setTimeout(async () => {
+      const SendTokenToUserTwoData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserTwo, 1002)
+      if(SendTokenToUserTwoData) {
+        console.log("SendTokenToUserTwoData", SendTokenToUserTwoData)
+        if(SendTokenToUserTwoData?.msg?.Output?.data?.output)  {
+          const formatText = SendTokenToUserTwoData?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              UserTwoRegister: formatText
+              SendUserTwo1002: formatText
             }))
 
             //Read message from inbox
@@ -277,7 +305,7 @@ const Inbox = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  UserTwoRegister: formatText2
+                  SendUserTwo1002: formatText2
                 }))
               }
             }
@@ -287,28 +315,48 @@ const Inbox = () => {
         }
       }
 
-      const TokenMembers3rd = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
-      if(TokenMembers3rd) {
-        console.log("TokenMembers3rd", TokenMembers3rd)
-        if(TokenMembers3rd?.msg?.Output?.data?.output)  {
-          const formatText = TokenMembers3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenMembers3rd: formatText
-          }))
-        }
-      }
-
-      const UserThreeRegisterData = await RegisterTokenMember(currentWallet.jwk, TokenProcessTxId, UserThree)
-      if(UserThreeRegisterData) {
-        console.log("UserThreeRegisterData", UserThreeRegisterData)
-        if(UserThreeRegisterData?.msg?.Output?.data?.output)  {
-          const formatText = UserThreeRegisterData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const UserTwoBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserTwo)
+      if(UserTwoBalanceData) {
+        console.log("UserTwoBalanceData", UserTwoBalanceData)
+        if(UserTwoBalanceData?.msg?.Output?.data?.output)  {
+          const formatText = UserTwoBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              UserThreeRegister: formatText
+              UserTwoBalance: formatText
+            }))
+
+            //Read message from inbox
+            const UserTwoInboxData = await GetMyLastMsg(currentWallet.jwk, UserTwo)
+            if(UserTwoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = UserTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  UserTwoBalance: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
+    }, 10000);
+
+    setTimeout(async () => {
+      const SendTokenToUserThreeData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserThree, 1003)
+      if(SendTokenToUserThreeData) {
+        console.log("SendTokenToUserThreeData", SendTokenToUserThreeData)
+        if(SendTokenToUserThreeData?.msg?.Output?.data?.output)  {
+          const formatText = SendTokenToUserThreeData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              SendUserThree1003: formatText
             }))
 
             //Read message from inbox
@@ -318,7 +366,7 @@ const Inbox = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  UserThreeRegister: formatText2
+                  SendUserThree1003: formatText2
                 }))
               }
             }
@@ -328,69 +376,123 @@ const Inbox = () => {
         }
       }
 
-      const TokenMembers4th = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
-      if(TokenMembers4th) {
-        console.log("TokenMembers4th", TokenMembers4th)
-        if(TokenMembers4th?.msg?.Output?.data?.output)  {
-          const formatText = TokenMembers4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenMembers4th: formatText
-          }))
+      const UserThreeBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserThree)
+      if(UserThreeBalanceData) {
+        console.log("UserThreeBalanceData", UserThreeBalanceData)
+        if(UserThreeBalanceData?.msg?.Output?.data?.output)  {
+          const formatText = UserThreeBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              UserThreeBalance: formatText
+            }))
+
+            //Read message from inbox
+            const UserThreeInboxData = await GetMyLastMsg(currentWallet.jwk, UserThree)
+            if(UserThreeInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = UserThreeInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  UserThreeBalance: formatText2
+                }))
+              }
+            }
+
+          }
+
         }
       }
 
-      const SendMessageToTokenDataUserOne = await SendMessageToToken(currentWallet.jwk, TokenProcessTxId, UserOne, "001 Msg from UserOne ["+UserOne+"]")
-      if(SendMessageToTokenDataUserOne) {
-        console.log("SendMessageToTokenDataUserOne", SendMessageToTokenDataUserOne)
-        if(SendMessageToTokenDataUserOne?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToTokenDataUserOne?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToTokenDataUserOne formatText", formatText)
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserOneSendMessage: formatText
-          }))
+    }, 15000);
+
+    setTimeout(async () => {
+      const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, 2000)
+      if(MintTokenData) {
+        console.log("MintTokenData", MintTokenData)
+        if(MintTokenData?.msg?.Output?.data?.output)  {
+          const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              Mint2000: formatText
+            }))
+
+            //Read message from inbox
+            const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+            if(MintTokenInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  Mint2000: formatText2
+                }))
+              }
+            }
+
+          }
+
         }
       }
 
-      const SendMessageToTokenDataUserTwo = await SendMessageToToken(currentWallet.jwk, TokenProcessTxId, UserTwo, "002 Msg from UserTwo ["+UserTwo+"]")
-      if(SendMessageToTokenDataUserTwo) {
-        console.log("SendMessageToTokenDataUserTwo", SendMessageToTokenDataUserTwo)
-        if(SendMessageToTokenDataUserTwo?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToTokenDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToTokenDataUserTwo formatText", formatText)
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserTwoSendMessage: formatText
-          }))
+
+    }, 20000);
+    
+    setTimeout(async () => {
+      const TokenBalancesData = await AoTokenBalances(currentWallet.jwk, TokenProcessTxId)
+      if(TokenBalancesData) {
+        console.log("TokenBalancesData", TokenBalancesData)
+        if(TokenBalancesData?.msg?.Output?.data?.output)  {
+          const formatText = TokenBalancesData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              TokenBalances: formatText
+            }))
+
+            //Read message from inbox
+            const TokenBalancesInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+            if(TokenBalancesInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = TokenBalancesInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                let TokenBalancesList = null
+                try {
+                  TokenBalancesList = JSON.parse(formatText2)
+                  let TotalTokenSum = BigNumber(0)
+                  Object.values(TokenBalancesList).map((ItemV: any)=>{
+                    TotalTokenSum = TotalTokenSum.plus(ItemV);
+                  })
+                  TokenBalancesList['TotalTokenSum'] = String(TotalTokenSum)
+                }
+                catch(Error: any) {
+                  TokenBalancesList = {result: formatText2} 
+                  console.log("TokenBalancesData Error:", Error)
+                }
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  TokenBalances: TokenBalancesList
+                }))
+                console.log("TokenBalancesList", TokenBalancesList)
+              }
+            }
+
+          }
+
         }
       }
 
-      const SendMessageToTokenDataUserThree = await SendMessageToToken(currentWallet.jwk, TokenProcessTxId, UserThree, "003 Msg from UserThree ["+UserThree+"]")
-      if(SendMessageToTokenDataUserThree) {
-        console.log("SendMessageToTokenDataUserThree", SendMessageToTokenDataUserThree)
-        if(SendMessageToTokenDataUserThree?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToTokenDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToTokenDataUserThree formatText", formatText)
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserThreeSendMessage: formatText
-          }))
-        }
-      }
-      
 
-
-      //
-      
-      //Delay 5s code end
-      setIsDisabledButton(false)
-
-    }, 5000);
+    }, 25000);
 
     
-
     
+
+    setIsDisabledButton(false)
+
+
 
   }
 
@@ -423,6 +525,10 @@ const Inbox = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
+                TokenProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
+                </Typography>
+
+                <Typography noWrap variant='body2' sx={{my: 2}}>
                 UserOne Message From: Top-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOne}</Typography>
                 </Typography>
 
@@ -433,10 +539,6 @@ const Inbox = () => {
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 UserThree Message From: Bottom-Right ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThree}</Typography>
                 </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                TokenProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
-                </Typography>
                 
                 <Tooltip title={toolInfo?.LoadBlueprintToken}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
@@ -444,61 +546,55 @@ const Inbox = () => {
                   </Typography>
                 </Tooltip>
 
-                <Tooltip title={toolInfo?.LoadBlueprintChat}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  .load-blueprint chat: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintChat}</Typography>
-                  </Typography>
-                </Tooltip>
-
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers1st}</Typography>
+                Token Balance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenBalance}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserOne Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneRegister}</Typography>
+                SendUserOne1001: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.SendUserOne1001}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(1 user): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers2nd}</Typography>
+                UserOneBalance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneBalance}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserTwo Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoRegister}</Typography>
+                SendUserTwo1002: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.SendUserTwo1002}</Typography>
                 </Typography>
-
-                <Tooltip title={toolInfo?.TokenMembers3rd}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Members(2 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers3rd}</Typography>
-                  </Typography>
-                </Tooltip>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserThree Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeRegister}</Typography>
+                UserTwoBalance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoBalance}</Typography>
                 </Typography>
 
-                <Tooltip title={toolInfo?.TokenMembers4th}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                      Members(3 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers4th}</Typography>
-                  </Typography>
-                </Tooltip>
+                <Typography noWrap variant='body2' sx={{my: 2}}>
+                SendUserThree1003: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.SendUserThree1003}</Typography>
+                </Typography>
+
+                <Typography noWrap variant='body2' sx={{my: 2}}>
+                UserThreeBalance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeBalance}</Typography>
+                </Typography>
+
+                <Typography noWrap variant='body2' sx={{my: 2}}>
+                Mint2000: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.Mint2000}</Typography>
+                </Typography>
                 
-                <Tooltip title={toolInfo?.UserOneSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserOne Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
+                <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Token Balances: 
+                </Typography>
+                {toolInfo && toolInfo.TokenBalances && Object.keys(toolInfo.TokenBalances).map((Item: string, Index: number)=>{
+
+                  return (
+                    <Fragment key={Index}>
+                      <Box sx={{color: 'primary.main'}}>
+                        <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main', pr: 3}}>{Index}</Typography>
+                        <Typography noWrap variant='body2' sx={{display: 'inline', color: 'info.main', pr: 3}}>{Item}</Typography>
+                        <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main', pr: 3}}>{toolInfo.TokenBalances[Item]}</Typography>
+                      </Box>
+                    </Fragment>
+                  )
+
+                })}
                 
-                <Tooltip title={toolInfo?.UserTwoSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserTwo Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
-                
-                <Tooltip title={toolInfo?.UserThreeSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserThree Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
 
 
               </Grid>

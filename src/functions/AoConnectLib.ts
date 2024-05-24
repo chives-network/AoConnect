@@ -233,6 +233,7 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
         
         if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
+            console.log("GetMyLastMsg MsgContent", MsgContent)
             return { id: GetMyLastMsgResult, msg: MsgContent };
         }
         else {
@@ -240,7 +241,7 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
         }
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.log("GetMyLastMsg Error:", Error)
     }
   
 }
@@ -296,8 +297,6 @@ export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId
     }
   
 }
-
-
 
 export const SendMessageToChatroom = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, Message: string) => {
     try {
@@ -361,3 +360,113 @@ export const AoLoadBlueprintChatroom = async (currentWalletJwk: any, processTxId
 export const AoLoadBlueprintChat = async (currentWalletJwk: any, processTxId: string) => {
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chat')
 }
+
+export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: string) => {
+    return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'token')
+}
+
+export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, myProcessTxId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendTokenResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + tokenTxId + '", Action = "Balance", Tags = { Target = ao.id } })',
+        });
+        console.log("AoTokenBalance Balance", SendTokenResult)
+        
+        if(SendTokenResult && SendTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, SendTokenResult)
+            return { id: SendTokenResult, msg: MsgContent };
+        }
+        else {
+            return { id: SendTokenResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("AoTokenBalance Error:", Error)
+    }
+  
+}
+
+export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendTokenResult = await message({
+            process: tokenTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Balances" }})',
+        });
+        console.log("AoTokenBalances Balances", SendTokenResult)
+        
+        if(SendTokenResult && SendTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(tokenTxId, SendTokenResult)
+            return { id: SendTokenResult, msg: MsgContent };
+        }
+        else {
+            return { id: SendTokenResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("AoTokenBalances Error:", Error)
+    }
+  
+}
+
+export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, myTokenProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendTokenResult = await message({
+            process: myTokenProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + tokenTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + sendOutAmount + '"})',
+        });
+        console.log("AoTokenTransfer Transfer", SendTokenResult)
+        
+        if(SendTokenResult && SendTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(myTokenProcessTxId, SendTokenResult)
+            return { id: SendTokenResult, msg: MsgContent };
+        }
+        else {
+            return { id: SendTokenResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("AoTokenTransfer Error:", Error)
+    }
+  
+}
+
+export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mintAmount: number) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendTokenResult = await message({
+            process: tokenTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + mintAmount + '" }})',
+        });
+        console.log("AoTokenTransfer Transfer", SendTokenResult)
+        
+        if(SendTokenResult && SendTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(tokenTxId, SendTokenResult)
+            return { id: SendTokenResult, msg: MsgContent };
+        }
+        else {
+            return { id: SendTokenResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("AoTokenTransfer Error:", Error)
+    }
+  
+}
+
+

@@ -386,7 +386,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(chatroomId)
+                                        setProcessTxId(myProcessTxId)
                                     }}>
                                         Inbox[#Inbox]
                                     </Button>
@@ -399,7 +399,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(chatroomId)
+                                        setProcessTxId(myProcessTxId)
                                     }}>
                                         Inbox[#Inbox].Data
                                     </Button>
@@ -414,6 +414,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         handleLuaFromGithub('chatroom')
                                         setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
                                     }}>
                                         .load-blueprint chatrom
                                     </Button>
@@ -553,6 +554,8 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
+                                        setProcessTxId(myProcessTxId)
                                     }}>
                                         Inbox[#Inbox]
                                     </Button>
@@ -564,6 +567,8 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr: 3, mb: 2 }} onClick={()=>{
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
+                                        setProcessTxId(myProcessTxId)
                                     }}>
                                         Inbox[#Inbox].Data
                                     </Button>
@@ -575,7 +580,11 @@ const AoSendMsgModel = () => {
                                 <Divider sx={{ mr:3, mb: 2 }} />
                                 
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', m: 0, p: 0 }}>
-                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>handleLuaFromGithub('token')}>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
+                                        handleLuaFromGithub('token')
+                                        setMessageHelp('ProcessTxId: TokenTxId')
+                                        setProcessTxId(chatroomId)
+                                    }}>
                                         .load-blueprint token
                                     </Button>
                                     <Typography variant='body2' sx={{ mt: -2 }}>
