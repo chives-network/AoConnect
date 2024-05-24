@@ -23,7 +23,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintChatroom, AoLoadBlueprintChat, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoLoadBlueprintChat, GetTokenMembers, RegisterTokenMember, SendMessageToToken } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -139,7 +139,7 @@ const Inbox = () => {
 
 
 
-  const handleSimulatedChatroom = async function () {
+  const handleSimulatedToken = async function () {
 
     setIsDisabledButton(true)
     setToolInfo(null)
@@ -168,11 +168,11 @@ const Inbox = () => {
       }))
     }
     
-    const ChatroomProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
-    if(ChatroomProcessTxId) {
+    const TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+    if(TokenProcessTxId) {
       setToolInfo((prevState: any)=>({
         ...prevState,
-        ChatroomProcessTxId: ChatroomProcessTxId
+        TokenProcessTxId: TokenProcessTxId
       }))
     }
 
@@ -180,20 +180,20 @@ const Inbox = () => {
       
       //Delay 5s code begin
 
-      const LoadBlueprintChatroom = await AoLoadBlueprintChatroom(currentWallet.jwk, ChatroomProcessTxId)
-      if(LoadBlueprintChatroom) {
-        console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
-        if(LoadBlueprintChatroom?.msg?.Output?.data?.output)  {
-          const formatText = LoadBlueprintChatroom?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId)
+      if(LoadBlueprintToken) {
+        console.log("LoadBlueprintToken", LoadBlueprintToken)
+        if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
+          const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            LoadBlueprintChatroom: formatText
+            LoadBlueprintToken: formatText
           }))
         }
       }
-      console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
+      console.log("LoadBlueprintToken", LoadBlueprintToken)
 
-      const LoadBlueprintChat = await AoLoadBlueprintChat(currentWallet.jwk, ChatroomProcessTxId)
+      const LoadBlueprintChat = await AoLoadBlueprintChat(currentWallet.jwk, TokenProcessTxId)
       if(LoadBlueprintChat) {
         console.log("LoadBlueprintChat", LoadBlueprintChat)
         if(LoadBlueprintChat?.msg?.Output?.data?.output)  {
@@ -205,19 +205,19 @@ const Inbox = () => {
         }
       }
 
-      const ChatroomMembers1st = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers1st) {
-        console.log("ChatroomMembers1st", ChatroomMembers1st)
-        if(ChatroomMembers1st?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const TokenMembers1st = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
+      if(TokenMembers1st) {
+        console.log("TokenMembers1st", TokenMembers1st)
+        if(TokenMembers1st?.msg?.Output?.data?.output)  {
+          const formatText = TokenMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers1st: formatText
+            TokenMembers1st: formatText
           }))
         }
       }
 
-      const UserOneRegisterData = await RegisterChatroomMember(currentWallet.jwk, ChatroomProcessTxId, UserOne)
+      const UserOneRegisterData = await RegisterTokenMember(currentWallet.jwk, TokenProcessTxId, UserOne)
       if(UserOneRegisterData) {
         console.log("UserOneRegisterData", UserOneRegisterData)
         if(UserOneRegisterData?.msg?.Output?.data?.output)  {
@@ -246,19 +246,19 @@ const Inbox = () => {
         }
       }
 
-      const ChatroomMembers2nd = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers2nd) {
-        console.log("ChatroomMembers2nd", ChatroomMembers2nd)
-        if(ChatroomMembers2nd?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const TokenMembers2nd = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
+      if(TokenMembers2nd) {
+        console.log("TokenMembers2nd", TokenMembers2nd)
+        if(TokenMembers2nd?.msg?.Output?.data?.output)  {
+          const formatText = TokenMembers2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers2nd: formatText
+            TokenMembers2nd: formatText
           }))
         }
       }
 
-      const UserTwoRegisterData = await RegisterChatroomMember(currentWallet.jwk, ChatroomProcessTxId, UserTwo)
+      const UserTwoRegisterData = await RegisterTokenMember(currentWallet.jwk, TokenProcessTxId, UserTwo)
       if(UserTwoRegisterData) {
         console.log("UserTwoRegisterData", UserTwoRegisterData)
         if(UserTwoRegisterData?.msg?.Output?.data?.output)  {
@@ -287,19 +287,19 @@ const Inbox = () => {
         }
       }
 
-      const ChatroomMembers3rd = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers3rd) {
-        console.log("ChatroomMembers3rd", ChatroomMembers3rd)
-        if(ChatroomMembers3rd?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const TokenMembers3rd = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
+      if(TokenMembers3rd) {
+        console.log("TokenMembers3rd", TokenMembers3rd)
+        if(TokenMembers3rd?.msg?.Output?.data?.output)  {
+          const formatText = TokenMembers3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers3rd: formatText
+            TokenMembers3rd: formatText
           }))
         }
       }
 
-      const UserThreeRegisterData = await RegisterChatroomMember(currentWallet.jwk, ChatroomProcessTxId, UserThree)
+      const UserThreeRegisterData = await RegisterTokenMember(currentWallet.jwk, TokenProcessTxId, UserThree)
       if(UserThreeRegisterData) {
         console.log("UserThreeRegisterData", UserThreeRegisterData)
         if(UserThreeRegisterData?.msg?.Output?.data?.output)  {
@@ -328,24 +328,24 @@ const Inbox = () => {
         }
       }
 
-      const ChatroomMembers4th = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers4th) {
-        console.log("ChatroomMembers4th", ChatroomMembers4th)
-        if(ChatroomMembers4th?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const TokenMembers4th = await GetTokenMembers(currentWallet.jwk, TokenProcessTxId)
+      if(TokenMembers4th) {
+        console.log("TokenMembers4th", TokenMembers4th)
+        if(TokenMembers4th?.msg?.Output?.data?.output)  {
+          const formatText = TokenMembers4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers4th: formatText
+            TokenMembers4th: formatText
           }))
         }
       }
 
-      const SendMessageToChatroomDataUserOne = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserOne, "001 Msg from UserOne ["+UserOne+"]")
-      if(SendMessageToChatroomDataUserOne) {
-        console.log("SendMessageToChatroomDataUserOne", SendMessageToChatroomDataUserOne)
-        if(SendMessageToChatroomDataUserOne?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChatroomDataUserOne?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChatroomDataUserOne formatText", formatText)
+      const SendMessageToTokenDataUserOne = await SendMessageToToken(currentWallet.jwk, TokenProcessTxId, UserOne, "001 Msg from UserOne ["+UserOne+"]")
+      if(SendMessageToTokenDataUserOne) {
+        console.log("SendMessageToTokenDataUserOne", SendMessageToTokenDataUserOne)
+        if(SendMessageToTokenDataUserOne?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToTokenDataUserOne?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToTokenDataUserOne formatText", formatText)
           setToolInfo((prevState: any)=>({
             ...prevState,
             UserOneSendMessage: formatText
@@ -353,12 +353,12 @@ const Inbox = () => {
         }
       }
 
-      const SendMessageToChatroomDataUserTwo = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserTwo, "002 Msg from UserTwo ["+UserTwo+"]")
-      if(SendMessageToChatroomDataUserTwo) {
-        console.log("SendMessageToChatroomDataUserTwo", SendMessageToChatroomDataUserTwo)
-        if(SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChatroomDataUserTwo formatText", formatText)
+      const SendMessageToTokenDataUserTwo = await SendMessageToToken(currentWallet.jwk, TokenProcessTxId, UserTwo, "002 Msg from UserTwo ["+UserTwo+"]")
+      if(SendMessageToTokenDataUserTwo) {
+        console.log("SendMessageToTokenDataUserTwo", SendMessageToTokenDataUserTwo)
+        if(SendMessageToTokenDataUserTwo?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToTokenDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToTokenDataUserTwo formatText", formatText)
           setToolInfo((prevState: any)=>({
             ...prevState,
             UserTwoSendMessage: formatText
@@ -366,12 +366,12 @@ const Inbox = () => {
         }
       }
 
-      const SendMessageToChatroomDataUserThree = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserThree, "003 Msg from UserThree ["+UserThree+"]")
-      if(SendMessageToChatroomDataUserThree) {
-        console.log("SendMessageToChatroomDataUserThree", SendMessageToChatroomDataUserThree)
-        if(SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChatroomDataUserThree formatText", formatText)
+      const SendMessageToTokenDataUserThree = await SendMessageToToken(currentWallet.jwk, TokenProcessTxId, UserThree, "003 Msg from UserThree ["+UserThree+"]")
+      if(SendMessageToTokenDataUserThree) {
+        console.log("SendMessageToTokenDataUserThree", SendMessageToTokenDataUserThree)
+        if(SendMessageToTokenDataUserThree?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToTokenDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToTokenDataUserThree formatText", formatText)
           setToolInfo((prevState: any)=>({
             ...prevState,
             UserThreeSendMessage: formatText
@@ -408,9 +408,9 @@ const Inbox = () => {
           <Card>
               <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Button sx={{ m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                      () => { handleSimulatedChatroom() }
+                      () => { handleSimulatedToken() }
                   }>
-                  {t("Simulated Chatroom")}
+                  {t("Simulated Token")}
                   </Button>
               </Grid>
           </Card>
@@ -435,12 +435,12 @@ const Inbox = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                ChatroomProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomProcessTxId}</Typography>
+                TokenProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
                 </Typography>
                 
-                <Tooltip title={toolInfo?.LoadBlueprintChatroom}>
+                <Tooltip title={toolInfo?.LoadBlueprintToken}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  .load-blueprint chatroom: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintChatroom}</Typography>
+                  .load-blueprint token: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintToken}</Typography>
                   </Typography>
                 </Tooltip>
 
@@ -451,7 +451,7 @@ const Inbox = () => {
                 </Tooltip>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers1st}</Typography>
+                Members(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers1st}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
@@ -459,16 +459,16 @@ const Inbox = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(1 user): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers2nd}</Typography>
+                Members(1 user): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers2nd}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 UserTwo Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoRegister}</Typography>
                 </Typography>
 
-                <Tooltip title={toolInfo?.ChatroomMembers3rd}>
+                <Tooltip title={toolInfo?.TokenMembers3rd}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Members(2 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers3rd}</Typography>
+                  Members(2 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers3rd}</Typography>
                   </Typography>
                 </Tooltip>
 
@@ -476,9 +476,9 @@ const Inbox = () => {
                 UserThree Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeRegister}</Typography>
                 </Typography>
 
-                <Tooltip title={toolInfo?.ChatroomMembers4th}>
+                <Tooltip title={toolInfo?.TokenMembers4th}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                      Members(3 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers4th}</Typography>
+                      Members(3 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenMembers4th}</Typography>
                   </Typography>
                 </Tooltip>
                 
