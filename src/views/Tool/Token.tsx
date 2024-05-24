@@ -612,7 +612,7 @@ const Inbox = () => {
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 TokenProcessTxId: 
                 <Link href={`https://www.ao.link/token/${toolInfo?.TokenProcessTxId}`} target='_blank'>
-                  <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
+                  <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
                 </Link>
                 </Typography>
 

@@ -57,7 +57,7 @@ Variant = "0.0.3"
 
 -- token should be idempotent and not change previous state updates
 Balances = Balances or { [ao.id] = utils.toBalanceValue(9999 * 1e12) }
-Name = Name or 'AoConnectToken' 
+Name = 'AoConnectToken' 
 Ticker = Ticker or 'AOCN'
 Denomination = Denomination or 12
 Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
