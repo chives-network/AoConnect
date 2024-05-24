@@ -249,8 +249,48 @@ const Inbox = () => {
         }
       }
 
+      const SendMessageToChatroomDataUserOne = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserOne, "This message sent from UserOne ["+UserOne+"]")
+      if(SendMessageToChatroomDataUserOne) {
+        console.log("SendMessageToChatroomDataUserOne", SendMessageToChatroomDataUserOne)
+        if(SendMessageToChatroomDataUserOne?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToChatroomDataUserOne?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToChatroomDataUserOne formatText", formatText)
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            UserOneSendMessage: formatText
+          }))
+        }
+      }
 
-      //SendMessageToChatroom
+      const SendMessageToChatroomDataUserTwo = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserTwo, "This message sent from UserTwo ["+UserTwo+"]")
+      if(SendMessageToChatroomDataUserTwo) {
+        console.log("SendMessageToChatroomDataUserTwo", SendMessageToChatroomDataUserTwo)
+        if(SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToChatroomDataUserTwo formatText", formatText)
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            UserTwoSendMessage: formatText
+          }))
+        }
+      }
+
+      const SendMessageToChatroomDataUserThree = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserThree, "This message sent from UserThree ["+UserThree+"]")
+      if(SendMessageToChatroomDataUserThree) {
+        console.log("SendMessageToChatroomDataUserThree", SendMessageToChatroomDataUserThree)
+        if(SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToChatroomDataUserThree formatText", formatText)
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            UserThreeSendMessage: formatText
+          }))
+        }
+      }
+      
+
+
+      //
       
       //Delay 5s code end
       setIsDisabledButton(false)
@@ -354,6 +394,18 @@ const Inbox = () => {
                 <Tooltip title={toolInfo?.UserOneSendMessage}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
                   UserOne Send Message: {toolInfo?.UserOneSendMessage}
+                  </Typography>
+                </Tooltip>
+                
+                <Tooltip title={toolInfo?.UserTwoSendMessage}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  UserTwo Send Message: {toolInfo?.UserTwoSendMessage}
+                  </Typography>
+                </Tooltip>
+                
+                <Tooltip title={toolInfo?.UserThreeSendMessage}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  UserThree Send Message: {toolInfo?.UserThreeSendMessage}
                   </Typography>
                 </Tooltip>
 
