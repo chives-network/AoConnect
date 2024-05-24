@@ -56,11 +56,11 @@ local utils = {
 Variant = "0.0.3"
 
 -- token should be idempotent and not change previous state updates
-Balances = Balances or { [ao.id] = utils.toBalanceValue(10000 * 1e12) }
-Name = Name or 'Points Coin' 
-Ticker = Ticker or 'PNTS'
+Balances = Balances or { [ao.id] = utils.toBalanceValue(9999 * 1e12) }
+Name = Name or 'AoConnectToken' 
+Ticker = Ticker or 'AOCN'
 Denomination = Denomination or 12
-Logo = Logo or 'SBCCXwwecBlDqRLUjb8dYABExTJXLieawf7m2aBJ-KY'
+Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 
 --[[
      Add handlers for each incoming Action defined by the ao Standard Token Specification

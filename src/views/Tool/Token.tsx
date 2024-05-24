@@ -13,6 +13,8 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
@@ -496,6 +498,8 @@ const Inbox = () => {
 
   }
 
+  const [tokenInfo, setTokenInfo] = useState<any>()
+
 
   //Loading the all Inbox to IndexedDb
   useEffect(() => {
@@ -523,6 +527,88 @@ const Inbox = () => {
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 CurrentAddress: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
                 </Typography>
+
+                <TextField
+                    sx={{ml: 2, width: '200px'}}
+                    size="small"
+                    label={`${t('Name')}`}
+                    placeholder={`${t('Name')}`}
+                    value={tokenInfo?.Name ?? 'AoConnectToken'}
+                    onChange={(e: any)=>{
+                      setTokenInfo((prevState: any)=>({
+                        ...prevState,
+                        Name: e.target.value
+                      }))
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                            <Icon icon='mdi:account-outline' />
+                            </InputAdornment>
+                        )
+                    }}
+                />
+                <TextField
+                    sx={{ml: 2, width: '200px'}}
+                    size="small"
+                    label={`${t('Ticker')}`}
+                    placeholder={`${t('Ticker')}`}
+                    value={tokenInfo?.Ticker ?? 'AOCN'}
+                    onChange={(e: any)=>{
+                      setTokenInfo((prevState: any)=>({
+                        ...prevState,
+                        Ticker: e.target.value
+                      }))
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                            <Icon icon='mdi:account-outline' />
+                            </InputAdornment>
+                        )
+                    }}
+                />
+                <TextField
+                    sx={{ml: 2, width: '200px'}}
+                    size="small"
+                    type="number"
+                    label={`${t('Balance')}`}
+                    placeholder={`${t('Balance')}`}
+                    value={tokenInfo?.Ticker ?? 9999}
+                    onChange={(e: any)=>{
+                      setTokenInfo((prevState: any)=>({
+                        ...prevState,
+                        Balance: e.target.value
+                      }))
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                            <Icon icon='mdi:account-outline' />
+                            </InputAdornment>
+                        )
+                    }}
+                />
+                <TextField
+                    sx={{ml: 2}}
+                    size="small"
+                    label={`${t('Logo')}`}
+                    placeholder={`${t('Logo')}`}
+                    value={tokenInfo?.Ticker ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
+                    onChange={(e: any)=>{
+                      setTokenInfo((prevState: any)=>({
+                        ...prevState,
+                        Logo: e.target.value
+                      }))
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                            <Icon icon='mdi:account-outline' />
+                            </InputAdornment>
+                        )
+                    }}
+                />
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 TokenProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
