@@ -3,10 +3,9 @@ import { useState, useEffect, Fragment } from 'react'
 
 import { BigNumber } from 'bignumber.js';
 
-// ** Next Imports
-import Button from '@mui/material/Button'
-
 // ** MUI Imports
+import Button from '@mui/material/Button'
+import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -42,6 +41,7 @@ const Inbox = () => {
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>()
+  const [tokenInfo, setTokenInfo] = useState<any>()
 
   // ** State
   const [isLoading, setIsLoading] = useState(false);
@@ -180,7 +180,7 @@ const Inbox = () => {
       }))
     }
 
-    const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId)
+    const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
     if(LoadBlueprintToken) {
       console.log("LoadBlueprintToken", LoadBlueprintToken)
       if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
@@ -498,7 +498,6 @@ const Inbox = () => {
 
   }
 
-  const [tokenInfo, setTokenInfo] = useState<any>()
 
 
   //Loading the all Inbox to IndexedDb
@@ -529,7 +528,7 @@ const Inbox = () => {
                 </Typography>
 
                 <TextField
-                    sx={{ml: 2, width: '200px'}}
+                    sx={{ml: 2, my: 2, width: '200px'}}
                     size="small"
                     label={`${t('Name')}`}
                     placeholder={`${t('Name')}`}
@@ -549,7 +548,7 @@ const Inbox = () => {
                     }}
                 />
                 <TextField
-                    sx={{ml: 2, width: '200px'}}
+                    sx={{ml: 2, my: 2, width: '200px'}}
                     size="small"
                     label={`${t('Ticker')}`}
                     placeholder={`${t('Ticker')}`}
@@ -569,12 +568,12 @@ const Inbox = () => {
                     }}
                 />
                 <TextField
-                    sx={{ml: 2, width: '200px'}}
+                    sx={{ml: 2, my: 2, width: '200px'}}
                     size="small"
                     type="number"
                     label={`${t('Balance')}`}
                     placeholder={`${t('Balance')}`}
-                    value={tokenInfo?.Ticker ?? 9999}
+                    value={tokenInfo?.Balance ?? 9999}
                     onChange={(e: any)=>{
                       setTokenInfo((prevState: any)=>({
                         ...prevState,
@@ -590,11 +589,11 @@ const Inbox = () => {
                     }}
                 />
                 <TextField
-                    sx={{ml: 2}}
+                    sx={{ml: 2, my: 2}}
                     size="small"
                     label={`${t('Logo')}`}
                     placeholder={`${t('Logo')}`}
-                    value={tokenInfo?.Ticker ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
+                    value={tokenInfo?.Logo ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
                     onChange={(e: any)=>{
                       setTokenInfo((prevState: any)=>({
                         ...prevState,
@@ -611,7 +610,10 @@ const Inbox = () => {
                 />
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                TokenProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
+                TokenProcessTxId: 
+                <Link href={`https://www.ao.link/token/${toolInfo?.TokenProcessTxId}`} target='_blank'>
+                  <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
+                </Link>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>

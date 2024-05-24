@@ -361,8 +361,46 @@ export const AoLoadBlueprintChat = async (currentWalletJwk: any, processTxId: st
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chat')
 }
 
-export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: string) => {
-    return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'token')
+export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: string, tokenInfo: any) => {
+    try {
+        const Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/token.lua', { headers: { }, params: { } }).then(res => res.data)
+        
+        //Filter Token Infor
+        if(tokenInfo && tokenInfo.Name) {
+            Data.replace("AoConnectToken", tokenInfo.Name)
+        }
+        if(tokenInfo && tokenInfo.Ticker) {
+            Data.replace("AOCN", tokenInfo.Ticker)
+        }
+        if(tokenInfo && tokenInfo.Balance) {
+            Data.replace("9999", tokenInfo.Balance)
+        }
+        if(tokenInfo && tokenInfo.Logo) {
+            Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", tokenInfo.Logo)
+        }
+
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetMyLastMsgResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: Data,
+        });
+        console.log("AoLoadBlueprintModule GetMyLastMsg", module, GetMyLastMsgResult)
+        
+        if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
+            console.log("AoLoadBlueprintModule MsgContent", module, MsgContent)
+            return { id: GetMyLastMsgResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetMyLastMsgResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("AoLoadBlueprintChatroom Error:", Error)
+    }
 }
 
 export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, myProcessTxId: string) => {
