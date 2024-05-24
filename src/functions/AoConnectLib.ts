@@ -363,20 +363,20 @@ export const AoLoadBlueprintChat = async (currentWalletJwk: any, processTxId: st
 
 export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: string, tokenInfo: any) => {
     try {
-        const Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/token.lua', { headers: { }, params: { } }).then(res => res.data)
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/token.lua', { headers: { }, params: { } }).then(res => res.data)
         
         //Filter Token Infor
         if(tokenInfo && tokenInfo.Name) {
-            Data.replace("AoConnectToken", tokenInfo.Name)
+            Data = Data.replace("AoConnectToken", tokenInfo.Name)
         }
         if(tokenInfo && tokenInfo.Ticker) {
-            Data.replace("AOCN", tokenInfo.Ticker)
+            Data = Data.replace("AOCN", tokenInfo.Ticker)
         }
         if(tokenInfo && tokenInfo.Balance) {
-            Data.replace("9999", tokenInfo.Balance)
+            Data = Data.replace("9999", tokenInfo.Balance)
         }
         if(tokenInfo && tokenInfo.Logo) {
-            Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", tokenInfo.Logo)
+            Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", tokenInfo.Logo)
         }
 
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
