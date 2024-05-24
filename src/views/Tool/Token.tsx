@@ -683,6 +683,10 @@ const Inbox = () => {
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 Mint2000: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.Mint2000}</Typography>
                 </Typography>
+
+                <Typography noWrap variant='body2' sx={{my: 2}}>
+                Make other 5 process tx id, and send them a randrom amount
+                </Typography>
                 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                   Token Balances: 
