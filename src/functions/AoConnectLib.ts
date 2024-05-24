@@ -1,5 +1,7 @@
 import { connect, createDataItemSigner } from "@permaweb/aoconnect"
 import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from './AoConnectMsgReminder'
+import authConfig from 'src/configs/auth'
+import axios from 'axios'
 
 const MU_URL = "https://mu.ao-testnet.xyz"
 const CU_URL = "https://cu.ao-testnet.xyz"
@@ -168,6 +170,19 @@ export const AoUnMonitor = async (currentWalletJwk: any, processTxId: string) =>
     }
 }
 
+export const AoCreateProcessAuto = async (currentWalletJwk: any) => {
+    try {
+
+        const processTxId: any = await AoCreateProcess(currentWalletJwk, authConfig.AoConnectModule, String(authConfig.AoConnectScheduler), [{ "name": "Your-Tag-Name", "value": "Your-Tag-Value" }, { "name": "Creator", "value": "Chives-Network" }]);
+
+        console.log("AoCreateProcessAuto processTxId", processTxId)
+    
+        return processTxId;
+    }
+    catch(Error: any) {
+        console.log("AoCreateProcessAuto Error:", Error)
+    }
+}
 
 export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) => {
     
@@ -228,4 +243,121 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
         console.log("AoGetPageRecords Error:", Error)
     }
   
+}
+
+export const GetChatroomMembers = async (currentWalletJwk: any, processTxId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChatroomMembersResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Members',
+        });
+        console.log("GetChatroomMembers GetChatroomMembers", GetChatroomMembersResult)
+        
+        if(GetChatroomMembersResult && GetChatroomMembersResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetChatroomMembersResult)
+            return { id: GetChatroomMembersResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetChatroomMembersResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("GetChatroomMembers Error:", Error)
+    }
+  
+}
+
+export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChatroomMembersResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + chatroomTxId + '", Action = "Register" })',
+        });
+        console.log("GetChatroomMembers GetChatroomMembers", GetChatroomMembersResult)
+        
+        if(GetChatroomMembersResult && GetChatroomMembersResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChatroomMembersResult)
+            return { id: GetChatroomMembersResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetChatroomMembersResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("GetChatroomMembers Error:", Error)
+    }
+  
+}
+
+
+
+export const SendMessageToChatroom = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, Message: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendMessageResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "Broadcast", Data = "' + Message + '" })',
+        });
+        console.log("SendMessageToChatroom SendMessage", SendMessageResult)
+        
+        if(SendMessageResult && SendMessageResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, SendMessageResult)
+            return { id: SendMessageResult, msg: MsgContent };
+        }
+        else {
+            return { id: SendMessageResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("SendMessageToChatroom Error:", Error)
+    }
+  
+}
+
+export const AoLoadBlueprintModule = async (currentWalletJwk: any, processTxId: string, module: string) => {
+    try {
+        const Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/' + module + '.lua', { headers: { }, params: { } }).then(res => res.data)
+    
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetMyLastMsgResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: Data,
+        });
+        console.log("AoLoadBlueprintModule GetMyLastMsg", module, GetMyLastMsgResult)
+        
+        if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
+            console.log("AoLoadBlueprintModule MsgContent", module, MsgContent)
+            return { id: GetMyLastMsgResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetMyLastMsgResult };
+        }
+    }
+    catch(Error: any) {
+        console.log("AoLoadBlueprintChatroom Error:", Error)
+    }
+  
+}
+
+export const AoLoadBlueprintChatroom = async (currentWalletJwk: any, processTxId: string) => {
+    return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chatroom')
+}
+
+export const AoLoadBlueprintChat = async (currentWalletJwk: any, processTxId: string) => {
+    return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chat')
 }

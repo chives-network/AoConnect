@@ -68,7 +68,7 @@ const AoCreateProcessModel = () => {
     setSchedulerError("")
   };
 
-  const [tags, setTags] = useState<string>('[ \n{ "name": "Your-Tag-Name-Here", "value": "your-tag-value" }, \n{ "name": "Another-Tag", "value": "another-value" } \n]')
+  const [tags, setTags] = useState<string>('[ \n{ "name": "Your-Tag-Name", "value": "Your-Tag-Value" }, \n{ "name": "Creator", "value": "Chives-Network" } \n]')
   const [tagsError, setTagsError] = useState<string | null>(null)
   const handleTagsChange = (event: any) => {
     setTags(event.target.value);

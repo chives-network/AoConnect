@@ -26,6 +26,11 @@ const ARISNavMenus = [
     path: '/learn'
   },
   {
+    title: 'Tool',
+    icon: 'carbon:tool-kit',
+    path: '/tool'
+  },
+  {
     title: 'Chat',
     icon: 'material-symbols:chat',
     path: '/chat/room'
