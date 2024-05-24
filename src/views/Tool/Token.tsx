@@ -455,14 +455,6 @@ const Inbox = () => {
     if(UserAdd3) {
       await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd3, generateRandomNumber(1111, 9999) )
     }
-    const UserAdd4 = await AoCreateProcessAuto(currentWallet.jwk)
-    if(UserAdd4) {
-      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd4, generateRandomNumber(1111, 9999) )
-    }
-    const UserAdd5 = await AoCreateProcessAuto(currentWallet.jwk)
-    if(UserAdd5) {
-      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd5, generateRandomNumber(1111, 9999) )
-    }
 
     setTimeout(async () => {
       const TokenBalancesData = await AoTokenBalances(currentWallet.jwk, TokenProcessTxId)
@@ -685,7 +677,7 @@ const Inbox = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Make other 5 process tx id, and send them a randrom amount
+                Make other 3 process tx id, and send them a randrom amount
                 </Typography>
                 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
