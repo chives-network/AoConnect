@@ -32,17 +32,13 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoSendMsg, AoGetMessage } from 'src/functions/AoConnectLib'
+import { AoSendMsg, AoGetMessage, generateRandomNumber } from 'src/functions/AoConnectLib'
 import { SetAoConnectReminderProcessTxId, GetAoConnectReminderProcessTxId, SetAoConnectReminderChatroomTxId, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnectMsgReminder'
 
 
 import MessageRender from './MessageRender'
 
-function generateRandomNumber() {
-    const min = 100000;
-    const max = 999999;
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
 
 const AoSendMsgModel = () => {
   // ** Hook
@@ -111,7 +107,7 @@ const AoSendMsgModel = () => {
     setMyProcessTxId(GetAoConnectReminderProcessTxId())
   }, [])
   
-  const [message, setMessage] = useState<string>("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
+  const [message, setMessage] = useState<string>("Hello World : " + String(generateRandomNumber(1111, 9999)).substring(0, 4) + ".")
   const [messageError, setMessageError] = useState<string | null>(null)
   const [messageHelp, setMessageHelp] = useState<string | null>(null)
   const handlemessageChange = (event: any) => {

@@ -26,7 +26,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -442,6 +442,28 @@ const Inbox = () => {
 
     }, 20000);
     
+    //add random amount transfer
+    const UserAdd1 = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserAdd1) {
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd1, generateRandomNumber(1111, 9999) )
+    }
+    const UserAdd2 = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserAdd2) {
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd2, generateRandomNumber(1111, 9999) )
+    }
+    const UserAdd3 = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserAdd3) {
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd3, generateRandomNumber(1111, 9999) )
+    }
+    const UserAdd4 = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserAdd4) {
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd4, generateRandomNumber(1111, 9999) )
+    }
+    const UserAdd5 = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserAdd5) {
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd5, generateRandomNumber(1111, 9999) )
+    }
+
     setTimeout(async () => {
       const TokenBalancesData = await AoTokenBalances(currentWallet.jwk, TokenProcessTxId)
       if(TokenBalancesData) {
@@ -490,11 +512,7 @@ const Inbox = () => {
     }, 25000);
 
     
-    
-
     setIsDisabledButton(false)
-
-
 
   }
 
