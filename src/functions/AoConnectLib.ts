@@ -114,7 +114,7 @@ export const AoCreateProcess = async (currentWalletJwk: any, moduleTxId: string,
     }
 }
 
-export const AoDryRun = async (currentWalletJwk: any, processTxId: string, Data: string, Tags: any[]) => {
+export const AoDryRun = async (processTxId: string, TargetTxId: string, Data: string, Tags: any[]) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -122,10 +122,15 @@ export const AoDryRun = async (currentWalletJwk: any, processTxId: string, Data:
             process: processTxId,
             data: Data,
             tags: [{name: 'Action', value: 'Balance'}],
-            anchor: '1234'
+            anchor: TargetTxId
         });
 
-        console.log("AoDryRun result", result)
+        console.log("AoDryRun result", result, {
+            process: processTxId,
+            data: Data,
+            tags: [{name: 'Action', value: 'Balance'}],
+            anchor: TargetTxId
+        })
     
         return result;
     }

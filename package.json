@@ -33,7 +33,7 @@
     "@mui/material": "5.12.2",
     "@mui/system": "5.12.1",
     "@mui/x-data-grid": "6.0.3",
-    "@permaweb/aoconnect": "^0.0.53",
+    "@permaweb/aoconnect": "^0.0.54",
     "@popperjs/core": "2.11.7",
     "@reduxjs/toolkit": "1.9.5",
     "@supercharge/promise-pool": "^3.1.0",

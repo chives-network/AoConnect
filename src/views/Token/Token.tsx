@@ -26,7 +26,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoDryRun } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -91,24 +91,39 @@ const Inbox = () => {
       }))
     }
 
-    const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
-    if(LoadBlueprintToken) {
-      console.log("LoadBlueprintToken", LoadBlueprintToken)
-      if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
-        const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        setToolInfo((prevState: any)=>({
-          ...prevState,
-          LoadBlueprintToken: formatText
-        }))
-      }
-    }
-    console.log("LoadBlueprintToken", LoadBlueprintToken)
+    setTimeout(async () => {
 
-    await handleTokenBalance(TokenProcessTxId)
+      const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
+      if(LoadBlueprintToken) {
+        console.log("LoadBlueprintToken", LoadBlueprintToken)
+        if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
+          const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            LoadBlueprintToken: formatText
+          }))
+        }
+      }
+      console.log("LoadBlueprintToken", LoadBlueprintToken)
+
+      
+      const AoDryRunBalance = await AoDryRun(TokenProcessTxId, TokenProcessTxId, TokenProcessTxId, [])
+      console.log("AoDryRunBalance", AoDryRunBalance)
+
+    }, 5000);
+
+    
 
     setIsDisabledButton(false)
 
   }
+
+  const handleTest = async function (TokenProcessTxId: string) {
+    const AoDryRunBalance = await AoDryRun(TokenProcessTxId, TokenProcessTxId, '5555', [])
+    console.log("AoDryRunBalance", AoDryRunBalance)
+  }
+
+  handleTest("aFExjGOV-DwCv6yU6H4FbSOiKq82hsVD2M5Gk6wbP1U")
 
   const handleTokenMint = async function (TokenProcessTxId: string) {
 
