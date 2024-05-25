@@ -210,6 +210,43 @@ export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
 }
 
 
+export const    AoTokenInfoDryRun = async (TargetTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'Info' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Tags) {
+            const RS: any[] = []
+            result.Messages[0].Tags.map((Item: any)=>{
+                RS[Item.name] = Item.value
+            })
+            return RS
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.log("AoTokenInfoDryRun Error:", Error)
+
+        return 
+    }
+}
+
+
 
 
 export const AoMonitor = async (currentWalletJwk: any, processTxId: string) => {
