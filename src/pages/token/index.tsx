@@ -1,11 +1,11 @@
-import LearnCenterModel from 'src/views/Learn/LearnCenter';
+import TokenModel from 'src/views/Token/Index';
 
-const LearnCenter = () => {
+const Token = () => {
 
 
-  return <LearnCenterModel />
+  return <TokenModel />
 
 }
 
-export default LearnCenter
+export default Token
 
