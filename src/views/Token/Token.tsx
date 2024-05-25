@@ -55,7 +55,7 @@ const Inbox = () => {
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>()
   const [tokenCreate, setTokenCreate] = useState<any>()
-  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, openCreateToken: false, FormSubmit: 'Submit' })
+  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, openCreateToken: true, FormSubmit: 'Submit' })
 
   // ** State
   const [isLoading, setIsLoading] = useState(false);
@@ -307,7 +307,7 @@ const Inbox = () => {
           <Card>
               <Grid item sx={{ display: 'column', m: 2 }}>
                 
-                <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} isDisabledButton={isDisabledButton} />
+                <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenCreate={handleTokenCreate} isDisabledButton={isDisabledButton} />
 
                 <TextField
                     sx={{ml: 2, my: 2}}

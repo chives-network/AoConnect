@@ -10,8 +10,6 @@ import { useTranslation } from 'react-i18next'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -24,8 +22,6 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 import Box from '@mui/material/Box'
 import Icon from 'src/@core/components/icon'
-import Avatar from '@mui/material/Avatar'
-import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 
 const TokenSendOut = (props: any) => {
