@@ -50,7 +50,7 @@ const Inbox = () => {
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>()
-  const [tokenInfo, setTokenInfo] = useState<any>()
+  const [tokenCreate, setTokenCreate] = useState<any>()
   const [tokenGetInfor, setTokenGetInfor] = useState<any>()
 
   // ** State
@@ -119,34 +119,7 @@ const Inbox = () => {
       ExistToken
     }))
 
-    const AoDryRunBalances = await AoTokenBalancesDryRun(ExistToken)
-    if(AoDryRunBalances) {
-      console.log("AoDryRunBalances", AoDryRunBalances)
-      const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
-      const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
-                        .sort((a: any, b: any) => b[1] - a[1])
-                        .reduce((acc: any, [key, value]) => {
-                            acc[key] = value;
-                            return acc;
-                        }, {} as { [key: string]: number });
-      const TokenMap = Object.values(AoDryRunBalancesJson)
-      const TokenHolders = TokenMap.length
-      let CirculatingSupply = BigNumber(0)
-      TokenMap.map((Item: any)=>{
-        CirculatingSupply = CirculatingSupply.plus(Item)
-      })
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        TokenBalances: AoDryRunBalancesJsonSorted
-      }))
-      setTokenGetInfor((prevState: any)=>({
-        ...prevState,
-        TokenBalances: AoDryRunBalancesJsonSorted,
-        TokenHolders: TokenHolders,
-        CirculatingSupply: CirculatingSupply
-      }))
-      console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
-    }
+    await handleAoTokenBalancesDryRun(ExistToken)
 
     setIsDisabledButton(false)
 
@@ -170,7 +143,7 @@ const Inbox = () => {
     setTimeout(async () => {
 
       try {
-        const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
+        const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate)
         if(LoadBlueprintToken) {
           console.log("LoadBlueprintToken", LoadBlueprintToken)
           if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
@@ -214,45 +187,69 @@ const Inbox = () => {
 
   }
 
+  const handleAoTokenBalancesDryRun = async function (ExistToken: string) {
+    const AoDryRunBalances = await AoTokenBalancesDryRun(ExistToken)
+    if(AoDryRunBalances) {
+      console.log("AoDryRunBalances", AoDryRunBalances)
+      const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+      const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
+                        .sort((a: any, b: any) => b[1] - a[1])
+                        .reduce((acc: any, [key, value]) => {
+                            acc[key] = value;
+                            return acc;
+                        }, {} as { [key: string]: number });
+      const TokenMap = Object.values(AoDryRunBalancesJson)
+      const TokenHolders = TokenMap.length
+      let CirculatingSupply = BigNumber(0)
+      TokenMap.map((Item: any)=>{
+        CirculatingSupply = CirculatingSupply.plus(Item)
+      })
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        TokenBalances: AoDryRunBalancesJsonSorted
+      }))
+      setTokenGetInfor((prevState: any)=>({
+        ...prevState,
+        TokenBalances: AoDryRunBalancesJsonSorted,
+        TokenHolders: TokenHolders,
+        CirculatingSupply: CirculatingSupply
+      }))
+      console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+    }
+  }
+
 
   const handleTest = async function (TargetTxId: string) {
     const AoDryRunBalance = await AoTokenInfoDryRun(TargetTxId)
     console.log("AoTokenInfoDryRun", AoDryRunBalance)
   }
 
-  handleTest("7bXsUAAy7rIbdhCkhZtw8_XGNc2CZtRAH0qxK1pktP0")
+  //handleTest("7bXsUAAy7rIbdhCkhZtw8_XGNc2CZtRAH0qxK1pktP0")
 
-  const handleTokenMint = async function (TokenProcessTxId: string) {
+  const handleTokenMint = async function (TokenProcessTxId: string, MintAmount: number) {
 
+    if(MintAmount == null || Number(MintAmount) <= 0) return
+    
     setIsDisabledButton(true)
     setToolInfo(null)
 
-    const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, 2000)
+    const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, MintAmount)
     if(MintTokenData) {
       console.log("MintTokenData", MintTokenData)
       if(MintTokenData?.msg?.Output?.data?.output)  {
         const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            Mint2000: formatText
-          }))
-
-          //Read message from inbox
           const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
           if(MintTokenInboxData?.msg?.Output?.data?.output)  {
             const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                Mint2000: formatText2
-              }))
+              toast.success(formatText2, {
+                duration: 2000
+              })
             }
+            await handleAoTokenBalancesDryRun(TokenProcessTxId)
           }
-
         }
-
       }
     }
 
@@ -286,9 +283,9 @@ const Inbox = () => {
                     size="small"
                     label={`${t('Name')}`}
                     placeholder={`${t('Name')}`}
-                    value={tokenInfo?.Name ?? 'AoConnectToken'}
+                    value={tokenCreate?.Name ?? 'AoConnectToken'}
                     onChange={(e: any)=>{
-                      setTokenInfo((prevState: any)=>({
+                      setTokenCreate((prevState: any)=>({
                         ...prevState,
                         Name: e.target.value
                       }))
@@ -306,9 +303,9 @@ const Inbox = () => {
                     size="small"
                     label={`${t('Ticker')}`}
                     placeholder={`${t('Ticker')}`}
-                    value={tokenInfo?.Ticker ?? 'AOCN'}
+                    value={tokenCreate?.Ticker ?? 'AOCN'}
                     onChange={(e: any)=>{
-                      setTokenInfo((prevState: any)=>({
+                      setTokenCreate((prevState: any)=>({
                         ...prevState,
                         Ticker: e.target.value
                       }))
@@ -327,9 +324,9 @@ const Inbox = () => {
                     type="number"
                     label={`${t('Balance')}`}
                     placeholder={`${t('Balance')}`}
-                    value={tokenInfo?.Balance ?? 9999}
+                    value={tokenCreate?.Balance ?? 9999}
                     onChange={(e: any)=>{
-                      setTokenInfo((prevState: any)=>({
+                      setTokenCreate((prevState: any)=>({
                         ...prevState,
                         Balance: e.target.value
                       }))
@@ -347,9 +344,9 @@ const Inbox = () => {
                     size="small"
                     label={`${t('Logo')}`}
                     placeholder={`${t('Logo')}`}
-                    value={tokenInfo?.Logo ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
+                    value={tokenCreate?.Logo ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
                     onChange={(e: any)=>{
-                      setTokenInfo((prevState: any)=>({
+                      setTokenCreate((prevState: any)=>({
                         ...prevState,
                         Logo: e.target.value
                       }))
@@ -374,9 +371,9 @@ const Inbox = () => {
                     size="small"
                     label={`${t('ExistToken')}`}
                     placeholder={`${t('ExistToken')}`}
-                    value={tokenInfo?.ExistToken ?? ''}
+                    value={tokenCreate?.ExistToken ?? ''}
                     onChange={(e: any)=>{
-                      setTokenInfo((prevState: any)=>({
+                      setTokenCreate((prevState: any)=>({
                         ...prevState,
                         ExistToken: e.target.value
                       }))
@@ -391,9 +388,36 @@ const Inbox = () => {
                 />
 
                 <Button sx={{ m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                    () => { handleTokenSearch(tokenInfo?.ExistToken) }
+                    () => { handleTokenSearch(tokenCreate?.ExistToken) }
                 }>
                 {t("Search Token")}
+                </Button>
+
+                <TextField
+                    sx={{ml: 2, my: 2}}
+                    size="small"
+                    label={`${t('MintAmount')}`}
+                    placeholder={`${t('MintAmount')}`}
+                    value={tokenCreate?.MintAmount ?? ''}
+                    onChange={(e: any)=>{
+                      setTokenCreate((prevState: any)=>({
+                        ...prevState,
+                        MintAmount: e.target.value
+                      }))
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                              <Icon icon='mdi:account-outline' />
+                            </InputAdornment>
+                        )
+                    }}
+                />
+
+                <Button sx={{ m: 2, mt: 3 }} size="small" disabled={(tokenGetInfor?.Name ? false : true) || (isDisabledButton)} variant='outlined' onClick={
+                    () => { handleTokenMint(tokenGetInfor?.ExistToken, tokenCreate?.MintAmount) }
+                }>
+                {t("Mint Token")}
                 </Button>
 
               </Grid>
