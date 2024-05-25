@@ -35,6 +35,10 @@ import authConfig from 'src/configs/auth'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
+import TokenList from './TokenList'
+import TokenCreate from './TokenCreate'
+import TokenSendOut from './TokenSendOut'
+
 import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
@@ -51,7 +55,7 @@ const Inbox = () => {
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>()
   const [tokenCreate, setTokenCreate] = useState<any>()
-  const [tokenGetInfor, setTokenGetInfor] = useState<any>()
+  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, openCreateToken: false, FormSubmit: 'Submit' })
 
   // ** State
   const [isLoading, setIsLoading] = useState(false);
@@ -218,7 +222,6 @@ const Inbox = () => {
     }
   }
 
-
   const handleTest = async function (TargetTxId: string) {
     const AoDryRunBalance = await AoTokenInfoDryRun(TargetTxId)
     console.log("AoTokenInfoDryRun", AoDryRunBalance)
@@ -256,11 +259,36 @@ const Inbox = () => {
     setIsDisabledButton(false)
   }
 
-  //Loading the all Inbox to IndexedDb
-  useEffect(() => {
-    //GetMyInboxMsgFromAoConnect()
-  }, [])
-  
+  const handleTokenSendOut = async function (TokenProcessTxId: string, ReceivedAddress: string, Amount: number) {
+
+    if(Amount == null || Number(Amount) <= 0) return
+    
+    setIsDisabledButton(true)
+    setToolInfo(null)
+
+    const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, Number(Amount))
+    if(MintTokenData) {
+      console.log("MintTokenData", MintTokenData)
+      if(MintTokenData?.msg?.Output?.data?.output)  {
+        const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+          if(MintTokenInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(formatText2, {
+                duration: 2000
+              })
+            }
+            await handleAoTokenBalancesDryRun(TokenProcessTxId)
+          }
+        }
+      }
+    }
+
+    setIsDisabledButton(false)
+  }
+
 
   return (
     <Fragment>
@@ -278,93 +306,8 @@ const Inbox = () => {
         <Grid item xs={12} sx={{my: 2}}>
           <Card>
               <Grid item sx={{ display: 'column', m: 2 }}>
-                <TextField
-                    sx={{ml: 2, my: 2, width: '200px'}}
-                    size="small"
-                    label={`${t('Name')}`}
-                    placeholder={`${t('Name')}`}
-                    value={tokenCreate?.Name ?? 'AoConnectToken'}
-                    onChange={(e: any)=>{
-                      setTokenCreate((prevState: any)=>({
-                        ...prevState,
-                        Name: e.target.value
-                      }))
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                            <Icon icon='mdi:account-outline' />
-                            </InputAdornment>
-                        )
-                    }}
-                />
-                <TextField
-                    sx={{ml: 2, my: 2, width: '200px'}}
-                    size="small"
-                    label={`${t('Ticker')}`}
-                    placeholder={`${t('Ticker')}`}
-                    value={tokenCreate?.Ticker ?? 'AOCN'}
-                    onChange={(e: any)=>{
-                      setTokenCreate((prevState: any)=>({
-                        ...prevState,
-                        Ticker: e.target.value
-                      }))
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                            <Icon icon='mdi:account-outline' />
-                            </InputAdornment>
-                        )
-                    }}
-                />
-                <TextField
-                    sx={{ml: 2, my: 2, width: '200px'}}
-                    size="small"
-                    type="number"
-                    label={`${t('Balance')}`}
-                    placeholder={`${t('Balance')}`}
-                    value={tokenCreate?.Balance ?? 9999}
-                    onChange={(e: any)=>{
-                      setTokenCreate((prevState: any)=>({
-                        ...prevState,
-                        Balance: e.target.value
-                      }))
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                            <Icon icon='mdi:account-outline' />
-                            </InputAdornment>
-                        )
-                    }}
-                />
-                <TextField
-                    sx={{ml: 2, my: 2}}
-                    size="small"
-                    label={`${t('Logo')}`}
-                    placeholder={`${t('Logo')}`}
-                    value={tokenCreate?.Logo ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
-                    onChange={(e: any)=>{
-                      setTokenCreate((prevState: any)=>({
-                        ...prevState,
-                        Logo: e.target.value
-                      }))
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                            <Icon icon='mdi:account-outline' />
-                            </InputAdornment>
-                        )
-                    }}
-                />
-
-                <Button sx={{ m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                    () => { handleTokenCreate() }
-                }>
-                {t("Create Token")}
-                </Button>
+                
+                <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} isDisabledButton={isDisabledButton} />
 
                 <TextField
                     sx={{ml: 2, my: 2}}
@@ -500,53 +443,12 @@ const Inbox = () => {
 
                   </Box>
 
-                  <Box
-                    sx={{
-                      py: 3,
-                      px: 5,
-                      display: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      borderBottom: theme => `1px solid ${theme.palette.divider}`
-                    }}
-                    >
-                    <TableContainer>
-                      <Table>
-                        <TableBody>
-                        <TableRow>
-                          <TableCell colSpan={2}>
-                            My Token: {tokenGetInfor.ExistToken}
-                          </TableCell>
-                          <TableCell colSpan={2}>
-                            Balance: {tokenGetInfor.TokenBalance}
-                          </TableCell>
-                        </TableRow>
-                        {tokenGetInfor && tokenGetInfor.TokenBalances && Object.keys(tokenGetInfor.TokenBalances).map((Item: string, Index: number)=>{
+                  <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} />
 
-                          return (
-                            <TableRow key={Index}>
-                              <TableCell>
-                                <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline' }}>{Index + 1}</Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 3, display: 'inline' }}>{Item}</Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline' }}>{tokenGetInfor.TokenBalances[Item]}</Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline' }}>Send to this account</Typography>
-                              </TableCell>
-                            </TableRow>
-                          )
-                          
-                        })}
-                    
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-
-                  </Box>
+                  {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
+                    <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} isDisabledButton={isDisabledButton} handleTokenSendOut={handleTokenSendOut} /> 
+                  )}
+                  
 
                   </>
 
