@@ -114,28 +114,62 @@ export const AoCreateProcess = async (currentWalletJwk: any, moduleTxId: string,
     }
 }
 
-export const AoDryRun = async (processTxId: string, TargetTxId: string, Data: string, Tags: any[]) => {
+export const AoDryRun = async (TargetTxId: string, processTxId: string, Data: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            process: processTxId,
+            Owner: processTxId,
+            process: TargetTxId,
             data: Data,
-            tags: [{name: 'Action', value: 'Balance'}],
-            anchor: TargetTxId
+            tags: [
+                { name: 'Action', value: 'Balance' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
         });
 
-        console.log("AoDryRun result", result, {
-            process: processTxId,
-            data: Data,
-            tags: [{name: 'Action', value: 'Balance'}],
-            anchor: TargetTxId
-        })
+        console.log("AoDryRun result 001", result)
     
         return result;
     }
     catch(Error: any) {
         console.log("AoGetPageRecords Error:", Error)
+    }
+}
+
+export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: string, Data: string = 'Balance') => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: Data,
+            tags: [
+                { name: 'Action', value: 'Balance' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0]) {
+
+            return result.Messages[0]
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.log("AoTokenBalanceDryRun Error:", Error)
+
+        return 
     }
 }
 
