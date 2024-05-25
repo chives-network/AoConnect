@@ -26,7 +26,9 @@ const AllApp = () => {
   const [search, setSearch] = useState<string>("ALL")
 
   useEffect(() => {
-    getAppsPage()
+    
+    //getAppsPage()
+    
   }, [])
 
   const handleSearchFilter = async function (Item: string) {

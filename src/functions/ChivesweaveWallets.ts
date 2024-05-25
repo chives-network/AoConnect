@@ -635,6 +635,22 @@ async function createDataItem (walletData: any, item: ArDataItemParams) {
     return dataItem
 }
 
+export async function createDataItemSigner (walletDataJwk: any, item: ArDataItemParams) {
+    // @ts-ignore
+    const { createData, signers } = await import('../../scripts/arbundles')
+    const { data, tags, target } = item
+    const signer = new signers.ArweaveSigner(walletDataJwk)
+    const anchor = arweave.utils.bufferTob64(crypto.getRandomValues(new Uint8Array(32))).slice(0, 32)
+    const dataItem = createData(data, signer, { tags, target, anchor })
+    await dataItem.sign(signer)
+    
+    return {
+        id: dataItem.id,
+        raw: dataItem.getRaw()
+    }
+}
+
+
 async function createBundle (walletData: any, items: Awaited<ReturnType<typeof createDataItem>>[]) {
     // @ts-ignore
     const { bundleAndSignData, signers } = await import('../../scripts/arbundles')
@@ -642,7 +658,6 @@ async function createBundle (walletData: any, items: Awaited<ReturnType<typeof c
     
     return bundleAndSignData(items, signer)
 }
-
 
 export async function pkcs8ToJwk (key: Uint8Array) {
 	const imported = await window.crypto.subtle.importKey('pkcs8', key, { name: 'RSA-PSS', hash: 'SHA-256' }, true, ['sign'])

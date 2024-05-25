@@ -1,5 +1,5 @@
 
-const { connect, createDataItemSigner } = require("@permaweb/aoconnect");
+import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
 import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from './AoConnectMsgReminder'
 import authConfig from 'src/configs/auth'
