@@ -143,14 +143,14 @@ export const AoDryRun = async (TargetTxId: string, processTxId: string, Data: st
     }
 }
 
-export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: string, Data: string = 'Balance') => {
+export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
             Owner: processTxId,
             process: TargetTxId,
-            data: Data,
+            data: null,
             tags: [
                 { name: 'Action', value: 'Balance' },
                 { name: 'Target', value: processTxId },
@@ -160,9 +160,9 @@ export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: stri
             ]
         });
 
-        if(result && result.Messages && result.Messages[0]) {
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
-            return result.Messages[0]
+            return result.Messages[0].Data
         }
         else {
 
@@ -175,6 +175,42 @@ export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: stri
         return 
     }
 }
+
+export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'Balances' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return result.Messages[0].Data
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.log("AoTokenBalancesDryRun Error:", Error)
+
+        return 
+    }
+}
+
+
+
 
 export const AoMonitor = async (currentWalletJwk: any, processTxId: string) => {
     try {

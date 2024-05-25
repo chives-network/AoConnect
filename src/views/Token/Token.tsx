@@ -26,7 +26,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -78,6 +78,40 @@ const Inbox = () => {
     )
   }
 
+  
+  const handleTokenSearch = async function (ExistToken: string) {
+    if(!ExistToken) return 
+
+    setIsDisabledButton(true)
+    setToolInfo(null)
+
+    setToolInfo((prevState: any)=>({
+      ...prevState,
+      TokenProcessTxId: ExistToken
+    }))
+
+    const AoDryRunBalance = await AoTokenBalanceDryRun(ExistToken, ExistToken)
+    if(AoDryRunBalance) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        TokenBalance: AoDryRunBalance
+      }))
+    }
+
+    const AoDryRunBalances = await AoTokenBalancesDryRun(ExistToken)
+    if(AoDryRunBalances) {
+      console.log("AoDryRunBalances", AoDryRunBalances)
+      const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        TokenBalances: AoDryRunBalancesJson
+      }))
+      console.log("AoDryRunBalances", AoDryRunBalancesJson)
+    }
+
+    setIsDisabledButton(false)
+  }
+
   const handleTokenCreate = async function () {
 
     setIsDisabledButton(true)
@@ -93,28 +127,43 @@ const Inbox = () => {
 
     setTimeout(async () => {
 
-      const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
-      if(LoadBlueprintToken) {
+      try {
+        const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
+        if(LoadBlueprintToken) {
+          console.log("LoadBlueprintToken", LoadBlueprintToken)
+          if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
+            const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              LoadBlueprintToken: formatText
+            }))
+          }
+        }
         console.log("LoadBlueprintToken", LoadBlueprintToken)
-        if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
-          const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
+
+        const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId)
+        if(AoDryRunBalance) {
           setToolInfo((prevState: any)=>({
             ...prevState,
-            LoadBlueprintToken: formatText
+            TokenBalance: AoDryRunBalance
           }))
         }
-      }
-      console.log("LoadBlueprintToken", LoadBlueprintToken)
 
-      const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId)
-      if(AoDryRunBalance && AoDryRunBalance.Data) {
-        setToolInfo((prevState: any)=>({
-          ...prevState,
-          TokenBalance: AoDryRunBalance.Data
-        }))
+        const AoDryRunBalances = await AoTokenBalancesDryRun(TokenProcessTxId)
+        if(AoDryRunBalances) {
+          console.log("AoDryRunBalances", AoDryRunBalances)
+          const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            TokenBalances: AoDryRunBalancesJson
+          }))
+          console.log("AoDryRunBalances", AoDryRunBalancesJson)
+        }
+        
       }
-      
-      console.log("AoDryRunBalance", AoDryRunBalance)
+      catch(Error: any) {
+        console.log("handleTokenCreate Error:", Error)
+      }
 
     }, 5000);
 
@@ -123,11 +172,12 @@ const Inbox = () => {
 
   }
 
-  const handleTest = async function (TargetTxId: string, processTxId: string) {
-    const AoDryRunBalance = await AoTokenBalanceDryRun(TargetTxId, processTxId)
-    console.log("AoDryRunBalance", AoDryRunBalance?.Data)
+  const handleTest = async function (TargetTxId: string) {
+    const AoDryRunBalance = await AoTokenBalancesDryRun(TargetTxId)
+    console.log("AoDryRunBalance", AoDryRunBalance)
   }
-  //handleTest("S41n0OXe7-q8ggCDzuVZNAIv9UqBmQlDKmf8TYYbg5c", "JdgOijyEbzNk7CGljwv8dq4LTYPFq_gorlVqraO7COQ")
+
+  //handleTest("S41n0OXe7-q8ggCDzuVZNAIv9UqBmQlDKmf8TYYbg5c")
 
   const handleTokenMint = async function (TokenProcessTxId: string) {
 
@@ -165,96 +215,6 @@ const Inbox = () => {
 
     setIsDisabledButton(false)
   }
-
-  const handleTokenBalance = async function (TokenProcessTxId: string) {
-
-    setIsDisabledButton(true)
-    setToolInfo(null)
-
-    const TokenBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId)
-    if(TokenBalanceData) {
-      console.log("TokenBalanceData", TokenBalanceData)
-      if(TokenBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = TokenBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenBalance: formatText
-          }))
-
-          //Read message from inbox
-          const TokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-          if(TokenInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = TokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                TokenBalance: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    setIsDisabledButton(false)
-  }
-
-  const handleTokenBalances = async function (TokenProcessTxId: string) {
-
-    setIsDisabledButton(true)
-    setToolInfo(null)
-
-    const TokenBalancesData = await AoTokenBalances(currentWallet.jwk, TokenProcessTxId)
-    if(TokenBalancesData) {
-      console.log("TokenBalancesData", TokenBalancesData)
-      if(TokenBalancesData?.msg?.Output?.data?.output)  {
-        const formatText = TokenBalancesData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenBalances: formatText
-          }))
-
-          //Read message from inbox
-          const TokenBalancesInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-          if(TokenBalancesInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = TokenBalancesInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              let TokenBalancesList = null
-              try {
-                TokenBalancesList = JSON.parse(formatText2)
-                let TotalTokenSum = BigNumber(0)
-                Object.values(TokenBalancesList).map((ItemV: any)=>{
-                  TotalTokenSum = TotalTokenSum.plus(ItemV);
-                })
-                TokenBalancesList['TotalTokenSum'] = String(TotalTokenSum)
-              }
-              catch(Error: any) {
-                TokenBalancesList = {result: formatText2} 
-                console.log("TokenBalancesData Error:", Error)
-              }
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                TokenBalances: TokenBalancesList
-              }))
-              console.log("TokenBalancesList", TokenBalancesList)
-            }
-          }
-
-        }
-
-      }
-    }
-
-    setIsDisabledButton(false)
-  }
-
-  
 
   //Loading the all Inbox to IndexedDb
   useEffect(() => {
@@ -363,6 +323,33 @@ const Inbox = () => {
                     () => { handleTokenCreate() }
                 }>
                 {t("Create Token")}
+                </Button>
+
+                <TextField
+                    sx={{ml: 2, my: 2}}
+                    size="small"
+                    label={`${t('ExistToken')}`}
+                    placeholder={`${t('ExistToken')}`}
+                    value={tokenInfo?.ExistToken ?? ''}
+                    onChange={(e: any)=>{
+                      setTokenInfo((prevState: any)=>({
+                        ...prevState,
+                        ExistToken: e.target.value
+                      }))
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                            <Icon icon='mdi:account-outline' />
+                            </InputAdornment>
+                        )
+                    }}
+                />
+
+                <Button sx={{ m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                    () => { handleTokenSearch(tokenInfo?.ExistToken) }
+                }>
+                {t("Search Token")}
                 </Button>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
