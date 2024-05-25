@@ -1,4 +1,6 @@
-import { connect, createDataItemSigner } from "@permaweb/aoconnect"
+
+const { connect, createDataItemSigner } = require("@permaweb/aoconnect");
+
 import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from './AoConnectMsgReminder'
 import authConfig from 'src/configs/auth'
 import axios from 'axios'

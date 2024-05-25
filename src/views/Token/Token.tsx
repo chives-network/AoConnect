@@ -125,11 +125,9 @@ const Inbox = () => {
 
   const handleTest = async function (TargetTxId: string, processTxId: string) {
     const AoDryRunBalance = await AoTokenBalanceDryRun(TargetTxId, processTxId)
-    console.log("AoDryRunBalance", AoDryRunBalance.Data)
+    console.log("AoDryRunBalance", AoDryRunBalance?.Data)
   }
-  
-
-  handleTest("S41n0OXe7-q8ggCDzuVZNAIv9UqBmQlDKmf8TYYbg5c", "JdgOijyEbzNk7CGljwv8dq4LTYPFq_gorlVqraO7COQ")
+  //handleTest("S41n0OXe7-q8ggCDzuVZNAIv9UqBmQlDKmf8TYYbg5c", "JdgOijyEbzNk7CGljwv8dq4LTYPFq_gorlVqraO7COQ")
 
   const handleTokenMint = async function (TokenProcessTxId: string) {
 
