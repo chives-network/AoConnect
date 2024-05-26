@@ -15,12 +15,6 @@ import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
-import TableContainer from '@mui/material/TableContainer'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
-
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
@@ -53,9 +47,8 @@ const Inbox = () => {
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [toolInfo, setToolInfo] = useState<any>()
-  const [tokenCreate, setTokenCreate] = useState<any>()
-  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, openCreateToken: true, FormSubmit: 'Submit' })
+  const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: true, FormSubmit: 'Submit', isDisabledButton: false })
+  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
   // ** State
   const [isLoading, setIsLoading] = useState(false);
@@ -92,24 +85,19 @@ const Inbox = () => {
     )
   }
 
-  
   const handleTokenSearch = async function (ExistToken: string) {
     if(!ExistToken) return 
 
     setIsDisabledButton(true)
-    setToolInfo(null)
 
-    setToolInfo((prevState: any)=>({
+    setTokenGetInfor((prevState: any)=>({
       ...prevState,
-      TokenProcessTxId: ExistToken
+      TokenProcessTxId: ExistToken,
+      ExistToken: ExistToken
     }))
 
     const AoDryRunBalance = await AoTokenBalanceDryRun(ExistToken, ExistToken)
     if(AoDryRunBalance) {
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        TokenBalance: AoDryRunBalance
-      }))
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
         TokenBalance: AoDryRunBalance
@@ -119,8 +107,7 @@ const Inbox = () => {
     const TokenGetMap = await AoTokenInfoDryRun(ExistToken)
     setTokenGetInfor((prevState: any)=>({
       ...prevState,
-      ...TokenGetMap,
-      ExistToken
+      ...TokenGetMap
     }))
 
     await handleAoTokenBalancesDryRun(ExistToken)
@@ -129,66 +116,49 @@ const Inbox = () => {
 
   }
 
-  console.log("tokenGetInfor", tokenGetInfor)
+  const handleTokenCreate = async function (tokenCreate: any) {
 
-  const handleTokenCreate = async function () {
-
-    setIsDisabledButton(true)
-    setToolInfo(null)
-
-    const TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
-    if(TokenProcessTxId) {
-      setToolInfo((prevState: any)=>({
+    const TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk);
+    if (TokenProcessTxId) {
+      setTokenGetInfor((prevState: any) => ({
         ...prevState,
-        TokenProcessTxId: TokenProcessTxId
-      }))
+        TokenProcessTxId: TokenProcessTxId,
+        ExistToken: TokenProcessTxId
+      }));
     }
+  
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate);
+          if (LoadBlueprintToken) {
+            console.log("LoadBlueprintToken", LoadBlueprintToken);
+            if (LoadBlueprintToken?.msg?.Output?.data?.output) {
 
-    setTimeout(async () => {
+              // const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              // setTokenGetInfor((prevState: any) => ({
+              //   ...prevState,
+              //   LoadBlueprintToken: formatText
+              // }));
 
-      try {
-        const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate)
-        if(LoadBlueprintToken) {
-          console.log("LoadBlueprintToken", LoadBlueprintToken)
-          if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
-            const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              LoadBlueprintToken: formatText
-            }))
+            }
           }
+  
+          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId);
+          if (AoDryRunBalance) {
+            setTokenGetInfor((prevState: any) => ({
+              ...prevState,
+              TokenBalance: AoDryRunBalance
+            }));
+            resolve({ Token: TokenProcessTxId, Balance: AoDryRunBalance });
+          }
+        } catch (error) {
+          console.log("handleTokenCreate Error:", error);
+          reject(error);
         }
-        console.log("LoadBlueprintToken", LoadBlueprintToken)
-
-        const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId)
-        if(AoDryRunBalance) {
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenBalance: AoDryRunBalance
-          }))
-        }
-
-        const AoDryRunBalances = await AoTokenBalancesDryRun(TokenProcessTxId)
-        if(AoDryRunBalances) {
-          console.log("AoDryRunBalances", AoDryRunBalances)
-          const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenBalances: AoDryRunBalancesJson
-          }))
-          console.log("AoDryRunBalances", AoDryRunBalancesJson)
-        }
-        
-      }
-      catch(Error: any) {
-        console.log("handleTokenCreate Error:", Error)
-      }
-
-    }, 5000);
-
-
-    setIsDisabledButton(false)
-
+      }, 5000);
+    });
+    
   }
 
   const handleAoTokenBalancesDryRun = async function (ExistToken: string) {
@@ -208,10 +178,6 @@ const Inbox = () => {
       TokenMap.map((Item: any)=>{
         CirculatingSupply = CirculatingSupply.plus(Item)
       })
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        TokenBalances: AoDryRunBalancesJsonSorted
-      }))
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
         TokenBalances: AoDryRunBalancesJsonSorted,
@@ -234,7 +200,12 @@ const Inbox = () => {
     if(MintAmount == null || Number(MintAmount) <= 0) return
     
     setIsDisabledButton(true)
-    setToolInfo(null)
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      disabledSendOutButton: true
+    }))
+
+    
 
     const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, MintAmount)
     if(MintTokenData) {
@@ -250,13 +221,18 @@ const Inbox = () => {
                 duration: 2000
               })
             }
-            await handleAoTokenBalancesDryRun(TokenProcessTxId)
+            await handleTokenSearch(TokenProcessTxId)
           }
         }
       }
     }
 
     setIsDisabledButton(false)
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      disabledSendOutButton: false
+    }))
+
   }
 
   const handleTokenSendOut = async function (TokenProcessTxId: string, ReceivedAddress: string, Amount: number) {
@@ -264,7 +240,6 @@ const Inbox = () => {
     if(Amount == null || Number(Amount) <= 0) return
     
     setIsDisabledButton(true)
-    setToolInfo(null)
 
     const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, Number(Amount))
     if(MintTokenData) {
@@ -307,16 +282,16 @@ const Inbox = () => {
           <Card>
               <Grid item sx={{ display: 'column', m: 2 }}>
                 
-                <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenCreate={handleTokenCreate} isDisabledButton={isDisabledButton} />
+                <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} />
 
                 <TextField
                     sx={{ml: 2, my: 2}}
                     size="small"
                     label={`${t('ExistToken')}`}
                     placeholder={`${t('ExistToken')}`}
-                    value={tokenCreate?.ExistToken ?? ''}
+                    value={tokenGetInfor?.ExistToken ?? ''}
                     onChange={(e: any)=>{
-                      setTokenCreate((prevState: any)=>({
+                      setTokenGetInfor((prevState: any)=>({
                         ...prevState,
                         ExistToken: e.target.value
                       }))
@@ -331,7 +306,7 @@ const Inbox = () => {
                 />
 
                 <Button sx={{ m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                    () => { handleTokenSearch(tokenCreate?.ExistToken) }
+                    () => { handleTokenSearch(tokenGetInfor?.ExistToken) }
                 }>
                 {t("Search Token")}
                 </Button>
@@ -341,9 +316,9 @@ const Inbox = () => {
                     size="small"
                     label={`${t('MintAmount')}`}
                     placeholder={`${t('MintAmount')}`}
-                    value={tokenCreate?.MintAmount ?? ''}
+                    value={tokenGetInfor?.MintAmount ?? ''}
                     onChange={(e: any)=>{
-                      setTokenCreate((prevState: any)=>({
+                      setTokenGetInfor((prevState: any)=>({
                         ...prevState,
                         MintAmount: e.target.value
                       }))
@@ -358,7 +333,7 @@ const Inbox = () => {
                 />
 
                 <Button sx={{ m: 2, mt: 3 }} size="small" disabled={(tokenGetInfor?.Name ? false : true) || (isDisabledButton)} variant='outlined' onClick={
-                    () => { handleTokenMint(tokenGetInfor?.ExistToken, tokenCreate?.MintAmount) }
+                    () => { handleTokenMint(tokenGetInfor?.ExistToken, tokenGetInfor?.MintAmount) }
                 }>
                 {t("Mint Token")}
                 </Button>
@@ -414,8 +389,8 @@ const Inbox = () => {
                           </Typography>
                           <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
                             {tokenGetInfor?.Ticker}
-                            <Link href={`https://www.ao.link/token/${toolInfo?.TokenProcessTxId}`} target='_blank'>
-                              <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
+                            <Link href={`https://www.ao.link/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
+                              <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
                             </Link>
                           </Typography>
                         </Box>
@@ -446,7 +421,7 @@ const Inbox = () => {
                   <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} />
 
                   {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
-                    <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} isDisabledButton={isDisabledButton} handleTokenSendOut={handleTokenSendOut} /> 
+                    <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
                   )}
                   
 

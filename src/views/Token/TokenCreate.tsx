@@ -19,6 +19,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 
+import toast from 'react-hot-toast'
 
 import Box from '@mui/material/Box'
 import Icon from 'src/@core/components/icon'
@@ -26,26 +27,97 @@ import IconButton from '@mui/material/IconButton'
 
 const TokenCreate = (props: any) => {
     // ** Props
-    const {tokenCreate, setTokenCreate, tokenGetInfor, setTokenGetInfor, handleTokenCreate, isDisabledButton } = props
+    const {tokenCreate, setTokenCreate, handleTokenCreate, handleTokenSearch } = props
 
     // ** Hook
     const { t } = useTranslation()
-    const auth = useAuth()
     const router = useRouter()
-    useEffect(() => {
-        CheckPermission(auth, router, false)
-    }, [auth, router])
+
+    const auth = useAuth()
+    const currentWallet = auth.currentWallet
+    const currentAddress = auth.currentAddress
+
+    const handleSubmit = async () => {
+        if(currentAddress == undefined || currentAddress.length != 43) {
+            toast.success(t(`Please create a wallet first`), {
+                duration: 4000
+            })
+            router.push("/mywallets");
+            
+            return
+        }
+
+        console.log("tokenCreate", tokenCreate)
+
+        if(tokenCreate && (tokenCreate.Name == null || tokenCreate.Name.trim() == "") )  {
+            setTokenCreate( (prevState: any) => ({ 
+                ...prevState, 
+                NameError: t('Token name must have a value')
+            }) )
+            
+            return
+        }
+
+        if(tokenCreate && (tokenCreate.Ticker == null || tokenCreate.Ticker.trim() == "") )  {
+            setTokenCreate( (prevState: any) => ({ 
+                ...prevState, 
+                TickerError: t('Token ticker must have a value')
+            }) )
+            
+            return
+        }
+
+        if(tokenCreate && (tokenCreate.Balance == null || Number(tokenCreate.Balance.trim()) <= 0) )  {
+            setTokenCreate( (prevState: any) => ({ 
+                ...prevState, 
+                BalanceError: t('Token Balance more than zero')
+            }) )
+            
+            return
+        }
+
+        setTokenCreate( (prevState: any) => ({ 
+            ...prevState, 
+            isDisabledButton: true,
+            FormSubmit: 'Submitting...'
+        }) )
+
+        const handleTokenCreateResult: any = await handleTokenCreate(tokenCreate);
+
+        console.log("handleTokenCreateResult", handleTokenCreateResult)
+
+        if(handleTokenCreateResult && handleTokenCreateResult.Token) {
+            toast.success('Your token have created', { duration: 4000 })
+            toast.success('Token: ' + handleTokenCreateResult.Token, { duration: 4000 })
+            handleTokenSearch(handleTokenCreateResult.Token)
+        }
+
+        setTokenCreate( (prevState: any) => ({ 
+            ...prevState,
+            NameError: '',
+            LogoError: '',
+            TickerError: '',
+            BalanceError: '',
+            isDisabledButton: false,
+            openCreateToken: false,
+            FormSubmit: 'Submit'
+        }) )
+
+    }
 
   return (
-    <Dialog fullWidth open={tokenGetInfor.openCreateToken} onClose={
-        () => { setTokenGetInfor( (prevState: any) => ({ ...prevState, openCreateToken: false }) ) }
+    <Dialog fullWidth open={tokenCreate.openCreateToken} onClose={
+        () => { setTokenCreate( (prevState: any) => ({ ...prevState, openCreateToken: false }) ) }
     }>
         <DialogTitle>
             <Box display="flex" alignItems="center">
                 <Box position={'absolute'} right={'6px'} top={'2px'}>
                     <IconButton size="small" edge="end" onClick={
-                        () => { setTokenGetInfor( (prevState: any) => ({ ...prevState, openCreateToken: false }) ) }
-                    } aria-label="close">
+                            () => { setTokenCreate( (prevState: any) => ({ ...prevState, openCreateToken: false }) ) }
+                        } 
+                        aria-label="close" 
+                        disabled={tokenCreate.isDisabledButton}
+                        >
                     <Icon icon='mdi:close' />
                     </IconButton>
                 </Box>
@@ -61,9 +133,10 @@ const TokenCreate = (props: any) => {
                             fullWidth
                             label={`${t('Name')}`}
                             placeholder={`${t('Token name, e.g. AoConnectToken')}`}
+                            disabled={tokenCreate.isDisabledButton}
                             value={tokenCreate?.Name}
                             onChange={(e: any)=>{
-                                setTokenCreate( (prevState: any) => ({ ...prevState, Name: e.target.value }) )
+                                setTokenCreate( (prevState: any) => ({ ...prevState, Name: e.target.value, NameError: null }) )
                             }}
                             InputProps={{
                                 startAdornment: (
@@ -81,6 +154,7 @@ const TokenCreate = (props: any) => {
                             fullWidth
                             label={`${t('Ticker')}`}
                             placeholder={`${t('Token ticker, e.g. AOCN')}`}
+                            disabled={tokenCreate.isDisabledButton}
                             value={tokenCreate?.Ticker}
                             onChange={(e: any)=>{
                                 setTokenCreate( (prevState: any) => ({ ...prevState, Ticker: e.target.value }) )
@@ -102,9 +176,10 @@ const TokenCreate = (props: any) => {
                             type='number'
                             label={`${t('Balance')}`}
                             placeholder={`${t('Total Issues Amount, e.g. 1000')}`}
-                            value={tokenGetInfor?.Balance}
+                            disabled={tokenCreate.isDisabledButton}
+                            value={tokenCreate?.Balance}
                             onChange={(e: any)=>{
-                                setTokenGetInfor( (prevState: any) => ({ ...prevState, Balance: e.target.value }) )
+                                setTokenCreate( (prevState: any) => ({ ...prevState, Balance: e.target.value }) )
                             }}
                             InputProps={{
                                 startAdornment: (
@@ -113,8 +188,8 @@ const TokenCreate = (props: any) => {
                                     </InputAdornment>
                                 )
                             }}
-                            error={!!tokenGetInfor?.BalanceError}
-                            helperText={tokenGetInfor?.BalanceError}
+                            error={!!tokenCreate?.BalanceError}
+                            helperText={tokenCreate?.BalanceError}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -122,23 +197,21 @@ const TokenCreate = (props: any) => {
                             fullWidth
                             label={`${t('Logo')}`}
                             placeholder={`${t('Logo')}`}
-                            value={tokenGetInfor?.Logo ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
+                            disabled={tokenCreate.isDisabledButton}
+                            value={tokenCreate?.Logo ?? 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'}
                             onChange={(e: any)=>{
-                                setTokenGetInfor( (prevState: any) => ({ ...prevState, Logo: e.target.value }) )
+                                setTokenCreate( (prevState: any) => ({ ...prevState, Logo: e.target.value }) )
                             }}
-                            error={!!tokenGetInfor?.LogoError}
-                            helperText={tokenGetInfor?.LogoError}
+                            error={!!tokenCreate?.LogoError}
+                            helperText={tokenCreate?.LogoError}
                         />
                     </Grid>
 
                     <Grid item xs={12} container justifyContent="flex-end">
-                        <Button variant='contained' disabled={isDisabledButton} onClick={
-                            () => { 
-                                setTokenGetInfor( (prevState: any) => ({ ...prevState, FormAction: 'deletepublish' }) )
-                                handleTokenCreate()
-                                }
+                        <Button variant='contained' disabled={tokenCreate.isDisabledButton} onClick={
+                            () => { handleSubmit() }
                         }>
-                        {t(tokenGetInfor.FormSubmit)}
+                        {t(tokenCreate.FormSubmit)}
                         </Button>
                     </Grid>
                 </Grid>

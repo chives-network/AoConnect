@@ -32,9 +32,7 @@ const TokenSendOut = (props: any) => {
     const { t } = useTranslation()
     const auth = useAuth()
     const router = useRouter()
-    useEffect(() => {
-        CheckPermission(auth, router, false)
-    }, [auth, router])
+    
 
   return (
     <Dialog fullWidth open={tokenGetInfor.openSendOutToken} onClose={

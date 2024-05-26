@@ -4,7 +4,9 @@ import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
 import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from './AoConnectMsgReminder'
 import authConfig from 'src/configs/auth'
+import BigNumber from 'bignumber.js'
 import axios from 'axios'
+
 
 const MU_URL = "https://mu.ao-testnet.xyz"
 const CU_URL = "https://cu.ao-testnet.xyz"
@@ -600,11 +602,13 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
+        const mintAmountBigNumber = new BigNumber(mintAmount);
+        const mintAmountUnit = mintAmountBigNumber.times('1e12');
         const SendTokenResult = await message({
             process: tokenTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + mintAmount + '" }})',
+            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + mintAmountUnit.toString() + '" }})',
         });
         console.log("AoTokenTransfer Transfer", SendTokenResult)
         
