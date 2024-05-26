@@ -53,7 +53,6 @@ const TokenList = (prop: any) => {
                                 ...prevState,
                                 openSendOutToken: true,
                                 SendOutToken: Item,
-                                SendOutTokenBalance: tokenGetInfor.TokenBalances[Item]
                             })) }
                         }>
                         {t("Send")}

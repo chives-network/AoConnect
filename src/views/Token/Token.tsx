@@ -386,7 +386,17 @@ const Inbox = () => {
                       }))
                      }
                 }>
-                {t("Mint Token")}
+                {t("Mint")}
+                </Button>
+
+                <Button sx={{ m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                    () => { setTokenGetInfor((prevState: any)=>({
+                        ...prevState,
+                        openSendOutToken: true,
+                        SendOutToken: "",
+                    })) }
+                }>
+                {t("Send")}
                 </Button>
 
               </Grid>
