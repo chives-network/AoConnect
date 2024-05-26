@@ -34,7 +34,7 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun, FormatBalance, AoTokenInBoxDryRun } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun, FormatBalance, AoTokenInBoxDryRun, GetMyInboxMsg } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 import { nlNL } from '@mui/x-data-grid';
 
@@ -225,13 +225,14 @@ const Inbox = () => {
     }
   }
 
-  
+
   const handleTest = async function (TargetTxId: string) {
-    const AoDryRunBalance = await AoTokenInBoxDryRun(TargetTxId)
-    console.log("AoTokenInBoxDryRun", AoDryRunBalance)
+    const AoDryRunBalance = await GetMyInboxMsg(currentWallet.jwk,TargetTxId)
+    console.log("GetMyInboxMsg", AoDryRunBalance)
   }
 
-  handleTest("nmzqK_4NpiXC_4dUjEUuweP40GMYNkgpQ_oi-YHj854")
+  
+  handleTest("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
 
   const handleTokenMint = async function (TokenProcessTxId: string, MintAmount: number) {
 

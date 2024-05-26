@@ -357,8 +357,10 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
             const InboxMsgList: any[] = ConvertInboxMessageFormatToJson(formatText)
 
             if(InboxMsgList) {
-                SaveInboxMsgIntoIndexedDb(InboxMsgList)
+                SaveInboxMsgIntoIndexedDb(processTxId, InboxMsgList)
             }
+            console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
+            
             
             return { id: GetMyInboxMsgResult, msg: InboxMsgList };
         }

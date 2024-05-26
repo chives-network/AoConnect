@@ -69,7 +69,8 @@ const Inbox = () => {
   }
   
   const GetInboxMsgFromIndexedDbInbox = async function (paginationModel: any) {
-    const GetInboxMsgFromIndexedDbData = await GetInboxMsgFromIndexedDb(paginationModel.page, paginationModel.pageSize)
+    const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
+    const GetInboxMsgFromIndexedDbData = await GetInboxMsgFromIndexedDb(GetMyCurrentProcessTxIdData, paginationModel.page, paginationModel.pageSize)
     console.log("GetInboxMsgFromIndexedDbData", GetInboxMsgFromIndexedDbData, paginationModel)
     setStore(GetInboxMsgFromIndexedDbData)
   }

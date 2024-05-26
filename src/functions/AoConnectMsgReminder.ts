@@ -1,7 +1,7 @@
 import { AoGetPageRecords } from './AoConnectLib'
 import { getMessageData, getMessagesData, getOutputData, getNoticeAction, parseNoticeData, getNoticeData, parseAmount } from './AoConnectUtils'
 
-const AoConnectIndexedDb: string = 'AoConnectDb13'
+const AoConnectIndexedDb: string = 'AoConnectDb'
 const AoConnectLastCursor: string = 'AoConnectLastCursor'
 const AoConnectAllMessages: string = 'AoConnectAllMessages'
 const AoConnectReminderProcessTxId: string = 'AoConnectReminderProcessTxId'
@@ -111,17 +111,17 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
     })
 
     //Write to IndexedDb
-    SaveMessagesIntoIndexedDb(NeedReminderMsg)
+    SaveMessagesIntoIndexedDb(processTxId, NeedReminderMsg)
     
     console.log("ReminderMsgAndStoreToLocal NeedReminderMsg", NeedReminderMsg)
 
     return NeedReminderMsg
 }
 
-export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
+export const SaveMessagesIntoIndexedDb = (processTxId: string, NeedReminderMsg: any[]) => {
 
     let db: any = null;
-    const request = OpenDb();
+    const request = OpenDb(processTxId);
 
     request.onsuccess = function(event: any) {
         db = event.target.result;
@@ -163,7 +163,7 @@ export const SaveMessagesIntoIndexedDb = (NeedReminderMsg: any[]) => {
 
 export const GetChatLogFromIndexedDb = (processTxId: string) => {
     return new Promise((resolve, reject) => {
-        const request = OpenDb(reject);
+        const request = OpenDb(processTxId, reject);
 
         request.onsuccess = function(event: any) {
             const db = event.target.result;
@@ -235,10 +235,10 @@ export function ConvertInboxMessageFormatToJson(input: string) {
     }
 }
 
-export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
+export const SaveInboxMsgIntoIndexedDb = (processTxId: string, InboxMsgList: any[]) => {
 
     let db: any = null;
-    const request = OpenDb();
+    const request = OpenDb(processTxId);
 
     request.onsuccess = function(event: any) {
         db = event.target.result;
@@ -282,10 +282,10 @@ export const SaveInboxMsgIntoIndexedDb = (InboxMsgList: any[]) => {
 
 }
 
-export const GetInboxMsgFromIndexedDb = (pageNumber: number, pageSize: number) => {
+export const GetInboxMsgFromIndexedDb = (processTxId: string, pageNumber: number, pageSize: number) => {
 
     return new Promise((resolve, reject) => {
-        const request = OpenDb(reject);
+        const request = OpenDb(processTxId, reject);
 
         request.onsuccess = function(event: any) {
             const db = event.target.result;
@@ -316,8 +316,8 @@ export const GetInboxMsgFromIndexedDb = (pageNumber: number, pageSize: number) =
 
 }
 
-const OpenDb = (reject: any = null) => {
-    const request = indexedDB.open(AoConnectIndexedDb, 3);
+const OpenDb = (processTxId: string = "", reject: any = null) => {
+    const request = indexedDB.open(processTxId && processTxId!="" ? processTxId : AoConnectIndexedDb, 3);
     request.onerror = function(event: any) {
         console.log('Database error: ' + event.target.errorCode);
         if( reject ) {

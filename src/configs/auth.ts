@@ -3,7 +3,7 @@ export default {
   tokenName: 'AR',
   backEndApi: 'https://arweave.net',
   AoConnectWebSite: "https://www.ao.link",
-  AoConnectModule: '5l00H2S0RuPYe-V5GAI-1RgQEHFInSMr20E-3RNXJ_U',
+  AoConnectModule: '1PdCJiXhNafpJbvC-sjxWTeNzbf9Q_RfUNs84GYoPm0',
   AoConnectScheduler: 'fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY',
   AoConnectGithub: 'https://github.com/chives-network/AoConnect',
   backEndApiChatBook: '',
