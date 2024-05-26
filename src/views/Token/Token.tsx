@@ -47,7 +47,7 @@ const Inbox = () => {
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: true, FormSubmit: 'Submit', isDisabledButton: false })
+  const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
   // ** State
@@ -85,18 +85,18 @@ const Inbox = () => {
     )
   }
 
-  const handleTokenSearch = async function (ExistToken: string) {
-    if(!ExistToken) return 
+  const handleTokenSearch = async function (CurrentToken: string) {
+    if(!CurrentToken) return 
 
     setIsDisabledButton(true)
 
     setTokenGetInfor((prevState: any)=>({
       ...prevState,
-      TokenProcessTxId: ExistToken,
-      ExistToken: ExistToken
+      TokenProcessTxId: CurrentToken,
+      CurrentToken: CurrentToken
     }))
 
-    const AoDryRunBalance = await AoTokenBalanceDryRun(ExistToken, ExistToken)
+    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
     if(AoDryRunBalance) {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
@@ -104,13 +104,13 @@ const Inbox = () => {
       }))
     }
 
-    const TokenGetMap = await AoTokenInfoDryRun(ExistToken)
+    const TokenGetMap = await AoTokenInfoDryRun(CurrentToken)
     setTokenGetInfor((prevState: any)=>({
       ...prevState,
       ...TokenGetMap
     }))
 
-    await handleAoTokenBalancesDryRun(ExistToken)
+    await handleAoTokenBalancesDryRun(CurrentToken)
 
     setIsDisabledButton(false)
 
@@ -123,7 +123,7 @@ const Inbox = () => {
       setTokenGetInfor((prevState: any) => ({
         ...prevState,
         TokenProcessTxId: TokenProcessTxId,
-        ExistToken: TokenProcessTxId
+        CurrentToken: TokenProcessTxId
       }));
     }
   
@@ -161,8 +161,8 @@ const Inbox = () => {
     
   }
 
-  const handleAoTokenBalancesDryRun = async function (ExistToken: string) {
-    const AoDryRunBalances = await AoTokenBalancesDryRun(ExistToken)
+  const handleAoTokenBalancesDryRun = async function (CurrentToken: string) {
+    const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
     if(AoDryRunBalances) {
       console.log("AoDryRunBalances", AoDryRunBalances)
       const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
@@ -292,16 +292,27 @@ const Inbox = () => {
                 
                 <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} />
 
+                <Button sx={{ m: 2, mt: 3 }} size="small" variant='outlined' onClick={
+                    () => { 
+                      setTokenCreate((prevState: any)=>({
+                        ...prevState,
+                        openCreateToken: true
+                      }))
+                     }
+                }>
+                {t("Create Token")}
+                </Button>
+
                 <TextField
                     sx={{ml: 2, my: 2}}
                     size="small"
-                    label={`${t('ExistToken')}`}
-                    placeholder={`${t('ExistToken')}`}
-                    value={tokenGetInfor?.ExistToken ?? ''}
+                    label={`${t('CurrentToken')}`}
+                    placeholder={`${t('CurrentToken')}`}
+                    value={tokenGetInfor?.CurrentToken ?? ''}
                     onChange={(e: any)=>{
                       setTokenGetInfor((prevState: any)=>({
                         ...prevState,
-                        ExistToken: e.target.value
+                        CurrentToken: e.target.value
                       }))
                     }}
                     InputProps={{
@@ -314,13 +325,13 @@ const Inbox = () => {
                 />
 
                 <Button sx={{ m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                    () => { handleTokenSearch(tokenGetInfor?.ExistToken) }
+                    () => { handleTokenSearch(tokenGetInfor?.CurrentToken) }
                 }>
                 {t("Search Token")}
                 </Button>
 
                 <TextField
-                    sx={{ml: 2, my: 2}}
+                    sx={{ml: 2, my: 2, width: '200px'}}
                     size="small"
                     label={`${t('MintAmount')}`}
                     placeholder={`${t('MintAmount')}`}
@@ -341,7 +352,7 @@ const Inbox = () => {
                 />
 
                 <Button sx={{ m: 2, mt: 3 }} size="small" disabled={(tokenGetInfor?.Name ? false : true) || (isDisabledButton)} variant='outlined' onClick={
-                    () => { handleTokenMint(tokenGetInfor?.ExistToken, tokenGetInfor?.MintAmount) }
+                    () => { handleTokenMint(tokenGetInfor?.CurrentToken, tokenGetInfor?.MintAmount) }
                 }>
                 {t("Mint Token")}
                 </Button>

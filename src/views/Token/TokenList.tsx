@@ -36,7 +36,7 @@ const TokenList = (prop: any) => {
             <TableBody>
             <TableRow>
                 <TableCell colSpan={2}>
-                My Token: {tokenGetInfor.ExistToken}
+                My Token: {tokenGetInfor.CurrentToken}
                 </TableCell>
                 <TableCell colSpan={2}>
                 Balance: {tokenGetInfor.TokenBalance}
