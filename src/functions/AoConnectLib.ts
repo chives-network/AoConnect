@@ -580,7 +580,7 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
             process: myTokenProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + tokenTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + sendOutAmount + '"})',
+            data: 'Send({ Target = "' + tokenTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount) + '"})',
         });
         console.log("AoTokenTransfer Transfer", SendTokenResult)
         
@@ -602,13 +602,11 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
-        const mintAmountBigNumber = new BigNumber(mintAmount);
-        const mintAmountUnit = mintAmountBigNumber.times('1e12');
         const SendTokenResult = await message({
             process: tokenTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + mintAmountUnit.toString() + '" }})',
+            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + BalanceTimes(mintAmount) + '" }})',
         });
         console.log("AoTokenTransfer Transfer", SendTokenResult)
         
@@ -629,3 +627,22 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
 export const generateRandomNumber = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export const FormatBalance = (Balance: number) => {
+
+    return (new BigNumber(Number(Balance))).div('1e12').toFixed()
+}
+
+export const BalanceTimes = (Balance: number) => {
+
+    return (new BigNumber(Number(Balance))).times('1e12').toString()
+}
+
+export const BalanceCompare = (Balance1: number, Balance2: number) => {
+    const number1 = new BigNumber(Balance1)
+    const number2 = new BigNumber(Balance2)
+    const comparisonResult = number1.comparedTo(number2)
+    return comparisonResult
+}
+
+

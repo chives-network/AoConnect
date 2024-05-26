@@ -19,19 +19,122 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 
+import toast from 'react-hot-toast'
 
 import Box from '@mui/material/Box'
 import Icon from 'src/@core/components/icon'
 import IconButton from '@mui/material/IconButton'
 
+import { BalanceCompare } from 'src/functions/AoConnectLib'
+
 const TokenSendOut = (props: any) => {
     // ** Props
-    const {tokenGetInfor, setTokenGetInfor, handleTokenSendOut, isDisabledButton } = props
+    const {tokenGetInfor, setTokenGetInfor, handleTokenSendOut, handleTokenSearch } = props
 
     // ** Hook
     const { t } = useTranslation()
-    const auth = useAuth()
     const router = useRouter()
+
+    const auth = useAuth()
+    const currentWallet = auth.currentWallet
+    const currentAddress = auth.currentAddress
+
+    useEffect(()=>{
+        setTokenGetInfor( (prevState: any) => ({ 
+            ...prevState,
+            SendOutTokenError: '',
+            SendOutAmount: '',
+            SendOutAmountError: '',
+            SendOutData: '',
+            SendOutDataError: '',
+            isDisabledButton: false,
+            FormSubmit: 'Submit'
+        }) )
+    }, [])
+
+    const handleSubmit = async () => {
+        if(currentAddress == undefined || currentAddress.length != 43) {
+            toast.success(t(`Please create a wallet first`), {
+                duration: 4000
+            })
+            router.push("/mywallets");
+            
+            return
+        }
+
+        console.log("tokenGetInfor", tokenGetInfor)
+
+        if(tokenGetInfor && (tokenGetInfor.SendOutToken == null || tokenGetInfor.SendOutToken.trim() == "") )  {
+            setTokenGetInfor( (prevState: any) => ({ 
+                ...prevState, 
+                SendOutTokenError: t('Token name must have a value')
+            }) )
+            
+            return
+        }
+
+        if(tokenGetInfor && tokenGetInfor.TokenProcessTxId == tokenGetInfor.SendOutToken )  {
+            setTokenGetInfor( (prevState: any) => ({ 
+                ...prevState, 
+                SendOutTokenError: t('Cannot send amount to yourself')
+            }) )
+            
+            return
+        }
+
+        if(tokenGetInfor && (tokenGetInfor.SendOutAmount == null || tokenGetInfor.SendOutAmount.trim() == "" || tokenGetInfor.SendOutAmount <= 0) )  {
+            setTokenGetInfor( (prevState: any) => ({ 
+                ...prevState, 
+                SendOutAmountError: t('Token send out amount must more than zero')
+            }) )
+            
+            return
+        }
+        if(tokenGetInfor && tokenGetInfor.SendOutAmount && BalanceCompare(tokenGetInfor.TokenBalance, tokenGetInfor.SendOutAmount) === -1 )  {
+            setTokenGetInfor( (prevState: any) => ({
+                ...prevState, 
+                SendOutAmountError: t('Insufficient balance')
+            }) )
+            
+            return
+        }
+        if(tokenGetInfor && tokenGetInfor.SendOutAmount && BalanceCompare(tokenGetInfor.TokenBalance, tokenGetInfor.SendOutAmount) === 1 )  {
+            setTokenGetInfor( (prevState: any) => ({
+                ...prevState, 
+                SendOutAmountError: null
+            }) )
+        }
+
+        setTokenGetInfor( (prevState: any) => ({ 
+            ...prevState, 
+            isDisabledButton: true,
+            FormSubmit: 'Submitting...'
+        }) )
+
+        const handleTokenSendOutResult: any = await handleTokenSendOut(tokenGetInfor.TokenProcessTxId, tokenGetInfor.SendOutToken, tokenGetInfor.SendOutAmount);
+
+        console.log("handleTokenSendOutResult", handleTokenSendOutResult)
+
+        if(handleTokenSendOutResult && handleTokenSendOutResult.Token) {
+            toast.success('Your token have created', { duration: 4000 })
+            toast.success('Token: ' + handleTokenSendOutResult.Token, { duration: 4000 })
+            handleTokenSearch(handleTokenSendOutResult.Token)
+        }
+
+        setTokenGetInfor( (prevState: any) => ({ 
+            ...prevState,
+            SendOutToken: '',
+            SendOutTokenError: '',
+            SendOutAmount: '',
+            SendOutAmountError: '',
+            SendOutData: '',
+            SendOutDataError: '',
+            isDisabledButton: false,
+            openSendOutToken: false,
+            FormSubmit: 'Submit'
+        }) )
+
+    }
     
 
   return (
@@ -43,7 +146,10 @@ const TokenSendOut = (props: any) => {
                 <Box position={'absolute'} right={'6px'} top={'2px'}>
                     <IconButton size="small" edge="end" onClick={
                         () => { setTokenGetInfor( (prevState: any) => ({ ...prevState, openSendOutToken: false }) ) }
-                    } aria-label="close">
+                    } 
+                    aria-label="close"
+                    disabled={tokenGetInfor.isDisabledButton}
+                    >
                     <Icon icon='mdi:close' />
                     </IconButton>
                 </Box>
@@ -51,12 +157,47 @@ const TokenSendOut = (props: any) => {
         </DialogTitle>
         <DialogContent>
         <Card>
-            <CardHeader title={`${t('Send Coin Out')}`} />
+            <CardHeader title={`${t('Send Token Out')}`} />
             <CardContent>
                 <Grid container spacing={5}>
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
+                            disabled
+                            size="small"
+                            label={`${t('My Token')}`}
+                            placeholder={`${t('My Token')}`}
+                            value={tokenGetInfor?.TokenProcessTxId}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            disabled
+                            size="small"
+                            label={`${t('My Balance')}`}
+                            placeholder={`${t('My Balance')}`}
+                            value={tokenGetInfor?.TokenBalance}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            disabled={tokenGetInfor.isDisabledButton}
                             label={`${t('SendOutToken')}`}
                             placeholder={`${t('SendOutToken')}`}
                             value={tokenGetInfor?.SendOutToken}
@@ -78,6 +219,7 @@ const TokenSendOut = (props: any) => {
                         <TextField
                             fullWidth
                             type='number'
+                            disabled={tokenGetInfor.isDisabledButton}
                             label={`${t('SendOutAmount')}`}
                             placeholder={`${t('SendOutAmount')}`}
                             value={tokenGetInfor?.SendOutAmount}
@@ -100,6 +242,7 @@ const TokenSendOut = (props: any) => {
                             fullWidth
                             multiline
                             rows={4}
+                            disabled={tokenGetInfor.isDisabledButton}
                             label={`${t('SendOutData')}`}
                             placeholder={`${t('SendOutData')}`}
                             value={tokenGetInfor?.SendOutData}
@@ -112,11 +255,8 @@ const TokenSendOut = (props: any) => {
                     </Grid>
 
                     <Grid item xs={12} container justifyContent="flex-end">
-                        <Button variant='contained' disabled={isDisabledButton} onClick={
-                            () => { 
-                                setTokenGetInfor( (prevState: any) => ({ ...prevState, FormAction: 'deletepublish' }) )
-                                handleTokenSendOut()
-                                }
+                        <Button variant='contained' disabled={tokenGetInfor.isDisabledButton} onClick={
+                            () => { handleSubmit() }
                         }>
                         {t(tokenGetInfor.FormSubmit)}
                         </Button>

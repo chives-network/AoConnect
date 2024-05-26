@@ -123,7 +123,6 @@ const SendOutForm = () => {
         return 
     }
     
-    //Send coin out
     setIsDisabledButton(true)
     setUploadingButton(`${t('Submitting...')}`)
 

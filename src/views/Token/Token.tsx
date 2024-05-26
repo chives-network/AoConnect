@@ -33,7 +33,7 @@ import TokenList from './TokenList'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun, FormatBalance } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -100,7 +100,7 @@ const Inbox = () => {
     if(AoDryRunBalance) {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
-        TokenBalance: AoDryRunBalance
+        TokenBalance: FormatBalance(AoDryRunBalance)
       }))
     }
 
@@ -148,9 +148,9 @@ const Inbox = () => {
           if (AoDryRunBalance) {
             setTokenGetInfor((prevState: any) => ({
               ...prevState,
-              TokenBalance: AoDryRunBalance
+              TokenBalance: FormatBalance(AoDryRunBalance)
             }));
-            resolve({ Token: TokenProcessTxId, Balance: AoDryRunBalance });
+            resolve({ Token: TokenProcessTxId, Balance: FormatBalance(AoDryRunBalance) });
           }
         } catch (error) {
           console.log("handleTokenCreate Error:", error);
@@ -169,10 +169,10 @@ const Inbox = () => {
       const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
                         .sort((a: any, b: any) => b[1] - a[1])
                         .reduce((acc: any, [key, value]) => {
-                            acc[key] = value;
+                            acc[key] = FormatBalance(Number(value));
                             return acc;
                         }, {} as { [key: string]: number });
-      const TokenMap = Object.values(AoDryRunBalancesJson)
+      const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
       const TokenHolders = TokenMap.length
       let CirculatingSupply = BigNumber(0)
       TokenMap.map((Item: any)=>{
@@ -204,8 +204,6 @@ const Inbox = () => {
       ...prevState,
       disabledSendOutButton: true
     }))
-
-    
 
     const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, MintAmount)
     if(MintTokenData) {
@@ -241,21 +239,31 @@ const Inbox = () => {
     
     setIsDisabledButton(true)
 
-    const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, Number(Amount))
-    if(MintTokenData) {
-      console.log("MintTokenData", MintTokenData)
-      if(MintTokenData?.msg?.Output?.data?.output)  {
-        const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+    const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, ReceivedAddress, Number(Amount))
+    if(AoTokenTransferData) {
+      console.log("AoTokenTransferData", AoTokenTransferData)
+      if(AoTokenTransferData?.msg?.Output?.data?.output)  {
+        const formatText = AoTokenTransferData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
-          const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-          if(MintTokenInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          const AoTokenTransferInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+          if(AoTokenTransferInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AoTokenTransferInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
               toast.success(formatText2, {
-                duration: 2000
+                duration: 5000
               })
             }
+            
             await handleAoTokenBalancesDryRun(TokenProcessTxId)
+
+            const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId)
+            if(AoDryRunBalance) {
+              setTokenGetInfor((prevState: any)=>({
+                ...prevState,
+                TokenBalance: FormatBalance(AoDryRunBalance)
+              }))
+            }
+
           }
         }
       }
