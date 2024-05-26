@@ -14,9 +14,9 @@ Handlers.add(
     
     if not found then
       table.insert(Members, msg.From)
-      Handlers.utils.reply("Registered. " .. msg.From )(msg)
+      Handlers.utils.reply("Registered")(msg)
     else
-      Handlers.utils.reply("Already registered. " .. msg.From )(msg)
+      Handlers.utils.reply("Already registered")(msg)
     end
   end
 )
@@ -29,13 +29,13 @@ Handlers.add(
     for i, v in ipairs(Members) do
         if v == msg.From then
             table.remove(Members, i)
-            Handlers.utils.reply("Unregistered. " .. msg.From )(msg)
+            Handlers.utils.reply("Unregistered")(msg)
             found = true
             break
         end
     end
     if not found then
-        Handlers.utils.reply("Not registered " .. msg.From )(msg)
+        Handlers.utils.reply("Not registered")(msg)
     end
   end
 )
@@ -51,6 +51,6 @@ Handlers.add(
         haveSentRecords[recipient] = true
       end
     end
-    Handlers.utils.reply("Broadcasted...." .. msg.From)(msg)
+    Handlers.utils.reply("Broadcasted")(msg)
   end
 )
