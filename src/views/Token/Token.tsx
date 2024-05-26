@@ -30,6 +30,7 @@ import authConfig from 'src/configs/auth'
 import { useTranslation } from 'react-i18next'
 
 import TokenList from './TokenList'
+import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
@@ -48,6 +49,7 @@ const Inbox = () => {
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
+  const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
@@ -213,7 +215,7 @@ const Inbox = () => {
         ...prevState,
         TokenBalances: AoDryRunBalancesJsonSorted,
         TokenHolders: TokenHolders,
-        CirculatingSupply: CirculatingSupply
+        CirculatingSupply: CirculatingSupply.toString()
       }))
       console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
     }
@@ -370,29 +372,15 @@ const Inbox = () => {
                 {t("Search Token")}
                 </Button>
 
-                <TextField
-                    sx={{ml: 2, my: 2, width: '200px'}}
-                    size="small"
-                    label={`${t('MintAmount')}`}
-                    placeholder={`${t('MintAmount')}`}
-                    value={tokenGetInfor?.MintAmount ?? ''}
-                    onChange={(e: any)=>{
+                <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
+
+                <Button sx={{ m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                    () => { 
                       setTokenGetInfor((prevState: any)=>({
                         ...prevState,
-                        MintAmount: e.target.value
+                        openMintToken: true
                       }))
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                              <Icon icon='mdi:account-outline' />
-                            </InputAdornment>
-                        )
-                    }}
-                />
-
-                <Button sx={{ m: 2, mt: 3 }} size="small" disabled={(tokenGetInfor?.Name ? false : true) || (isDisabledButton)} variant='outlined' onClick={
-                    () => { handleTokenMint(tokenGetInfor?.CurrentToken, tokenGetInfor?.MintAmount) }
+                     }
                 }>
                 {t("Mint Token")}
                 </Button>
