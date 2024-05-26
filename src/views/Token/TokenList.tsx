@@ -34,38 +34,30 @@ const TokenList = (prop: any) => {
         <TableContainer>
             <Table>
             <TableBody>
-            <TableRow>
-                <TableCell colSpan={2}>
-                My Token: {tokenGetInfor.CurrentToken}
-                </TableCell>
-                <TableCell colSpan={2}>
-                Balance: {tokenGetInfor.TokenBalance}
-                </TableCell>
-            </TableRow>
             {tokenGetInfor && tokenGetInfor.TokenBalances && Object.keys(tokenGetInfor.TokenBalances).map((Item: string, Index: number)=>{
 
                 return (
-                <TableRow key={Index}>
-                    <TableCell>
-                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline' }}>{Index + 1}</Typography>
+                <TableRow key={Index} sx={{my: 0, py: 0}}>
+                    <TableCell sx={{my: 0, py: 0}}>
+                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Index + 1}</Typography>
                     </TableCell>
-                    <TableCell>
-                    <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 3, display: 'inline' }}>{Item}</Typography>
+                    <TableCell sx={{my: 0, py: 0}}>
+                        <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Item}</Typography>
                     </TableCell>
-                    <TableCell>
-                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline' }}>{tokenGetInfor.TokenBalances[Item]}</Typography>
+                    <TableCell sx={{my: 0, py: 0}}>
+                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{tokenGetInfor.TokenBalances[Item]}</Typography>
                     </TableCell>
-                    <TableCell>
-                    <Button sx={{ m: 2, mt: 3 }} size="small" disabled={tokenGetInfor.disabledSendOutButton || tokenGetInfor.TokenProcessTxId == Item} variant='outlined' onClick={
-                        () => { setTokenGetInfor((prevState: any)=>({
-                            ...prevState,
-                            openSendOutToken: true,
-                            SendOutToken: Item,
-                            SendOutTokenBalance: tokenGetInfor.TokenBalances[Item]
-                        })) }
-                    }>
-                    {t("Send")}
-                    </Button>
+                    <TableCell sx={{my: 0, py: 0}}>
+                        <Button sx={{my: 0}} size="small" disabled={tokenGetInfor.disabledSendOutButton || tokenGetInfor.TokenProcessTxId == Item} variant='outlined' onClick={
+                            () => { setTokenGetInfor((prevState: any)=>({
+                                ...prevState,
+                                openSendOutToken: true,
+                                SendOutToken: Item,
+                                SendOutTokenBalance: tokenGetInfor.TokenBalances[Item]
+                            })) }
+                        }>
+                        {t("Send")}
+                        </Button>
                     </TableCell>
                 </TableRow>
                 )

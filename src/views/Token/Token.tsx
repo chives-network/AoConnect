@@ -96,7 +96,11 @@ const Inbox = () => {
     setTokenGetInfor((prevState: any)=>({
       ...prevState,
       TokenProcessTxId: CurrentToken,
-      CurrentToken: CurrentToken
+      CurrentToken: CurrentToken,
+      TokenBalance: 0,
+      TokenBalances: null,
+      TokenHolders: null,
+      CirculatingSupply: null
     }))
 
     const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
@@ -433,6 +437,7 @@ const Inbox = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                           <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                             {tokenGetInfor?.Name}
+                            <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance}</Typography>
                           </Typography>
                           <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
                             {tokenGetInfor?.Ticker}
@@ -458,7 +463,7 @@ const Inbox = () => {
                           {tokenGetInfor?.TokenHolders}
                         </Typography>
                         <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
-                          {String(tokenGetInfor?.CirculatingSupply)}
+                          {tokenGetInfor?.CirculatingSupply}
                         </Typography>
                       </Box>
                     </Box>
