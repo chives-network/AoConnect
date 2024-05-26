@@ -57,8 +57,12 @@ Handlers.add(
 
 function help()
   return(
-      "Welcome to ao DevChat v0.1!\n\n" ..
-      "Have fun, be respectful, and remember: Cypherpunks ship code! 🫡")
+      "Welcome to Chives Chatroom V0.1!\n\n" ..
+      "Main functoin:\n\n" ..
+      "1 Register\n\n" ..
+      "2 Broadcast\n\n" ..
+      "3 Unregister\n\n" ..
+      "Have fun, be respectful !")
 end
 
 return help()
