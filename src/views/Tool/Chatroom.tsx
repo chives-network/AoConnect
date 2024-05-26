@@ -143,6 +143,14 @@ const Inbox = () => {
 
     setIsDisabledButton(true)
     setToolInfo(null)
+    
+    const ChatroomProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+    if(ChatroomProcessTxId) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        ChatroomProcessTxId: ChatroomProcessTxId
+      }))
+    }
 
     const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserOne) {
@@ -165,14 +173,6 @@ const Inbox = () => {
       setToolInfo((prevState: any)=>({
         ...prevState,
         UserThree: UserThree
-      }))
-    }
-    
-    const ChatroomProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
-    if(ChatroomProcessTxId) {
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        ChatroomProcessTxId: ChatroomProcessTxId
       }))
     }
 
@@ -379,14 +379,10 @@ const Inbox = () => {
         }
       }
       
-
-
-      //
-      
-      //Delay 5s code end
+      //Delay 1s code end
       setIsDisabledButton(false)
 
-    }, 5000);
+    }, 1000);
 
     
 
@@ -423,6 +419,10 @@ const Inbox = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
+                ChatroomProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomProcessTxId}</Typography>
+                </Typography>
+
+                <Typography noWrap variant='body2' sx={{my: 2}}>
                 UserOne Message From: Top-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOne}</Typography>
                 </Typography>
 
@@ -432,10 +432,6 @@ const Inbox = () => {
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 UserThree Message From: Bottom-Right ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThree}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                ChatroomProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomProcessTxId}</Typography>
                 </Typography>
                 
                 <Tooltip title={toolInfo?.LoadBlueprintChatroom}>

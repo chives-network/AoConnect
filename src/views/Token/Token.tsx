@@ -35,6 +35,7 @@ import TokenSendOut from './TokenSendOut'
 
 import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun, FormatBalance } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
+import { nlNL } from '@mui/x-data-grid';
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -105,10 +106,25 @@ const Inbox = () => {
     }
 
     const TokenGetMap = await AoTokenInfoDryRun(CurrentToken)
-    setTokenGetInfor((prevState: any)=>({
-      ...prevState,
-      ...TokenGetMap
-    }))
+    if(TokenGetMap)  {
+      setTokenGetInfor((prevState: any)=>({
+        ...prevState,
+        ...TokenGetMap
+      }))
+    }
+    else {
+
+      //No Token Infor
+      setTokenGetInfor((prevState: any)=>({
+        ...prevState,
+        Name: null,
+        Ticker: null,
+        Balance: null,
+        Logo: null
+      }))
+    }
+
+    console.log("TokenGetMap", TokenGetMap)
 
     await handleAoTokenBalancesDryRun(CurrentToken)
 
@@ -118,7 +134,22 @@ const Inbox = () => {
 
   const handleTokenCreate = async function (tokenCreate: any) {
 
-    const TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk);
+    let TokenProcessTxId = null
+    if(tokenCreate && tokenCreate.ManualProcessTxId && tokenCreate.ManualProcessTxId.length == 43) {
+      TokenProcessTxId = tokenCreate?.ManualProcessTxId
+      const TokenGetMap = await AoTokenInfoDryRun(TokenProcessTxId)
+      if(TokenGetMap) {
+        toast.error(t('This token have created, can not create again'), {
+          duration: 4000
+        })
+
+        return 
+      }
+    }
+    else {
+      TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+    }
+
     if (TokenProcessTxId) {
       setTokenGetInfor((prevState: any) => ({
         ...prevState,
@@ -198,7 +229,16 @@ const Inbox = () => {
   const handleTokenMint = async function (TokenProcessTxId: string, MintAmount: number) {
 
     if(MintAmount == null || Number(MintAmount) <= 0) return
-    
+
+    const TokenGetMap = await AoTokenInfoDryRun(TokenProcessTxId)
+    if(TokenGetMap == null) {
+      toast.error(t('This token not exist, please create first'), {
+        duration: 4000
+      })
+
+      return 
+    }
+
     setIsDisabledButton(true)
     setTokenGetInfor((prevState: any)=>({
       ...prevState,

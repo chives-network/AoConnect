@@ -49,6 +49,7 @@ const TokenCreate = (props: any) => {
             BalanceError: '',
             isDisabledButton: false,
             openCreateToken: false,
+            ManualProcessTxId: '',
             FormSubmit: 'Submit'
         }) )
     }, [])
@@ -144,6 +145,27 @@ const TokenCreate = (props: any) => {
             <CardHeader title={`${t('Create New Token')}`} />
             <CardContent>
                 <Grid container spacing={5}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label={`${t('ManualProcessTxId')}`}
+                            placeholder={`${t('Using a exist process tx id, if not, pls empty')}`}
+                            disabled={tokenCreate.isDisabledButton}
+                            value={tokenCreate?.ManualProcessTxId}
+                            onChange={(e: any)=>{
+                                setTokenCreate( (prevState: any) => ({ ...prevState, ManualProcessTxId: e.target.value, ManualProcessTxIdError: null }) )
+                            }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                            error={!!tokenCreate?.ManualProcessTxIdError}
+                            helperText={tokenCreate?.ManualProcessTxIdError}
+                        />
+                    </Grid>
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
