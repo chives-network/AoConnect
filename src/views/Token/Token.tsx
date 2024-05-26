@@ -34,7 +34,7 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun, FormatBalance } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun, FormatBalance, AoTokenInBoxDryRun } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 import { nlNL } from '@mui/x-data-grid';
 
@@ -225,12 +225,13 @@ const Inbox = () => {
     }
   }
 
+  
   const handleTest = async function (TargetTxId: string) {
-    const AoDryRunBalance = await AoTokenInfoDryRun(TargetTxId)
-    console.log("AoTokenInfoDryRun", AoDryRunBalance)
+    const AoDryRunBalance = await AoTokenInBoxDryRun(TargetTxId)
+    console.log("AoTokenInBoxDryRun", AoDryRunBalance)
   }
 
-  //handleTest("7bXsUAAy7rIbdhCkhZtw8_XGNc2CZtRAH0qxK1pktP0")
+  handleTest("nmzqK_4NpiXC_4dUjEUuweP40GMYNkgpQ_oi-YHj854")
 
   const handleTokenMint = async function (TokenProcessTxId: string, MintAmount: number) {
 

@@ -37,8 +37,6 @@ const TokenMint = (props: any) => {
     const currentWallet = auth.currentWallet
     const currentAddress = auth.currentAddress
 
-    console.log("tokenGetInfor", tokenGetInfor)
-
     useEffect(()=>{
         setTokenGetInfor( (prevState: any) => ({ 
             ...prevState,
@@ -65,8 +63,6 @@ const TokenMint = (props: any) => {
             
             return
         }
-
-        console.log("tokenGetInfor", tokenGetInfor)
 
         if(tokenGetInfor && (tokenGetInfor.MintAmount == null || Number(tokenGetInfor.MintAmount.trim()) <= 0) )  {
             setTokenGetInfor( (prevState: any) => ({ 

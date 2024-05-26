@@ -62,8 +62,6 @@ const TokenSendOut = (props: any) => {
             return
         }
 
-        console.log("tokenGetInfor", tokenGetInfor)
-
         if(tokenGetInfor && (tokenGetInfor.SendOutToken == null || tokenGetInfor.SendOutToken.trim() == "") )  {
             setTokenGetInfor( (prevState: any) => ({ 
                 ...prevState, 
