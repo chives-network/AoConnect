@@ -193,6 +193,7 @@ const Inbox = () => {
       }
       console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
 
+      /*
       const LoadBlueprintChat = await AoLoadBlueprintChat(currentWallet.jwk, ChatroomProcessTxId)
       if(LoadBlueprintChat) {
         console.log("LoadBlueprintChat", LoadBlueprintChat)
@@ -204,6 +205,7 @@ const Inbox = () => {
           }))
         }
       }
+      */
 
       const ChatroomMembers1st = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
       if(ChatroomMembers1st) {
@@ -437,12 +439,6 @@ const Inbox = () => {
                 <Tooltip title={toolInfo?.LoadBlueprintChatroom}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
                   .load-blueprint chatroom: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintChatroom}</Typography>
-                  </Typography>
-                </Tooltip>
-
-                <Tooltip title={toolInfo?.LoadBlueprintChat}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  .load-blueprint chat: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintChat}</Typography>
                   </Typography>
                 </Tooltip>
 
