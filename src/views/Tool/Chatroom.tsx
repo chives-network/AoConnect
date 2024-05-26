@@ -382,7 +382,7 @@ const Inbox = () => {
       //Delay 1s code end
       setIsDisabledButton(false)
 
-    }, 1000);
+    }, 5000);
 
     
 

@@ -44,7 +44,7 @@ export const AoGetLastPage = async (processTxId: string, Sort: string = 'DESC', 
         return resultsOut
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
 
         return []
     }
@@ -61,7 +61,7 @@ export const AoGetRecord = async (processTxId: string, messageTxId: string) => {
         return resultsOut
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
     }
 }
 
@@ -76,7 +76,7 @@ export const AoGetMessage = async (processTxId: string, messageTxId: string) => 
         return resultsOut
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
     }
 }
 
@@ -93,7 +93,7 @@ export const AoGetPageRecords = async (processTxId: string, Sort: string = 'DESC
         return resultsOut
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
     }
 }
 
@@ -115,7 +115,7 @@ export const AoCreateProcess = async (currentWalletJwk: any, moduleTxId: string,
         return processTxId;
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
     }
 }
 
@@ -141,7 +141,7 @@ export const AoDryRun = async (TargetTxId: string, processTxId: string, Data: st
         return result;
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
     }
 }
 
@@ -172,7 +172,7 @@ export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: stri
         }
     }
     catch(Error: any) {
-        console.log("AoTokenBalanceDryRun Error:", Error)
+        console.error("AoTokenBalanceDryRun Error:", Error)
 
         return 
     }
@@ -205,7 +205,7 @@ export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
         }
     }
     catch(Error: any) {
-        console.log("AoTokenBalancesDryRun Error:", Error)
+        console.error("AoTokenBalancesDryRun Error:", Error)
 
         return 
     }
@@ -242,7 +242,7 @@ export const AoTokenInfoDryRun = async (TargetTxId: string) => {
         }
     }
     catch(Error: any) {
-        console.log("AoTokenInfoDryRun Error:", Error)
+        console.error("AoTokenInfoDryRun Error:", Error)
 
         return 
     }
@@ -278,7 +278,7 @@ export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
         }
     }
     catch(Error: any) {
-        console.log("AoTokenInfoDryRun Error:", Error)
+        console.error("AoTokenInfoDryRun Error:", Error)
 
         return 
     }
@@ -301,7 +301,7 @@ export const AoMonitor = async (currentWalletJwk: any, processTxId: string) => {
         return result;
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
     }
 }
 
@@ -319,7 +319,7 @@ export const AoUnMonitor = async (currentWalletJwk: any, processTxId: string) =>
         return result;
     }
     catch(Error: any) {
-        console.log("AoGetPageRecords Error:", Error)
+        console.error("AoGetPageRecords Error:", Error)
     }
 }
 
@@ -333,7 +333,7 @@ export const AoCreateProcessAuto = async (currentWalletJwk: any) => {
         return processTxId;
     }
     catch(Error: any) {
-        console.log("AoCreateProcessAuto Error:", Error)
+        console.error("AoCreateProcessAuto Error:", Error)
     }
 }
 
@@ -394,7 +394,7 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
         }
     }
     catch(Error: any) {
-        console.log("GetMyLastMsg Error:", Error)
+        console.error("GetMyLastMsg Error:", Error)
     }
   
 }
@@ -420,7 +420,7 @@ export const GetChatroomMembers = async (currentWalletJwk: any, processTxId: str
         }
     }
     catch(Error: any) {
-        console.log("GetChatroomMembers Error:", Error)
+        console.error("GetChatroomMembers Error:", Error)
     }
   
 }
@@ -446,7 +446,7 @@ export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId
         }
     }
     catch(Error: any) {
-        console.log("GetChatroomMembers Error:", Error)
+        console.error("GetChatroomMembers Error:", Error)
     }
   
 }
@@ -472,7 +472,7 @@ export const SendMessageToChatroom = async (currentWalletJwk: any, chatroomTxId:
         }
     }
     catch(Error: any) {
-        console.log("SendMessageToChatroom Error:", Error)
+        console.error("SendMessageToChatroom Error:", Error)
     }
   
 }
@@ -501,7 +501,12 @@ export const AoLoadBlueprintModule = async (currentWalletJwk: any, processTxId: 
         }
     }
     catch(Error: any) {
-        console.log("AoLoadBlueprintChatroom Error:", Error)
+        console.error("AoLoadBlueprintChatroom Error:", Error)
+
+        // 重新执行函数直到成功为止
+        setTimeout(async () => {
+            return await AoLoadBlueprintModule(currentWalletJwk, processTxId, module);
+        }, 15000)
     }
   
 }
@@ -552,7 +557,7 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
         }
     }
     catch(Error: any) {
-        console.log("AoLoadBlueprintChatroom Error:", Error)
+        console.error("AoLoadBlueprintChatroom Error:", Error)
     }
 }
 
@@ -577,7 +582,7 @@ export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, m
         }
     }
     catch(Error: any) {
-        console.log("AoTokenBalance Error:", Error)
+        console.error("AoTokenBalance Error:", Error)
     }
   
 }
@@ -603,7 +608,7 @@ export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) 
         }
     }
     catch(Error: any) {
-        console.log("AoTokenBalances Error:", Error)
+        console.error("AoTokenBalances Error:", Error)
     }
   
 }
@@ -629,7 +634,7 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
         }
     }
     catch(Error: any) {
-        console.log("AoTokenTransfer Error:", Error)
+        console.error("AoTokenTransfer Error:", Error)
     }
   
 }
@@ -655,7 +660,7 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
         }
     }
     catch(Error: any) {
-        console.log("AoTokenTransfer Error:", Error)
+        console.error("AoTokenTransfer Error:", Error)
     }
   
 }
@@ -681,4 +686,6 @@ export const BalanceCompare = (Balance1: number, Balance2: number) => {
     return comparisonResult
 }
 
-
+export const sleep = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
