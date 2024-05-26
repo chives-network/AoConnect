@@ -54,3 +54,11 @@ Handlers.add(
     Handlers.utils.reply("Broadcasted")(msg)
   end
 )
+
+function help()
+  return(
+      "Welcome to ao DevChat v0.1!\n\n" ..
+      "Have fun, be respectful, and remember: Cypherpunks ship code! 🫡")
+end
+
+return help()
