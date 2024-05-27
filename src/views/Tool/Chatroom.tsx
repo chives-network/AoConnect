@@ -358,7 +358,7 @@ const Chatroom = () => {
       const SendMessageToChatroomDataUserTwo = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserTwo, "002 Msg from UserTwo ["+UserTwo+"]")
       if(SendMessageToChatroomDataUserTwo) {
         console.log("SendMessageToChatroomDataUserTwo", SendMessageToChatroomDataUserTwo)
-        if(SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data)  {
+        if(SendMessageToChatroomDataUserTwo?.msg?.Messages && SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data)  {
           const formatText = SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
           console.log("SendMessageToChatroomDataUserTwo formatText", formatText)
           setToolInfo((prevState: any)=>({
