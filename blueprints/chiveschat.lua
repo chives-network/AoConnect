@@ -1,6 +1,17 @@
-Owners = Members or {}
+Owners = Owners or {}
 Admins = Admins or {}
 Members = Members or {}
+
+-- Owner CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw
+-- Admin 4g0crQskU9ikPci3dmrWHHigEn2XCe5bCk_VaSOFa4c
+-- Member vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA
+-- Send({Target = "chatroom txid", Action = "AddAdmin", AdminId = "admin txid..." }) need owner role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelAdmin", AdminId = "admin txid..." }) need owner role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApprovalApply", Applicant = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
 
 
 Handlers.add(
@@ -17,7 +28,7 @@ Handlers.add(
         end
 
         if not found then
-            table.insert(Members, msg.AdminId)
+            table.insert(Admins, msg.AdminId)
             Handlers.utils.reply("Have add admin " .. msg.AdminId)(msg)
         else
             Handlers.utils.reply("Already is admin " .. msg.AdminId)(msg)
@@ -82,13 +93,13 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "ApplyJoin"),
   function (msg)
     local haveSentRecords = {}
-    for _, Admin in ipairs(Admins) do
-      if not haveSentRecords[Admin] then
-        ao.send({Target = Admin, Data = 'You have a new application that needs approval.', Sender = msg.From})
-        haveSentRecords[Admin] = true
+    for _, admin in ipairs(Admins) do
+      if not haveSentRecords[admin] then
+        ao.send({Target = admin, Data = 'You have a new application that needs approval.', Sender = msg.From})
+        haveSentRecords[admin] = true
       end
     end
-    Handlers.utils.reply("Broadcasted to chatroom administrators")(msg)
+    ao.send({Target = msg.From, Data = 'Your application has been submitted and is awaiting administrator approval.', Admin = admin})
   end
 )
 
@@ -134,41 +145,20 @@ Handlers.add(
 )
 
 Handlers.add(
-  "Register",
-  Handlers.utils.hasMatchingTag("Action", "Register"),
-  function (msg)
-    local isMember = false
-    for _, member in ipairs(Members) do
-      if member == msg.From then
-        isMember = true
-        break
-      end
-    end
-    
-    if not isMember then
-      table.insert(Members, msg.From)
-      Handlers.utils.reply("Registered")(msg)
-    else
-      Handlers.utils.reply("Already registered")(msg)
-    end
-  end
-)
-
-Handlers.add(
-  "Unregister",
-  Handlers.utils.hasMatchingTag("Action", "Unregister"),
+  "Quit",
+  Handlers.utils.hasMatchingTag("Action", "Quit"),
   function (msg)
     local isMember = false
     for i, v in ipairs(Members) do
         if v == msg.From then
             table.remove(Members, i)
-            Handlers.utils.reply("Unregistered")(msg)
+            Handlers.utils.reply("Quit")(msg)
             isMember = true
             break
         end
     end
     if not isMember then
-        Handlers.utils.reply("Not registered")(msg)
+        Handlers.utils.reply("Not a member")(msg)
     end
   end
 )
@@ -180,6 +170,18 @@ Handlers.add(
     local isMember = false
     for _, member in ipairs(Members) do
       if member == msg.From then
+        isMember = true
+        break
+      end
+    end
+    for _, admin in ipairs(Admins) do
+      if admin == msg.From then
+        isMember = true
+        break
+      end
+    end
+    for _, owner in ipairs(Owners) do
+      if owner == msg.From then
         isMember = true
         break
       end
@@ -217,8 +219,8 @@ function Welcome()
       "Welcome to ChivesChat V0.1!\n\n" ..
       "Main functoin:\n\n" ..
       "1. Chatroom support three roles: owner, admin, member.\n" ..
-      "2. The chatroom owner can add or delete admins.\n\n" ..
-      "3. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n" ..
+      "2. The chatroom owner can add or delete admins.\n" ..
+      "3. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n\n" ..
       "Have fun, be respectful !")
 end
 
