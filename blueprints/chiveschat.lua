@@ -30,6 +30,13 @@
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApprovalApply", Applicant = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
+-- Setting Channels (need owner role to call)
+-- Send({Target = "Dofexypz0gtPi5MmC7iHNw_d9E7nXVsHvO_BDriPfsk", Action = "AddChannel", ChannelId = "1", ChannelName = "Announcement", ChannelGroup = "Welcome", ChannelSort = "1", ChannelWritePermission = "Owner" })
+-- Send({Target = "Dofexypz0gtPi5MmC7iHNw_d9E7nXVsHvO_BDriPfsk", Action = "AddChannel", ChannelId = "2", ChannelName = "Rules", ChannelGroup = "Welcome", ChannelSort = "2", ChannelWritePermission = "Owner" })
+-- Send({Target = "Dofexypz0gtPi5MmC7iHNw_d9E7nXVsHvO_BDriPfsk", Action = "AddChannel", ChannelId = "3", ChannelName = "Introduction", ChannelGroup = "Introduction", ChannelSort = "3" })
+-- Send({Target = "Dofexypz0gtPi5MmC7iHNw_d9E7nXVsHvO_BDriPfsk", Action = "AddChannel", ChannelId = "4", ChannelName = "Community", ChannelGroup = "Community", ChannelSort = "4" })
+-- Send({Target = "Dofexypz0gtPi5MmC7iHNw_d9E7nXVsHvO_BDriPfsk", Action = "AddChannel", ChannelId = "5", ChannelName = "Support", ChannelGroup = "Community", ChannelSort = "5" })
+-- Send({Target = "Dofexypz0gtPi5MmC7iHNw_d9E7nXVsHvO_BDriPfsk", Action = "AddChannel", ChannelId = "6", ChannelName = "Admin Team", ChannelGroup = "Administrators", ChannelSort = "6", ChannelReadPermission = "Owner,Admin" })
 
 Owners = Owners or {}
 Admins = Admins or {}
@@ -48,6 +55,14 @@ function Welcome()
       "6. Owner can add or delete channels.\n\n" ..
       "Have fun, be respectful !")
 end
+
+Handlers.add(
+  "GetInfo",
+  Handlers.utils.hasMatchingTag("Action", "GetInfo"),
+  function (msg)
+    return Channels
+  end
+)
 
 Handlers.add(
   "AddChannel",
