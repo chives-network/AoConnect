@@ -41,24 +41,50 @@ export const GetChivesChatMembers = async (currentWalletJwk: any, processTxId: s
   
 }
 
-export const RegisterChivesChatMember = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string) => {
+export const GetChivesChatAdmins = async (currentWalletJwk: any, processTxId: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
-        const GetChivesChatMembersResult = await message({
+        const GetChivesChatAdminsResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Admins',
+        });
+        console.log("GetChivesChatAdmins GetChivesChatAdmins", GetChivesChatAdminsResult)
+        
+        if(GetChivesChatAdminsResult && GetChivesChatAdminsResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetChivesChatAdminsResult)
+            return { id: GetChivesChatAdminsResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetChivesChatAdminsResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("GetChivesChatAdmins Error:", Error)
+    }
+  
+}
+
+export const ChivesChatAddAdmin = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, AdminId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatAddAdminResult = await message({
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + chatroomTxId + '", Action = "Register" })',
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "AddAdmin", AdminId = "' + AdminId + '" })',
         });
-        console.log("GetChivesChatMembers GetChivesChatMembers", GetChivesChatMembersResult)
+        console.log("ChivesChatAddAdmin GetChivesChatAddAdminResult", GetChivesChatAddAdminResult)
         
-        if(GetChivesChatMembersResult && GetChivesChatMembersResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatMembersResult)
-            return { id: GetChivesChatMembersResult, msg: MsgContent };
+        if(GetChivesChatAddAdminResult && GetChivesChatAddAdminResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddAdminResult)
+            return { id: GetChivesChatAddAdminResult, msg: MsgContent };
         }
         else {
-            return { id: GetChivesChatMembersResult };
+            return { id: GetChivesChatAddAdminResult };
         }
     }
     catch(Error: any) {
@@ -66,6 +92,86 @@ export const RegisterChivesChatMember = async (currentWalletJwk: any, chatroomTx
     }
   
 }
+
+export const ChivesChatDelAdmin = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, AdminId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatDelAdminResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "DelAdmin", AdminId = "' + AdminId + '" })',
+        });
+        console.log("ChivesChatDelAdmin GetChivesChatDelAdminResult", GetChivesChatDelAdminResult)
+        
+        if(GetChivesChatDelAdminResult && GetChivesChatDelAdminResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelAdminResult)
+            return { id: GetChivesChatDelAdminResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetChivesChatDelAdminResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("GetChivesChatMembers Error:", Error)
+    }
+  
+}
+
+export const ChivesChatAddMember = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, MemberId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "AddMember", MemberId = "' + MemberId + '" })',
+        }
+        console.log("ChivesChatAddMember Data", Data)
+        const GetChivesChatAddMemberResult = await message(Data);
+        console.log("ChivesChatAddMember GetChivesChatAddMemberResult", GetChivesChatAddMemberResult)
+        
+        if(GetChivesChatAddMemberResult && GetChivesChatAddMemberResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddMemberResult)
+            return { id: GetChivesChatAddMemberResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetChivesChatAddMemberResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("GetChivesChatMembers Error:", Error)
+    }
+  
+}
+
+export const ChivesChatDelMember = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, MemberId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatDelMemberResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "DelMember", MemberId = "' + MemberId + '" })',
+        });
+        console.log("ChivesChatDelMember GetChivesChatDelMemberResult", GetChivesChatDelMemberResult)
+        
+        if(GetChivesChatDelMemberResult && GetChivesChatDelMemberResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelMemberResult)
+            return { id: GetChivesChatDelMemberResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetChivesChatDelMemberResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("GetChivesChatMembers Error:", Error)
+    }
+  
+}
+
 
 export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, Message: string) => {
     try {

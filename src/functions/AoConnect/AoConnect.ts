@@ -119,10 +119,6 @@ export const AoCreateProcess = async (currentWalletJwk: any, moduleTxId: string,
     }
 }
 
-
-
-
-
 export const AoMonitor = async (currentWalletJwk: any, processTxId: string) => {
     try {
         const { monitor } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -225,9 +221,11 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
         if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
             console.log("GetMyLastMsg MsgContent", MsgContent)
+
             return { id: GetMyLastMsgResult, msg: MsgContent };
         }
         else {
+
             return { id: GetMyLastMsgResult };
         }
     }
@@ -236,7 +234,6 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
     }
   
 }
-
 
 export const AoLoadBlueprintModule = async (currentWalletJwk: any, processTxId: string, module: string) => {
     try {
@@ -255,9 +252,11 @@ export const AoLoadBlueprintModule = async (currentWalletJwk: any, processTxId: 
         if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
             console.log("AoLoadBlueprintModule MsgContent", module, MsgContent)
+
             return { id: GetMyLastMsgResult, msg: MsgContent };
         }
         else {
+
             return { id: GetMyLastMsgResult };
         }
     }
@@ -266,20 +265,20 @@ export const AoLoadBlueprintModule = async (currentWalletJwk: any, processTxId: 
 
         // 重新执行函数直到成功为止
         setTimeout(async () => {
+
             return await AoLoadBlueprintModule(currentWalletJwk, processTxId, module);
         }, 15000)
     }
   
 }
 
-
-
 export const AoLoadBlueprintChat = async (currentWalletJwk: any, processTxId: string) => {
+
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chat')
 }
 
-
 export const generateRandomNumber = (min: number, max: number) => {
+
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -297,9 +296,11 @@ export const BalanceCompare = (Balance1: number, Balance2: number) => {
     const number1 = new BigNumber(Balance1)
     const number2 = new BigNumber(Balance2)
     const comparisonResult = number1.comparedTo(number2)
+
     return comparisonResult
 }
 
 export const sleep = (ms: number) => {
+
     return new Promise(resolve => setTimeout(resolve, ms));
 }

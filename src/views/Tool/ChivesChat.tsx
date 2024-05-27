@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
-import { AoLoadBlueprintChivesChat, GetChivesChatMembers, RegisterChivesChatMember, SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
+import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, SendMessageToChivesChat, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddMember, ChivesChatDelMember } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -153,6 +153,22 @@ const ChivesChat = () => {
       }))
     }
 
+    const AdminOne = await AoCreateProcessAuto(currentWallet.jwk)
+    if(AdminOne) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        AdminOne: AdminOne
+      }))
+    }
+
+    const AdminTwo = await AoCreateProcessAuto(currentWallet.jwk)
+    if(AdminTwo) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        AdminTwo: AdminTwo
+      }))
+    }
+
     const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserOne) {
       setToolInfo((prevState: any)=>({
@@ -194,38 +210,38 @@ const ChivesChat = () => {
       }
       console.log("LoadBlueprintChivesChat", LoadBlueprintChivesChat)
 
-      const ChivesChatMembers1st = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
-      if(ChivesChatMembers1st) {
-        console.log("ChivesChatMembers1st", ChivesChatMembers1st)
-        if(ChivesChatMembers1st?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAdmins1st = await GetChivesChatAdmins(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatAdmins1st) {
+        console.log("ChivesChatAdmins1st", ChivesChatAdmins1st)
+        if(ChivesChatAdmins1st?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAdmins1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChivesChatMembers1st: formatText
+            ChivesChatAdmins1st: formatText
           }))
         }
       }
 
-      const UserOneRegisterData = await RegisterChivesChatMember(currentWallet.jwk, ChivesChatProcessTxId, UserOne)
-      if(UserOneRegisterData) {
-        console.log("UserOneRegisterData", UserOneRegisterData)
-        if(UserOneRegisterData?.msg?.Output?.data?.output)  {
-          const formatText = UserOneRegisterData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddAdminOne = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminOne)
+      if(ChivesChatAddAdminOne) {
+        console.log("ChivesChatAddAdminOne", ChivesChatAddAdminOne)
+        if(ChivesChatAddAdminOne?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddAdminOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              UserOneRegister: formatText
+              ChivesChatAddAdminOne: formatText
             }))
 
             //Read message from inbox
-            const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserOne)
-            if(UserOneInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  UserOneRegister: formatText2
+                  ChivesChatAddAdminOne: formatText2
                 }))
               }
             }
@@ -235,38 +251,38 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatMembers2nd = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
-      if(ChivesChatMembers2nd) {
-        console.log("ChivesChatMembers2nd", ChivesChatMembers2nd)
-        if(ChivesChatMembers2nd?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatMembers2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAdmins2nd = await GetChivesChatAdmins(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatAdmins2nd) {
+        console.log("ChivesChatAdmins2nd", ChivesChatAdmins2nd)
+        if(ChivesChatAdmins2nd?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAdmins2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChivesChatMembers2nd: formatText
+            ChivesChatAdmins2nd: formatText
           }))
         }
       }
 
-      const UserTwoRegisterData = await RegisterChivesChatMember(currentWallet.jwk, ChivesChatProcessTxId, UserTwo)
-      if(UserTwoRegisterData) {
-        console.log("UserTwoRegisterData", UserTwoRegisterData)
-        if(UserTwoRegisterData?.msg?.Output?.data?.output)  {
-          const formatText = UserTwoRegisterData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddAdminTwo = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminTwo)
+      if(ChivesChatAddAdminTwo) {
+        console.log("ChivesChatAddAdminTwo", ChivesChatAddAdminTwo)
+        if(ChivesChatAddAdminTwo?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddAdminTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              UserTwoRegister: formatText
+              ChivesChatAddAdminTwo: formatText
             }))
 
             //Read message from inbox
-            const UserTwoInboxData = await GetMyLastMsg(currentWallet.jwk, UserTwo)
-            if(UserTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  UserTwoRegister: formatText2
+                  ChivesChatAddAdminTwo: formatText2
                 }))
               }
             }
@@ -276,38 +292,38 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatMembers3rd = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
-      if(ChivesChatMembers3rd) {
-        console.log("ChivesChatMembers3rd", ChivesChatMembers3rd)
-        if(ChivesChatMembers3rd?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatMembers3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAdmins3rd = await GetChivesChatAdmins(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatAdmins3rd) {
+        console.log("ChivesChatAdmins3rd", ChivesChatAdmins3rd)
+        if(ChivesChatAdmins3rd?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAdmins3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChivesChatMembers3rd: formatText
+            ChivesChatAdmins3rd: formatText
           }))
         }
       }
 
-      const UserThreeRegisterData = await RegisterChivesChatMember(currentWallet.jwk, ChivesChatProcessTxId, UserThree)
-      if(UserThreeRegisterData) {
-        console.log("UserThreeRegisterData", UserThreeRegisterData)
-        if(UserThreeRegisterData?.msg?.Output?.data?.output)  {
-          const formatText = UserThreeRegisterData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatDelAdminOne = await ChivesChatDelAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminOne)
+      if(ChivesChatDelAdminOne) {
+        console.log("ChivesChatDelAdminOne", ChivesChatDelAdminOne)
+        if(ChivesChatDelAdminOne?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatDelAdminOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              UserThreeRegister: formatText
+              ChivesChatDelAdminOne: formatText
             }))
 
             //Read message from inbox
-            const UserThreeInboxData = await GetMyLastMsg(currentWallet.jwk, UserThree)
-            if(UserThreeInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserThreeInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  UserThreeRegister: formatText2
+                  ChivesChatDelAdminOne: formatText2
                 }))
               }
             }
@@ -317,68 +333,171 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatMembers4th = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
-      if(ChivesChatMembers4th) {
-        console.log("ChivesChatMembers4th", ChivesChatMembers4th)
-        if(ChivesChatMembers4th?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatMembers4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAdmins4th = await GetChivesChatAdmins(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatAdmins4th) {
+        console.log("ChivesChatAdmins4th", ChivesChatAdmins4th)
+        if(ChivesChatAdmins4th?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAdmins4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChivesChatMembers4th: formatText
+            ChivesChatAdmins4th: formatText
           }))
         }
       }
 
-      const SendMessageToChivesChatDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, UserOne, "001 Msg from UserOne ["+UserOne+"]")
-      if(SendMessageToChivesChatDataUserOne) {
-        console.log("SendMessageToChivesChatDataUserOne", SendMessageToChivesChatDataUserOne)
-        if(SendMessageToChivesChatDataUserOne?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChivesChatDataUserOne?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChivesChatDataUserOne formatText", formatText)
+      //Admin add or del member
+      const ChivesChatAddMemberOne = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne)
+      if(ChivesChatAddMemberOne) {
+        console.log("ChivesChatAddMemberOne", ChivesChatAddMemberOne)
+        if(ChivesChatAddMemberOne?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddMemberOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              ChivesChatAddMemberOne: formatText
+            }))
+
+            //Read message from inbox
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, AdminTwo)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  ChivesChatAddMemberOne: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
+      const ChivesChatAddMemberTwo = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo)
+      if(ChivesChatAddMemberTwo) {
+        console.log("ChivesChatAddMemberTwo", ChivesChatAddMemberTwo)
+        if(ChivesChatAddMemberTwo?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddMemberTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              ChivesChatAddMemberTwo: formatText
+            }))
+
+            //Read message from inbox
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, AdminTwo)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  ChivesChatAddMemberTwo: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
+      const ChivesChatAddMemberThree = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree)
+      if(ChivesChatAddMemberThree) {
+        console.log("ChivesChatAddMemberThree", ChivesChatAddMemberThree)
+        if(ChivesChatAddMemberThree?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddMemberThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              ChivesChatAddMemberThree: formatText
+            }))
+
+            //Read message from inbox
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, AdminTwo)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  ChivesChatAddMemberThree: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
+      const GetChivesChatMembers1st = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
+      if(GetChivesChatMembers1st) {
+        console.log("GetChivesChatMembers1st", GetChivesChatMembers1st)
+        if(GetChivesChatMembers1st?.msg?.Output?.data?.output)  {
+          const formatText = GetChivesChatMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            UserOneSendMessage: formatText
+            GetChivesChatMembers1st: formatText
           }))
         }
       }
 
-      const SendMessageToChivesChatDataUserTwo = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "002 Msg from UserTwo ["+UserTwo+"]")
-      if(SendMessageToChivesChatDataUserTwo) {
-        console.log("SendMessageToChivesChatDataUserTwo", SendMessageToChivesChatDataUserTwo)
-        if(SendMessageToChivesChatDataUserTwo?.msg?.Messages && SendMessageToChivesChatDataUserTwo?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChivesChatDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChivesChatDataUserTwo formatText", formatText)
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserTwoSendMessage: formatText
-          }))
-        }
-      }
+      const ChivesChatDelMemberTwo = await ChivesChatDelMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo)
+      if(ChivesChatDelMemberTwo) {
+        console.log("ChivesChatDelMemberTwo", ChivesChatDelMemberTwo)
+        if(ChivesChatDelMemberTwo?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatDelMemberTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
 
-      const SendMessageToChivesChatDataUserThree = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "003 Msg from UserThree ["+UserThree+"]")
-      if(SendMessageToChivesChatDataUserThree) {
-        console.log("SendMessageToChivesChatDataUserThree", SendMessageToChivesChatDataUserThree)
-        if(SendMessageToChivesChatDataUserThree?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChivesChatDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChivesChatDataUserThree formatText", formatText)
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserThreeSendMessage: formatText
-          }))
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              ChivesChatDelMemberTwo: formatText
+            }))
+
+            //Read message from inbox
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, AdminTwo)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  ChivesChatDelMemberTwo: formatText2
+                }))
+              }
+            }
+
+          }
+
         }
       }
       
+      const GetChivesChatMembers2nd = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
+      if(GetChivesChatMembers2nd) {
+        console.log("GetChivesChatMembers2nd", GetChivesChatMembers2nd)
+        if(GetChivesChatMembers2nd?.msg?.Output?.data?.output)  {
+          const formatText = GetChivesChatMembers2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            GetChivesChatMembers2nd: formatText
+          }))
+        }
+      }
+
       //Delay 1s code end
       setIsDisabledButton(false)
 
     }, 5000);
 
-    
+
+      
+
 
     
 
   }
-
 
   //Loading the all Inbox to IndexedDb
   useEffect(() => {
@@ -412,16 +531,31 @@ const ChivesChat = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserOne Message From: Top-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOne}</Typography>
+                AdminOne Message From: Top-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.AdminOne}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserTwo Message From: Bottom-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwo}</Typography>
+                AdminTwo Message From: Bottom-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.AdminTwo}</Typography>
                 </Typography>
+                
 
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserThree Message From: Bottom-Right ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThree}</Typography>
-                </Typography>
+                <Tooltip title={toolInfo?.UserOne}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  UserOne ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOne}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.UserTwo}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  UserTwo ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwo}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.UserThree}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  UserThree ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThree}</Typography>
+                  </Typography>
+                </Tooltip>
                 
                 <Tooltip title={toolInfo?.LoadBlueprintChivesChat}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
@@ -430,55 +564,76 @@ const ChivesChat = () => {
                 </Tooltip>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers1st}</Typography>
+                Admins(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAdmins1st}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserOne Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneRegister}</Typography>
+                AddAdmin AdminOne : <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddAdminOne}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(1 user): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers2nd}</Typography>
+                Admins(1 Admin): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAdmins2nd}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserTwo Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoRegister}</Typography>
+                AddAdmin AdminTwo: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddAdminTwo}</Typography>
                 </Typography>
 
                 <Tooltip title={toolInfo?.ChivesChatMembers3rd}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Members(2 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers3rd}</Typography>
+                  Admins(2 Admins): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAdmins3rd}</Typography>
                   </Typography>
                 </Tooltip>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserThree Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeRegister}</Typography>
+                DelAdmin AdminOne: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatDelAdminOne}</Typography>
                 </Typography>
 
-                <Tooltip title={toolInfo?.ChivesChatMembers4th}>
+                <Tooltip title={toolInfo?.ChivesChatAdmins4th}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                      Members(3 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers4th}</Typography>
-                  </Typography>
-                </Tooltip>
-                
-                <Tooltip title={toolInfo?.UserOneSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserOne Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
-                
-                <Tooltip title={toolInfo?.UserTwoSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserTwo Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
-                
-                <Tooltip title={toolInfo?.UserThreeSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserThree Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeSendMessage}</Typography>
+                  Admins(1 Admins, Left AdminTwo): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAdmins4th}</Typography>
                   </Typography>
                 </Tooltip>
 
+                <Tooltip title={toolInfo?.ChivesChatAddMemberOne}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Add UserOne: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddMemberOne}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.ChivesChatAddMemberTwo}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Add UserTwo: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddMemberTwo}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.ChivesChatAddMemberThree}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Add UserThree: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddMemberThree}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.GetChivesChatMembers1st}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Members in Chatroom(3 Users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.GetChivesChatMembers1st}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.GetChivesChatMembers1st}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Delete UserTwo Using AdminTwo: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatDelMemberTwo}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.GetChivesChatMembers2nd}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Members in Chatroom(User One and Three, UserTwo was deleted): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.GetChivesChatMembers2nd}</Typography>
+                  </Typography>
+                </Tooltip>
+
+
+
+                
 
               </Grid>
           </Card>
