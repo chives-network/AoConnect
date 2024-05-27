@@ -62,7 +62,7 @@ Handlers.add(
   function (msg)
     ao.send({
       Target = msg.From,
-      Data = json.encode(Channels)
+      Data = require('json').encode(Channels)
     })
   end
 )

@@ -138,8 +138,7 @@ const ChivesChat = () => {
     return () => clearInterval(intervalId);
   }, [toolInfo?.UserThree]);
 
-
-
+  
   const handleSimulatedChivesChat = async function () {
 
     setIsDisabledButton(true)
@@ -544,33 +543,12 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatGetInfoData = await ChivesChatGetInfo(ChivesChatProcessTxId, AdminTwo)
+      const ChivesChatGetInfoData = await ChivesChatGetInfo(ChivesChatProcessTxId, UserOne)
       if(ChivesChatGetInfoData) {
-        console.log("ChivesChatGetInfoData", ChivesChatGetInfoData)
-        if(ChivesChatGetInfoData?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatGetInfoData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
-
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              ChivesChatGetInfoData: formatText
-            }))
-
-            //Read message from inbox
-            const ChivesChatGetInfoInboxData = await GetMyLastMsg(currentWallet.jwk, AdminTwo)
-            if(ChivesChatGetInfoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = ChivesChatGetInfoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  ChivesChatGetInfoData: formatText2
-                }))
-              }
-            }
-
-          }
-
-        }
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          ChivesChatGetInfoData: ChivesChatGetInfoData
+        }))
       }
 
       //Delay 1s code end
@@ -581,9 +559,9 @@ const ChivesChat = () => {
 
   }
 
-  //Loading the all Inbox to IndexedDb
+
   useEffect(() => {
-    //GetMyInboxMsgFromAoConnect()
+    
   }, [])
 
   return (
