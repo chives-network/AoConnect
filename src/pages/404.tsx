@@ -13,9 +13,6 @@ import Box, { BoxProps } from '@mui/material/Box'
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
-// ** Demo Imports
-import FooterIllustrations from 'src/views/pages/misc/FooterIllustrations'
-
 // ** Styled Components
 const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -34,15 +31,6 @@ const Img = styled('img')(({ theme }) => ({
   },
   [theme.breakpoints.up('lg')]: {
     marginTop: theme.spacing(13)
-  }
-}))
-
-const TreeIllustration = styled('img')(({ theme }) => ({
-  left: 0,
-  bottom: '5rem',
-  position: 'absolute',
-  [theme.breakpoints.down('lg')]: {
-    bottom: 0
   }
 }))
 

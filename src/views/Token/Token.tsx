@@ -10,7 +10,6 @@ import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -21,7 +20,6 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import toast from 'react-hot-toast'
-import Avatar from '@mui/material/Avatar'
 import MuiAvatar from '@mui/material/Avatar'
 import authConfig from 'src/configs/auth'
 
@@ -35,7 +33,6 @@ import TokenSendOut from './TokenSendOut'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
-import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -175,6 +172,7 @@ const Inbox = () => {
                         .sort((a: any, b: any) => b[1] - a[1])
                         .reduce((acc: any, [key, value]) => {
                             acc[key] = FormatBalance(Number(value));
+                            
                             return acc;
                         }, {} as { [key: string]: number });
       const TokenMap = Object.values(AoDryRunBalancesJsonSorted)

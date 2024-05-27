@@ -80,7 +80,7 @@ export const AoGetMessage = async (processTxId: string, messageTxId: string) => 
     }
 }
 
-export const AoGetPageRecords = async (processTxId: string, Sort = 'DESC', Limit = 25, From: string = '') => {
+export const AoGetPageRecords = async (processTxId: string, Sort = 'DESC', Limit = 25, From = '') => {
     try {
         const { results } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const resultsOut = await results({

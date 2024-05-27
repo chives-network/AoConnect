@@ -52,7 +52,7 @@ export const GetChivesChatAdmins = async (currentWalletJwk: any, processTxId: st
         
         if(GetChivesChatAdminsResult && GetChivesChatAdminsResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChivesChatAdminsResult)
-            
+
             return { id: GetChivesChatAdminsResult, msg: MsgContent };
         }
         else {
@@ -80,9 +80,11 @@ export const ChivesChatAddAdmin = async (currentWalletJwk: any, chatroomTxId: st
         
         if(GetChivesChatAddAdminResult && GetChivesChatAddAdminResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddAdminResult)
+
             return { id: GetChivesChatAddAdminResult, msg: MsgContent };
         }
         else {
+
             return { id: GetChivesChatAddAdminResult };
         }
     }
@@ -106,9 +108,11 @@ export const ChivesChatDelAdmin = async (currentWalletJwk: any, chatroomTxId: st
         
         if(GetChivesChatDelAdminResult && GetChivesChatDelAdminResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelAdminResult)
+
             return { id: GetChivesChatDelAdminResult, msg: MsgContent };
         }
         else {
+
             return { id: GetChivesChatDelAdminResult };
         }
     }
@@ -133,9 +137,11 @@ export const ChivesChatAddMember = async (currentWalletJwk: any, chatroomTxId: s
         
         if(GetChivesChatAddMemberResult && GetChivesChatAddMemberResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddMemberResult)
+
             return { id: GetChivesChatAddMemberResult, msg: MsgContent };
         }
         else {
+
             return { id: GetChivesChatAddMemberResult };
         }
     }
@@ -159,9 +165,11 @@ export const ChivesChatDelMember = async (currentWalletJwk: any, chatroomTxId: s
         
         if(GetChivesChatDelMemberResult && GetChivesChatDelMemberResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelMemberResult)
+
             return { id: GetChivesChatDelMemberResult, msg: MsgContent };
         }
         else {
+
             return { id: GetChivesChatDelMemberResult };
         }
     }
@@ -185,9 +193,11 @@ export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: 
         
         if(GetChivesChatAddChannelResult && GetChivesChatAddChannelResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddChannelResult)
+
             return { id: GetChivesChatAddChannelResult, msg: MsgContent };
         }
         else {
+            
             return { id: GetChivesChatAddChannelResult };
         }
     }
@@ -244,9 +254,11 @@ export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxI
         
         if(SendMessageResult && SendMessageResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, SendMessageResult)
+
             return { id: SendMessageResult, msg: MsgContent };
         }
         else {
+            
             return { id: SendMessageResult };
         }
     }

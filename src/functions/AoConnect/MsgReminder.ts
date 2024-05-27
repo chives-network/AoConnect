@@ -1,11 +1,11 @@
 import { AoGetPageRecords } from './AoConnect'
 
-const AoConnectIndexedDb: string = 'AoConnectDb'
-const AoConnectLastCursor: string = 'AoConnectLastCursor'
-const AoConnectAllMessages: string = 'AoConnectAllMessages'
-const AoConnectReminderProcessTxId: string = 'AoConnectReminderProcessTxId'
-const AoConnectReminderChatroomTxId: string = 'AoConnectReminderChatroomTxId'
-const AoConnectEveryTimeGetMsgCount: number = 10
+const AoConnectIndexedDb = 'AoConnectDb'
+const AoConnectLastCursor = 'AoConnectLastCursor'
+const AoConnectAllMessages = 'AoConnectAllMessages'
+const AoConnectReminderProcessTxId = 'AoConnectReminderProcessTxId'
+const AoConnectReminderChatroomTxId = 'AoConnectReminderChatroomTxId'
+const AoConnectEveryTimeGetMsgCount = 10
 
 export const SetAoConnectReminderChatroomTxId = (chatroomTxId: string) => {
     window.localStorage.setItem(AoConnectReminderChatroomTxId, chatroomTxId)
@@ -50,6 +50,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
         //Output From Chatroom Msg Reminder
         if(item.node && item.node.Output && item.node.Output.data && item.node.Output.data.output && typeof item.node.Output.data.output === 'string' )  {
             const Msg = item.node.Output.data.output.replace(ansiRegex, '');
+            
             //NeedReminderMsg.push([Msg, ''])
         }
 
@@ -315,7 +316,7 @@ export const GetInboxMsgFromIndexedDb = (processTxId: string, pageNumber: number
 
 }
 
-const OpenDb = (processTxId: string = "", reject: any = null) => {
+const OpenDb = (processTxId = "", reject: any = null) => {
     const request = indexedDB.open(processTxId && processTxId!="" ? processTxId : AoConnectIndexedDb, 3);
     request.onerror = function(event: any) {
         console.log('Database error: ' + event.target.errorCode);

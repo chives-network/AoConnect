@@ -19,7 +19,6 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import toast from 'react-hot-toast'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'

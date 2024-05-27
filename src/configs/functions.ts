@@ -55,7 +55,6 @@ export function formatSecondToMinute(miningTime: number): string {
 
 export function formatTimestampDateTime(timestamp: number): string {
   const date = String(timestamp).length == 10 ? new Date(timestamp * 1000) : new Date(timestamp)
-  const currentDate = new Date();
   if(timestamp == undefined) return ""
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

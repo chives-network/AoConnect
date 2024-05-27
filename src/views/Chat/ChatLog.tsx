@@ -38,7 +38,6 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Types Imports
 import {
   MessageType,
-  MsgFeedbackType,
   ChatLogChatType,
   MessageGroupType,
   FormattedChatsType

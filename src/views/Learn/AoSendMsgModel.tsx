@@ -163,9 +163,6 @@ const AoSendMsgModel = () => {
         duration: 4000 
       })
       setResultText(Result)
-      //setProcessTxId("")
-      //setMessage("Hello World : " + String(generateRandomNumber()).substring(0, 4) + ".")
-      //setTags("")
     }
     setIsDisabledButton(false)
     setUploadingButton(`${t('Submit')}`)

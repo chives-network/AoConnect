@@ -6,9 +6,6 @@ import AppModel from 'src/views/Chatroom/Model'
 // ** Axios Imports
 import axios from 'axios'
 import authConfig from 'src/configs/auth'
-import { useAuth } from 'src/hooks/useAuth'
-import { useRouter } from 'next/router'
-import { getAnonymousUserId } from 'src/functions/ChatBook'
 
 
 const AllApp = () => {
@@ -28,6 +25,7 @@ const AllApp = () => {
   useEffect(() => {
     
     getAppsPage()
+    console.log("type", type, search)
     
   }, [])
 
@@ -39,12 +37,6 @@ const AllApp = () => {
     setSearch(Item)
     setAppId("")
   }
-
-  const [anonymousUserId, setAnonymousUserId] = useState<string>('')
-  useEffect(() => {
-    const tempId = getAnonymousUserId()
-    setAnonymousUserId(tempId)
-  }, [])
 
   const getAppsPage = async function () {
     const pagesize = 20

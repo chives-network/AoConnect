@@ -253,6 +253,7 @@ export const AoTokenInfoDryRun = async (TargetTxId: string) => {
             result.Messages[0].Tags.map((Item: any)=>{
                 RS[Item.name] = Item.value
             })
+            
             return RS
         }
         else {
@@ -289,7 +290,7 @@ export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
             result.Messages[0].Tags.map((Item: any)=>{
                 RS[Item.name] = Item.value
             })
-            
+
             return RS
         }
         else {

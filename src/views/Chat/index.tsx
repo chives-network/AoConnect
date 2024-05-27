@@ -12,21 +12,16 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 import ChatIndex from 'src/views/Chat/ChatIndex'
 
 // ** Axios Imports
-import axios from 'axios'
 import authConfig from 'src/configs/auth'
 import { useRouter } from 'next/router'
-import { useAuth } from 'src/hooks/useAuth'
-import { useTranslation } from 'react-i18next'
 
 import { GetChatLogFromIndexedDb } from 'src/functions/AoConnect/MsgReminder'
 
-const Chat = (props: any) => {
+const Chat = () => {
   // ** States
-  const [refreshChatCounter, setRefreshChatCounter] = useState<number>(0)
   const [app, setApp] = useState<any>(null)
 
   // ** Hooks
-  const { t } = useTranslation()
   const theme = useTheme()
   const { settings } = useSettings()
   const router = useRouter()

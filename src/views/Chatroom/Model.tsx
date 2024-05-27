@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, MouseEvent, Fragment } from 'react'
+import { Fragment } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -7,14 +7,9 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import CardMedia from '@mui/material/CardMedia'
-import authConfig from 'src/configs/auth'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import Link from 'next/link'
 
 import Avatar from '@mui/material/Avatar'
 import Container from '@mui/material/Container'
