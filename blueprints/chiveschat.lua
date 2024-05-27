@@ -1,6 +1,6 @@
 
--- Author: Chives-Network
 -- Name: ChivesChat
+-- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
 -- Version: 20240527
@@ -13,10 +13,13 @@
 -- 4. Member: Apply join chatroom, send messages, and quit chatroom.
 -- 5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.
 
+
+-- Three Roles Account
 -- Owner CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw
 -- Admin 4g0crQskU9ikPci3dmrWHHigEn2XCe5bCk_VaSOFa4c
 -- Member vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA
 
+-- Function Call Examples
 -- Send({Target = "chatroom txid", Action = "AddAdmin", AdminId = "admin txid..." }) need owner role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelAdmin", AdminId = "admin txid..." }) need owner role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AddMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
