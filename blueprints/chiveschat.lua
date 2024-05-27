@@ -60,7 +60,12 @@ Handlers.add(
   "GetInfo",
   Handlers.utils.hasMatchingTag("Action", "GetInfo"),
   function (msg)
-    return (Channels)
+    ao.send({
+      Target = msg.From,
+      ['Message-Id'] = msg.Id,
+      Channels = Channels,
+      Data = "Successfully GetInfo"
+    })
   end
 )
 
