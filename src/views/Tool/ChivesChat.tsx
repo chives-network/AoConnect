@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
-import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, SendMessageToChivesChat, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddMember, ChivesChatDelMember } from 'src/functions/AoConnect/ChivesChat'
+import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, SendMessageToChivesChat, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddMember, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetInfo } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -486,6 +486,93 @@ const ChivesChat = () => {
         }
       }
 
+      const ChivesChatAddChannel1 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "11", "ChannelName001", "Welcome", "11", "Owner")
+      if(ChivesChatAddChannel1) {
+        console.log("ChivesChatAddChannel1", ChivesChatAddChannel1)
+        if(ChivesChatAddChannel1?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddChannel1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              ChivesChatAddChannel1: formatText
+            }))
+
+            //Read message from inbox
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  ChivesChatAddChannel1: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
+      const ChivesChatAddChannel2 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "12", "ChannelName002", "Welcome", "12", "Owner")
+      if(ChivesChatAddChannel2) {
+        console.log("ChivesChatAddChannel2", ChivesChatAddChannel2)
+        if(ChivesChatAddChannel2?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddChannel2?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              ChivesChatAddChannel2: formatText
+            }))
+
+            //Read message from inbox
+            const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+            if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  ChivesChatAddChannel2: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
+      const ChivesChatGetInfoData = await ChivesChatGetInfo(ChivesChatProcessTxId, AdminTwo)
+      if(ChivesChatGetInfoData) {
+        console.log("ChivesChatGetInfoData", ChivesChatGetInfoData)
+        if(ChivesChatGetInfoData?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatGetInfoData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              ChivesChatGetInfoData: formatText
+            }))
+
+            //Read message from inbox
+            const ChivesChatGetInfoInboxData = await GetMyLastMsg(currentWallet.jwk, AdminTwo)
+            if(ChivesChatGetInfoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = ChivesChatGetInfoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  ChivesChatGetInfoData: formatText2
+                }))
+              }
+            }
+
+          }
+
+        }
+      }
+
       //Delay 1s code end
       setIsDisabledButton(false)
 
@@ -614,7 +701,7 @@ const ChivesChat = () => {
                   </Typography>
                 </Tooltip>
 
-                <Tooltip title={toolInfo?.GetChivesChatMembers1st}>
+                <Tooltip title={toolInfo?.ChivesChatDelMemberTwo}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
                   Delete UserTwo Using AdminTwo: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatDelMemberTwo}</Typography>
                   </Typography>
@@ -626,9 +713,27 @@ const ChivesChat = () => {
                   </Typography>
                 </Tooltip>
 
+                <Tooltip title={toolInfo?.ChivesChatAddChannel1}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Add Channel 1: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddChannel1}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.ChivesChatAddChannel2}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  Add Channel 2: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddChannel2}</Typography>
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip title={toolInfo?.ChivesChatGetInfoData}>
+                  <Typography noWrap variant='body2' sx={{my: 2}}>
+                  All Channels: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatGetInfoData}</Typography>
+                  </Typography>
+                </Tooltip>
 
 
-                
+
+                       
 
               </Grid>
           </Card>

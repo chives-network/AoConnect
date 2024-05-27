@@ -172,6 +172,64 @@ export const ChivesChatDelMember = async (currentWalletJwk: any, chatroomTxId: s
   
 }
 
+export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, ChannelId: string, ChannelName: string, ChannelGroup: string, ChannelSort: string, ChannelWritePermission: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatAddChannelResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "AddChannel", ChannelId = "' + ChannelId + '", ChannelName = "' + ChannelName + '", ChannelGroup = "' + ChannelGroup + '", ChannelSort = "' + ChannelSort + '", ChannelWritePermission = "' + ChannelWritePermission + '"})',
+        });
+        console.log("ChivesChatAddChannel GetChivesChatAddChannelResult", GetChivesChatAddChannelResult)
+        
+        if(GetChivesChatAddChannelResult && GetChivesChatAddChannelResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddChannelResult)
+            return { id: GetChivesChatAddChannelResult, msg: MsgContent };
+        }
+        else {
+            return { id: GetChivesChatAddChannelResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("GetChivesChatMembers Error:", Error)
+    }
+  
+}
+
+export const ChivesChatGetInfo = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetInfo' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return result.Messages[0].Data
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenBalanceDryRun Error:", Error)
+
+        return 
+    }
+}
 
 export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, Message: string) => {
     try {
