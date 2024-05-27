@@ -31,7 +31,7 @@ import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
-const Inbox = () => {
+const TokenModel = () => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -710,5 +710,5 @@ const Inbox = () => {
   )
 }
 
-export default Inbox
+export default TokenModel
 

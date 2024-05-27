@@ -28,7 +28,7 @@ import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
-const Chatroom = () => {
+const ChivesChat = () => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -192,20 +192,6 @@ const Chatroom = () => {
         }
       }
       console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
-
-      /*
-      const LoadBlueprintChat = await AoLoadBlueprintChat(currentWallet.jwk, ChatroomProcessTxId)
-      if(LoadBlueprintChat) {
-        console.log("LoadBlueprintChat", LoadBlueprintChat)
-        if(LoadBlueprintChat?.msg?.Output?.data?.output)  {
-          const formatText = LoadBlueprintChat?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            LoadBlueprintChat: formatText
-          }))
-        }
-      }
-      */
 
       const ChatroomMembers1st = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
       if(ChatroomMembers1st) {
@@ -504,5 +490,5 @@ const Chatroom = () => {
   )
 }
 
-export default Chatroom
+export default ChivesChat
 

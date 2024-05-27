@@ -2,6 +2,7 @@
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 
+import ChivesChat from './ChivesChat'
 import Chatroom from './Chatroom'
 import Token from './Token'
 
@@ -10,6 +11,11 @@ const LearnCenter = () => {
 
   return (
     <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <Card sx={{ padding: '0 8px' }}>
+          <ChivesChat />
+        </Card>
+      </Grid>
       <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
           <Chatroom />
