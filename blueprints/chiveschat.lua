@@ -12,6 +12,7 @@
 -- 3. Admin: Approval join application, invite members, delete members.
 -- 4. Member: Apply join chatroom, send messages, and quit chatroom.
 -- 5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.
+-- 6. Owner can add or delete channels.
 
 
 -- Three Roles Account
@@ -33,6 +34,7 @@
 Owners = Owners or {}
 Admins = Admins or {}
 Members = Members or {}
+Channels = Channels or {}
 
 function Welcome()
   return(
@@ -42,9 +44,69 @@ function Welcome()
       "2. Owner: can add or delete admins, invite members, delete members.\n" ..
       "3. Admin: Approval join application, invite members, delete members.\n" ..
       "4. Member: Apply join chatroom, send messages, and quit chatroom.\n" ..
-      "5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n\n" ..
+      "5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n" ..
+      "6. Owner can add or delete channels.\n\n" ..
       "Have fun, be respectful !")
 end
+
+Handlers.add(
+  "AddChannel",
+  Handlers.utils.hasMatchingTag("Action", "AddChannel"),
+  function (msg)
+    if msg.From == ao.id then
+        Channels[msg.ChannelId] = {
+          ChannelId = msg.ChannelId,
+          ChannelName = msg.ChannelName,
+          ChannelGroup = msg.ChannelGroup,
+          ChannelSort = msg.ChannelSort
+        }
+        Handlers.utils.reply("Has save channel")(msg)
+        ao.send({
+            Target = msg.From,
+            Data = "Successfully add a channel"
+        })
+
+    else
+        ao.send({
+          Target = msg.From,
+          Action = 'AddChannel-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'Only the owner can add a channel'
+        })
+    end
+  end
+)
+
+Handlers.add(
+  "DelChannel",
+  Handlers.utils.hasMatchingTag("Action", "DelChannel"),
+  function (msg)
+    if msg.From == ao.id then
+        if Channels[msg.ChannelId] then
+          Channels[msg.ChannelId] = nil
+          Handlers.utils.reply("Channel deleted")(msg)
+          ao.send({
+              Target = msg.From,
+              Data = "Successfully deleted the channel"
+          })
+        else
+          ao.send({
+            Target = msg.From,
+            Action = 'DeleteChannel-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'Channel not found'
+          })
+        end
+    else
+        ao.send({
+          Target = msg.From,
+          Action = 'DeleteChannel-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'Only the owner can delete a channel'
+        })
+    end
+  end
+)
 
 Handlers.add(
   "AddAdmin",
