@@ -23,8 +23,9 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintChivesChat, AoLoadBlueprintChat, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnect/AoConnect'
+import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
+import { AoLoadBlueprintChivesChat, GetChivesChatMembers, RegisterChivesChatMember, SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -139,16 +140,16 @@ const ChivesChat = () => {
 
 
 
-  const handleSimulatedChatroom = async function () {
+  const handleSimulatedChivesChat = async function () {
 
     setIsDisabledButton(true)
     setToolInfo(null)
     
-    const ChatroomProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
-    if(ChatroomProcessTxId) {
+    const ChivesChatProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+    if(ChivesChatProcessTxId) {
       setToolInfo((prevState: any)=>({
         ...prevState,
-        ChatroomProcessTxId: ChatroomProcessTxId
+        ChivesChatProcessTxId: ChivesChatProcessTxId
       }))
     }
 
@@ -180,7 +181,7 @@ const ChivesChat = () => {
       
       //Delay 5s code begin
 
-      const LoadBlueprintChivesChat = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChatroomProcessTxId)
+      const LoadBlueprintChivesChat = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId)
       if(LoadBlueprintChivesChat) {
         console.log("LoadBlueprintChivesChat", LoadBlueprintChivesChat)
         if(LoadBlueprintChivesChat?.msg?.Output?.data?.output)  {
@@ -193,19 +194,19 @@ const ChivesChat = () => {
       }
       console.log("LoadBlueprintChivesChat", LoadBlueprintChivesChat)
 
-      const ChatroomMembers1st = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers1st) {
-        console.log("ChatroomMembers1st", ChatroomMembers1st)
-        if(ChatroomMembers1st?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatMembers1st = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatMembers1st) {
+        console.log("ChivesChatMembers1st", ChivesChatMembers1st)
+        if(ChivesChatMembers1st?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers1st: formatText
+            ChivesChatMembers1st: formatText
           }))
         }
       }
 
-      const UserOneRegisterData = await RegisterChatroomMember(currentWallet.jwk, ChatroomProcessTxId, UserOne)
+      const UserOneRegisterData = await RegisterChivesChatMember(currentWallet.jwk, ChivesChatProcessTxId, UserOne)
       if(UserOneRegisterData) {
         console.log("UserOneRegisterData", UserOneRegisterData)
         if(UserOneRegisterData?.msg?.Output?.data?.output)  {
@@ -234,19 +235,19 @@ const ChivesChat = () => {
         }
       }
 
-      const ChatroomMembers2nd = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers2nd) {
-        console.log("ChatroomMembers2nd", ChatroomMembers2nd)
-        if(ChatroomMembers2nd?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatMembers2nd = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatMembers2nd) {
+        console.log("ChivesChatMembers2nd", ChivesChatMembers2nd)
+        if(ChivesChatMembers2nd?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatMembers2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers2nd: formatText
+            ChivesChatMembers2nd: formatText
           }))
         }
       }
 
-      const UserTwoRegisterData = await RegisterChatroomMember(currentWallet.jwk, ChatroomProcessTxId, UserTwo)
+      const UserTwoRegisterData = await RegisterChivesChatMember(currentWallet.jwk, ChivesChatProcessTxId, UserTwo)
       if(UserTwoRegisterData) {
         console.log("UserTwoRegisterData", UserTwoRegisterData)
         if(UserTwoRegisterData?.msg?.Output?.data?.output)  {
@@ -275,19 +276,19 @@ const ChivesChat = () => {
         }
       }
 
-      const ChatroomMembers3rd = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers3rd) {
-        console.log("ChatroomMembers3rd", ChatroomMembers3rd)
-        if(ChatroomMembers3rd?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatMembers3rd = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatMembers3rd) {
+        console.log("ChivesChatMembers3rd", ChivesChatMembers3rd)
+        if(ChivesChatMembers3rd?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatMembers3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers3rd: formatText
+            ChivesChatMembers3rd: formatText
           }))
         }
       }
 
-      const UserThreeRegisterData = await RegisterChatroomMember(currentWallet.jwk, ChatroomProcessTxId, UserThree)
+      const UserThreeRegisterData = await RegisterChivesChatMember(currentWallet.jwk, ChivesChatProcessTxId, UserThree)
       if(UserThreeRegisterData) {
         console.log("UserThreeRegisterData", UserThreeRegisterData)
         if(UserThreeRegisterData?.msg?.Output?.data?.output)  {
@@ -316,24 +317,24 @@ const ChivesChat = () => {
         }
       }
 
-      const ChatroomMembers4th = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
-      if(ChatroomMembers4th) {
-        console.log("ChatroomMembers4th", ChatroomMembers4th)
-        if(ChatroomMembers4th?.msg?.Output?.data?.output)  {
-          const formatText = ChatroomMembers4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatMembers4th = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
+      if(ChivesChatMembers4th) {
+        console.log("ChivesChatMembers4th", ChivesChatMembers4th)
+        if(ChivesChatMembers4th?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatMembers4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChatroomMembers4th: formatText
+            ChivesChatMembers4th: formatText
           }))
         }
       }
 
-      const SendMessageToChatroomDataUserOne = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserOne, "001 Msg from UserOne ["+UserOne+"]")
-      if(SendMessageToChatroomDataUserOne) {
-        console.log("SendMessageToChatroomDataUserOne", SendMessageToChatroomDataUserOne)
-        if(SendMessageToChatroomDataUserOne?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChatroomDataUserOne?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChatroomDataUserOne formatText", formatText)
+      const SendMessageToChivesChatDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, UserOne, "001 Msg from UserOne ["+UserOne+"]")
+      if(SendMessageToChivesChatDataUserOne) {
+        console.log("SendMessageToChivesChatDataUserOne", SendMessageToChivesChatDataUserOne)
+        if(SendMessageToChivesChatDataUserOne?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToChivesChatDataUserOne?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToChivesChatDataUserOne formatText", formatText)
           setToolInfo((prevState: any)=>({
             ...prevState,
             UserOneSendMessage: formatText
@@ -341,12 +342,12 @@ const ChivesChat = () => {
         }
       }
 
-      const SendMessageToChatroomDataUserTwo = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserTwo, "002 Msg from UserTwo ["+UserTwo+"]")
-      if(SendMessageToChatroomDataUserTwo) {
-        console.log("SendMessageToChatroomDataUserTwo", SendMessageToChatroomDataUserTwo)
-        if(SendMessageToChatroomDataUserTwo?.msg?.Messages && SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChatroomDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChatroomDataUserTwo formatText", formatText)
+      const SendMessageToChivesChatDataUserTwo = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "002 Msg from UserTwo ["+UserTwo+"]")
+      if(SendMessageToChivesChatDataUserTwo) {
+        console.log("SendMessageToChivesChatDataUserTwo", SendMessageToChivesChatDataUserTwo)
+        if(SendMessageToChivesChatDataUserTwo?.msg?.Messages && SendMessageToChivesChatDataUserTwo?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToChivesChatDataUserTwo?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToChivesChatDataUserTwo formatText", formatText)
           setToolInfo((prevState: any)=>({
             ...prevState,
             UserTwoSendMessage: formatText
@@ -354,12 +355,12 @@ const ChivesChat = () => {
         }
       }
 
-      const SendMessageToChatroomDataUserThree = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserThree, "003 Msg from UserThree ["+UserThree+"]")
-      if(SendMessageToChatroomDataUserThree) {
-        console.log("SendMessageToChatroomDataUserThree", SendMessageToChatroomDataUserThree)
-        if(SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data)  {
-          const formatText = SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
-          console.log("SendMessageToChatroomDataUserThree formatText", formatText)
+      const SendMessageToChivesChatDataUserThree = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "003 Msg from UserThree ["+UserThree+"]")
+      if(SendMessageToChivesChatDataUserThree) {
+        console.log("SendMessageToChivesChatDataUserThree", SendMessageToChivesChatDataUserThree)
+        if(SendMessageToChivesChatDataUserThree?.msg?.Messages[0]?.Data)  {
+          const formatText = SendMessageToChivesChatDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+          console.log("SendMessageToChivesChatDataUserThree formatText", formatText)
           setToolInfo((prevState: any)=>({
             ...prevState,
             UserThreeSendMessage: formatText
@@ -392,9 +393,9 @@ const ChivesChat = () => {
           <Card>
               <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                      () => { handleSimulatedChatroom() }
+                      () => { handleSimulatedChivesChat() }
                   }>
-                  {t("Simulated Chatroom")}
+                  {t("Simulated ChivesChat")}
                   </Button>
               </Grid>
           </Card>
@@ -407,7 +408,7 @@ const ChivesChat = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                ChatroomProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomProcessTxId}</Typography>
+                ChivesChatProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatProcessTxId}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
@@ -429,7 +430,7 @@ const ChivesChat = () => {
                 </Tooltip>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers1st}</Typography>
+                Members(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers1st}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
@@ -437,16 +438,16 @@ const ChivesChat = () => {
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(1 user): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers2nd}</Typography>
+                Members(1 user): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers2nd}</Typography>
                 </Typography>
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 UserTwo Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoRegister}</Typography>
                 </Typography>
 
-                <Tooltip title={toolInfo?.ChatroomMembers3rd}>
+                <Tooltip title={toolInfo?.ChivesChatMembers3rd}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Members(2 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers3rd}</Typography>
+                  Members(2 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers3rd}</Typography>
                   </Typography>
                 </Tooltip>
 
@@ -454,9 +455,9 @@ const ChivesChat = () => {
                 UserThree Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeRegister}</Typography>
                 </Typography>
 
-                <Tooltip title={toolInfo?.ChatroomMembers4th}>
+                <Tooltip title={toolInfo?.ChivesChatMembers4th}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                      Members(3 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers4th}</Typography>
+                      Members(3 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatMembers4th}</Typography>
                   </Typography>
                 </Tooltip>
                 
