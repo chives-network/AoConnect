@@ -205,11 +205,16 @@ const AoSendMsgModel = () => {
   }
 
   const handleLuaFromGithub = async (module: string) => {
-    const Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/' + module + '.lua', { headers: { }, params: { } }).then(res => res.data)
-    setMessage(Data)
-    setTags('[ { "name": "Action", "value": "Eval" } ]')
-    setResultText('')
-    setResultText2('')
+    try {
+        const Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/' + module + '.lua', { headers: { }, params: { } }).then(res => res.data)
+        setMessage(Data)
+        setTags('[ { "name": "Action", "value": "Eval" } ]')
+        setResultText('')
+        setResultText2('')
+    }
+    catch(Error: any) {
+        console.error("getAppsPage Error:", Error)
+    }
   }
 
   return (

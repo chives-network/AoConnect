@@ -27,7 +27,7 @@ const AllApp = () => {
 
   useEffect(() => {
     
-    //getAppsPage()
+    getAppsPage()
     
   }, [])
 
@@ -50,28 +50,33 @@ const AllApp = () => {
     const pagesize = 20
 
     if(loadingAllData == false)  {
-      setLoading(true)
-      const RS = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/collection/chatroom.json', { headers: { 'Content-Type': 'application/json'} }).then(res=>res.data)
-      console.log("RSRSRSRSRS",RS)
-      if(RS) {
-        const appInitial: string[] = []
-        RS.map((Item: any)=>{
-          appInitial.push(Item)
-        })
-        if(RS.length < pagesize && pageid >= 0) {
-          setLoadingAllData(true)
+      try {
+        setLoading(true)
+        const RS = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/collection/chatroom.json', { headers: { 'Content-Type': 'application/json'} }).then(res=>res.data)
+        console.log("RSRSRSRSRS",RS)
+        if(RS) {
+          const appInitial: string[] = []
+          RS.map((Item: any)=>{
+            appInitial.push(Item)
+          })
+          if(RS.length < pagesize && pageid >= 0) {
+            setLoadingAllData(true)
+          }
+          setApp([...app, ...appInitial].filter((element) => element != null))
+          setAppId("")
+          window.localStorage.setItem(authConfig.AoConnectChatRoom, JSON.stringify([...app, ...appInitial]))
         }
-        setApp([...app, ...appInitial].filter((element) => element != null))
-        setAppId("")
-        window.localStorage.setItem(authConfig.AoConnectChatRoom, JSON.stringify([...app, ...appInitial]))
-      }
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 500);  
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 500);  
 
-      return () => {
-        clearTimeout(timer);
-      };
+        return () => {
+          clearTimeout(timer);
+        };
+      }
+      catch(Error: any) {
+          console.error("getAppsPage Error:", Error)
+      }
     }
     else {
       setLoading(true)
