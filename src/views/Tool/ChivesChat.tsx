@@ -492,11 +492,6 @@ const ChivesChat = () => {
     }, 5000);
 
 
-      
-
-
-    
-
   }
 
   //Loading the all Inbox to IndexedDb

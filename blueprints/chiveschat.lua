@@ -61,14 +61,18 @@ Handlers.add(
 
         if not found then
             table.insert(Admins, msg.AdminId)
-            Handlers.utils.reply("Have add admin " .. msg.AdminId)(msg)
+            Handlers.utils.reply("Have add administrator")(msg)
         else
-            Handlers.utils.reply("Already is admin " .. msg.AdminId)(msg)
+            Handlers.utils.reply("Already is administrator")(msg)
         end
 
         ao.send({
             Target = msg.From,
-            Data = "Successfully add admin " .. msg.AdminId
+            Data = "Successfully add administrator"
+        })
+        ao.send({
+          Target = msg.AdminId,
+          Data = "You have been set as an administrator.  Chatroom:" .. ao.id
         })
 
     else
@@ -76,7 +80,7 @@ Handlers.add(
           Target = msg.From,
           Action = 'AddAdmin-Error',
           ['Message-Id'] = msg.Id,
-          Error = 'Only owner can add admin ' .. msg.AdminId
+          Error = 'Only the owner can add an administrator'
         })
     end
   end
@@ -91,7 +95,7 @@ Handlers.add(
         for i, v in ipairs(Admins) do
             if v == msg.AdminId then
                 table.remove(Admins, i)
-                Handlers.utils.reply("Have delete admin " .. msg.AdminId)(msg)
+                Handlers.utils.reply("Have delete administrator")(msg)
                 found = true
                 break
             end
@@ -100,12 +104,16 @@ Handlers.add(
         if found then
             ao.send({
                 Target = msg.From,
-                Data = "Successfully delete admin " .. msg.AdminId
+                Data = "Successfully delete administrator"
+            })
+            ao.send({
+              Target = msg.AdminId,
+              Data = "You have been removed as an administrator. Chatroom:" .. ao.id
             })
         else
             ao.send({
                 Target = msg.From,
-                Data = "Not a admin " .. msg.AdminId
+                Data = "Not a administrator"
             })
         end
 
@@ -114,7 +122,7 @@ Handlers.add(
           Target = msg.From,
           Action = 'DelAdmin-Error',
           ['Message-Id'] = msg.Id,
-          Error = 'Only owner can delete admin ' .. msg.AdminId
+          Error = 'Only the owner can delete an administrator'
         })
     end
   end
@@ -146,19 +154,24 @@ Handlers.add(
       if not isMember then
         table.insert(Members, msg.MemberId)
         Handlers.utils.reply("Joined")(msg)
+        ao.send({
+          Target = msg.From,
+          Data = "Successfully add member"
+        })
+        ao.send({
+          Target = msg.MemberId,
+          Data = "You have been invited to join chatroom " .. ao.id
+        })
       else
         Handlers.utils.reply("Already joined")(msg)
       end
-      ao.send({
-        Target = msg.From,
-        Data = "Successfully add member " .. msg.MemberId
-      })
+      
     else 
       ao.send({
         Target = msg.From,
         Action = 'AddMember-Error',
         ['Message-Id'] = msg.Id,
-        Error = 'Only admin can add member ' .. msg.MemberId
+        Error = 'Only an administrator can add a member'
       })
     end
   end
@@ -184,21 +197,26 @@ Handlers.add(
       for i, v in ipairs(Members) do
           if v == msg.MemberId then
               table.remove(Members, i)
-              Handlers.utils.reply("Has remove member ".. msg.MemberId)(msg)
+              Handlers.utils.reply("Member has been removed")(msg)
               isMember = true
+              ao.send({
+                Target = msg.From,
+                Data = "Member successfully removed"
+              })
+              ao.send({
+                Target = msg.MemberId,
+                Data = "You have been removed from chatroom " .. ao.id
+              })
               break
           end
       end
-      ao.send({
-        Target = msg.From,
-        Data = "Successfully remove member " .. msg.MemberId
-      })
+      
     else 
       ao.send({
         Target = msg.From,
         Action = 'DelMember-Error',
         ['Message-Id'] = msg.Id,
-        Error = 'Only admin can remove member ' .. msg.MemberId
+        Error = 'Only an administrator can remove a member'
       })
     end
   end
@@ -211,11 +229,11 @@ Handlers.add(
     local haveSentRecords = {}
     for _, admin in ipairs(Admins) do
       if not haveSentRecords[admin] then
-        ao.send({Target = admin, Data = 'You have a new application that needs approval.', Sender = msg.From})
+        ao.send({Target = admin, Data = 'You have a new application that requires approval', Sender = msg.From})
         haveSentRecords[admin] = true
       end
     end
-    ao.send({Target = msg.From, Data = 'Your application has been submitted and is awaiting administrator approval.', Admin = admin})
+    ao.send({Target = msg.From, Data = 'Your application has been submitted and is awaiting administrator approval', Admin = admin})
   end
 )
 
@@ -241,22 +259,25 @@ Handlers.add(
         if not isMember then
           table.insert(Members, msg.Applicant)
           Handlers.utils.reply("Joined")(msg)
+          ao.send({
+            Target = msg.From,
+            Data = "Successfully approval user " .. msg.Applicant
+          })
+          ao.send({
+            Target = msg.Applicant,
+            Data = "Your application has been approved. Chatroom " .. ao.id
+          })
         else
           Handlers.utils.reply("Already joined")(msg)
         end
-        ao.send({
-          Target = msg.From,
-          Data = "Successfully approval user " .. msg.Applicant
-        })
     else 
       ao.send({
         Target = msg.From,
         Action = 'ApprovalApply-Error',
         ['Message-Id'] = msg.Id,
-        Error = 'Only admin can approval ' .. msg.Applicant
+        Error = 'Only administrators can approve'
       })
     end
-    Handlers.utils.reply("You have approval one application")(msg)
   end
 )
 
@@ -268,7 +289,7 @@ Handlers.add(
     for i, v in ipairs(Members) do
         if v == msg.From then
             table.remove(Members, i)
-            Handlers.utils.reply("Quit")(msg)
+            Handlers.utils.reply("You have successfully exited from chatroom " .. ao.id)(msg)
             isMember = true
             break
         end
