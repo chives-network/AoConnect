@@ -28,7 +28,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoGetMessage } from 'src/functions/AoConnectLib'
+import { AoGetMessage } from 'src/functions/AoConnect/AoConnect'
 
 import MessageRender from './MessageRender'
 

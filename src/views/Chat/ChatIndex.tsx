@@ -27,7 +27,7 @@ import authConfig from 'src/configs/auth'
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 
-import { GetChatLogFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
+import { GetChatLogFromIndexedDb } from 'src/functions/AoConnect/MsgReminder'
 
 const AppChat = (props: any) => {
   // ** Hook

@@ -24,7 +24,7 @@ import ChatContextPreview from 'src/views/Chat/ChatContextPreview'
 
 import { ChatAiAudioV1 } from 'src/functions/ChatBook'
 
-import { GetAppAvatar } from 'src/functions/AoConnectMsgReminder'
+import { GetAppAvatar } from 'src/functions/AoConnect/MsgReminder'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'

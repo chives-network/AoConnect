@@ -24,8 +24,8 @@ import { useTranslation } from 'react-i18next'
 import { isMobile } from 'src/configs/functions'
 
 import { formatHash, formatTimestampDateTime } from 'src/configs/functions'
-import { GetMyInboxMsg } from 'src/functions/AoConnectLib'
-import { GetInboxMsgFromIndexedDb, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnectMsgReminder'
+import { GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
+import { GetInboxMsgFromIndexedDb, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnect/MsgReminder'
 
 import ViewMessage from './ViewMessage'
 

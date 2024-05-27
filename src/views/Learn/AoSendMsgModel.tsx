@@ -32,8 +32,8 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoSendMsg, AoGetMessage, generateRandomNumber } from 'src/functions/AoConnectLib'
-import { SetAoConnectReminderProcessTxId, GetAoConnectReminderProcessTxId, SetAoConnectReminderChatroomTxId, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnectMsgReminder'
+import { AoSendMsg, AoGetMessage, generateRandomNumber } from 'src/functions/AoConnect/AoConnect'
+import { SetAoConnectReminderProcessTxId, GetAoConnectReminderProcessTxId, SetAoConnectReminderChatroomTxId, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
 
 
 import MessageRender from './MessageRender'

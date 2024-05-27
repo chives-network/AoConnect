@@ -35,7 +35,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useRouter } from 'next/router'
 
-import { AoGetPageRecords } from 'src/functions/AoConnectLib'
+import { AoGetPageRecords } from 'src/functions/AoConnect/AoConnect'
 import AnsiText from './AnsiText'
 
 

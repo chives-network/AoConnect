@@ -34,8 +34,9 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun, FormatBalance, AoTokenInBoxDryRun, GetMyInboxMsg } from 'src/functions/AoConnectLib'
-import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
+import { GetMyLastMsg, AoCreateProcessAuto, generateRandomNumber, FormatBalance, GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
+import { AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 import { nlNL } from '@mui/x-data-grid';
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;

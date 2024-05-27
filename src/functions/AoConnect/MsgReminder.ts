@@ -1,5 +1,5 @@
-import { AoGetPageRecords } from './AoConnectLib'
-import { getMessageData, getMessagesData, getOutputData, getNoticeAction, parseNoticeData, getNoticeData, parseAmount } from './AoConnectUtils'
+import { AoGetPageRecords } from './AoConnect'
+import { getMessageData, getMessagesData, getOutputData, getNoticeAction, parseNoticeData, getNoticeData, parseAmount } from './Utils'
 
 const AoConnectIndexedDb: string = 'AoConnectDb'
 const AoConnectLastCursor: string = 'AoConnectLastCursor'

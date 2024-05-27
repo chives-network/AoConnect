@@ -18,7 +18,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 
-import { GetChatLogFromIndexedDb } from 'src/functions/AoConnectMsgReminder'
+import { GetChatLogFromIndexedDb } from 'src/functions/AoConnect/MsgReminder'
 
 const Chat = (props: any) => {
   // ** States

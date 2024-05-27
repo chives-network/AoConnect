@@ -13,7 +13,7 @@ import authConfig from 'src/configs/auth'
 import ChatLog from './ChatLog'
 import { useTranslation } from 'react-i18next'
 import SendMsgForm from 'src/views/Chat/SendMsgForm'
-import { GetAppAvatar } from 'src/functions/AoConnectMsgReminder'
+import { GetAppAvatar } from 'src/functions/AoConnect/MsgReminder'
 
 const ChatContent = (props: any) => {
   // ** Props

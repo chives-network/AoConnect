@@ -25,7 +25,7 @@ import Box from '@mui/material/Box'
 import Icon from 'src/@core/components/icon'
 import IconButton from '@mui/material/IconButton'
 
-import { BalanceCompare } from 'src/functions/AoConnectLib'
+import { BalanceCompare } from 'src/functions/AoConnect/AoConnect'
 
 const TokenSendOut = (props: any) => {
     // ** Props

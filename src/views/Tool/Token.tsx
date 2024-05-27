@@ -26,8 +26,9 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances, generateRandomNumber } from 'src/functions/AoConnectLib'
-import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
+import { GetMyLastMsg, AoCreateProcessAuto, generateRandomNumber } from 'src/functions/AoConnect/AoConnect'
+import { AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances } from 'src/functions/AoConnect/Token'
+import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 

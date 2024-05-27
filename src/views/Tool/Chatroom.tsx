@@ -23,8 +23,9 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintChatroom, AoLoadBlueprintChat, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnectLib'
-import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
+import { GetMyLastMsg, AoCreateProcessAuto, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnect/AoConnect'
+import { AoLoadBlueprintChatroom } from 'src/functions/AoConnect/Chatroom'
+import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
