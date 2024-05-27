@@ -1,6 +1,3 @@
-Owners = Owners or {}
-Admins = Admins or {}
-Members = Members or {}
 
 -- Author: Chives-Network
 -- Name: ChivesChat
@@ -8,6 +5,13 @@ Members = Members or {}
 -- Copyright: MIT
 -- Version: 20240527
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/chiveschat.lua
+
+-- Function
+-- 1. Chatroom support three roles: owner, admin, member.
+-- 2. Owner: can add or delete admins, invite members, delete members.
+-- 3. Admin: Approval join application, invite members, delete members.
+-- 4. Member: Apply join chatroom, send messages, and quit chatroom.
+-- 5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.
 
 -- Owner CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw
 -- Admin 4g0crQskU9ikPci3dmrWHHigEn2XCe5bCk_VaSOFa4c
@@ -22,6 +26,10 @@ Members = Members or {}
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApprovalApply", Applicant = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
+
+Owners = Owners or {}
+Admins = Admins or {}
+Members = Members or {}
 
 function Welcome()
   return(
