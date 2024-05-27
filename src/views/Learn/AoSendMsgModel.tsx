@@ -178,18 +178,6 @@ const AoSendMsgModel = () => {
     }
   }, [resultText])
 
-  const handleSendMsgTest = async () =>{
-    if(currentWallet && currentWallet.jwk)  {
-        const Result: any = await AoSendMsg(
-                currentWallet.jwk, 
-                'K5P_L9KdbbvORnde7_0JXaix1Cn9_FWGfUKMjFR3GUw', 
-                '',  
-                [ { name: 'Action', value: 'Eval' } ]
-        );
-        console.log("handleSendMsgTest", Result)
-    }
-  }
-
   const handleGetMsgContent = async () => {
     if(processTxId && resultText && resultText.length == 43)  {
         setIsDisabledButton2(true)

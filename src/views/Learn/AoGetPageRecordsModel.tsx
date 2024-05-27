@@ -53,7 +53,6 @@ const AoGetPageRecordsModel = () => {
   const [resultRecords, setresultRecords] = useState<any>()
 
   const auth = useAuth()
-  const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
   const [processTxId, setprocessTxId] = useState<string>("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
@@ -89,9 +88,6 @@ const AoGetPageRecordsModel = () => {
     if(true) {
       setresultRecords(Result)
       toast.success("AoGetPageRecords Success", { position: 'top-right', duration: 4000 })
-      //setprocessTxId("")
-      //setMessage("")
-      //setTags("")
     }
     setIsDisabledButton(false)
     setUploadingButton(`${t('Submit')}`)

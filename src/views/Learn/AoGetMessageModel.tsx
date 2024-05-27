@@ -46,7 +46,6 @@ const AoGetMessageModel = () => {
   const [resultText, setResultText] = useState<any>()
 
   const auth = useAuth()
-  const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
   const [processTxId, setprocessTxId] = useState<string>("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
@@ -90,21 +89,11 @@ const AoGetMessageModel = () => {
       setResultText(Result)
       console.log("AoGetMessageModel","handleSubmit","processTxId:", processTxId, "message:", message, "Result:", Result)
       toast.success("AoGetMessage Success", { position: 'top-right', duration: 4000 })
-      //setprocessTxId("")
-      //setMessage("")
-      //setTags("")
     }
     setIsDisabledButton(false)
     setUploadingButton(`${t('Submit')}`)
 
   }
-
-  const [isReactJson, setIsReactJson] = useState<boolean>(false)
-  useEffect(()=>{
-    setIsReactJson(false)
-  }, [])
-
-  
 
   return (
     <Fragment>

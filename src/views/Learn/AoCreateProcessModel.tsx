@@ -94,9 +94,6 @@ const AoCreateProcessModel = () => {
     if(processId && processId.length == 43) {
       toast.success(processId, { position: 'top-right', duration: 4000 })
       setResultText(processId)
-      //setmoduleTxId("")
-      //setScheduler("")
-      //setTags("")
     }
     setIsDisabledButton(false)
     setUploadingButton(`${t('Submit')}`)

@@ -45,7 +45,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   }
 
   const auth = useAuth()
-  const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
   // ** Change html `lang` attribute when changing locale
@@ -63,6 +62,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     const intervalId = setInterval(async () => {
       const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
       const ReminderMsgAndStoreToLocalData = GetMyCurrentProcessTxIdData && GetMyCurrentProcessTxIdData.length == 43 ? await ReminderMsgAndStoreToLocal(GetMyCurrentProcessTxIdData) : null
+      
       //Every msg delay one second to remind
       const displayMessagesWithDelay = (messages: any[], index: number) => {
         if (index < messages.length) {
@@ -79,7 +79,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
     return () => clearInterval(intervalId);
 
-  }, []);
+  }, [currentAddress]);
 
 
   //Message Format {Target, Action, Type, FromProcess, Data, Ref_}

@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
+import Link from '@mui/material/Link'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
@@ -25,7 +26,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
-import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, SendMessageToChivesChat, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddMember, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetInfo } from 'src/functions/AoConnect/ChivesChat'
+import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddMember, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetInfo } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -41,7 +42,7 @@ const ChivesChat = () => {
   const [toolInfo, setToolInfo] = useState<any>()
 
   // ** State
-  const [isLoading, setIsLoading] = useState(false);
+  //const [isLoading, setIsLoading] = useState(false);
 
   const CustomToast = (ContentList: any, position: string, avatar: string) => {
     return toast(
@@ -68,6 +69,7 @@ const ChivesChat = () => {
         style: {
           minWidth: '550px'
         },
+        
         //@ts-ignore
         position: position,
         duration: 4000
@@ -138,7 +140,7 @@ const ChivesChat = () => {
     return () => clearInterval(intervalId);
   }, [toolInfo?.UserThree]);
 
-  
+
   const handleSimulatedChivesChat = async function () {
 
     setIsDisabledButton(true)
@@ -559,11 +561,6 @@ const ChivesChat = () => {
 
   }
 
-
-  useEffect(() => {
-    
-  }, [])
-
   return (
     <Fragment>
       {currentAddress ?
@@ -576,6 +573,11 @@ const ChivesChat = () => {
                   }>
                   {t("Simulated ChivesChat")}
                   </Button>
+                  <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/chiveschat.lua`} target='_blank'>
+                      <Typography variant='body2'>
+                        {t("ChivesChat Lua")}
+                      </Typography>
+                  </Link>
               </Grid>
           </Card>
         </Grid>

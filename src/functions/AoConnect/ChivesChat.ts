@@ -2,12 +2,7 @@
 //Due need to use the node esm mode, so have change the package.json and move the repo to this location. Version: 0.0.53
 import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
-import authConfig from 'src/configs/auth'
-import BigNumber from 'bignumber.js'
-import axios from 'axios'
-
-import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from 'src/functions/AoConnect/MsgReminder'
-import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes, AoLoadBlueprintModule } from 'src/functions/AoConnect/AoConnect'
+import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, AoLoadBlueprintModule } from 'src/functions/AoConnect/AoConnect'
 
 
 export const AoLoadBlueprintChivesChat = async (currentWalletJwk: any, processTxId: string) => {
@@ -29,9 +24,11 @@ export const GetChivesChatMembers = async (currentWalletJwk: any, processTxId: s
         
         if(GetChivesChatMembersResult && GetChivesChatMembersResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChivesChatMembersResult)
+
             return { id: GetChivesChatMembersResult, msg: MsgContent };
         }
         else {
+
             return { id: GetChivesChatMembersResult };
         }
     }
@@ -55,9 +52,11 @@ export const GetChivesChatAdmins = async (currentWalletJwk: any, processTxId: st
         
         if(GetChivesChatAdminsResult && GetChivesChatAdminsResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChivesChatAdminsResult)
+            
             return { id: GetChivesChatAdminsResult, msg: MsgContent };
         }
         else {
+
             return { id: GetChivesChatAdminsResult };
         }
     }

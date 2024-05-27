@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
-import { CheckPermission } from 'src/functions/ChatBook'
 import { useTranslation } from 'react-i18next'
 
 // ** MUI Imports
@@ -36,7 +35,6 @@ const TokenSendOut = (props: any) => {
     const router = useRouter()
 
     const auth = useAuth()
-    const currentWallet = auth.currentWallet
     const currentAddress = auth.currentAddress
 
     useEffect(()=>{

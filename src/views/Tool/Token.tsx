@@ -5,10 +5,10 @@ import { BigNumber } from 'bignumber.js';
 
 // ** MUI Imports
 import Button from '@mui/material/Button'
-import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
+import Link from '@mui/material/Link'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
@@ -45,7 +45,7 @@ const TokenModel = () => {
   const [tokenInfo, setTokenInfo] = useState<any>()
 
   // ** State
-  const [isLoading, setIsLoading] = useState(false);
+  //const [isLoading, setIsLoading] = useState(false);
 
   const CustomToast = (ContentList: any, position: string, avatar: string) => {
     return toast(
@@ -72,6 +72,7 @@ const TokenModel = () => {
         style: {
           minWidth: '550px'
         },
+        
         //@ts-ignore
         position: position,
         duration: 4000
@@ -528,6 +529,11 @@ const TokenModel = () => {
                   }>
                   {t("Simulated Token")}
                   </Button>
+                  <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/token.lua`} target='_blank'>
+                      <Typography variant='body2'>
+                        {t("Token Lua")}
+                      </Typography>
+                  </Link>
               </Grid>
           </Card>
         </Grid>

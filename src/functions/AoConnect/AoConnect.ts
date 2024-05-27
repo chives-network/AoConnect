@@ -32,10 +32,10 @@ export const AoSendMsg = async (currentWalletJwk: any, processTxId: string, Msg:
     }
 }
 
-export const AoGetLastPage = async (processTxId: string, Sort: string = 'DESC', Limit: number = 25) => {
+export const AoGetLastPage = async (processTxId: string, Sort = 'DESC', Limit = 25) => {
     try {
         const { results } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        let resultsOut = await results({
+        const resultsOut = await results({
             process: processTxId,
             sort: Sort,
             limit: Limit,
@@ -53,7 +53,7 @@ export const AoGetLastPage = async (processTxId: string, Sort: string = 'DESC', 
 export const AoGetRecord = async (processTxId: string, messageTxId: string) => {
     try {
         const { result } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        let resultsOut = await result({
+        const resultsOut = await result({
             process: processTxId,
             message: messageTxId
         });
@@ -68,7 +68,7 @@ export const AoGetRecord = async (processTxId: string, messageTxId: string) => {
 export const AoGetMessage = async (processTxId: string, messageTxId: string) => {
     try {
         const { result } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        let resultsOut = await result({
+        const resultsOut = await result({
             process: processTxId,
             message: messageTxId
         });
@@ -80,10 +80,10 @@ export const AoGetMessage = async (processTxId: string, messageTxId: string) => 
     }
 }
 
-export const AoGetPageRecords = async (processTxId: string, Sort: string = 'DESC', Limit: number = 25, From: string = '') => {
+export const AoGetPageRecords = async (processTxId: string, Sort = 'DESC', Limit = 25, From: string = '') => {
     try {
         const { results } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        let resultsOut = await results({
+        const resultsOut = await results({
             process: processTxId,
             from: From && From != '' ? From : undefined,
             sort: Sort, 
@@ -102,9 +102,7 @@ export const AoCreateProcess = async (currentWalletJwk: any, moduleTxId: string,
         const { spawn } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const processTxId = await spawn({
-            // The Arweave TXID of the ao Module
             module: moduleTxId,
-            // The Arweave wallet address of a Scheduler Unit
             scheduler: scheduler,
             signer: createDataItemSigner(currentWalletJwk),
             tags: Tags,

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, Fragment } from 'react'
+import { useState, Fragment } from 'react'
 
 import { BigNumber } from 'bignumber.js';
 
@@ -12,7 +12,6 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Tooltip from '@mui/material/Tooltip'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 
@@ -34,10 +33,9 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, generateRandomNumber, FormatBalance, GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
-import { nlNL } from '@mui/x-data-grid';
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -49,45 +47,14 @@ const Inbox = () => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
+  
+  //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
   // ** State
-  const [isLoading, setIsLoading] = useState(false);
-
-  const CustomToast = (ContentList: any, position: string, avatar: string) => {
-    return toast(
-      t => (
-        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar alt='Victor Anderson' src={ ContentList['Logo'] || '/images/avatars/' + avatar } sx={{ mr: 3, width: 40, height: 40 }} />
-            <div>
-              <Typography>{ContentList['Data']}</Typography>
-              {ContentList && ContentList['Action'] == null && ContentList['FromProcess'] && (
-                <Typography variant='caption'>{ContentList['FromProcess']} Id: {ContentList['Ref_']}</Typography>
-              )}
-              {ContentList && ContentList['Action'] != null && (
-                <Typography variant='caption'>Action: {ContentList['Action']} Id: {ContentList['Ref_']}</Typography>
-              )}
-            </div>
-          </Box>
-          <IconButton onClick={() => toast.dismiss(t.id)}>
-            <Icon icon='mdi:close' fontSize={20} />
-          </IconButton>
-        </Box>
-      ),
-      {
-        style: {
-          minWidth: '550px'
-        },
-        //@ts-ignore
-        position: position,
-        duration: 4000
-      }
-    )
-  }
+  //const [isLoading, setIsLoading] = useState(false);
 
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 

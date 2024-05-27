@@ -2,11 +2,8 @@
 //Due need to use the node esm mode, so have change the package.json and move the repo to this location. Version: 0.0.53
 import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
-import authConfig from 'src/configs/auth'
-import BigNumber from 'bignumber.js'
 import axios from 'axios'
 
-import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from 'src/functions/AoConnect/MsgReminder'
 import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes } from 'src/functions/AoConnect/AoConnect'
 
 
@@ -42,9 +39,11 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
         if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
             console.log("AoLoadBlueprintModule MsgContent", module, MsgContent)
+
             return { id: GetMyLastMsgResult, msg: MsgContent };
         }
         else {
+
             return { id: GetMyLastMsgResult };
         }
     }
@@ -67,9 +66,11 @@ export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, m
         
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, SendTokenResult)
+
             return { id: SendTokenResult, msg: MsgContent };
         }
         else {
+
             return { id: SendTokenResult };
         }
     }
@@ -93,9 +94,11 @@ export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) 
         
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(tokenTxId, SendTokenResult)
+
             return { id: SendTokenResult, msg: MsgContent };
         }
         else {
+
             return { id: SendTokenResult };
         }
     }
@@ -119,9 +122,11 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
         
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(myTokenProcessTxId, SendTokenResult)
+
             return { id: SendTokenResult, msg: MsgContent };
         }
         else {
+
             return { id: SendTokenResult };
         }
     }
@@ -145,9 +150,11 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
         
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(tokenTxId, SendTokenResult)
+
             return { id: SendTokenResult, msg: MsgContent };
         }
         else {
+
             return { id: SendTokenResult };
         }
     }
@@ -282,6 +289,7 @@ export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
             result.Messages[0].Tags.map((Item: any)=>{
                 RS[Item.name] = Item.value
             })
+            
             return RS
         }
         else {

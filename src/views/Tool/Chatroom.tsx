@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
+import Link from '@mui/material/Link'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
@@ -41,7 +42,7 @@ const Chatroom = () => {
   const [toolInfo, setToolInfo] = useState<any>()
 
   // ** State
-  const [isLoading, setIsLoading] = useState(false);
+  //const [isLoading, setIsLoading] = useState(false);
 
   const CustomToast = (ContentList: any, position: string, avatar: string) => {
     return toast(
@@ -68,6 +69,7 @@ const Chatroom = () => {
         style: {
           minWidth: '550px'
         },
+
         //@ts-ignore
         position: position,
         duration: 4000
@@ -411,6 +413,11 @@ const Chatroom = () => {
                   }>
                   {t("Simulated Chatroom")}
                   </Button>
+                  <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/chatroom.lua`} target='_blank'>
+                      <Typography variant='body2'>
+                        {t("Chatroom Lua")}
+                      </Typography>
+                  </Link>
               </Grid>
           </Card>
         </Grid>
