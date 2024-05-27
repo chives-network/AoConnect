@@ -246,7 +246,7 @@ const TokenCreate = (props: any) => {
                     </Grid>
 
                     <Grid item xs={12} container justifyContent="flex-end">
-                        <Button variant='contained' disabled={tokenCreate.isDisabledButton} onClick={
+                        <Button sx={{textTransform: 'none', }} variant='contained' disabled={tokenCreate.isDisabledButton} onClick={
                             () => { handleSubmit() }
                         }>
                         {t(tokenCreate.FormSubmit)}

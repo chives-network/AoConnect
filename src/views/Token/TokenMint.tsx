@@ -200,7 +200,7 @@ const TokenMint = (props: any) => {
                     </Grid>
 
                     <Grid item xs={12} container justifyContent="flex-end">
-                        <Button variant='contained' disabled={tokenGetInfor.isDisabledButton} onClick={
+                        <Button sx={{textTransform: 'none', }} variant='contained' disabled={tokenGetInfor.isDisabledButton} onClick={
                             () => { handleSubmit() }
                         }>
                         {t(tokenGetInfor.FormSubmit)}

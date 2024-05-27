@@ -48,7 +48,7 @@ const TokenList = (prop: any) => {
                         <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{tokenGetInfor.TokenBalances[Item]}</Typography>
                     </TableCell>
                     <TableCell sx={{my: 0, py: 0}}>
-                        <Button sx={{my: 0}} size="small" disabled={tokenGetInfor.disabledSendOutButton || tokenGetInfor.TokenProcessTxId == Item} variant='outlined' onClick={
+                        <Button sx={{textTransform: 'none', my: 0}} size="small" disabled={tokenGetInfor.disabledSendOutButton || tokenGetInfor.TokenProcessTxId == Item} variant='outlined' onClick={
                             () => { setTokenGetInfor((prevState: any)=>({
                                 ...prevState,
                                 openSendOutToken: true,

@@ -340,7 +340,7 @@ const Inbox = () => {
                 
                 <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} />
 
-                <Button sx={{ m: 2, mt: 3 }} size="small" variant='outlined' onClick={
+                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} size="small" variant='outlined' onClick={
                     () => { 
                       setTokenCreate((prevState: any)=>({
                         ...prevState,
@@ -372,7 +372,7 @@ const Inbox = () => {
                     }}
                 />
 
-                <Button sx={{ m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
                     () => { handleTokenSearch(tokenGetInfor?.CurrentToken) }
                 }>
                 {t("Search Token")}
@@ -380,7 +380,7 @@ const Inbox = () => {
 
                 <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
 
-                <Button sx={{ m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
                     () => { 
                       setTokenGetInfor((prevState: any)=>({
                         ...prevState,
@@ -391,7 +391,7 @@ const Inbox = () => {
                 {t("Mint")}
                 </Button>
 
-                <Button sx={{ m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
                     () => { setTokenGetInfor((prevState: any)=>({
                         ...prevState,
                         openSendOutToken: true,

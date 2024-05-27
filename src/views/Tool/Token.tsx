@@ -522,7 +522,7 @@ const TokenModel = () => {
         <Grid item xs={12}>
           <Card>
               <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Button sx={{ m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                  <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
                       () => { handleSimulatedToken() }
                   }>
                   {t("Simulated Token")}
