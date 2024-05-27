@@ -31,12 +31,12 @@
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
 -- Setting Channels (need owner role to call)
--- Send({Target = "PoaM0gVaHif3PPdVbPd0ptWASXInF-UVEOd4cgFx5uM", Action = "AddChannel", ChannelId = "1", ChannelName = "Announcement", ChannelGroup = "Welcome", ChannelSort = "1", ChannelWritePermission = "Owner" })
--- Send({Target = "PoaM0gVaHif3PPdVbPd0ptWASXInF-UVEOd4cgFx5uM", Action = "AddChannel", ChannelId = "2", ChannelName = "Rules", ChannelGroup = "Welcome", ChannelSort = "2", ChannelWritePermission = "Owner" })
--- Send({Target = "PoaM0gVaHif3PPdVbPd0ptWASXInF-UVEOd4cgFx5uM", Action = "AddChannel", ChannelId = "3", ChannelName = "Introduction", ChannelGroup = "Introduction", ChannelSort = "3" })
--- Send({Target = "PoaM0gVaHif3PPdVbPd0ptWASXInF-UVEOd4cgFx5uM", Action = "AddChannel", ChannelId = "4", ChannelName = "Community", ChannelGroup = "Community", ChannelSort = "4" })
--- Send({Target = "PoaM0gVaHif3PPdVbPd0ptWASXInF-UVEOd4cgFx5uM", Action = "AddChannel", ChannelId = "5", ChannelName = "Support", ChannelGroup = "Community", ChannelSort = "5" })
--- Send({Target = "PoaM0gVaHif3PPdVbPd0ptWASXInF-UVEOd4cgFx5uM", Action = "AddChannel", ChannelId = "6", ChannelName = "Admin Team", ChannelGroup = "Administrators", ChannelSort = "6", ChannelReadPermission = "Owner,Admin" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "1", ChannelName = "Announcement", ChannelGroup = "Welcome", ChannelSort = "1", ChannelWritePermission = "Owner" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "2", ChannelName = "Rules", ChannelGroup = "Welcome", ChannelSort = "2", ChannelWritePermission = "Owner" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "3", ChannelName = "Introduction", ChannelGroup = "Introduction", ChannelSort = "3" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "4", ChannelName = "Community", ChannelGroup = "Community", ChannelSort = "4" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "5", ChannelName = "Support", ChannelGroup = "Community", ChannelSort = "5" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "6", ChannelName = "Admin Team", ChannelGroup = "Administrators", ChannelSort = "6", ChannelReadPermission = "Owner,Admin" })
 
 Owners = Owners or {}
 Admins = Admins or {}
@@ -62,10 +62,9 @@ Handlers.add(
   function (msg)
     ao.send({
       Target = msg.From,
-      ['Message-Id'] = msg.Id,
-      Channels = Channels,
-      Data = "Successfully GetInfo"
+      Data = require('json').encode(Channels)
     })
+    return("Channel GetInfo")
   end
 )
 
