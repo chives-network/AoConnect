@@ -517,6 +517,10 @@ export const AoLoadBlueprintChatroom = async (currentWalletJwk: any, processTxId
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chatroom')
 }
 
+export const AoLoadBlueprintChivesChat = async (currentWalletJwk: any, processTxId: string) => {
+    return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chiveschat')
+}
+
 export const AoLoadBlueprintChat = async (currentWalletJwk: any, processTxId: string) => {
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chat')
 }

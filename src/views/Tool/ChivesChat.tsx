@@ -23,7 +23,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintChatroom, AoLoadBlueprintChat, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnectLib'
+import { GetMyLastMsg, AoCreateProcessAuto, AoLoadBlueprintChivesChat, AoLoadBlueprintChat, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnectLib'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnectMsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -180,18 +180,18 @@ const ChivesChat = () => {
       
       //Delay 5s code begin
 
-      const LoadBlueprintChatroom = await AoLoadBlueprintChatroom(currentWallet.jwk, ChatroomProcessTxId)
-      if(LoadBlueprintChatroom) {
-        console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
-        if(LoadBlueprintChatroom?.msg?.Output?.data?.output)  {
-          const formatText = LoadBlueprintChatroom?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const LoadBlueprintChivesChat = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChatroomProcessTxId)
+      if(LoadBlueprintChivesChat) {
+        console.log("LoadBlueprintChivesChat", LoadBlueprintChivesChat)
+        if(LoadBlueprintChivesChat?.msg?.Output?.data?.output)  {
+          const formatText = LoadBlueprintChivesChat?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            LoadBlueprintChatroom: formatText
+            LoadBlueprintChivesChat: formatText
           }))
         }
       }
-      console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
+      console.log("LoadBlueprintChivesChat", LoadBlueprintChivesChat)
 
       const ChatroomMembers1st = await GetChatroomMembers(currentWallet.jwk, ChatroomProcessTxId)
       if(ChatroomMembers1st) {
@@ -422,9 +422,9 @@ const ChivesChat = () => {
                 UserThree Message From: Bottom-Right ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThree}</Typography>
                 </Typography>
                 
-                <Tooltip title={toolInfo?.LoadBlueprintChatroom}>
+                <Tooltip title={toolInfo?.LoadBlueprintChivesChat}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  .load-blueprint chatroom: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintChatroom}</Typography>
+                  .load-blueprint chiveschat: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintChivesChat}</Typography>
                   </Typography>
                 </Tooltip>
 
