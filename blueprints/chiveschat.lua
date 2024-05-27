@@ -2,17 +2,38 @@ Owners = Owners or {}
 Admins = Admins or {}
 Members = Members or {}
 
+-- Author: Chives-Network
+-- Name: ChivesChat
+-- Email: chivescoin@gmail.com
+-- Copyright: MIT
+-- Version: 20240527
+-- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/chiveschat.lua
+
 -- Owner CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw
 -- Admin 4g0crQskU9ikPci3dmrWHHigEn2XCe5bCk_VaSOFa4c
 -- Member vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA
+
 -- Send({Target = "chatroom txid", Action = "AddAdmin", AdminId = "admin txid..." }) need owner role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelAdmin", AdminId = "admin txid..." }) need owner role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AddMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApprovalApply", Applicant = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
 
+function Welcome()
+  return(
+      "Welcome to ChivesChat V0.1!\n\n" ..
+      "Main functoin:\n\n" ..
+      "1. Chatroom support three roles: owner, admin, member.\n" ..
+      "2. Owner: can add or delete admins, invite members, delete members.\n" ..
+      "3. Admin: Approval join application, invite members, delete members.\n" ..
+      "4. Member: Apply join chatroom, send messages, and quit chatroom.\n" ..
+      "5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n\n" ..
+      "Have fun, be respectful !")
+end
 
 Handlers.add(
   "AddAdmin",
@@ -84,6 +105,90 @@ Handlers.add(
           ['Message-Id'] = msg.Id,
           Error = 'Only owner can delete admin ' .. msg.AdminId
         })
+    end
+  end
+)
+
+Handlers.add(
+  "AddMember",
+  Handlers.utils.hasMatchingTag("Action", "AddMember"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+    
+    if isAdmin then
+      local isMember = false
+      for _, member in ipairs(Members) do
+        if member == msg.MemberId then
+          isMember = true
+          break
+        end
+      end
+      if not isMember then
+        table.insert(Members, msg.MemberId)
+        Handlers.utils.reply("Joined")(msg)
+      else
+        Handlers.utils.reply("Already joined")(msg)
+      end
+      ao.send({
+        Target = msg.From,
+        Data = "Successfully add member " .. msg.MemberId
+      })
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'AddMember-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only admin can add member ' .. msg.MemberId
+      })
+    end
+  end
+)
+
+Handlers.add(
+  "DelMember",
+  Handlers.utils.hasMatchingTag("Action", "DelMember"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+    
+    if isAdmin then
+      local isMember = false
+      for i, v in ipairs(Members) do
+          if v == msg.MemberId then
+              table.remove(Members, i)
+              Handlers.utils.reply("Has remove member ".. msg.MemberId)(msg)
+              isMember = true
+              break
+          end
+      end
+      ao.send({
+        Target = msg.From,
+        Data = "Successfully remove member " .. msg.MemberId
+      })
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'DelMember-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only admin can remove member ' .. msg.MemberId
+      })
     end
   end
 )
@@ -202,26 +307,16 @@ Handlers.add(
         Data = 'Successfully Broadcasted ' .. msg.Data
       })
     else
-      Handlers.utils.reply("Your are not a memeber")(msg)
+      Handlers.utils.reply("You are not a memeber")(msg)
       ao.send({
         Target = msg.From,
         Action = 'Broadcast-Error',
         ['Message-Id'] = msg.Id,
-        Error = 'Your are not a memeber ' .. msg.Data
+        Error = 'You are not a memeber ' .. msg.Data
       })
     end
     
   end
 )
-
-function Welcome()
-  return(
-      "Welcome to ChivesChat V0.1!\n\n" ..
-      "Main functoin:\n\n" ..
-      "1. Chatroom support three roles: owner, admin, member.\n" ..
-      "2. The chatroom owner can add or delete admins.\n" ..
-      "3. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n\n" ..
-      "Have fun, be respectful !")
-end
 
 return Welcome()
