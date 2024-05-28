@@ -457,7 +457,7 @@ Handlers.add(
             ['Message-Id'] = msg.Id,
             Error = 'Does not have an invite or has already processed'
           })
-      endend
+      end
     else 
       ao.send({
         Target = msg.From,
@@ -466,6 +466,7 @@ Handlers.add(
         Error = 'Only an administrator can refuse a invite'
       })
     end
+    
   end
 )
 
