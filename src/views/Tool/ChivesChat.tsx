@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
-import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, GetChivesChatInvites, GetChivesChatApplicants, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvite, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetChannels, ChivesChatAgreeInvite, ChivesChatRefuseInvite } from 'src/functions/AoConnect/ChivesChat'
+import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembersByOwner, GetChivesChatInvites, GetChivesChatApplicants, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvite, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetChannels, ChivesChatAgreeInvite, ChivesChatRefuseInvite, ChivesChatGetMembers } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -517,18 +517,19 @@ const ChivesChat = () => {
         }
       }
 
-      const GetChivesChatMembers1st = await GetChivesChatMembers(currentWallet.jwk, ChivesChatProcessTxId)
-      if(GetChivesChatMembers1st) {
-        console.log("GetChivesChatMembers1st", GetChivesChatMembers1st)
-        if(GetChivesChatMembers1st?.msg?.Output?.data?.output)  {
-          const formatText = GetChivesChatMembers1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const GetChivesChatMembersByOwner1st = await GetChivesChatMembersByOwner(currentWallet.jwk, ChivesChatProcessTxId)
+      if(GetChivesChatMembersByOwner1st) {
+        console.log("GetChivesChatMembersByOwner1st", GetChivesChatMembersByOwner1st)
+        if(GetChivesChatMembersByOwner1st?.msg?.Output?.data?.output)  {
+          const formatText = GetChivesChatMembersByOwner1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            'GetChivesChatMembers1st(1 member)': formatText
+            'GetChivesChatMembersByOwner1st(1 member)': formatText
           }))
         }
       }
 
+      /*
       const ChivesChatAddChannel1 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "11", "ChannelName001", "Welcome", "11", "Owner")
       if(ChivesChatAddChannel1) {
         console.log("ChivesChatAddChannel1", ChivesChatAddChannel1)
@@ -594,6 +595,7 @@ const ChivesChat = () => {
           ChivesChatGetChannelsData: ChivesChatGetChannelsData
         }))
       }
+      */
 
       //Delay 1s code end
       setIsDisabledButton(false)

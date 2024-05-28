@@ -9,30 +9,30 @@ export const AoLoadBlueprintChivesChat = async (currentWalletJwk: any, processTx
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chiveschat')
 }
 
-export const GetChivesChatMembers = async (currentWalletJwk: any, processTxId: string) => {
+export const GetChivesChatMembersByOwner = async (currentWalletJwk: any, processTxId: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
-        const GetChivesChatMembersResult = await message({
+        const GetChivesChatMembersByOwnerResult = await message({
             process: processTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Members',
         });
-        console.log("GetChivesChatMembers GetChivesChatMembers", GetChivesChatMembersResult)
+        console.log("GetChivesChatMembersByOwner GetChivesChatMembersByOwner", GetChivesChatMembersByOwnerResult)
         
-        if(GetChivesChatMembersResult && GetChivesChatMembersResult.length == 43) {
-            const MsgContent = await AoGetRecord(processTxId, GetChivesChatMembersResult)
+        if(GetChivesChatMembersByOwnerResult && GetChivesChatMembersByOwnerResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetChivesChatMembersByOwnerResult)
 
-            return { id: GetChivesChatMembersResult, msg: MsgContent };
+            return { id: GetChivesChatMembersByOwnerResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatMembersResult };
+            return { id: GetChivesChatMembersByOwnerResult };
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("GetChivesChatMembersByOwner Error:", Error)
     }
   
 }
@@ -417,6 +417,39 @@ export const ChivesChatGetChannels = async (TargetTxId: string, processTxId: str
             data: null,
             tags: [
                 { name: 'Action', value: 'GetChannels' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return result.Messages[0].Data
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenBalanceDryRun Error:", Error)
+
+        return 
+    }
+}
+
+export const ChivesChatGetMembers = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetMembers' },
                 { name: 'Target', value: processTxId },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
