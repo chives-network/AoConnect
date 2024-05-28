@@ -98,17 +98,21 @@ Handlers.add(
 )
 
 Handlers.add(
-  "Applicants",
-  Handlers.utils.hasMatchingTag("Action", "Applicants"),
+  "GetApplicants",
+  Handlers.utils.hasMatchingTag("Action", "GetApplicants"),
   function (msg)
-    local found = false
-    for i, v in ipairs(Admins) do
-        if v == msg.From then
-            found = true
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
             break
         end
     end
-    if msg.From == ao.id or found then
+    
+    if isAdmin then
       ao.send({
         Target = msg.From,
         Data = require('json').encode(Applicants)

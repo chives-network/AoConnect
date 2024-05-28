@@ -144,6 +144,12 @@ const ChivesChat = () => {
 
   const handleSimulatedChivesChat = async function () {
 
+    const ChivesChatGetApplicants2st = await ChivesChatGetApplicants("-HH-l6wmkly08vfditzx9igzchTYSCULPB234pIM6bQ", "7JEAYyBa5oF9JKswTJJxgc5V8b-95sKYeK5Tzri3q1E")
+      if(ChivesChatGetApplicants2st) {
+        console.log("ChivesChatGetApplicants2st", ChivesChatGetApplicants2st)
+      }
+      return 
+
     setIsDisabledButton(true)
     setToolInfo(null)
     
@@ -718,6 +724,18 @@ const ChivesChat = () => {
           setToolInfo((prevState: any)=>({
             ...prevState,
             'ChivesChatGetApplicants3st(Empty)': formatText
+          }))
+        }
+      }
+
+      const GetChivesChatMembersByOwner2st = await GetChivesChatMembersByOwner(currentWallet.jwk, ChivesChatProcessTxId)
+      if(GetChivesChatMembersByOwner2st) {
+        console.log("GetChivesChatMembersByOwner2st", GetChivesChatMembersByOwner2st)
+        if(GetChivesChatMembersByOwner2st?.msg?.Output?.data?.output)  {
+          const formatText = GetChivesChatMembersByOwner2st?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            'GetChivesChatMembersByOwner2st(2 members, UserThree and UserTwo)': formatText
           }))
         }
       }
