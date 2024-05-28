@@ -348,16 +348,16 @@ const ChivesChat = () => {
       }
 
       //Admin add or del member
-      const ChivesChatAddInviteOne = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne, "UserOne", "感兴趣")
-      if(ChivesChatAddInviteOne) {
-        console.log("ChivesChatAddInviteOne", ChivesChatAddInviteOne)
-        if(ChivesChatAddInviteOne?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatAddInviteOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddInviteUserOne = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne, "UserOne", "感兴趣")
+      if(ChivesChatAddInviteUserOne) {
+        console.log("ChivesChatAddInviteUserOne", ChivesChatAddInviteUserOne)
+        if(ChivesChatAddInviteUserOne?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddInviteUserOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatAddInviteOne: formatText
+              ChivesChatAddInviteUserOne: formatText
             }))
 
             //Read message from inbox
@@ -367,7 +367,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatAddInviteOne: formatText2
+                  ChivesChatAddInviteUserOne: formatText2
                 }))
               }
             }
@@ -377,16 +377,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatAddInviteTwo = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo, "UserTwo", "Interesting This Chatroom")
-      if(ChivesChatAddInviteTwo) {
-        console.log("ChivesChatAddInviteTwo", ChivesChatAddInviteTwo)
-        if(ChivesChatAddInviteTwo?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatAddInviteTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddInviteUserTwo = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo, "UserTwo", "Interesting This Chatroom")
+      if(ChivesChatAddInviteUserTwo) {
+        console.log("ChivesChatAddInviteUserTwo", ChivesChatAddInviteUserTwo)
+        if(ChivesChatAddInviteUserTwo?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddInviteUserTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatAddInviteTwo: formatText
+              ChivesChatAddInviteUserTwo: formatText
             }))
 
             //Read message from inbox
@@ -396,7 +396,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatAddInviteTwo: formatText2
+                  ChivesChatAddInviteUserTwo: formatText2
                 }))
               }
             }
@@ -406,16 +406,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatAddInviteThree = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree, "UserThree", "Interesting This Chatroom")
-      if(ChivesChatAddInviteThree) {
-        console.log("ChivesChatAddInviteThree", ChivesChatAddInviteThree)
-        if(ChivesChatAddInviteThree?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatAddInviteThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddInviteUserThree = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree, "UserThree", "Interesting This Chatroom")
+      if(ChivesChatAddInviteUserThree) {
+        console.log("ChivesChatAddInviteUserThree", ChivesChatAddInviteUserThree)
+        if(ChivesChatAddInviteUserThree?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddInviteUserThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatAddInviteThree: formatText
+              ChivesChatAddInviteUserThree: formatText
             }))
 
             //Read message from inbox
@@ -425,7 +425,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatAddInviteThree: formatText2
+                  ChivesChatAddInviteUserThree: formatText2
                 }))
               }
             }
@@ -435,28 +435,28 @@ const ChivesChat = () => {
         }
       }
 
-      const GetChivesChatInvites1st = await GetChivesChatInvites(currentWallet.jwk, ChivesChatProcessTxId)
-      if(GetChivesChatInvites1st) {
-        console.log("GetChivesChatInvites1st", GetChivesChatInvites1st)
-        if(GetChivesChatInvites1st?.msg?.Output?.data?.output)  {
-          const formatText = GetChivesChatInvites1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const GetChivesChatInvitesList1st = await GetChivesChatInvites(currentWallet.jwk, ChivesChatProcessTxId)
+      if(GetChivesChatInvitesList1st) {
+        console.log("GetChivesChatInvitesList1st", GetChivesChatInvitesList1st)
+        if(GetChivesChatInvitesList1st?.msg?.Output?.data?.output)  {
+          const formatText = GetChivesChatInvitesList1st?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            'GetChivesChatInvites1st(3 Invites)': formatText
+            'GetChivesChatInvitesList1st(3 Invites)': formatText
           }))
         }
       }
       
-      const ChivesChatAgreeInviteUserOne = await ChivesChatAgreeInvite(currentWallet.jwk, ChivesChatProcessTxId, UserOne)
-      if(ChivesChatAgreeInviteUserOne) {
-        console.log("ChivesChatAgreeInviteUserOne", ChivesChatAgreeInviteUserOne)
-        if(ChivesChatAgreeInviteUserOne?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatAgreeInviteUserOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatUserOneAgreeInvite = await ChivesChatAgreeInvite(currentWallet.jwk, ChivesChatProcessTxId, UserOne)
+      if(ChivesChatUserOneAgreeInvite) {
+        console.log("ChivesChatUserOneAgreeInvite", ChivesChatUserOneAgreeInvite)
+        if(ChivesChatUserOneAgreeInvite?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatUserOneAgreeInvite?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatAgreeInviteUserOne: formatText
+              ChivesChatUserOneAgreeInvite: formatText
             }))
 
             //Read message from inbox
@@ -466,7 +466,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatAgreeInviteUserOne: formatText2
+                  ChivesChatUserOneAgreeInvite: formatText2
                 }))
               }
             }
@@ -476,16 +476,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatRefuseInviteUserTwo = await ChivesChatRefuseInvite(currentWallet.jwk, ChivesChatProcessTxId, UserTwo)
-      if(ChivesChatRefuseInviteUserTwo) {
-        console.log("ChivesChatRefuseInviteUserTwo", ChivesChatRefuseInviteUserTwo)
-        if(ChivesChatRefuseInviteUserTwo?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatRefuseInviteUserTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatUserTwoRefuseInvite = await ChivesChatRefuseInvite(currentWallet.jwk, ChivesChatProcessTxId, UserTwo)
+      if(ChivesChatUserTwoRefuseInvite) {
+        console.log("ChivesChatUserTwoRefuseInvite", ChivesChatUserTwoRefuseInvite)
+        if(ChivesChatUserTwoRefuseInvite?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatUserTwoRefuseInvite?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatRefuseInviteUserTwo: formatText
+              ChivesChatUserTwoRefuseInvite: formatText
             }))
 
             //Read message from inbox
@@ -495,7 +495,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatRefuseInviteUserTwo: formatText2
+                  ChivesChatUserTwoRefuseInvite: formatText2
                 }))
               }
             }
@@ -505,28 +505,28 @@ const ChivesChat = () => {
         }
       }
       
-      const GetChivesChatInvites2nd = await GetChivesChatInvites(currentWallet.jwk, ChivesChatProcessTxId)
-      if(GetChivesChatInvites2nd) {
-        console.log("GetChivesChatInvites2nd", GetChivesChatInvites2nd)
-        if(GetChivesChatInvites2nd?.msg?.Output?.data?.output)  {
-          const formatText = GetChivesChatInvites2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const GetChivesChatInvitesList2nd = await GetChivesChatInvites(currentWallet.jwk, ChivesChatProcessTxId)
+      if(GetChivesChatInvitesList2nd) {
+        console.log("GetChivesChatInvitesList2nd", GetChivesChatInvitesList2nd)
+        if(GetChivesChatInvitesList2nd?.msg?.Output?.data?.output)  {
+          const formatText = GetChivesChatInvitesList2nd?.msg?.Output?.data?.output.replace(ansiRegex, '');
           setToolInfo((prevState: any)=>({
             ...prevState,
-            'GetChivesChatInvites2nd(1 invite, Left UserThree)': formatText
+            'GetChivesChatInvitesList2nd(1 invite, Left UserThree)': formatText
           }))
         }
       }
 
-      const ChivesChatRefuseInviteUserThree = await ChivesChatRefuseInvite(currentWallet.jwk, ChivesChatProcessTxId, UserThree)
-      if(ChivesChatRefuseInviteUserThree) {
-        console.log("ChivesChatRefuseInviteUserThree", ChivesChatRefuseInviteUserThree)
-        if(ChivesChatRefuseInviteUserThree?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatRefuseInviteUserThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatUserThreeRefuseInvite = await ChivesChatRefuseInvite(currentWallet.jwk, ChivesChatProcessTxId, UserThree)
+      if(ChivesChatUserThreeRefuseInvite) {
+        console.log("ChivesChatUserThreeRefuseInvite", ChivesChatUserThreeRefuseInvite)
+        if(ChivesChatUserThreeRefuseInvite?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatUserThreeRefuseInvite?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatRefuseInviteUserThree: formatText
+              ChivesChatUserThreeRefuseInvite: formatText
             }))
 
             //Read message from inbox
@@ -536,7 +536,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatRefuseInviteUserThree: formatText2
+                  ChivesChatUserThreeRefuseInvite: formatText2
                 }))
               }
             }
@@ -570,16 +570,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatApplyJoinUserTwo = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "UserTwo", "感兴趣")
-      if(ChivesChatApplyJoinUserTwo) {
-        console.log("ChivesChatApplyJoinUserTwo", ChivesChatApplyJoinUserTwo)
-        if(ChivesChatApplyJoinUserTwo?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatApplyJoinUserTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatUserTwoApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "UserTwo", "感兴趣")
+      if(ChivesChatUserTwoApplyJoin) {
+        console.log("ChivesChatUserTwoApplyJoin", ChivesChatUserTwoApplyJoin)
+        if(ChivesChatUserTwoApplyJoin?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatUserTwoApplyJoin?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatApplyJoinUserTwo: formatText
+              ChivesChatUserTwoApplyJoin: formatText
             }))
 
             //Read message from inbox
@@ -589,7 +589,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatApplyJoinUserTwo: formatText2
+                  ChivesChatUserTwoApplyJoin: formatText2
                 }))
               }
             }
@@ -599,16 +599,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatApplyJoinUserThree = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "UserThree", "感兴趣")
-      if(ChivesChatApplyJoinUserThree) {
-        console.log("ChivesChatApplyJoinUserThree", ChivesChatApplyJoinUserThree)
-        if(ChivesChatApplyJoinUserThree?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatApplyJoinUserThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatUserThreeApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "UserThree", "感兴趣")
+      if(ChivesChatUserThreeApplyJoin) {
+        console.log("ChivesChatUserThreeApplyJoin", ChivesChatUserThreeApplyJoin)
+        if(ChivesChatUserThreeApplyJoin?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatUserThreeApplyJoin?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatApplyJoinUserThree: formatText
+              ChivesChatUserThreeApplyJoin: formatText
             }))
 
             //Read message from inbox
@@ -618,7 +618,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatApplyJoinUserThree: formatText2
+                  ChivesChatUserThreeApplyJoin: formatText2
                 }))
               }
             }
@@ -640,16 +640,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatApprovalApplyUserTwo = await ChivesChatApprovalApply(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo, "UserTwo", "感兴趣ChivesChatApprovalApply")
-      if(ChivesChatApprovalApplyUserTwo) {
-        console.log("ChivesChatApprovalApplyUserTwo", ChivesChatApprovalApplyUserTwo)
-        if(ChivesChatApprovalApplyUserTwo?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatApprovalApplyUserTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAdminTwoApprovalApplyUserTwo = await ChivesChatApprovalApply(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo, "UserTwo", "感兴趣ChivesChatApprovalApply")
+      if(ChivesChatAdminTwoApprovalApplyUserTwo) {
+        console.log("ChivesChatAdminTwoApprovalApplyUserTwo", ChivesChatAdminTwoApprovalApplyUserTwo)
+        if(ChivesChatAdminTwoApprovalApplyUserTwo?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAdminTwoApprovalApplyUserTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatApprovalApplyUserTwo: formatText
+              ChivesChatAdminTwoApprovalApplyUserTwo: formatText
             }))
 
             //Read message from inbox
@@ -659,7 +659,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatApprovalApplyUserTwo: formatText2
+                  ChivesChatAdminTwoApprovalApplyUserTwo: formatText2
                 }))
               }
             }
@@ -681,16 +681,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatRefuseApplyUserThree = await ChivesChatRefuseApply(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree, "UserThree", "ChivesChatRefuseApplyUserThree")
-      if(ChivesChatRefuseApplyUserThree) {
-        console.log("ChivesChatRefuseApplyUserThree", ChivesChatRefuseApplyUserThree)
-        if(ChivesChatRefuseApplyUserThree?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatRefuseApplyUserThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAdminTwoRefuseApplyUserThree = await ChivesChatRefuseApply(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree, "UserThree", "ChivesChatAdminTwoRefuseApplyUserThree")
+      if(ChivesChatAdminTwoRefuseApplyUserThree) {
+        console.log("ChivesChatAdminTwoRefuseApplyUserThree", ChivesChatAdminTwoRefuseApplyUserThree)
+        if(ChivesChatAdminTwoRefuseApplyUserThree?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAdminTwoRefuseApplyUserThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatRefuseApplyUserThree: formatText
+              ChivesChatAdminTwoRefuseApplyUserThree: formatText
             }))
 
             //Read message from inbox
@@ -700,7 +700,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatRefuseApplyUserThree: formatText2
+                  ChivesChatAdminTwoRefuseApplyUserThree: formatText2
                 }))
               }
             }
