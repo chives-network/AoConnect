@@ -31,7 +31,7 @@ npm run export
 You need to provide information about the following projects.
 
 - **AO Developer's Handbook**: [Link](https://cookbook_ao.g8way.io/)
-- **Command-line based client tool officially released by AO**: [Link](https://github.com/permaweb/aos/)
+- **AOS Command-line based client tool officially released by AO**: [Link](https://github.com/permaweb/aos/)
 
 ### The difference between AOConnect and AOS
 AOS is a command-line based client software officially released by AO, with main functionalities including sending and receiving messages, loading LUA files, and executing function operations.
@@ -44,15 +44,19 @@ Developers are advised to first learn AOS to gain basic concepts and experience,
 1. **Wallet**: Integrated a simplified version of an AR wallet.
 
 2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
+
 <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Learn.png" width="600" />
 
 3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
+
 please go to [AOConnect Application Simulation] section.
 
 4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
+
 [Not Ready]
 
 5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
+
 <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
 
 ## AOConnect Application Simulation
@@ -61,7 +65,9 @@ please go to [AOConnect Application Simulation] section.
   1. Register
   2. Broadcast
   3. Unregister
+
   Simulate Chatroom lua module (This is not a specific function, but a simulator that simulates all relevant functions):
+
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChatroom.png" width="600" />
 
 ### Token
@@ -70,7 +76,9 @@ please go to [AOConnect Application Simulation] section.
   2. Create Token
   3. Mint Token
   4. Transfer Token
+  
   Simulate Token lua module (This is not a specific function, but a simulator that simulates all relevant functions):
+
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedToken.png" width="600" />
 
 ### ChivesChat
