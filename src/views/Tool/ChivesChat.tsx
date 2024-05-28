@@ -78,6 +78,7 @@ const ChivesChat = () => {
     )
   }
 
+  /*
   useEffect(() => {
     const intervalId = setInterval(async () => {
       const UserOneTxId = toolInfo?.UserOne
@@ -140,7 +141,7 @@ const ChivesChat = () => {
 
     return () => clearInterval(intervalId);
   }, [toolInfo?.UserThree]);
-
+  */
 
   const handleSimulatedChivesChat = async function () {
 
@@ -149,7 +150,7 @@ const ChivesChat = () => {
     
     setToolInfo((prevState: any)=>({
       ...prevState,
-      'Create Process Tx Id': 'Chatroom, AdminOne, AdminTwo, UserOne, UserTwo, UserThree'
+      'Create Chatroom and other 5 users': 'Chatroom, AdminOne, AdminTwo, UserOne, UserTwo, UserThree'
     }))
 
     const ChivesChatProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
