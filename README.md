@@ -42,30 +42,36 @@ Developers are advised to first learn AOS to gain basic concepts and experience,
 
 ## AOConnect Main Functions
 1. **Wallet**: Integrated a simplified version of an AR wallet.
-2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
-3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
-4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
-5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
 
-## AOConnect Typical Application Tools
+2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Learn.png" width="600" />
+
+3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
+please go to [AOConnect Application Simulation] section.
+
+4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
+[Not Ready]
+
+5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
+
+## AOConnect Application Simulation
 ### Chatroom
 - **Function**
   1. Register
   2. Broadcast
   3. Unregister
-  Simulate Chatroom lua module:
+  Simulate Chatroom lua module (This is not a specific function, but a simulator that simulates all relevant functions):
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChatroom.png" width="600" />
 
 ### Token
 - **Function**
   1. Token Balances
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
   2. Create Token
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenCreate.png" width="600" />
   3. Mint Token
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenMint.png" width="600" />
   4. Transfer Token
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenSendOut.png" width="600" />
+  Simulate Token lua module (This is not a specific function, but a simulator that simulates all relevant functions):
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedToken.png" width="600" />
 
 ### ChivesChat
 - **Function**
@@ -77,7 +83,7 @@ Developers are advised to first learn AOS to gain basic concepts and experience,
   6. Anyone can get channel information.
   7. Only members can get information on all members.
   8. This version of the message is public, not encrypted.
-  Simulate ChivesChat lua module:
+  Simulate ChivesChat lua module (This is not a specific function, but a simulator that simulates all relevant functions):
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChivesChat.png" width="600" />
 
 ## Future Planning
