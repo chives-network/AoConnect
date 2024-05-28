@@ -53,17 +53,19 @@ Developers are advised to first learn AOS to gain basic concepts and experience,
   1. Register
   2. Broadcast
   3. Unregister
+  Simulate Chatroom lua module:
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChatroom.png" width="600" />
 
 ### Token
 - **Function**
-  1. Create Token
-  ![Create Token](https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenCreate.png)
-
-  2. Mint Token
+  1. Token Balances
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
+  2. Create Token
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenCreate.png" width="600" />
+  3. Mint Token
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenMint.png" width="600" />
-
-  3. Transfer Token
-  4. Token Balances
+  4. Transfer Token
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenSendOut.png" width="600" />
 
 ### ChivesChat
 - **Function**
@@ -75,6 +77,8 @@ Developers are advised to first learn AOS to gain basic concepts and experience,
   6. Anyone can get channel information.
   7. Only members can get information on all members.
   8. This version of the message is public, not encrypted.
+  Simulate ChivesChat lua module:
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChivesChat.png" width="600" />
 
 ## Future Planning
 Currently in the development phase, the final stage will consider developing a decentralized instant messaging tool based on the AO network, supporting encrypted messages, groups, TOKEN distribution, exchange, staking, rewards, and more. The reference target will be DISCORD, while incorporating some features of the AO network to create an instant encrypted communication tool based on the AO and AR networks.
