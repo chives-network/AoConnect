@@ -446,9 +446,30 @@ const AoSendMsgModel = () => {
                                     }}>
                                         Members
                                     </Button>
-                                    <Typography variant='body2' sx={{ mt: -2 }}>
-                                        My process chat room 's members
-                                    </Typography>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
+                                        setMessage('Applicants')
+                                        setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
+                                    }}>
+                                        Applicants
+                                    </Button>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
+                                        setMessage('Invites')
+                                        setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
+                                    }}>
+                                        Invites
+                                    </Button>
+                                    <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
+                                        setMessage('Channels')
+                                        setTags('[ { "name": "Action", "value": "Eval" } ]')
+                                        setMessageHelp('ProcessTxId: ChatroomTxId')
+                                        setProcessTxId(chatroomId)
+                                    }}>
+                                        Channels
+                                    </Button>
                                 </Box>
                                 
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{

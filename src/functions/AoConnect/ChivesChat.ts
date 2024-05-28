@@ -9,7 +9,6 @@ export const AoLoadBlueprintChivesChat = async (currentWalletJwk: any, processTx
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chiveschat')
 }
 
-
 export const GetChivesChatMembers = async (currentWalletJwk: any, processTxId: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -34,6 +33,62 @@ export const GetChivesChatMembers = async (currentWalletJwk: any, processTxId: s
     }
     catch(Error: any) {
         console.error("GetChivesChatMembers Error:", Error)
+    }
+  
+}
+
+export const GetChivesChatInvites = async (currentWalletJwk: any, processTxId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatInvitesResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Invites',
+        });
+        console.log("GetChivesChatInvites GetChivesChatInvites", GetChivesChatInvitesResult)
+        
+        if(GetChivesChatInvitesResult && GetChivesChatInvitesResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetChivesChatInvitesResult)
+
+            return { id: GetChivesChatInvitesResult, msg: MsgContent };
+        }
+        else {
+
+            return { id: GetChivesChatInvitesResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("GetChivesChatInvites Error:", Error)
+    }
+  
+}
+
+export const GetChivesChatApplicants = async (currentWalletJwk: any, processTxId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatApplicantsResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Applicants',
+        });
+        console.log("GetChivesChatApplicants GetChivesChatApplicants", GetChivesChatApplicantsResult)
+        
+        if(GetChivesChatApplicantsResult && GetChivesChatApplicantsResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetChivesChatApplicantsResult)
+
+            return { id: GetChivesChatApplicantsResult, msg: MsgContent };
+        }
+        else {
+
+            return { id: GetChivesChatApplicantsResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("GetChivesChatApplicants Error:", Error)
     }
   
 }
@@ -89,7 +144,7 @@ export const ChivesChatAddAdmin = async (currentWalletJwk: any, chatroomTxId: st
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatAddAdmin Error:", Error)
     }
   
 }
@@ -117,7 +172,7 @@ export const ChivesChatDelAdmin = async (currentWalletJwk: any, chatroomTxId: st
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatDelAdmin Error:", Error)
     }
   
 }
@@ -146,7 +201,7 @@ export const ChivesChatApplyJoin = async (currentWalletJwk: any, chatroomTxId: s
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatApplyJoin Error:", Error)
     }
   
 }
@@ -175,7 +230,7 @@ export const ChivesChatApprovalApply = async (currentWalletJwk: any, chatroomTxI
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatApprovalApply Error:", Error)
     }
   
 }
@@ -204,7 +259,7 @@ export const ChivesChatRefuseApply = async (currentWalletJwk: any, chatroomTxId:
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatRefuseApply Error:", Error)
     }
   
 }
@@ -233,7 +288,7 @@ export const ChivesChatAddInvite = async (currentWalletJwk: any, chatroomTxId: s
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatAddInvite Error:", Error)
     }
   
 }
@@ -262,7 +317,7 @@ export const ChivesChatAgreeInvite = async (currentWalletJwk: any, chatroomTxId:
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatAgreeInvite Error:", Error)
     }
   
 }
@@ -291,7 +346,7 @@ export const ChivesChatRefuseInvite = async (currentWalletJwk: any, chatroomTxId
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatRefuseInvite Error:", Error)
     }
   
 }
@@ -319,7 +374,7 @@ export const ChivesChatDelMember = async (currentWalletJwk: any, chatroomTxId: s
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatDelMember Error:", Error)
     }
   
 }
@@ -347,12 +402,12 @@ export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: 
         }
     }
     catch(Error: any) {
-        console.error("GetChivesChatMembers Error:", Error)
+        console.error("ChivesChatAddChannel Error:", Error)
     }
   
 }
 
-export const ChivesChatGetInfo = async (TargetTxId: string, processTxId: string) => {
+export const ChivesChatGetChannels = async (TargetTxId: string, processTxId: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -361,7 +416,7 @@ export const ChivesChatGetInfo = async (TargetTxId: string, processTxId: string)
             process: TargetTxId,
             data: null,
             tags: [
-                { name: 'Action', value: 'GetInfo' },
+                { name: 'Action', value: 'GetChannels' },
                 { name: 'Target', value: processTxId },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },

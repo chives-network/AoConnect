@@ -62,13 +62,38 @@ function Welcome()
 end
 
 Handlers.add(
-  "GetInfo",
-  Handlers.utils.hasMatchingTag("Action", "GetInfo"),
+  "GetChannels",
+  Handlers.utils.hasMatchingTag("Action", "GetChannels"),
   function (msg)
     ao.send({
       Target = msg.From,
       Data = require('json').encode(Channels)
     })
+  end
+)
+
+Handlers.add(
+  "GetMembers",
+  Handlers.utils.hasMatchingTag("Action", "GetMembers"),
+  function (msg)
+    local found = false
+    for i, v in ipairs(Admins) do
+        if v == msg.From then
+            found = true
+            break
+        end
+    end
+    if Members[msg.From] or msg.From == ao.id or found then
+      ao.send({
+        Target = msg.From,
+        Data = require('json').encode(Members)
+      })
+    else 
+      ao.send({
+        Target = msg.From,
+        Data = "You need to join the chatroom first"
+      })
+    end
   end
 )
 
@@ -466,7 +491,7 @@ Handlers.add(
         Error = 'Only an administrator can refuse a invite'
       })
     end
-    
+
   end
 )
 
