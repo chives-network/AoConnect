@@ -387,7 +387,7 @@ const ChivesChat = () => {
     }))
 
     //Admin add or del member
-    const ChivesChatAddInviteUserOne = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne, "UserOne", "感兴趣")
+    const ChivesChatAddInviteUserOne = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne, "UserOne", "Hope join this chatroom")
     if(ChivesChatAddInviteUserOne) {
       console.log("ChivesChatAddInviteUserOne", ChivesChatAddInviteUserOne)
       if(ChivesChatAddInviteUserOne?.msg?.Output?.data?.output)  {
@@ -634,7 +634,7 @@ const ChivesChat = () => {
       'Testing Apply': '....................................................'
     }))
 
-    const ChivesChatUserTwoApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "UserTwo", "感兴趣")
+    const ChivesChatUserTwoApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "UserTwo", "Hope join this chatroom")
     if(ChivesChatUserTwoApplyJoin) {
       console.log("ChivesChatUserTwoApplyJoin", ChivesChatUserTwoApplyJoin)
       if(ChivesChatUserTwoApplyJoin?.msg?.Output?.data?.output)  {
@@ -665,7 +665,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatUserThreeApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "UserThree", "感兴趣")
+    const ChivesChatUserThreeApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "UserThree", "Hope join this chatroom")
     if(ChivesChatUserThreeApplyJoin) {
       console.log("ChivesChatUserThreeApplyJoin", ChivesChatUserThreeApplyJoin)
       if(ChivesChatUserThreeApplyJoin?.msg?.Output?.data?.output)  {
