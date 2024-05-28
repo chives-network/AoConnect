@@ -3,7 +3,7 @@
 -- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
--- Version: 20240527
+-- Version: 20240528
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/chiveschat.lua
 
 -- Function

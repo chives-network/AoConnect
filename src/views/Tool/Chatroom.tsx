@@ -24,7 +24,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
+import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintChatroom, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnect/Chatroom'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 

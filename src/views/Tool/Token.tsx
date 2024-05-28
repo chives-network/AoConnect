@@ -26,8 +26,8 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, generateRandomNumber } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalances } from 'src/functions/AoConnect/Token'
+import { GetMyLastMsg, AoCreateProcessAuto, generateRandomNumber, sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
+import { AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalancesDryRun } from 'src/functions/AoConnect/Token'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -144,7 +144,6 @@ const TokenModel = () => {
   }, [toolInfo?.UserThree]);
 
 
-
   const handleSimulatedToken = async function () {
 
     setIsDisabledButton(true)
@@ -158,6 +157,8 @@ const TokenModel = () => {
       }))
     }
 
+    await sleep(2000)
+
     const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserOne) {
       setToolInfo((prevState: any)=>({
@@ -165,6 +166,8 @@ const TokenModel = () => {
         UserOne: UserOne
       }))
     }
+
+    await sleep(2000)
 
     const UserTwo = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserTwo) {
@@ -174,6 +177,8 @@ const TokenModel = () => {
       }))
     }
 
+    await sleep(2000)
+
     const UserThree = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserThree) {
       setToolInfo((prevState: any)=>({
@@ -181,6 +186,8 @@ const TokenModel = () => {
         UserThree: UserThree
       }))
     }
+
+    await sleep(5000)
 
     const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
     if(LoadBlueprintToken) {
@@ -195,321 +202,317 @@ const TokenModel = () => {
     }
     console.log("LoadBlueprintToken", LoadBlueprintToken)
 
-    setTimeout(async () => {
+    await sleep(2000)
 
-      const TokenBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId)
-      if(TokenBalanceData) {
-        console.log("TokenBalanceData", TokenBalanceData)
-        if(TokenBalanceData?.msg?.Output?.data?.output)  {
-          const formatText = TokenBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    const TokenBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId)
+    if(TokenBalanceData) {
+      console.log("TokenBalanceData", TokenBalanceData)
+      if(TokenBalanceData?.msg?.Output?.data?.output)  {
+        const formatText = TokenBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              TokenBalance: formatText
-            }))
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            TokenBalance: formatText
+          }))
 
-            //Read message from inbox
-            const TokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-            if(TokenInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = TokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  TokenBalance: formatText2
-                }))
-              }
+          //Read message from inbox
+          const TokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+          if(TokenInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = TokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                TokenBalance: formatText2
+              }))
             }
-
           }
 
         }
+
       }
+    }
 
-    }, 1000);
+    await sleep(2000)
 
-    setTimeout(async () => {
-      const SendTokenToUserOneData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserOne, 1001)
-      if(SendTokenToUserOneData) {
-        console.log("SendTokenToUserOneData", SendTokenToUserOneData)
-        if(SendTokenToUserOneData?.msg?.Output?.data?.output)  {
-          const formatText = SendTokenToUserOneData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    const SendTokenToUserOneData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserOne, 1001)
+    if(SendTokenToUserOneData) {
+      console.log("SendTokenToUserOneData", SendTokenToUserOneData)
+      if(SendTokenToUserOneData?.msg?.Output?.data?.output)  {
+        const formatText = SendTokenToUserOneData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              SendUserOne1001: formatText
-            }))
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            SendUserOne1001: formatText
+          }))
 
-            //Read message from inbox
-            const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserOne)
-            if(UserOneInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  SendUserOne1001: formatText2
-                }))
-              }
+          //Read message from inbox
+          const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserOne)
+          if(UserOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                SendUserOne1001: formatText2
+              }))
             }
-
           }
 
         }
+
       }
-    
-      const UserOneBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserOne)
-      if(UserOneBalanceData) {
-        console.log("UserOneBalanceData", UserOneBalanceData)
-        if(UserOneBalanceData?.msg?.Output?.data?.output)  {
-          const formatText = UserOneBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    }
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              UserOneBalance: formatText
-            }))
+    await sleep(2000)
+  
+    const UserOneBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserOne)
+    if(UserOneBalanceData) {
+      console.log("UserOneBalanceData", UserOneBalanceData)
+      if(UserOneBalanceData?.msg?.Output?.data?.output)  {
+        const formatText = UserOneBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            //Read message from inbox
-            const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserOne)
-            if(UserOneInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  UserOneBalance: formatText2
-                }))
-              }
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            UserOneBalance: formatText
+          }))
+
+          //Read message from inbox
+          const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserOne)
+          if(UserOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                UserOneBalance: formatText2
+              }))
             }
-
           }
 
         }
+
       }
+    }
 
-    }, 5000);
-    
-    setTimeout(async () => {
-      const SendTokenToUserTwoData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserTwo, 1002)
-      if(SendTokenToUserTwoData) {
-        console.log("SendTokenToUserTwoData", SendTokenToUserTwoData)
-        if(SendTokenToUserTwoData?.msg?.Output?.data?.output)  {
-          const formatText = SendTokenToUserTwoData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    await sleep(2000)
+  
+    const SendTokenToUserTwoData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserTwo, 1002)
+    if(SendTokenToUserTwoData) {
+      console.log("SendTokenToUserTwoData", SendTokenToUserTwoData)
+      if(SendTokenToUserTwoData?.msg?.Output?.data?.output)  {
+        const formatText = SendTokenToUserTwoData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              SendUserTwo1002: formatText
-            }))
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            SendUserTwo1002: formatText
+          }))
 
-            //Read message from inbox
-            const UserTwoInboxData = await GetMyLastMsg(currentWallet.jwk, UserTwo)
-            if(UserTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  SendUserTwo1002: formatText2
-                }))
-              }
+          //Read message from inbox
+          const UserTwoInboxData = await GetMyLastMsg(currentWallet.jwk, UserTwo)
+          if(UserTwoInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = UserTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                SendUserTwo1002: formatText2
+              }))
             }
-
           }
 
         }
+
       }
+    }
 
-      const UserTwoBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserTwo)
-      if(UserTwoBalanceData) {
-        console.log("UserTwoBalanceData", UserTwoBalanceData)
-        if(UserTwoBalanceData?.msg?.Output?.data?.output)  {
-          const formatText = UserTwoBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    await sleep(2000)
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              UserTwoBalance: formatText
-            }))
+    const UserTwoBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserTwo)
+    if(UserTwoBalanceData) {
+      console.log("UserTwoBalanceData", UserTwoBalanceData)
+      if(UserTwoBalanceData?.msg?.Output?.data?.output)  {
+        const formatText = UserTwoBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            //Read message from inbox
-            const UserTwoInboxData = await GetMyLastMsg(currentWallet.jwk, UserTwo)
-            if(UserTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  UserTwoBalance: formatText2
-                }))
-              }
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            UserTwoBalance: formatText
+          }))
+
+          //Read message from inbox
+          const UserTwoInboxData = await GetMyLastMsg(currentWallet.jwk, UserTwo)
+          if(UserTwoInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = UserTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                UserTwoBalance: formatText2
+              }))
             }
-
           }
 
         }
+
       }
+    }
 
-    }, 10000);
+    await sleep(2000)
 
-    setTimeout(async () => {
-      const SendTokenToUserThreeData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserThree, 1003)
-      if(SendTokenToUserThreeData) {
-        console.log("SendTokenToUserThreeData", SendTokenToUserThreeData)
-        if(SendTokenToUserThreeData?.msg?.Output?.data?.output)  {
-          const formatText = SendTokenToUserThreeData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    const SendTokenToUserThreeData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserThree, 1003)
+    if(SendTokenToUserThreeData) {
+      console.log("SendTokenToUserThreeData", SendTokenToUserThreeData)
+      if(SendTokenToUserThreeData?.msg?.Output?.data?.output)  {
+        const formatText = SendTokenToUserThreeData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              SendUserThree1003: formatText
-            }))
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            SendUserThree1003: formatText
+          }))
 
-            //Read message from inbox
-            const UserThreeInboxData = await GetMyLastMsg(currentWallet.jwk, UserThree)
-            if(UserThreeInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserThreeInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  SendUserThree1003: formatText2
-                }))
-              }
+          //Read message from inbox
+          const UserThreeInboxData = await GetMyLastMsg(currentWallet.jwk, UserThree)
+          if(UserThreeInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = UserThreeInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                SendUserThree1003: formatText2
+              }))
             }
-
           }
 
         }
+
       }
+    }
 
-      const UserThreeBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserThree)
-      if(UserThreeBalanceData) {
-        console.log("UserThreeBalanceData", UserThreeBalanceData)
-        if(UserThreeBalanceData?.msg?.Output?.data?.output)  {
-          const formatText = UserThreeBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    await sleep(2000)
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              UserThreeBalance: formatText
-            }))
+    const UserThreeBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserThree)
+    if(UserThreeBalanceData) {
+      console.log("UserThreeBalanceData", UserThreeBalanceData)
+      if(UserThreeBalanceData?.msg?.Output?.data?.output)  {
+        const formatText = UserThreeBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            //Read message from inbox
-            const UserThreeInboxData = await GetMyLastMsg(currentWallet.jwk, UserThree)
-            if(UserThreeInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = UserThreeInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  UserThreeBalance: formatText2
-                }))
-              }
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            UserThreeBalance: formatText
+          }))
+
+          //Read message from inbox
+          const UserThreeInboxData = await GetMyLastMsg(currentWallet.jwk, UserThree)
+          if(UserThreeInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = UserThreeInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                UserThreeBalance: formatText2
+              }))
             }
-
           }
 
         }
+
       }
+    }
 
-    }, 15000);
+    await sleep(2000)
 
-    setTimeout(async () => {
-      const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, 2000)
-      if(MintTokenData) {
-        console.log("MintTokenData", MintTokenData)
-        if(MintTokenData?.msg?.Output?.data?.output)  {
-          const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, 2000)
+    if(MintTokenData) {
+      console.log("MintTokenData", MintTokenData)
+      if(MintTokenData?.msg?.Output?.data?.output)  {
+        const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              Mint2000: formatText
-            }))
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            Mint2000: formatText
+          }))
 
-            //Read message from inbox
-            const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-            if(MintTokenInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  Mint2000: formatText2
-                }))
-              }
+          //Read message from inbox
+          const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+          if(MintTokenInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                Mint2000: formatText2
+              }))
             }
-
           }
 
         }
+
       }
+    }
 
-
-    }, 20000);
+    await sleep(2000)
     
     //add random amount transfer
     const UserAdd1 = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserAdd1) {
       await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd1, generateRandomNumber(1111, 9999) )
     }
+
+    await sleep(2000)
+
     const UserAdd2 = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserAdd2) {
       await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd2, generateRandomNumber(1111, 9999) )
     }
+
+    await sleep(2000)
+
     const UserAdd3 = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserAdd3) {
       await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd3, generateRandomNumber(1111, 9999) )
     }
 
-    setTimeout(async () => {
-      const TokenBalancesData = await AoTokenBalances(currentWallet.jwk, TokenProcessTxId)
-      if(TokenBalancesData) {
-        console.log("TokenBalancesData", TokenBalancesData)
-        if(TokenBalancesData?.msg?.Output?.data?.output)  {
-          const formatText = TokenBalancesData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
+    setToolInfo((prevState: any)=>({
+      ...prevState,
+      WaitSeconds: '5s..........................'
+    }))
 
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              TokenBalances: formatText
-            }))
+    await sleep(5000)
 
-            //Read message from inbox
-            const TokenBalancesInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-            if(TokenBalancesInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = TokenBalancesInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                let TokenBalancesList = null
-                try {
-                  TokenBalancesList = JSON.parse(formatText2)
-                  let TotalTokenSum = BigNumber(0)
-                  Object.values(TokenBalancesList).map((ItemV: any)=>{
-                    TotalTokenSum = TotalTokenSum.plus(ItemV);
-                  })
-                  TokenBalancesList['TotalTokenSum'] = String(TotalTokenSum)
-                }
-                catch(Error: any) {
-                  TokenBalancesList = {result: formatText2} 
-                  console.log("TokenBalancesData Error:", Error)
-                }
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  TokenBalances: TokenBalancesList
-                }))
-                console.log("TokenBalancesList", TokenBalancesList)
-              }
-            }
+    const AoDryRunBalances = await AoTokenBalancesDryRun(TokenProcessTxId)
+    if(AoDryRunBalances) {
+      console.log("AoDryRunBalances", AoDryRunBalances)
+      const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+      const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
+                        .sort((a: any, b: any) => b[1] - a[1])
+                        .reduce((acc: any, [key, value]) => {
+                            acc[key] = FormatBalance(Number(value));
+                            
+                            return acc;
+                        }, {} as { [key: string]: number });
+      const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
+      const TokenHolders = TokenMap.length
+      let CirculatingSupply = BigNumber(0)
+      TokenMap.map((Item: any)=>{
+        CirculatingSupply = CirculatingSupply.plus(Item)
+      })
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        TokenBalances: AoDryRunBalancesJsonSorted,
+        TokenHolders: TokenHolders,
+        CirculatingSupply: CirculatingSupply.toString()
+      }))
+      console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+    }
 
-          }
+    setToolInfo((prevState: any)=>({
+      ...prevState,
+      ExecuteStatus: 'All Finished.'
+    }))
 
-        }
-      }
-
-
-    }, 25000);
-
-    
     setIsDisabledButton(false)
 
   }
-
 
 
   //Loading the all Inbox to IndexedDb
@@ -686,6 +689,10 @@ const TokenModel = () => {
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 Make other 3 process tx id, and send them a randrom amount
                 </Typography>
+
+                <Typography noWrap variant='body2' sx={{my: 2}}>
+                Wait Seconds: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.WaitSeconds}</Typography>
+                </Typography>
                 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                   Token Balances: 
@@ -703,6 +710,10 @@ const TokenModel = () => {
                   )
 
                 })}
+
+                <Typography noWrap variant='body2' sx={{my: 2}}>
+                Execute Status: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ExecuteStatus}</Typography>
+                </Typography>
                 
 
 
