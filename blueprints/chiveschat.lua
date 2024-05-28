@@ -8,8 +8,8 @@
 
 -- Function
 -- 1. Chatroom support three roles: owner, admin, member.
--- 2. Owner: can add or delete admins, invite members, delete members.
--- 3. Admin: Approval join application, invite members, delete members.
+-- 2. Owner: can add or delete admins, invite members, delete members, if user agree, will join chatroom.
+-- 3. Admin: Approval join application, invite members, delete members, if user agree, will join chatroom.
 -- 4. Member: Apply join chatroom, send messages, and quit chatroom.
 -- 5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.
 -- 6. Owner can add or delete channels.
@@ -23,7 +23,9 @@
 -- Function Call Examples
 -- Send({Target = "chatroom txid", Action = "AddAdmin", AdminId = "admin txid..." }) need owner role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelAdmin", AdminId = "admin txid..." }) need owner role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AddMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AddInvite", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "比较感兴趣此群组" }) need admin role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AgreeInvite" }) need user role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "RefuseInvite", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "不满足群组要求" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
@@ -41,6 +43,8 @@
 Owners = Owners or {}
 Admins = Admins or {}
 Members = Members or {}
+Invites = Invites or {}
+Applicants = Applicants or {}
 Channels = Channels or {}
 
 function Welcome()
@@ -48,8 +52,8 @@ function Welcome()
       "Welcome to ChivesChat V0.1!\n\n" ..
       "Main functoin:\n\n" ..
       "1. Chatroom support three roles: owner, admin, member.\n" ..
-      "2. Owner: can add or delete admins, invite members, delete members.\n" ..
-      "3. Admin: Approval join application, invite members, delete members.\n" ..
+      "2. Owner: can add or delete admins, invite members, delete members, if user agree, will join chatroom.\n" ..
+      "3. Admin: Approval join application, invite members, delete members, if user agree, will join chatroom.\n" ..
       "4. Member: Apply join chatroom, send messages, and quit chatroom.\n" ..
       "5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n" ..
       "6. Owner can add or delete channels.\n\n" ..
@@ -209,8 +213,8 @@ Handlers.add(
 )
 
 Handlers.add(
-  "AddMember",
-  Handlers.utils.hasMatchingTag("Action", "AddMember"),
+  "AddInvite",
+  Handlers.utils.hasMatchingTag("Action", "AddInvite"),
   function (msg)
     local isAdmin = false
     if msg.From == ao.id then
@@ -224,34 +228,101 @@ Handlers.add(
     end
     
     if isAdmin then
-      local isMember = false
-      for _, member in ipairs(Members) do
-        if member == msg.MemberId then
-          isMember = true
-          break
-        end
-      end
-      if not isMember then
-        table.insert(Members, msg.MemberId)
-        Handlers.utils.reply("Joined")(msg)
+      if not Invites[msg.MemberId] then
+        Invites[msg.MemberId] = {
+          MemberId = msg.MemberId,
+          MemberName = msg.MemberName,
+          MemberReason = msg.MemberReason
+        }
         ao.send({
           Target = msg.From,
-          Data = "Successfully add member"
+          Data = "Successfully invite member"
         })
         ao.send({
           Target = msg.MemberId,
           Data = "You have been invited to join chatroom " .. ao.id
         })
       else
-        Handlers.utils.reply("Already joined")(msg)
+          ao.send({
+            Target = msg.From,
+            Action = 'AddInvite-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'You have been invited this member'
+          })
       end
-      
     else 
       ao.send({
         Target = msg.From,
-        Action = 'AddMember-Error',
+        Action = 'AddInvite-Error',
         ['Message-Id'] = msg.Id,
-        Error = 'Only an administrator can add a member'
+        Error = 'Only an administrator can invite a member'
+      })
+    end
+  end
+)
+
+Handlers.add(
+  "AgreeInvite",
+  Handlers.utils.hasMatchingTag("Action", "AgreeInvite"),
+  function (msg)
+    if Invites[msg.From] then
+      Members[msg.From] = Invites[msg.From]
+      Invites[msg.From] = nil
+      ao.send({
+        Target = msg.From,
+        Data = "You have joined the chatroom " .. ao.id
+      })
+    else
+        ao.send({
+          Target = msg.From,
+          Action = 'AgreeInvite-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'Does not have an invite or has already processed'
+        })
+    end
+  end
+)
+
+Handlers.add(
+  "RefuseInvite",
+  Handlers.utils.hasMatchingTag("Action", "RefuseInvite"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+
+    if isAdmin then
+      if Invites[msg.MemberId] then
+        Invites[msg.MemberId] = nil
+        ao.send({
+          Target = msg.From,
+          Data = "You have refused user " .. msg.MemberName .. " entry to this chatroom " .. ao.id
+        })
+        ao.send({
+          Target = msg.MemberId,
+          Data = "You have been refused entry to this chatroom " .. ao.id .. " Reason: " .. msg.MemberReason
+        })
+      else
+          ao.send({
+            Target = msg.From,
+            Action = 'RefuseInvite-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'Does not have an invite or has already processed'
+          })
+      endend
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'RefuseInvite-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only an administrator can refuse a invite'
       })
     end
   end
@@ -273,24 +344,17 @@ Handlers.add(
     end
     
     if isAdmin then
-      local isMember = false
-      for i, v in ipairs(Members) do
-          if v == msg.MemberId then
-              table.remove(Members, i)
-              Handlers.utils.reply("Member has been removed")(msg)
-              isMember = true
-              ao.send({
-                Target = msg.From,
-                Data = "Member successfully removed"
-              })
-              ao.send({
-                Target = msg.MemberId,
-                Data = "You have been removed from chatroom " .. ao.id
-              })
-              break
-          end
+      if Members[msg.MemberId] then
+        Members[msg.MemberId] = nil
+        ao.send({
+          Target = msg.From,
+          Data = "Member successfully removed"
+        })
+        ao.send({
+          Target = msg.MemberId,
+          Data = "You have been removed from chatroom " .. ao.id
+        })
       end
-      
     else 
       ao.send({
         Target = msg.From,
@@ -306,14 +370,29 @@ Handlers.add(
   "ApplyJoin",
   Handlers.utils.hasMatchingTag("Action", "ApplyJoin"),
   function (msg)
-    local haveSentRecords = {}
-    for _, admin in ipairs(Admins) do
-      if not haveSentRecords[admin] then
-        ao.send({Target = admin, Data = 'You have a new application that requires approval', Sender = msg.From})
-        haveSentRecords[admin] = true
+    if not Applicants[msg.From] then
+      Applicants[msg.From] = {
+        MemberId = msg.From,
+        MemberName = msg.MemberName,
+        MemberReason = msg.MemberReason
+      }
+      ao.send({Target = msg.From, Data = 'Your application has been submitted and is awaiting administrator approval'})
+      local haveSentRecords = {}
+      for _, admin in ipairs(Admins) do
+        if not haveSentRecords[admin] then
+          ao.send({Target = admin, Data = 'You have a new application that requires approval', Sender = msg.From})
+          haveSentRecords[admin] = true
+        end
       end
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'ApplyJoin-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'You have already applied to join this chatroom, there is no need to apply again'
+      })
     end
-    ao.send({Target = msg.From, Data = 'Your application has been submitted and is awaiting administrator approval', Admin = admin})
+    
   end
 )
 
@@ -328,28 +407,35 @@ Handlers.add(
             break
         end
     end
+
     if isAdmin then
-        local isMember = false
-        for _, member in ipairs(Members) do
-          if member == msg.Applicant then
-            isMember = true
-            break
-          end
-        end
-        if not isMember then
-          table.insert(Members, msg.Applicant)
-          Handlers.utils.reply("Joined")(msg)
+      if not Members[msg.MemberId] then
+        if Applicants[msg.MemberId] then
+          Members[msg.MemberId] = Applicants[msg.MemberId]
           ao.send({
             Target = msg.From,
-            Data = "Successfully approval user " .. msg.Applicant
+            Data = "User successfully approved " .. msg.Applicant
           })
           ao.send({
             Target = msg.Applicant,
-            Data = "Your application has been approved. Chatroom " .. ao.id
+            Data = "Your application has been approved. Welcome to the chatroom " .. ao.id
           })
-        else
-          Handlers.utils.reply("Already joined")(msg)
+        else 
+          ao.send({
+            Target = msg.From,
+            Action = 'ApprovalApply-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'This member is not listed in the applicants or has already been approved'
+          })
         end
+      else
+        ao.send({
+          Target = msg.From,
+          Action = 'ApprovalApply-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'This member has joined'
+        })
+      end
     else 
       ao.send({
         Target = msg.From,
