@@ -44,7 +44,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
         //Output From Chatroom Msg Reminder
         if(item.node && item.node.Output && item.node.Output.data && typeof item.node.Output.data === 'string' )  {
             const Data = item.node.Output.data.replace(ansiRegex, '');
-            NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', From: null, Data, Ref_: null, Logo: null})
+            //NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', From: null, Data, Ref_: null, Logo: null, Sender: null})
         }
 
         //Output From Chatroom Msg Reminder
@@ -70,7 +70,9 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
                     })
 
                     const From = TagsMap['From-Process']
-                    const Type = TagsMap['Type']
+                    const Sender = TagsMap['Sender']
+                    let Type = TagsMap['Type']
+                    if(Sender) Type = "Chat"
                     const Action = TagsMap['Action']
                     const Ref_ = TagsMap['Ref_']
                     let Logo = null
@@ -81,9 +83,8 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
                         Logo = "/images/apple-touch-icon.png"
                     }
 
-
                     //Messages
-                    NeedReminderMsg.push({Target, Action, Type, From, Data, Ref_, Logo})
+                    NeedReminderMsg.push({Target, Action, Type, From, Data, Ref_, Logo, Sender})
 
                     const TickerList = Tags.filter((item: any)=> item.name == 'Ticker')
                     if( TickerList && TickerList.length == 1 )  {
@@ -93,10 +94,10 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string) => {
                         const FromList = Tags.filter((item: any)=> item.name == 'From-Process')
                         const From = FromList[0]['value']
                         if(Data) {
-                            NeedReminderMsg.push([Data.replace(ansiRegex, ''), Value.replace(ansiRegex, '') + " from " + Target, Logo])
+                            //NeedReminderMsg.push([Data.replace(ansiRegex, ''), Value.replace(ansiRegex, '') + " from " + Target, Logo])
                         }
                         else {
-                            NeedReminderMsg.push([Value.replace(ansiRegex, '') + " from " + Target, From])
+                            //NeedReminderMsg.push([Value.replace(ansiRegex, '') + " from " + Target, From])
                         }
                     }
 
@@ -130,15 +131,18 @@ export const SaveMessagesIntoIndexedDb = (processTxId: string, NeedReminderMsg: 
                 const transaction = db.transaction(['ReminderMsg'], 'readwrite');
                 const objectStore = transaction.objectStore('ReminderMsg');
 
-                NeedReminderMsg && NeedReminderMsg.map((ItemMsg: any, index: number)=>{
+                console.log("SaveMessagesIntoIndexedDb 3333", NeedReminderMsg)
 
-                    const {Target, Action, Type, From, Data, Ref_, Logo} = ItemMsg
+                NeedReminderMsg && NeedReminderMsg.map((ItemMsg: any)=>{
+
+                    const {Target, Action, Type, From, Data, Ref_, Logo, Sender} = ItemMsg
 
                     objectStore.add({
                         Target: Target,
                         Action: Action,
                         Type: Type,
                         From: From,
+                        Sender: Sender,
                         Data: Data,
                         Ref_: Ref_,
                         Logo: Logo
@@ -247,8 +251,11 @@ export const SaveInboxMsgIntoIndexedDb = (processTxId: string, InboxMsgList: any
                 const transaction = db.transaction(['InboxMsg'], 'readwrite');
                 const objectStore = transaction.objectStore('InboxMsg');
 
-                InboxMsgList && InboxMsgList.map((ItemMsg: any, index: number)=>{
-                    
+                InboxMsgList && InboxMsgList.map((ItemMsg: any)=>{
+                    let Type = ItemMsg?.Tags?.Type
+                    if(ItemMsg.Sender) {
+                        Type = "Chat"
+                    }
                     objectStore.add({
                         BlockHeight: ItemMsg['Block-Height'], 
                         From: ItemMsg.From,
@@ -256,8 +263,9 @@ export const SaveInboxMsgIntoIndexedDb = (processTxId: string, InboxMsgList: any
                         HashId: ItemMsg.Id,
                         Timestamp: ItemMsg.Timestamp,
                         Data: ItemMsg.Data,
-                        Type: ItemMsg?.Tags?.Type,
+                        Type: Type,
                         Ref_: ItemMsg?.Tags?.Ref_,
+                        Sender: ItemMsg.Sender,
                         Module: ItemMsg.Module,
                         Owner: ItemMsg.Owner,
                         Cron: ItemMsg.Cron,
@@ -333,6 +341,7 @@ const CreateDbTables = (db: any) => {
     if (!db.objectStoreNames.contains('InboxMsg')) {
         const objectStore = db.createObjectStore('InboxMsg', { keyPath: 'id', autoIncrement: true });
         objectStore.createIndex('BlockHeight', 'BlockHeight', { unique: false });
+        objectStore.createIndex('Sender', 'Sender', { unique: false });
         objectStore.createIndex('From', 'From', { unique: false });
         objectStore.createIndex('Target', 'Target', { unique: false });
         objectStore.createIndex('HashId', 'HashId', { unique: true });
@@ -357,6 +366,7 @@ const CreateDbTables = (db: any) => {
         objectStore2.createIndex('Data', 'Data', { unique: false });
         objectStore2.createIndex('Ref_', 'Ref_', { unique: false });
         objectStore2.createIndex('Logo', 'Logo', { unique: false });
+        objectStore2.createIndex('Sender', 'Sender', { unique: false });
     }
 
 }

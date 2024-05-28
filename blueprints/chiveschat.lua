@@ -624,13 +624,11 @@ Handlers.add(
     end
     if Members[msg.From] or isAdmin then
       local haveSentRecords = {}
-      for _, recipient in ipairs(Members) do
-        if not haveSentRecords[recipient] then
-          ao.send({Target = recipient, Data = msg.Data, Sender = msg.From})
-          haveSentRecords[recipient] = true
-        end
-      end
-      Handlers.utils.reply("Broadcasted")(msg)
+      for memberId, memberData in pairs(Members) do
+        ao.send({Target = memberId, Data = msg.Data, Sender = msg.From})
+      end    
+      ao.send({Target = ao.id, Data = msg.Data, Sender = msg.From})
+      -- Handlers.utils.reply("Broadcasted")(msg)
       ao.send({
         Target = msg.From,
         ['Message-Id'] = msg.Id,
