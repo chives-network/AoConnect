@@ -28,6 +28,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 
 import { GetChatLogFromIndexedDb } from 'src/functions/AoConnect/MsgReminder'
+import { GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
 
 const AppChat = (props: any) => {
   // ** Hook
@@ -45,6 +46,20 @@ const AppChat = (props: any) => {
   const [chatName, setChatName] = useState<string>("")
   const [historyCounter, setHistoryCounter] = useState<number>(0)
   const [stopMsg, setStopMsg] = useState<boolean>(false)
+  const [counter, setCounter] = useState<number>(0)
+
+  //Download data from Inbox
+  useEffect(() => {
+    if(id && id.length == 43 && currentAddress && currentAddress.length == 43)   {
+      handleGetMyInboxMsg(id)
+    }
+  }, [currentAddress, id])
+
+  const handleGetMyInboxMsg = async function (id: string) {
+    const RS = await GetMyInboxMsg(currentWallet.jwk, id)
+      console.log("handleGetMyInboxMsg GetMyInboxMsg First Time Loading Execute: ", RS, "Chatroom TxId:", id)
+      setCounter(counter+1)
+  }
 
   const getChatLogList = async function () {
     if(id && currentAddress) {

@@ -80,14 +80,17 @@ Handlers.add(
   "GetMembers",
   Handlers.utils.hasMatchingTag("Action", "GetMembers"),
   function (msg)
-    local found = false
-    for i, v in ipairs(Admins) do
-        if v == msg.From then
-            found = true
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
             break
         end
     end
-    if Members[msg.From] or msg.From == ao.id or found then
+    if Members[msg.From] or isAdmin then
       ao.send({
         Target = msg.From,
         Data = require('json').encode(Members)
@@ -585,17 +588,22 @@ Handlers.add(
   "Quit",
   Handlers.utils.hasMatchingTag("Action", "Quit"),
   function (msg)
-    local isMember = false
-    for i, v in ipairs(Members) do
-        if v == msg.From then
-            table.remove(Members, i)
-            Handlers.utils.reply("You have successfully exited from chatroom " .. ao.id)(msg)
-            isMember = true
-            break
-        end
-    end
-    if not isMember then
-        Handlers.utils.reply("Not a member")(msg)
+    if Members[msg.From] then
+      Members[msg.From] = nil
+      Handlers.utils.reply("You have successfully exited from chatroom")(msg)
+      ao.send({
+        Target = msg.From,
+        ['Message-Id'] = msg.Id,
+        Data = 'You have successfully exited from chatroom ' .. msg.Data
+      })
+    else 
+      Handlers.utils.reply("You are not a memeber")(msg)
+      ao.send({
+        Target = msg.From,
+        Action = 'Quit-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'You are not a memeber ' .. msg.Data
+      })
     end
   end
 )
@@ -604,27 +612,17 @@ Handlers.add(
   "Broadcast",
   Handlers.utils.hasMatchingTag("Action", "Broadcast"),
   function (msg)
-    local isMember = false
-    for _, member in ipairs(Members) do
-      if member == msg.From then
-        isMember = true
-        break
-      end
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
     end
-    for _, admin in ipairs(Admins) do
-      if admin == msg.From then
-        isMember = true
-        break
-      end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
     end
-    for _, owner in ipairs(Owners) do
-      if owner == msg.From then
-        isMember = true
-        break
-      end
-    end
-    
-    if isMember then
+    if Members[msg.From] or isAdmin then
       local haveSentRecords = {}
       for _, recipient in ipairs(Members) do
         if not haveSentRecords[recipient] then
@@ -638,7 +636,7 @@ Handlers.add(
         ['Message-Id'] = msg.Id,
         Data = 'Successfully Broadcasted ' .. msg.Data
       })
-    else
+    else 
       Handlers.utils.reply("You are not a memeber")(msg)
       ao.send({
         Target = msg.From,
@@ -647,7 +645,6 @@ Handlers.add(
         Error = 'You are not a memeber ' .. msg.Data
       })
     end
-    
   end
 )
 
