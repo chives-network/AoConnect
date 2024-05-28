@@ -8,12 +8,13 @@
 
 -- Function
 -- 1. Chatroom support three roles: owner, admin, member.
--- 2. Owner: can add or delete admins, invite members, delete members, if user agree, will join chatroom.
--- 3. Admin: Approval join application, invite members, delete members, if user agree, will join chatroom.
--- 4. Member: Apply join chatroom, send messages, and quit chatroom.
+-- 2. Owner: Can add or delete admins, add or delete channels, invite members (requiring user agreement), adding members, and deleting members.
+-- 3. Admin: Approval for joining the application, inviting members (requiring user agreement), adding members, and deleting members.
+-- 4. Member: Apply to join the chatroom, get approval from the admin, then send messages, and finally leave the chatroom.
 -- 5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.
--- 6. Owner can add or delete channels.
-
+-- 6. Anyone can get channel information.
+-- 7. Only members can get information on all members.
+-- 8. This version of the message is public, not encrypted.
 
 -- Three Roles Account
 -- Owner CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw
@@ -54,11 +55,13 @@ function Welcome()
       "Welcome to ChivesChat V0.1!\n\n" ..
       "Main functoin:\n\n" ..
       "1. Chatroom support three roles: owner, admin, member.\n" ..
-      "2. Owner: can add or delete admins, invite members, delete members, if user agree, will join chatroom.\n" ..
-      "3. Admin: Approval join application, invite members, delete members, if user agree, will join chatroom.\n" ..
-      "4. Member: Apply join chatroom, send messages, and quit chatroom.\n" ..
+      "2. Owner: Can add or delete admins, add or delete channels, invite members (requiring user agreement), adding members, and deleting members.\n" ..
+      "3. Admin: Approval for joining the application, inviting members (requiring user agreement), adding members, and deleting members.\n" ..
+      "4. Member: Apply to join the chatroom, get approval from the admin, then send messages, and finally leave the chatroom.\n" ..
       "5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n" ..
-      "6. Owner can add or delete channels.\n\n" ..
+      "6. Anyone can get channel information.\n" ..
+      "7. Only members can get information on all members.\n" ..
+      "8. This version of the message is public, not encrypted.\n" ..
       "Have fun, be respectful !")
 end
 
