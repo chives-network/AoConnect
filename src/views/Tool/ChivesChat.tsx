@@ -899,7 +899,7 @@ const ChivesChat = () => {
         const formatText = GetChivesChatMembersByOwner3rd?.msg?.Output?.data?.output.replace(ansiRegex, '');
         setToolInfo((prevState: any)=>({
           ...prevState,
-          'GetChivesChatMembersByOwner3rd(2 members, UserOne and UserTwo)': formatText
+          'GetChivesChatMembersByOwner3rd(4 members, UserOne, UserTwo, UserFour, UserFive)': formatText
         }))
       }
     }
@@ -940,7 +940,7 @@ const ChivesChat = () => {
         const formatText = GetChivesChatMembersByOwner4th?.msg?.Output?.data?.output.replace(ansiRegex, '');
         setToolInfo((prevState: any)=>({
           ...prevState,
-          'GetChivesChatMembersByOwner4th(2 members, UserOne and UserTwo)': formatText
+          'GetChivesChatMembersByOwner4th(3 members, UserOne, UserTwo, UserFour)': formatText
         }))
       }
     }
@@ -1017,7 +1017,7 @@ const ChivesChat = () => {
     if(ChivesChatGetChannelsData) {
       setToolInfo((prevState: any)=>({
         ...prevState,
-        ChivesChatGetChannelsData: ChivesChatGetChannelsData
+        'ChivesChatGetChannelsData(2 channels)': ChivesChatGetChannelsData
       }))
     }
 
@@ -1046,7 +1046,7 @@ const ChivesChat = () => {
                   <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
                       () => { handleSimulatedChivesChat() }
                   }>
-                  {t("Simulated ChivesChat")}
+                  {t("Simulated ChivesChat (No Reminder)")}
                   </Button>
                   <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/chiveschat.lua`} target='_blank'>
                       <Typography variant='body2'>
@@ -1068,8 +1068,8 @@ const ChivesChat = () => {
                   return (
                     <>
                     <Tooltip title={toolInfo[Item]}>
-                      <Typography noWrap variant='body2' sx={{my: 2}}>
-                      {Item}: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo[Item]}</Typography>
+                      <Typography  variant='body2' sx={{my: 2}}>
+                      {Item}: <Typography variant='body2' sx={{display: 'inline', color: 'primary.main', whiteSpace: 'pre-line'}}>{toolInfo[Item]}</Typography>
                       </Typography>
                     </Tooltip>
                     </>

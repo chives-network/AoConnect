@@ -61,7 +61,7 @@ function Welcome()
       "5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.\n" ..
       "6. Anyone can get channel information.\n" ..
       "7. Only members can get information on all members.\n" ..
-      "8. This version of the message is public, not encrypted.\n" ..
+      "8. This version of the message is public, not encrypted.\n\n" ..
       "Have fun, be respectful !")
 end
 
