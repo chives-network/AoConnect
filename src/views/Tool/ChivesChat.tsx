@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
-import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddMember, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetInfo } from 'src/functions/AoConnect/ChivesChat'
+import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembers, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvite, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetInfo } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -40,6 +40,7 @@ const ChivesChat = () => {
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>()
+
 
   // ** State
   //const [isLoading, setIsLoading] = useState(false);
@@ -347,16 +348,16 @@ const ChivesChat = () => {
       }
 
       //Admin add or del member
-      const ChivesChatAddMemberOne = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne)
-      if(ChivesChatAddMemberOne) {
-        console.log("ChivesChatAddMemberOne", ChivesChatAddMemberOne)
-        if(ChivesChatAddMemberOne?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatAddMemberOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddInviteOne = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne)
+      if(ChivesChatAddInviteOne) {
+        console.log("ChivesChatAddInviteOne", ChivesChatAddInviteOne)
+        if(ChivesChatAddInviteOne?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddInviteOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatAddMemberOne: formatText
+              ChivesChatAddInviteOne: formatText
             }))
 
             //Read message from inbox
@@ -366,7 +367,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatAddMemberOne: formatText2
+                  ChivesChatAddInviteOne: formatText2
                 }))
               }
             }
@@ -376,16 +377,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatAddMemberTwo = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo)
-      if(ChivesChatAddMemberTwo) {
-        console.log("ChivesChatAddMemberTwo", ChivesChatAddMemberTwo)
-        if(ChivesChatAddMemberTwo?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatAddMemberTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddInviteTwo = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo)
+      if(ChivesChatAddInviteTwo) {
+        console.log("ChivesChatAddInviteTwo", ChivesChatAddInviteTwo)
+        if(ChivesChatAddInviteTwo?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddInviteTwo?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatAddMemberTwo: formatText
+              ChivesChatAddInviteTwo: formatText
             }))
 
             //Read message from inbox
@@ -395,7 +396,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatAddMemberTwo: formatText2
+                  ChivesChatAddInviteTwo: formatText2
                 }))
               }
             }
@@ -405,16 +406,16 @@ const ChivesChat = () => {
         }
       }
 
-      const ChivesChatAddMemberThree = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree)
-      if(ChivesChatAddMemberThree) {
-        console.log("ChivesChatAddMemberThree", ChivesChatAddMemberThree)
-        if(ChivesChatAddMemberThree?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatAddMemberThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      const ChivesChatAddInviteThree = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree)
+      if(ChivesChatAddInviteThree) {
+        console.log("ChivesChatAddInviteThree", ChivesChatAddInviteThree)
+        if(ChivesChatAddInviteThree?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatAddInviteThree?.msg?.Output?.data?.output.replace(ansiRegex, '');
           if(formatText) {
 
             setToolInfo((prevState: any)=>({
               ...prevState,
-              ChivesChatAddMemberThree: formatText
+              ChivesChatAddInviteThree: formatText
             }))
 
             //Read message from inbox
@@ -424,7 +425,7 @@ const ChivesChat = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  ChivesChatAddMemberThree: formatText2
+                  ChivesChatAddInviteThree: formatText2
                 }))
               }
             }
@@ -657,21 +658,21 @@ const ChivesChat = () => {
                   </Typography>
                 </Tooltip>
 
-                <Tooltip title={toolInfo?.ChivesChatAddMemberOne}>
+                <Tooltip title={toolInfo?.ChivesChatAddInviteOne}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Add UserOne: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddMemberOne}</Typography>
+                  Add UserOne: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddInviteOne}</Typography>
                   </Typography>
                 </Tooltip>
 
-                <Tooltip title={toolInfo?.ChivesChatAddMemberTwo}>
+                <Tooltip title={toolInfo?.ChivesChatAddInviteTwo}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Add UserTwo: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddMemberTwo}</Typography>
+                  Add UserTwo: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddInviteTwo}</Typography>
                   </Typography>
                 </Tooltip>
 
-                <Tooltip title={toolInfo?.ChivesChatAddMemberThree}>
+                <Tooltip title={toolInfo?.ChivesChatAddInviteThree}>
                   <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Add UserThree: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddMemberThree}</Typography>
+                  Add UserThree: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChivesChatAddInviteThree}</Typography>
                   </Typography>
                 </Tooltip>
 

@@ -25,11 +25,12 @@
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelAdmin", AdminId = "admin txid..." }) need owner role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AddInvite", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "比较感兴趣此群组" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AgreeInvite" }) need user role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "RefuseInvite", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "不满足群组要求" }) need admin role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "RefuseInvite" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApprovalApply", Applicant = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
+-- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "RefuseApply", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "不满足群组要求" }) need admin role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
 -- Setting Channels (need owner role to call)
@@ -287,43 +288,19 @@ Handlers.add(
   "RefuseInvite",
   Handlers.utils.hasMatchingTag("Action", "RefuseInvite"),
   function (msg)
-    local isAdmin = false
-    if msg.From == ao.id then
-      isAdmin = true
-    end
-    for _, Admin in ipairs(Admins) do
-        if Admin == msg.From then
-            isAdmin = true
-            break
-        end
-    end
-
-    if isAdmin then
-      if Invites[msg.MemberId] then
-        Invites[msg.MemberId] = nil
-        ao.send({
-          Target = msg.From,
-          Data = "You have refused user " .. msg.MemberName .. " entry to this chatroom " .. ao.id
-        })
-        ao.send({
-          Target = msg.MemberId,
-          Data = "You have been refused entry to this chatroom " .. ao.id .. " Reason: " .. msg.MemberReason
-        })
-      else
-          ao.send({
-            Target = msg.From,
-            Action = 'RefuseInvite-Error',
-            ['Message-Id'] = msg.Id,
-            Error = 'Does not have an invite or has already processed'
-          })
-      endend
-    else 
+    if Invites[msg.From] then
+      Invites[msg.From] = nil
       ao.send({
         Target = msg.From,
-        Action = 'RefuseInvite-Error',
-        ['Message-Id'] = msg.Id,
-        Error = 'Only an administrator can refuse a invite'
+        Data = "You have refused the chatroom " .. ao.id
       })
+    else
+        ao.send({
+          Target = msg.From,
+          Action = 'RefuseInvite-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'Does not have an invite or has already processed'
+        })
     end
   end
 )
@@ -442,6 +419,51 @@ Handlers.add(
         Action = 'ApprovalApply-Error',
         ['Message-Id'] = msg.Id,
         Error = 'Only administrators can approve'
+      })
+    end
+  end
+)
+
+Handlers.add(
+  "RefuseApply",
+  Handlers.utils.hasMatchingTag("Action", "RefuseApply"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+
+    if isAdmin then
+      if Applicants[msg.MemberId] then
+        Applicants[msg.MemberId] = nil
+        ao.send({
+          Target = msg.From,
+          Data = "You have refused user " .. msg.MemberName .. " entry to this chatroom " .. ao.id
+        })
+        ao.send({
+          Target = msg.MemberId,
+          Data = "You have been refused entry to this chatroom " .. ao.id .. " Reason: " .. msg.MemberReason
+        })
+      else
+          ao.send({
+            Target = msg.From,
+            Action = 'RefuseApply-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'Does not have an invite or has already processed'
+          })
+      endend
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'RefuseApply-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only an administrator can refuse a invite'
       })
     end
   end
