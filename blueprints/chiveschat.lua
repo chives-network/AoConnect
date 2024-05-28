@@ -98,6 +98,31 @@ Handlers.add(
 )
 
 Handlers.add(
+  "Applicants",
+  Handlers.utils.hasMatchingTag("Action", "Applicants"),
+  function (msg)
+    local found = false
+    for i, v in ipairs(Admins) do
+        if v == msg.From then
+            found = true
+            break
+        end
+    end
+    if msg.From == ao.id or found then
+      ao.send({
+        Target = msg.From,
+        Data = require('json').encode(Applicants)
+      })
+    else 
+      ao.send({
+        Target = msg.From,
+        Data = "You are not a administrator"
+      })
+    end
+  end
+)
+
+Handlers.add(
   "AddChannel",
   Handlers.utils.hasMatchingTag("Action", "AddChannel"),
   function (msg)
