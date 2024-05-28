@@ -35,7 +35,7 @@ const FooterContent = () => {
           <LinkStyled target='_blank' href={authConfig.AoConnectGithub}>
             Github
           </LinkStyled>
-          <LinkStyled target='_blank' href='https://discord.gg/CQ2QeMWP4e'>
+          <LinkStyled target='_blank' href='https://discord.gg/YQXphqQnwK'>
             Discord
           </LinkStyled>
         </Box>
