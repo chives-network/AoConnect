@@ -41,11 +41,11 @@ Inspired by the design of AOS, AOConnect abandons the command-line design style 
 Developers are advised to first learn AOS to gain basic concepts and experience, and then delve into AOConnect for further exploration.
 
 ## AOConnect Main Functions
-    1. **Wallet**: Integrated a simplified version of an AR wallet.
-    2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
-    3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
-    4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
-    5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
+1. **Wallet**: Integrated a simplified version of an AR wallet.
+2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
+3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
+4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
+5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
 
 ## AOConnect Typical Application Tools
 ### Chatroom
@@ -57,6 +57,8 @@ Developers are advised to first learn AOS to gain basic concepts and experience,
 ### Token
 - **Function**
   1. Create Token
+  ![Create Token](https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenCreate.png)
+
   2. Mint Token
   3. Transfer Token
   4. Token Balances
@@ -77,6 +79,7 @@ Currently in the development phase, the final stage will consider developing a d
 
 ## Contact
 Email: chivescoin@gmail.com
+
 AO Official Discord: https://discord.gg/YQXphqQnwK
 
 <!-- LINK GROUP -->
