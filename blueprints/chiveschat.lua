@@ -359,6 +359,56 @@ Handlers.add(
   end
 )
 
+
+Handlers.add(
+  "AddMember",
+  Handlers.utils.hasMatchingTag("Action", "AddMember"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+
+    if isAdmin then
+      if not Members[msg.MemberId] then
+        Members[msg.MemberId] = {
+          MemberId = msg.MemberId,
+          MemberName = msg.MemberName,
+          MemberReason = msg.MemberReason
+        }
+        ao.send({
+          Target = msg.From,
+          Data = "User successfully join the chatroom " .. msg.MemberId
+        })
+        ao.send({
+          Target = msg.MemberId,
+          Data = "You have already joined. Welcome to the chatroom " .. ao.id
+        })
+      else
+        ao.send({
+          Target = msg.From,
+          Action = 'AddMember-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'This member has joined'
+        })
+      end
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'AddMember-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only administrators can add memeber'
+      })
+    end
+  end
+)
+
 Handlers.add(
   "DelMember",
   Handlers.utils.hasMatchingTag("Action", "DelMember"),
@@ -432,6 +482,9 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "ApprovalApply"),
   function (msg)
     local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
     for _, Admin in ipairs(Admins) do
         if Admin == msg.From then
             isAdmin = true
