@@ -60,6 +60,8 @@ Developers are advised to first learn AOS to gain basic concepts and experience,
   ![Create Token](https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenCreate.png)
 
   2. Mint Token
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenMint.png" width="600" />
+
   3. Transfer Token
   4. Token Balances
 
