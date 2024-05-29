@@ -56,6 +56,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     document.documentElement.setAttribute('lang', i18n.language)
   }, [i18n.language])
 
+  /*
   useEffect(() => {
 
     const intervalId = setInterval(async () => {
@@ -79,6 +80,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     return () => clearInterval(intervalId);
 
   }, [currentAddress]);
+  */
 
 
   //Message Format {Target, Action, Type, FromProcess, Data, Ref_}

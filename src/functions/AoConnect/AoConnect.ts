@@ -2,7 +2,7 @@
 //Due need to use the node esm mode, so have change the package.json and move the repo to this location. Version: 0.0.53
 import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
-import { ConvertInboxMessageFormatToJson, SaveInboxMsgIntoIndexedDb } from './MsgReminder'
+import { ConvertInboxMessageFormatAndStorage } from './MsgReminder'
 import authConfig from 'src/configs/auth'
 import BigNumber from 'bignumber.js'
 import axios from 'axios'
@@ -184,11 +184,8 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
         if(MsgContent && MsgContent.Output && MsgContent.Output.data && MsgContent.Output.data.output) {
             const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
-            const InboxMsgList: any[] = ConvertInboxMessageFormatToJson(formatText)
+            const InboxMsgList: any[] = ConvertInboxMessageFormatAndStorage(formatText, processTxId)
 
-            if(InboxMsgList) {
-                SaveInboxMsgIntoIndexedDb(processTxId, InboxMsgList)
-            }
             console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
             
             

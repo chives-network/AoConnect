@@ -625,14 +625,14 @@ Handlers.add(
     if Members[msg.From] or isAdmin then
       local haveSentRecords = {}
       for memberId, memberData in pairs(Members) do
-        ao.send({Target = memberId, Data = msg.Data, Sender = msg.From})
+        ao.send({Target = memberId, Data = "CCC" .. msg.Data, Sender = msg.From})
       end    
-      ao.send({Target = ao.id, Data = msg.Data, Sender = msg.From})
+      ao.send({Target = ao.id, Data = "AAA" .. msg.Data, Sender = msg.From})
       -- Handlers.utils.reply("Broadcasted")(msg)
       ao.send({
         Target = msg.From,
         ['Message-Id'] = msg.Id,
-        Data = 'Successfully Broadcasted ' .. msg.Data
+        Data = "BBB" .. 'Successfully Broadcasted ' .. msg.Data
       })
     else 
       Handlers.utils.reply("You are not a memeber")(msg)

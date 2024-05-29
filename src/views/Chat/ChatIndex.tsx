@@ -19,7 +19,8 @@ import ChatContent from 'src/views/Chat/ChatContent'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { ChatChatList, ChatChatInit, ChatChatNameList, ChatChatInput, ChatAiOutputV1, DeleteChatChat, DeleteChatChatHistory, DeleteChatChatByChatlogId, DeleteChatChatHistoryByChatlogId  } from 'src/functions/ChatBook'
+import { ChatChatInit, ChatChatNameList, ChatChatInput, ChatAiOutputV1, DeleteChatChat, DeleteChatChatHistory, DeleteChatChatByChatlogId, DeleteChatChatHistoryByChatlogId  } from 'src/functions/ChatBook'
+import { ReminderMsgAndStoreToLocal, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnect/MsgReminder'
 
 // ** Axios Imports
 import axios from 'axios'
@@ -27,7 +28,7 @@ import authConfig from 'src/configs/auth'
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 
-import { GetChatLogFromIndexedDb } from 'src/functions/AoConnect/MsgReminder'
+import { GetInboxMsgFromLocalStorage } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
 
 const AppChat = (props: any) => {
@@ -48,29 +49,34 @@ const AppChat = (props: any) => {
   const [stopMsg, setStopMsg] = useState<boolean>(false)
   const [counter, setCounter] = useState<number>(0)
 
+  const MyProcessTxId = "Ag2sWWOEn_bQHdB6xWzVc6TNC-89MqLgHOIBQeh7PZA"
+
   //Download data from Inbox
   useEffect(() => {
     if(id && id.length == 43 && currentAddress && currentAddress.length == 43)   {
-      handleGetMyInboxMsg(id)
+      //const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(id, 0, 10)
+      //console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
+      //setCounter(counter+1)
     }
   }, [currentAddress, id])
 
   const handleGetMyInboxMsg = async function (id: string) {
     const RS = await GetMyInboxMsg(currentWallet.jwk, id)
-      console.log("handleGetMyInboxMsg GetMyInboxMsg First Time Loading Execute: ", RS, "Chatroom TxId:", id)
       setCounter(counter+1)
   }
+  
 
   const getChatLogList = async function () {
     if(id && currentAddress) {
-      const GetChatLogFromIndexedDbData = await GetChatLogFromIndexedDb(id)
-      if(GetChatLogFromIndexedDbData)  {
-        const ChatChatInitList = ChatChatInit(GetChatLogFromIndexedDbData, app.systemPrompt)
+      const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(id, 0, 100)
+      console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
+      if(GetInboxMsgFromLocalStorageData)  {
+        const ChatChatInitList = ChatChatInit(GetInboxMsgFromLocalStorageData, app.systemPrompt, id, MyProcessTxId)
         setHistoryCounter(ChatChatInitList.length)
         const selectedChat = {
           "chat": {
               "id": 1,
-              "userId": currentAddress,
+              "userId": MyProcessTxId,
               "unseenMsgs": 0,
               "chat": ChatChatInitList
           }
@@ -78,7 +84,7 @@ const AppChat = (props: any) => {
         const storeInit = {
           "chats": [],
           "userProfile": {
-              "id": currentAddress,
+              "id": MyProcessTxId,
               "avatar": "/images/avatars/1.png",
               "fullName": "Current User",
           },
@@ -113,7 +119,7 @@ const AppChat = (props: any) => {
       setStore(storeInit)
 
       //Set system prompt
-      ChatChatInit([], "GetWelcomeTextFromAppValue")
+      //ChatChatInit([], "GetWelcomeTextFromAppValue")
       setHistoryCounter(0)
       setRefreshChatCounter(0)
       
@@ -157,9 +163,7 @@ const AppChat = (props: any) => {
   const lastChat = {
     "message": processingMessage,
     "time": Date.now(),
-    "senderId": 999999,
-    "responseTime": responseTime,
-    "history": [],
+    "senderId": MyProcessTxId,
     "feedback": {
         "isSent": true,
         "isDelivered": false,
@@ -173,36 +177,6 @@ const AppChat = (props: any) => {
   const hidden = false
 
   useEffect(() => {
-    if(currentAddress) {
-      const ChatChatListValue = ChatChatList()
-      if(processingMessage && processingMessage!="") {
-        
-        //流式输出的时候,进来显示
-        ChatChatListValue.push(lastChat)
-      }
-      const selectedChat = {
-        "chat": {
-            "id": currentAddress,
-            "userId": currentAddress,
-            "unseenMsgs": 0,
-            "chat": ChatChatListValue
-        }
-      }
-      const storeInit = {
-        "chats": [],
-        "userProfile": {
-            "id": currentAddress,
-            "avatar": "/images/avatars/1.png",
-            "fullName": "Current User",
-        },
-        "selectedChat": selectedChat
-      }
-      setStore(storeInit)
-      setHistoryCounter(ChatChatListValue.length)
-    }
-  }, [refreshChatCounter, processingMessage, auth])
-
-  useEffect(() => {
     if(t && id && app)   {
       const ChatChatNameListData: string[] = ChatChatNameList()
       if(ChatChatNameListData.length == 0) {
@@ -213,7 +187,7 @@ const AppChat = (props: any) => {
       getChatLogList()
 
     }
-  }, [t, app])
+  }, [t, app, id])
 
   const sendMsg = async (Obj: any) => {
     if(currentAddress && t) {

@@ -85,7 +85,7 @@ export function formatTimestampMemo(timestamp: number): string {
     timeMemo =  ` (about ${hours} hour${hours > 1 ? "s" : ""})`;
   } else {
     const days = Math.floor(timeDifference / 86400);
-    timeMemo =  ` (about ${days} day${days > 1 ? "s" : ""})`;
+    timeMemo =  ``;
   }
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -109,18 +109,19 @@ export function formatTimestampAge(timestamp: number): string {
   let timeMemo = '';
   if (timeDifference < 60) {
     timeMemo =  `${Math.floor(timeDifference)} seconds`;
-  } else if (timeDifference < 3600) {
+
+    return timeMemo
+  } 
+  else if (timeDifference < 3600) {
     const minutes = Math.floor(timeDifference / 60);
     timeMemo =  `${minutes} minute${minutes > 1 ? "s" : ""}`;
-  } else if (timeDifference < 86400) {
-    const hours = Math.floor(timeDifference / 3600);
-    timeMemo =  `about ${hours} hour${hours > 1 ? "s" : ""}`;
-  } else {
-    const days = Math.floor(timeDifference / 86400);
-    timeMemo =  `about ${days} day${days > 1 ? "s" : ""}`;
+
+    return timeMemo
+  } 
+  else {
+
+    return formatTimestampMemo(timestamp)
   }
-  
-  return timeMemo;
 }
 
 export function formatTimestamp(timestamp: number): string {

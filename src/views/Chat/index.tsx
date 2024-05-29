@@ -15,8 +15,6 @@ import ChatIndex from 'src/views/Chat/ChatIndex'
 import authConfig from 'src/configs/auth'
 import { useRouter } from 'next/router'
 
-import { GetChatLogFromIndexedDb } from 'src/functions/AoConnect/MsgReminder'
-
 const Chat = () => {
   // ** States
   const [app, setApp] = useState<any>(null)
@@ -29,9 +27,7 @@ const Chat = () => {
 
   useEffect(() => {
     if(id && id.length == 43) {
-      handlerGetChatLogFromIndexed(String(id))
-      
-      //Get Chatroom Detail
+
       const AoConnectChatRoomData = window.localStorage.getItem(authConfig.AoConnectChatRoom) || '{}';
       const AoConnectChatRoomJson = JSON.parse(AoConnectChatRoomData)
       if(AoConnectChatRoomJson) {
@@ -40,13 +36,9 @@ const Chat = () => {
           setApp(AppNew[0])
         }
       }
+
     }
   }, [id])
-
-  const handlerGetChatLogFromIndexed = async (id: string) => {
-    const GetChatLogFromIndexedDbData = await GetChatLogFromIndexedDb(String(id))
-    console.log("GetChatLogFromIndexedDb", GetChatLogFromIndexedDbData)
-  }
 
   // ** Vars
   const { skin } = settings

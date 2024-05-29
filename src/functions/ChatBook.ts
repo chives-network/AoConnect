@@ -36,8 +36,8 @@ export function ChatKnowledgeInit(MsgList: any) {
     MsgList.map((Item: any)=>{
         ChatLogList.push({
             "message": Item.send,
-            "time": Item.timestamp,
-            "senderId": Item.userId,
+            "Timestamp": Item.timestamp,
+            "Sender": Item.userId,
             "feedback": {
                 "isSent": true,
                 "isDelivered": true,
@@ -46,8 +46,8 @@ export function ChatKnowledgeInit(MsgList: any) {
           })
         ChatLogList.push({
             "message": Item.received,
-            "time": Item.timestamp,
-            "senderId": 9999999999,
+            "Timestamp": Item.timestamp,
+            "Sender": 9999999999,
             "feedback": {
                 "isSent": true,
                 "isDelivered": true,
@@ -65,8 +65,8 @@ export function ChatKnowledgeInput(Message: string, UserId: number, knowledgeId:
     const ChatKnowledgeList = ChatKnowledgeText ? JSON.parse(ChatKnowledgeText) : []
     ChatKnowledgeList.push({
       "message": Message,
-      "time": String(Date.now()),
-      "senderId": UserId,
+      "Timestamp": String(Date.now()),
+      "Sender": UserId,
       "knowledgeId": knowledgeId,
       "feedback": {
           "isSent": true,
@@ -141,7 +141,7 @@ export function ChatKnowledgeHistoryInput(question: string, answer: string, User
     if(ChatKnowledgeHistoryList && ChatKnowledgeHistoryList[UserId] && ChatKnowledgeHistoryList[UserId][knowledgeId]) {
         ChatKnowledgeHistoryList[UserId][knowledgeId].push({
             "question": question,
-            "time": String(Date.now()),
+            "Timestamp": String(Date.now()),
             "answer": answer,
         })
     }
@@ -149,7 +149,7 @@ export function ChatKnowledgeHistoryInput(question: string, answer: string, User
         ChatKnowledgeHistoryList[UserId] = {}
         ChatKnowledgeHistoryList[UserId][knowledgeId] = [{
             "question": question,
-            "time": String(Date.now()),
+            "Timestamp": String(Date.now()),
             "answer": answer,
         }]
     }
@@ -198,10 +198,10 @@ export function DeleteChatChat() {
     window.localStorage.setItem(ChatChat, JSON.stringify([]))
 }
 
-export function DeleteChatChatByChatlogId(chatlogId: string) {
+export function DeleteChatChatByHashId(HashId: string) {
     const ChatChatText = window.localStorage.getItem(ChatChat)
     const ChatChatList = ChatChatText ? JSON.parse(ChatChatText) : []
-    const ChatChatListFilter = ChatChatList.filter((item: any)=>item.chatlogId!=chatlogId)
+    const ChatChatListFilter = ChatChatList.filter((item: any)=>item.HashId!=HashId)
     window.localStorage.setItem(ChatChat, JSON.stringify(ChatChatListFilter))
 }
 
@@ -214,27 +214,25 @@ export function DeleteChatChatHistory(UserId: number | string, knowledgeId: numb
     }
 }
 
-export function DeleteChatChatHistoryByChatlogId(UserId: number | string, knowledgeId: number | string, appId: string, chatlogId: string) {
+export function DeleteChatChatHistoryByHashId(UserId: number | string, knowledgeId: number | string, appId: string, HashId: string) {
 	const ChatChatHistoryText = window.localStorage.getItem(ChatChatHistory)      
     const ChatChatHistoryList = ChatChatHistoryText ? JSON.parse(ChatChatHistoryText) : {}
     if(ChatChatHistoryList[UserId] && ChatChatHistoryList[UserId][knowledgeId] && ChatChatHistoryList[UserId][knowledgeId][appId]) {
         const TempList = ChatChatHistoryList[UserId][knowledgeId][appId]
-        const TempListFilter = TempList.filter((item: any)=>item.chatlogId!=chatlogId)
+        const TempListFilter = TempList.filter((item: any)=>item.HashId!=HashId)
         ChatChatHistoryList[UserId][knowledgeId][appId] = TempListFilter
         window.localStorage.setItem(ChatChatHistory, JSON.stringify(ChatChatHistoryList))
     }
 }
 
-export function ChatChatInit(MsgList: any, PromptTemplate: string) {
+export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId: string, MyProcessTxId: string) {
     const ChatLogList: any = []
     if(PromptTemplate && PromptTemplate!= "") {
         ChatLogList.push({
             "message": PromptTemplate,
-            "time": Date.now(),
-            "senderId": 999999,
-            "history": [],
-            "responseTime": 0,
-            "chatlogId": 0,
+            "Timestamp": Date.now(),
+            "Sender": ChatroomTxId,
+            "HashId": 0,
             "question": '',
             "feedback": {
                 "isSent": true,
@@ -247,23 +245,10 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string) {
     MsgList.map((Item: any)=>{
         ChatLogList.push({
             "message": Item.Data,
-            "time": Item.timestamp,
-            "senderId": Item.userId,
-            "chatlogId": Item.id,
-            "feedback": {
-                "isSent": true,
-                "isDelivered": true,
-                "isSeen": true
-            }
-          })
-        ChatLogList.push({
-            "message": Item.received,
-            "time": Item.timestamp,
-            "senderId": 999999,
-            "history": JSON.parse(Item.history || "[]"),
-            "responseTime": Item.responseTime,
-            "chatlogId": Item.id,
-            "question": Item.Data,
+            "Timestamp": Item.Timestamp,
+            "Sender": Item.Sender,
+            "HashId": Item.HashId,
+            "Item": Item,
             "feedback": {
                 "isSent": true,
                 "isDelivered": true,
@@ -272,20 +257,18 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string) {
           })
     })
 
-    window.localStorage.setItem(ChatChat, JSON.stringify(ChatLogList))
-
     return ChatLogList
 }
 
-export function ChatChatInput(chatlogId: string, Question: string, Message: string, UserId: number | string, responseTime: number, History: any[]) {
+export function ChatChatInput(HashId: string, Question: string, Message: string, UserId: number | string, responseTime: number, History: any[]) {
 	const ChatChatText = window.localStorage.getItem(ChatChat)      
     const ChatChatList = ChatChatText ? JSON.parse(ChatChatText) : []
     ChatChatList.push({
       "message": Message,
-      "time": Date.now(),
+      "Timestamp": Date.now(),
       "responseTime": responseTime,
-      "chatlogId": chatlogId,
-      "senderId": UserId,
+      "HashId": HashId,
+      "Sender": UserId,
       "history": History,
       "question": Question,
       "feedback": {
@@ -458,7 +441,7 @@ function extractTextBetween(text: string, startMarker: string, endMarker: string
     return match ? match[1] : text;
 }
 
-export function ChatChatHistoryInput(chatlogId: string, question: string, answer: string, UserId: number | string, knowledgeId: number | string, appId: string, responseTime: number, History: any[]) {
+export function ChatChatHistoryInput(HashId: string, question: string, answer: string, UserId: number | string, knowledgeId: number | string, appId: string, responseTime: number, History: any[]) {
     
     //console.log("ChatChatHistoryList", question, answer, UserId)
 	const ChatChatHistoryText = window.localStorage.getItem(ChatChatHistory)      
@@ -466,9 +449,9 @@ export function ChatChatHistoryInput(chatlogId: string, question: string, answer
     if(ChatChatHistoryList && ChatChatHistoryList[UserId] && ChatChatHistoryList[UserId][knowledgeId] && ChatChatHistoryList[UserId][knowledgeId][appId]) {
         ChatChatHistoryList[UserId][knowledgeId][appId].push({
             "question": question,
-            "time": String(Date.now()),
+            "Timestamp": String(Date.now()),
             "responseTime": responseTime,
-            "chatlogId" : chatlogId,
+            "HashId" : HashId,
             "history": History,
             "answer": answer,
         })
@@ -478,9 +461,9 @@ export function ChatChatHistoryInput(chatlogId: string, question: string, answer
         ChatChatHistoryList[UserId][knowledgeId] = {}
         ChatChatHistoryList[UserId][knowledgeId][appId] = [{
             "question": question,
-            "time": String(Date.now()),
+            "Timestamp": String(Date.now()),
             "responseTime": responseTime,
-            "chatlogId" : chatlogId,
+            "HashId" : HashId,
             "history": History,
             "answer": answer,
         }]
