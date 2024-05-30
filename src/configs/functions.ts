@@ -84,7 +84,6 @@ export function formatTimestampMemo(timestamp: number): string {
     const hours = Math.floor(timeDifference / 3600);
     timeMemo =  ` (about ${hours} hour${hours > 1 ? "s" : ""})`;
   } else {
-    const days = Math.floor(timeDifference / 86400);
     timeMemo =  ``;
   }
 

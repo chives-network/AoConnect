@@ -1,15 +1,11 @@
 // ** React Imports
-import { useRef, useEffect, Ref, ReactNode, Fragment, useState, memo } from 'react'
+import { useRef, useEffect, Ref, ReactNode, Fragment, memo } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import ReactMarkdown from 'react-markdown'
-import Link from 'next/link'
 import toast from 'react-hot-toast'
-import ListItem from '@mui/material/ListItem';
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
@@ -31,62 +27,10 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { re
   padding: theme.spacing(3, 5, 3, 3)
 }))
 
-const LinkStyled = styled(Link)(({ theme }) => ({
-  textDecoration: 'none',
-  color: theme.palette.success.main
-}))
-
-const SystemPromptTemplate = ({text, handleSendMsg}: any) => {
-
-  const handleClick = (event: any, keyword: string) => {
-    event.preventDefault();
-    handleSendMsg(keyword)
-  };
-
-  const replaceKeywordsWithLinks = (text: string) => {
-    const replacedText = text.split(/(\[.*?\])/).map((part, index) => {
-      if (part.startsWith('[') && part.endsWith(']')) {
-        const keyword = part.slice(1, -1);
-
-        return (
-          <ListItem key={index} sx={{m: 0, p: 0, pt: 0}}>
-            <Typography sx={{mr: 3, my: 0.5  }}>•</Typography>
-            <LinkStyled href="#" onClick={(event: any) => handleClick(event, keyword)}>
-              {keyword}
-            </LinkStyled>
-          </ListItem>
-        );
-      }
-
-      return part;
-    });
-
-    return replacedText;
-  };
-
-  //const text = '你好，我是知识库助手，请不要忘记选择知识库噢~[你是谁]你好: [如何使用]';
-  const processedText = replaceKeywordsWithLinks(text);
-
-  return (
-    <Box sx={{ pt: 2 }}>
-      {processedText}
-    </Box>
-  );
-};
-
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { data, hidden, app, rowInMsg, maxRows, sendButtonDisable, GetSystemPromptFromAppValue, handleDeleteOneChatLogById, sendMsg, store, processingMessages, MyProcessTxId } = props
-
-  const handleSendMsg = (msg: string) => {
-    if (store && store.selectedChat && msg.trim().length) {
-      sendMsg({ ...store.selectedChat, message: msg, template: '' })
-    }
-  }
-
-  const [contextPreviewOpen, setContextPreviewOpen] = useState<boolean>(false)
-  const [contextPreviewData, setContextPreviewData] = useState<any[]>([])
+  const { data, hidden, app, rowInMsg, maxRows, handleDeleteOneChatLogById, processingMessages } = props
 
   // ** Ref
   const chatArea = useRef(null)
@@ -265,16 +209,7 @@ const ChatLog = (props: any) => {
 
           <Box className='chat-body' sx={{ maxWidth: ['calc(100% - 5.75rem)', '100%', '100%'] }}>
             {item.messages.map((chat: any, ChatIndex: number) => {
-              let ChatMsgType = 'Chat'
-              let ChatMsgContent: any
-              if(chat.msg?.includes('"type":"image"')) {
-                ChatMsgType = 'Image'
-                ChatMsgContent = JSON.parse(chat.msg)
-              }
-              if(chat.msg?.includes('"type":"audio"')) {
-                ChatMsgType = 'Audio'
-                ChatMsgContent = JSON.parse(chat.msg)
-              }
+              const ChatMsgType = 'Chat'
 
               return (
                 <Box key={ChatIndex} sx={{ '&:not(:last-of-type)': { mb: 3 } }}>
@@ -286,21 +221,16 @@ const ChatLog = (props: any) => {
                           borderRadius: 1,
                           width: 'fit-content',
                           fontSize: '0.875rem',
-                          p: theme => theme.spacing(0.1, 2, 0.1, 3),
+                          p: theme => theme.spacing(2.5, 2, 2.5, 2),
                           ml: isSender ? 'auto' : undefined,
                           borderTopLeftRadius: !isSender ? 0 : undefined,
                           borderTopRightRadius: isSender ? 0 : undefined,
                           color: isSender ? 'common.white' : 'text.primary',
-                          backgroundColor: isSender ? 'primary.main' : 'background.paper'
+                          backgroundColor: isSender ? 'primary.main' : 'background.paper',
                         }}
                         >
-                          { /\[.*?\]/.test(chat.msg) ?
-                            <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
-                          :
-                            <Typography sx={{mx: 1, my: 2.5}}>{chat.msg?.replace('\n', '  \n')}</Typography>
-                          }
+                          {chat.msg?.replace('\n', '  \n')}
                         </Typography>
-                        
                       </div>
                       :
                       null

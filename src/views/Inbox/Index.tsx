@@ -25,7 +25,7 @@ import { isMobile } from 'src/configs/functions'
 
 import { formatHash, formatTimestampDateTime } from 'src/configs/functions'
 import { GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
-import { GetInboxMsgFromIndexedDb, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnect/MsgReminder'
+import { GetInboxMsgFromLocalStorage, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnect/MsgReminder'
 
 import ViewMessage from './ViewMessage'
 
@@ -51,7 +51,7 @@ const Inbox = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    GetInboxMsgFromIndexedDbInbox(paginationModel)
+    GetInboxMsgFromLocalStorageInbox(paginationModel)
     setIsLoading(false)
   }, [paginationModel, counter, isMobileData, auth])
 
@@ -68,11 +68,11 @@ const Inbox = () => {
     setIsDisabledButton(false)
   }
   
-  const GetInboxMsgFromIndexedDbInbox = async function (paginationModel: any) {
+  const GetInboxMsgFromLocalStorageInbox = async function (paginationModel: any) {
     const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
-    const GetInboxMsgFromIndexedDbData = await GetInboxMsgFromIndexedDb(GetMyCurrentProcessTxIdData, paginationModel.page, paginationModel.pageSize)
-    console.log("GetInboxMsgFromIndexedDbData", GetInboxMsgFromIndexedDbData, paginationModel)
-    setStore(GetInboxMsgFromIndexedDbData)
+    const GetInboxMsgFromLocalStorageData = await GetInboxMsgFromLocalStorage(GetMyCurrentProcessTxIdData, paginationModel.page, paginationModel.pageSize)
+    console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData, paginationModel)
+    setStore(GetInboxMsgFromLocalStorageData)
   }
 
   //Loading the all Inbox to IndexedDb

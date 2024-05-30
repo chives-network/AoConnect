@@ -16,7 +16,7 @@ import Card from '@mui/material/Card'
 import { styled } from '@mui/material/styles'
 import PerfectScrollbarComponent, { ScrollBarProps } from 'react-perfect-scrollbar'
 
-const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { ref: Ref<unknown> }>(({ theme }) => ({
+const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { ref: any }>(({ theme }) => ({
     padding: theme.spacing(3, 5, 3, 3)
   }))
 

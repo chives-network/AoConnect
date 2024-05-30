@@ -17,13 +17,14 @@ import { getChivesLanguage, setChivesLanguage } from 'src/functions/ChivesweaveW
 
 import { useAuth } from 'src/hooks/useAuth'
 
+/*
 import toast from 'react-hot-toast'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-
-import { ReminderMsgAndStoreToLocal, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnect/MsgReminder'
+*/
+//import { ReminderMsgAndStoreToLocal, GetAoConnectReminderProcessTxId } from 'src/functions/AoConnect/MsgReminder'
 
 
 interface Props {
@@ -54,6 +55,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       setChivesLanguage(localLanguage)
     }
     document.documentElement.setAttribute('lang', i18n.language)
+    console.log("currentAddress", currentAddress)
   }, [i18n.language])
 
   /*
@@ -80,8 +82,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     return () => clearInterval(intervalId);
 
   }, [currentAddress]);
-  */
-
 
   //Message Format {Target, Action, Type, FromProcess, Data, Ref_}
   const CustomToast = (ContentList: any) => {
@@ -114,6 +114,8 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       }
     )
   }
+
+  */
 
 
   return (

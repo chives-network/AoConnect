@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, Fragment } from 'react'
+import { useState, Fragment } from 'react'
 
 // ** Next Imports
 import Button from '@mui/material/Button'
@@ -10,7 +10,6 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -20,14 +19,12 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import toast from 'react-hot-toast'
-import Avatar from '@mui/material/Avatar'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintChivesChat, GetChivesChatAdmins, GetChivesChatMembersByOwner, GetChivesChatInvites, GetChivesChatApplicants, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvite, ChivesChatAddMember, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatGetChannels, ChivesChatAgreeInvite, ChivesChatRefuseInvite, ChivesChatGetMembers, ChivesChatApplyJoin, ChivesChatGetApplicants,ChivesChatApprovalApply, ChivesChatRefuseApply, SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
+import { ChivesChatAddMember, SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -380,7 +377,7 @@ const ChivesChatOnlyChat = () => {
                 </Typography>
                 
 
-                {toolInfo && Object.keys(toolInfo).map((Item: any, Index: number)=>{
+                {toolInfo && Object.keys(toolInfo).map((Item: any)=>{
 
                   return (
                     <>

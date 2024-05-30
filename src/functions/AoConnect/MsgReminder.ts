@@ -2,7 +2,6 @@ import { AoGetPageRecords } from './AoConnect'
 
 const AoConnectLocalStorage = 'AoConnectDb'
 const AoConnectLastCursor = 'AoConnectLastCursor'
-const AoConnectAllMessages = 'AoConnectAllMessages'
 const AoConnectReminderProcessTxId = 'AoConnectReminderProcessTxId'
 const AoConnectReminderChatroomTxId = 'AoConnectReminderChatroomTxId'
 const AoConnectEveryTimeGetMsgCount = 10
@@ -33,8 +32,6 @@ const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-n
 
 export const ReminderMsgAndStoreToLocal = async (processTxId: string, reminder = true) => {
     
-    return 
-
     const AoConnectLastCursorData = window.localStorage.getItem(AoConnectLastCursor + "_" + processTxId) || undefined
     const AoGetPageRecordsList = await AoGetPageRecords(processTxId, 'DESC', AoConnectEveryTimeGetMsgCount, AoConnectLastCursorData);
     const NeedReminderMsg: any[] = []
@@ -48,21 +45,22 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string, reminder =
 
         //Output From Chatroom Msg Reminder
         if(item.node && item.node.Output && item.node.Output.data && typeof item.node.Output.data === 'string' )  {
-            const Data = item.node.Output.data.replace(ansiRegex, '');
+            
+            //const Data = item.node.Output.data.replace(ansiRegex, '');
             //NeedReminderMsg.push({Target: null, Action: 'Output', Type:'Reminder', From: null, Data, Ref_: null, Logo: null, Sender: null})
         }
 
         //Output From Chatroom Msg Reminder
         if(item.node && item.node.Output && item.node.Output.data && item.node.Output.data.output && typeof item.node.Output.data.output === 'string' )  {
-            const Msg = item.node.Output.data.output.replace(ansiRegex, '');
             
+            //const Msg = item.node.Output.data.output.replace(ansiRegex, '');            
             //NeedReminderMsg.push([Msg, ''])
         }
 
         //Messages
         if(item.node && item.node.Messages && typeof item.node.Messages === 'object' && item.node.Messages.length > 0)  {
             const MessagesList = item.node.Messages;
-            MessagesList && MessagesList.map((ItemMsg: any, Index: number)=>{
+            MessagesList && MessagesList.map((ItemMsg: any)=>{
                 const Data = ItemMsg?.Data?.replace(ansiRegex, '')
                 const Tags = ItemMsg.Tags
                 const Target = ItemMsg.Target
@@ -94,6 +92,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string, reminder =
                     }
                     NeedSaveMsg.push({Target, Action, Type, From, Data, Ref_, Logo, Sender})
 
+                    /*
                     const TickerList = Tags.filter((item: any)=> item.name == 'Ticker')
                     if( TickerList && TickerList.length == 1 )  {
                         const Value = TickerList[0]['value']
@@ -102,12 +101,15 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string, reminder =
                         const FromList = Tags.filter((item: any)=> item.name == 'From-Process')
                         const From = FromList[0]['value']
                         if(Data) {
+
                             //NeedReminderMsg.push([Data.replace(ansiRegex, ''), Value.replace(ansiRegex, '') + " from " + Target, Logo])
                         }
                         else {
+
                             //NeedReminderMsg.push([Value.replace(ansiRegex, '') + " from " + Target, From])
                         }
                     }
+                    */
 
                 }
 
@@ -125,10 +127,6 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string, reminder =
     console.log("ReminderMsgAndStoreToLocal NeedReminderMsg", NeedReminderMsg)
 
     return NeedReminderMsg
-}
-
-export const GetChatLogFromLocalStorage = (processTxId: string) => {
-    
 }
 
 export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: string, clearDataAndRewrite: boolean) {

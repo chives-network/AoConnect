@@ -26,7 +26,7 @@ const Form = styled('form')(({ theme }) => ({
 
 const SendMsgForm = (props: any) => {
   // ** Props
-  const { store, sendMsg, sendButtonDisable, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows, setStopMsg} = props
+  const { store, sendMsg, sendButtonDisable, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows} = props
 
   // ** State
   const [msg, setMsg] = useState<string>('')

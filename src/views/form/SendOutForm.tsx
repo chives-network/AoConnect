@@ -40,7 +40,6 @@ const SendOutForm = () => {
   const router = useRouter()
     
   // ** State
-  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({})
   const [uploadingButton, setUploadingButton] = useState<string>(`${t('Submit')}`)
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   
@@ -138,24 +137,6 @@ const SendOutForm = () => {
 
   }
 
-  useEffect(() => {
-    let isFinishedAllUploaded = true
-    uploadProgress && Object.entries(uploadProgress) && Object.entries(uploadProgress).forEach(([key, value]) => {
-        if(value != 100) {
-            isFinishedAllUploaded = false
-        }
-        
-        console.log("uploadProgress key", key, value)
-    })
-    if(uploadProgress && Object.entries(uploadProgress) && Object.entries(uploadProgress).length > 0 && isFinishedAllUploaded) {
-        setIsDisabledButton(false)
-        setUploadingButton(`${t('Submit')}`)
-        setInputAddress("")
-        setInputAmount("")
-        setInputData("")
-        toast.success(`${t('Successfully submitted to blockchain')}`, { duration: 4000 })
-    }
-  }, [uploadProgress])
 
   return (
     <Fragment>

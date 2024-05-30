@@ -45,15 +45,12 @@ const AppChat = (props: any) => {
   const MyProcessTxId = "Ag2sWWOEn_bQHdB6xWzVc6TNC-89MqLgHOIBQeh7PZA"
 
   useEffect(() => {
-  }, [])
-
-  useEffect(() => {
     let timeoutId: any = null;
   
     const CronTaskLastMessage = () => {
       
       //console.log('This message will appear every 10 seconds');
-      let delay = Math.random() * 10000;
+      const delay = Math.random() * 10000;
       
       //console.log(`Simulating a long running process: ${delay}ms`);
       timeoutId = setTimeout(() => {
@@ -110,7 +107,7 @@ const AppChat = (props: any) => {
       
       //console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
       if(GetInboxMsgFromLocalStorageData)  {
-        const ChatChatInitList = ChatChatInit(GetInboxMsgFromLocalStorageData, app.systemPrompt, id, MyProcessTxId)
+        const ChatChatInitList = ChatChatInit(GetInboxMsgFromLocalStorageData, app.systemPrompt, id)
         const selectedChat = {
           "chat": {
               "id": 1,
@@ -170,6 +167,7 @@ const AppChat = (props: any) => {
     if (currentAddress && id) {
       const RS = {status:'ok', msg:'Success'}
       if(RS && RS.status == 'ok') { 
+        console.log("chatlogId", chatlogId)
         setRefreshChatCounter(refreshChatCounter + 1)
         toast.success(t(RS.msg) as string, { duration: 2500, position: 'top-center' })
       }
@@ -187,8 +185,6 @@ const AppChat = (props: any) => {
   const [sendButtonText, setSendButtonText] = useState<string>('')
   const [sendInputText, setSendInputText] = useState<string>('')
   const [processingMessages, setProcessingMessages] = useState<any[]>([])
-  const [finishedMessage, setFinishedMessage] = useState("")
-  const [responseTime, setResponseTime] = useState<number | null>(null);
   
   // ** Hooks
   const theme = useTheme()
@@ -202,7 +198,6 @@ const AppChat = (props: any) => {
       setSendButtonText(t("Sending") as string)
       setSendInputText(t("Answering...") as string)
       setRefreshChatCounter(refreshChatCounter + 1)
-      const startTime = performance.now()
       
       const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, MyProcessTxId, Obj.message)
       if(SendMessageToChatroomDataUserOne && SendMessageToChatroomDataUserOne.id && SendMessageToChatroomDataUserOne.NanoId) {
@@ -225,8 +220,6 @@ const AppChat = (props: any) => {
         console.log("SendMessageToChatroomDataUserOne.id", SendMessageToChatroomDataUserOne)
       }
       
-      const endTime = performance.now();
-      setResponseTime(endTime - startTime);
 
       if(true)      {
         setSendButtonDisable(false)

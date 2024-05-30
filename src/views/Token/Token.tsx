@@ -105,7 +105,7 @@ const Inbox = () => {
 
   const handleTokenCreate = async function (tokenCreate: any) {
 
-    let TokenProcessTxId = null
+    let TokenProcessTxId: any = null
     if(tokenCreate && tokenCreate.ManualProcessTxId && tokenCreate.ManualProcessTxId.length == 43) {
       TokenProcessTxId = tokenCreate?.ManualProcessTxId
       const TokenGetMap = await AoTokenInfoDryRun(TokenProcessTxId)

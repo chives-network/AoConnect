@@ -225,7 +225,7 @@ export function DeleteChatChatHistoryByHashId(UserId: number | string, knowledge
     }
 }
 
-export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId: string, MyProcessTxId: string) {
+export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId: string) {
     const ChatLogList: any = []
     if(PromptTemplate && PromptTemplate!= "") {
         ChatLogList.push({
@@ -280,10 +280,6 @@ export function ChatChatInput(HashId: string, Question: string, Message: string,
       }
     })
     window.localStorage.setItem(ChatChat, JSON.stringify(ChatChatList))
-}
-
-//@ts-ignore
-export async function ChatChatOutput(Message: string, Token: string, UserId: number, chatId: number | string, appId: string, setProcessingMessages:any, template: string, setFinishedMessage:any) {
 }
 
 export async function ChatAiAudioV1(Message: string, Token: string, voice: string, appId: string, userType: string) {
@@ -402,7 +398,7 @@ export async function ChatAiOutputV1(_id: string, Message: string, Token: string
                             setQuestionGuide(response)
                         }
                         else if(response.includes('```json')) {
-                            let result = extractTextBetween(response, "```json", "```");
+                            const result = extractTextBetween(response, "```json", "```");
                             const JsonArray = JSON.parse(result)
                             console.log("responseresponseresponseresponse", JsonArray) 
                             setQuestionGuide(JsonArray)
@@ -433,11 +429,12 @@ export async function ChatAiOutputV1(_id: string, Message: string, Token: string
 }
 
 function extractTextBetween(text: string, startMarker: string, endMarker: string) {
+    
     // 创建正则表达式模式，使用非贪婪匹配来获取开始和结束标记之间的文本
-    let regex = new RegExp(`${startMarker}(.*?)${endMarker}`, 's');
+    const regex = new RegExp(`${startMarker}(.*?)${endMarker}`, 's');
     
     // 使用正则表达式匹配文本
-    let match = text.match(regex);
+    const match = text.match(regex);
     
     // 如果匹配成功，返回匹配组中的文本；否则返回原始文本
     return match ? match[1] : text;
