@@ -176,8 +176,9 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
         tags: [ { name: 'Action', value: 'Eval' } ],
         signer: createDataItemSigner(currentWalletJwk),
         data: 'Inbox',
-      });
-    console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult)
+    });
+    
+    //console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult)
 
     if(GetMyInboxMsgResult && GetMyInboxMsgResult.length == 43) {
         const MsgContent = await AoGetMessage(processTxId, GetMyInboxMsgResult)
@@ -186,7 +187,7 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
             const InboxMsgList: any[] = ConvertInboxMessageFormatAndStorage(formatText, processTxId, true)
 
-            console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
+            //console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
             
             return { id: GetMyInboxMsgResult, msg: InboxMsgList };
         }
@@ -209,8 +210,9 @@ export const GetMyInboxLastMsg = async (currentWalletJwk: any, processTxId: stri
         tags: [ { name: 'Action', value: 'Eval' } ],
         signer: createDataItemSigner(currentWalletJwk),
         data: InboxDataFormat,
-      });
-    console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult)
+    });
+    
+    //console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult)
 
     if(GetMyInboxMsgResult && GetMyInboxMsgResult.length == 43) {
         const MsgContent = await AoGetMessage(processTxId, GetMyInboxMsgResult)
@@ -219,7 +221,7 @@ export const GetMyInboxLastMsg = async (currentWalletJwk: any, processTxId: stri
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
             const InboxMsgList: any[] = ConvertInboxMessageFormatAndStorage("{" + formatText + "}", processTxId, false)
 
-            console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
+            //console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
             
             return { id: GetMyInboxMsgResult, msg: InboxMsgList };
         }
