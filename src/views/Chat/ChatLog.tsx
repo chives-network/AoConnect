@@ -77,7 +77,7 @@ const SystemPromptTemplate = ({text, handleSendMsg}: any) => {
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { data, hidden, app, rowInMsg, maxRows, sendButtonDisable, GetSystemPromptFromAppValue, handleDeleteOneChatLogById, sendMsg, store, processingMessage, MyProcessTxId } = props
+  const { data, hidden, app, rowInMsg, maxRows, sendButtonDisable, GetSystemPromptFromAppValue, handleDeleteOneChatLogById, sendMsg, store, processingMessages, MyProcessTxId } = props
 
   const handleSendMsg = (msg: string) => {
     if (store && store.selectedChat && msg.trim().length) {
@@ -111,7 +111,7 @@ const ChatLog = (props: any) => {
       chatLog = data.chat.chat
     }
 
-    console.log("chatLogchatLog", chatLog)
+    const HaveLoadingNanoIdList: string[] = []
 
     const formattedChatLog: any[] = []
     let chatMessageSender = chatLog[0] ? chatLog[0].Sender : 11
@@ -120,6 +120,9 @@ const ChatLog = (props: any) => {
       messages: []
     }
     chatLog.forEach((msg: any, index: number) => {
+      if(msg && msg.NanoId) {
+        HaveLoadingNanoIdList.push(msg.NanoId)
+      }
       if (chatMessageSender === msg.Sender) {
         msgGroup.messages.push({
           Timestamp: msg.Timestamp,
@@ -149,21 +152,13 @@ const ChatLog = (props: any) => {
       if (index === chatLog.length - 1) {
         
         formattedChatLog.push(msgGroup)
-
-        if(processingMessage && processingMessage != "" && MyProcessTxId) {
-          msgGroup = {
-            Sender: MyProcessTxId,
-            messages: [
-              {
-                Timestamp: String(Date.now()),
-                msg: processingMessage,
-                HashId: String(Date.now()),
-                feedback: false
-              }
-            ]
+        processingMessages.map((MsgItem: any)=>{
+          
+          if(!HaveLoadingNanoIdList.includes(MsgItem.NanoId)) {
+            formattedChatLog.push(MsgItem)
           }
-          formattedChatLog.push(msgGroup)
-        }
+
+        })
 
       }
 
@@ -302,7 +297,7 @@ const ChatLog = (props: any) => {
                           { /\[.*?\]/.test(chat.msg) ?
                             <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
                           :
-                            <ReactMarkdown>{chat.msg?.replace('\n', '  \n')}</ReactMarkdown>
+                            <Typography sx={{mx: 1, my: 2.5}}>{chat.msg?.replace('\n', '  \n')}</Typography>
                           }
                         </Typography>
                         

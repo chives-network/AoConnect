@@ -22,11 +22,10 @@ import { useTranslation } from 'react-i18next'
 import { ChatChatInit } from 'src/functions/ChatBook'
 
 // ** Axios Imports
-import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage } from 'src/functions/AoConnect/MsgReminder'
-import { GetMyInboxMsg, GetMyInboxLastMsg } from 'src/functions/AoConnect/AoConnect'
+import { GetMyInboxMsg, GetMyInboxLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
 import { SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
 
 
@@ -52,19 +51,22 @@ const AppChat = (props: any) => {
     let timeoutId: any = null;
   
     const CronTaskLastMessage = () => {
-      console.log('This message will appear every 10 seconds');
+      
+      //console.log('This message will appear every 10 seconds');
       let delay = Math.random() * 10000;
-      console.log(`Simulating a long running process: ${delay}ms`);
+      
+      //console.log(`Simulating a long running process: ${delay}ms`);
       timeoutId = setTimeout(() => {
         handleGetLastMessage();
-        console.log('Finished long running process');
+        
+        //console.log('Finished long running process');
         timeoutId = setTimeout(CronTaskLastMessage, 10000);
       }, delay);
     };
   
     if (t && currentAddress && id) {
       CronTaskLastMessage();
-      handleGetAllLastMessages();
+      handleGetAllMessages();
       setSendButtonText(t("Send") as string);
       setSendInputText(t("Your message...") as string);
     }
@@ -77,28 +79,36 @@ const AppChat = (props: any) => {
   }, [t, currentAddress, id]);
   
   const handleGetLastMessage = async function () {
-    setDownloadButtonDisable(true)
-    await GetMyInboxLastMsg(currentWallet.jwk, id)
+    await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox-2]')
+    sleep(500)
+    await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox-1]')
+    sleep(500)
+    await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox]')
+    sleep(500)
     setCounter(counter+1)
     getChatLogList()
-    console.log("handleGetLastMessage counter", counter)
-    setDownloadButtonDisable(false)
+    
+    //console.log("handleGetLastMessage counter", counter)
   }
 
-  const handleGetAllLastMessages = async function () {
+  const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
+    getChatLogList()
     await GetMyInboxMsg(currentWallet.jwk, id)
-    setProcessingMessage("")
+    
+    //setProcessingMessages([])
     setCounter(counter+1)
     getChatLogList()
-    console.log("handleGetAllLastMessages counter", counter)
+    
+    //console.log("handleGetAllMessages counter", counter)
     setDownloadButtonDisable(false)
   }
   
   const getChatLogList = async function () {
     if(id && currentAddress) {
       const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(id, 0, 20)
-      console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
+      
+      //console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
       if(GetInboxMsgFromLocalStorageData)  {
         const ChatChatInitList = ChatChatInit(GetInboxMsgFromLocalStorageData, app.systemPrompt, id, MyProcessTxId)
         const selectedChat = {
@@ -176,7 +186,7 @@ const AppChat = (props: any) => {
   const [sendButtonLoading, setSendButtonLoading] = useState<boolean>(false)
   const [sendButtonText, setSendButtonText] = useState<string>('')
   const [sendInputText, setSendInputText] = useState<string>('')
-  const [processingMessage, setProcessingMessage] = useState("")
+  const [processingMessages, setProcessingMessages] = useState<any[]>([])
   const [finishedMessage, setFinishedMessage] = useState("")
   const [responseTime, setResponseTime] = useState<number | null>(null);
   
@@ -195,8 +205,24 @@ const AppChat = (props: any) => {
       const startTime = performance.now()
       
       const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, MyProcessTxId, Obj.message)
-      if(SendMessageToChatroomDataUserOne && SendMessageToChatroomDataUserOne.id) {
-        setProcessingMessage(Obj.message)
+      if(SendMessageToChatroomDataUserOne && SendMessageToChatroomDataUserOne.id && SendMessageToChatroomDataUserOne.NanoId) {
+        const messageInfor = {
+          Sender: MyProcessTxId,
+          NanoId: SendMessageToChatroomDataUserOne.NanoId,
+          messages: [
+            {
+              Timestamp: String(Date.now()),
+              msg: Obj.message,
+              NanoId: SendMessageToChatroomDataUserOne.NanoId,
+              feedback: false
+            }
+          ]
+        }
+        setProcessingMessages((prevState: any)=>([
+          ...prevState,
+          messageInfor
+        ]))
+        console.log("SendMessageToChatroomDataUserOne.id", SendMessageToChatroomDataUserOne)
       }
       
       const endTime = performance.now();
@@ -248,9 +274,9 @@ const AppChat = (props: any) => {
         sendButtonLoading={sendButtonLoading}
         sendButtonText={sendButtonText}
         sendInputText={sendInputText}
-        processingMessage={processingMessage}
+        processingMessages={processingMessages}
         ClearButtonClick={ClearButtonClick}
-        handleGetAllLastMessages={handleGetAllLastMessages}
+        handleGetAllMessages={handleGetAllMessages}
         app={app}
         handleDeleteOneChatLogById={handleDeleteOneChatLogById}
         MyProcessTxId={MyProcessTxId}

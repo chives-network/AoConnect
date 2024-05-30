@@ -77,7 +77,7 @@ export function ChatKnowledgeInput(Message: string, UserId: number, knowledgeId:
     window.localStorage.setItem(ChatKnowledge, JSON.stringify(ChatKnowledgeList))
 }
 
-export async function ChatKnowledgeOutput(Message: string, Token: string, UserId: number, knowledgeId: number, setProcessingMessage:any) {
+export async function ChatKnowledgeOutput(Message: string, Token: string, UserId: number, knowledgeId: number, setProcessingMessages:any) {
     const ChatKnowledgeHistoryText = window.localStorage.getItem(ChatKnowledgeHistory)      
     const ChatKnowledgeList = ChatKnowledgeHistoryText ? JSON.parse(ChatKnowledgeHistoryText) : []
     const History: any = []
@@ -90,7 +90,7 @@ export async function ChatKnowledgeOutput(Message: string, Token: string, UserId
         })
     }
     try {
-        setProcessingMessage('')
+        setProcessingMessages('')
         const response = await fetch(authConfig.backEndApiChatBook + `/api/ChatOpenaiKnowledge`, {
           method: 'POST',
           headers: {
@@ -107,10 +107,10 @@ export async function ChatKnowledgeOutput(Message: string, Token: string, UserId
         while (true) {
           const { done, value } = await reader.read();
           const text = new TextDecoder('utf-8').decode(value);
-          setProcessingMessage((prevText: string) => prevText + text);
+          setProcessingMessages((prevText: string) => prevText + text);
           responseText = responseText + text;
           if (done) {
-            setProcessingMessage('')
+            setProcessingMessages('')
             break;
           }
         }
@@ -118,7 +118,7 @@ export async function ChatKnowledgeOutput(Message: string, Token: string, UserId
             console.log("OpenAI Response:", responseText)
             ChatKnowledgeInput(responseText, 999999, knowledgeId)
             ChatKnowledgeHistoryInput(Message, responseText, UserId, knowledgeId)
-            setProcessingMessage(responseText);
+            setProcessingMessages(responseText);
 
             return true
         }
@@ -232,7 +232,8 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId:
             "message": PromptTemplate,
             "Timestamp": Date.now(),
             "Sender": ChatroomTxId,
-            "HashId": 0,
+            "HashId": '0',
+            "NanoId": '0',
             "question": '',
             "feedback": {
                 "isSent": true,
@@ -246,6 +247,7 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId:
         ChatLogList.push({
             "message": Item.Data + " Ref_:" + Item.Ref_,
             "Timestamp": Item.Timestamp,
+            "NanoId": Item.NanoId,
             "Sender": Item.Sender,
             "HashId": Item.HashId,
             "Item": Item,
@@ -281,7 +283,7 @@ export function ChatChatInput(HashId: string, Question: string, Message: string,
 }
 
 //@ts-ignore
-export async function ChatChatOutput(Message: string, Token: string, UserId: number, chatId: number | string, appId: string, setProcessingMessage:any, template: string, setFinishedMessage:any) {
+export async function ChatChatOutput(Message: string, Token: string, UserId: number, chatId: number | string, appId: string, setProcessingMessages:any, template: string, setFinishedMessage:any) {
 }
 
 export async function ChatAiAudioV1(Message: string, Token: string, voice: string, appId: string, userType: string) {
@@ -309,7 +311,7 @@ export async function ChatAiAudioV1(Message: string, Token: string, voice: strin
       
 }
 
-export async function ChatAiOutputV1(_id: string, Message: string, Token: string, UserId: number | string, chatId: number | string, appId: string, publishId: string, setProcessingMessage: any, template: string, setFinishedMessage: any, userType: string, allowQuestionGuide: boolean, setQuestionGuide: any, questionGuideTemplate: string, stopMsg: boolean, setStopMsg: any, GetModelFromAppValue: any, DatasetIdList: string[], DatasetPrompt: any) {
+export async function ChatAiOutputV1(_id: string, Message: string, Token: string, UserId: number | string, chatId: number | string, appId: string, publishId: string, setProcessingMessages: any, template: string, setFinishedMessage: any, userType: string, allowQuestionGuide: boolean, setQuestionGuide: any, questionGuideTemplate: string, stopMsg: boolean, setStopMsg: any, GetModelFromAppValue: any, DatasetIdList: string[], DatasetPrompt: any) {
     setStopMsg(false)
     const ChatChatHistoryText = window.localStorage.getItem(ChatChatHistory)      
     const ChatChatList = ChatChatHistoryText ? JSON.parse(ChatChatHistoryText) : []
@@ -323,7 +325,7 @@ export async function ChatAiOutputV1(_id: string, Message: string, Token: string
         })
     }
     try {
-        setProcessingMessage('')
+        setProcessingMessages('')
         console.log("chatId", chatId)
         if(chatId && UserId)  {
             const anonymousUserId = getAnonymousUserId()
@@ -355,11 +357,11 @@ export async function ChatAiOutputV1(_id: string, Message: string, Token: string
             while (true) {
                 const { done, value } = await reader.read();
                 const text = new TextDecoder('utf-8').decode(value);
-                setProcessingMessage((prevText: string) => prevText + text);
+                setProcessingMessages((prevText: string) => prevText + text);
                 responseText = responseText + text;
                 setQuestionGuide(null)
                 if (done || stopMsg) {
-                    setProcessingMessage('')
+                    setProcessingMessages('')
                     break;
                 }
             }

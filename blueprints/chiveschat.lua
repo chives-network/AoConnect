@@ -625,9 +625,9 @@ Handlers.add(
     if Members[msg.From] or isAdmin then
       local haveSentRecords = {}
       for memberId, memberData in pairs(Members) do
-        ao.send({Target = memberId, Data = "CCC" .. msg.Data, Sender = msg.From})
+        ao.send({Target = memberId, Data = "CCC" .. msg.Data, Sender = msg.From, NanoId = msg.NanoId })
       end    
-      ao.send({Target = ao.id, Data = "AAA" .. msg.Data, Sender = msg.From})
+      ao.send({Target = ao.id, Data = "AAA" .. msg.Data, Sender = msg.From, NanoId = msg.NanoId})
       -- Handlers.utils.reply("Broadcasted")(msg)
       ao.send({
         Target = msg.From,

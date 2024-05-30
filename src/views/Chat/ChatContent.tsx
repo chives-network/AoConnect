@@ -25,9 +25,9 @@ const ChatContent = (props: any) => {
     sendButtonLoading,
     sendButtonText,
     sendInputText,
-    processingMessage,
+    processingMessages,
     ClearButtonClick,
-    handleGetAllLastMessages,
+    handleGetAllMessages,
     app,
     handleDeleteOneChatLogById,
     MyProcessTxId
@@ -108,12 +108,12 @@ const ChatContent = (props: any) => {
                     <Button size="small" onClick={()=>ClearButtonClick()}>{t('Clear')}</Button>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Button size="small" onClick={()=>handleGetAllLastMessages()} disabled={downloadButtonDisable}>{t('Download')}</Button>
+                    <Button size="small" onClick={()=>handleGetAllMessages()} disabled={downloadButtonDisable}>{t('Download')}</Button>
                   </Box>
                 </Box>
               </Box>
 
-              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessage={processingMessage} MyProcessTxId={MyProcessTxId} />
+              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessages={processingMessages} MyProcessTxId={MyProcessTxId} />
 
               <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows}/>
 

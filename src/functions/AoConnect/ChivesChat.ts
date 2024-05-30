@@ -4,6 +4,8 @@ import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
 import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, AoLoadBlueprintModule } from 'src/functions/AoConnect/AoConnect'
 
+import { getNanoid } from 'src/functions/string.tools';
+
 
 export const AoLoadBlueprintChivesChat = async (currentWalletJwk: any, processTxId: string) => {
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chiveschat')
@@ -539,18 +541,20 @@ export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxI
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
+        const NanoId = getNanoid(32)
+
         const SendMessageResult = await message({
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + chatroomTxId + '", Action = "Broadcast", Data = "' + Message + '" })',
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "Broadcast", Data = "' + Message + '", NanoId = "' + NanoId + '" })',
         });
         console.log("SendMessageToChivesChat SendMessage", SendMessageResult)
         
         if(SendMessageResult && SendMessageResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, SendMessageResult)
 
-            return { id: SendMessageResult, msg: MsgContent };
+            return { id: SendMessageResult, msg: MsgContent, NanoId: NanoId };
         }
         else {
             

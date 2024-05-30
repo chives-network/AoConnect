@@ -200,7 +200,7 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
     
 }
 
-export const GetMyInboxLastMsg = async (currentWalletJwk: any, processTxId: string) => {
+export const GetMyInboxLastMsg = async (currentWalletJwk: any, processTxId: string, InboxDataFormat = 'Inbox[#Inbox]') => {
     
     const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -208,7 +208,7 @@ export const GetMyInboxLastMsg = async (currentWalletJwk: any, processTxId: stri
         process: processTxId,
         tags: [ { name: 'Action', value: 'Eval' } ],
         signer: createDataItemSigner(currentWalletJwk),
-        data: 'Inbox[#Inbox]',
+        data: InboxDataFormat,
       });
     console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult)
 

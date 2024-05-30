@@ -158,7 +158,6 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
 
             return {...Item, id: Index}
         })
-
         InboxMsgListNew.map((ItemMsg: any)=>{
             let Type = ItemMsg?.Tags?.Type
             if(ItemMsg.Sender) {
@@ -168,7 +167,8 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
             if(InboxMsgMap[Type] == undefined) {
                 InboxMsgMap[Type] = {}
             }
-            InboxMsgMap[Type][String(ItemMsg['Block-Height']) + "_" + Ref_] =  {
+            const KeyValue = ItemMsg && ItemMsg.NanoId ? ItemMsg.NanoId : String(ItemMsg['Block-Height']) + "_" + Ref_
+            InboxMsgMap[Type][KeyValue] =  {
                 BlockHeight: ItemMsg['Block-Height'], 
                 From: ItemMsg.From,
                 Target: ItemMsg.Target,
@@ -179,6 +179,7 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
                 Ref_: ItemMsg?.Tags?.Ref_,
                 Sender: ItemMsg.Sender,
                 Module: ItemMsg.Module,
+                NanoId: ItemMsg?.NanoId,
                 Owner: ItemMsg.Owner,
                 Cron: ItemMsg.Cron,
                 ContentType: ItemMsg['Content-Type'], 
@@ -214,7 +215,7 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
             window.localStorage.setItem(AoConnectLocalStorage + "_Process_" + processTxId, JSON.stringify(InboxMsgMap['Process']) )
         }
 
-        console.log("ConvertInboxMessageFormatAndStorage InboxMsgMap", InboxMsgMap)
+        //console.log("ConvertInboxMessageFormatAndStorage InboxMsgMap", InboxMsgMap)
 
         return InboxMsgMap
     }
@@ -226,20 +227,25 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
 }
 
 export const GetInboxMsgFromLocalStorage = (processTxId: string, From: number, Counter: number) => {
+    try {
+        const Data: string = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + processTxId) ?? "{}"
+        const RS = JSON.parse(Data)
+        if(RS) {
+            const ValuesRS = Object.values(RS)
+            const LengthRS = ValuesRS.length
 
-    const Data: string = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + processTxId) ?? ""
-    const RS = JSON.parse(Data)
-    if(RS) {
-        const ValuesRS = Object.values(RS)
-        const LengthRS = ValuesRS.length
+            return ValuesRS.slice(LengthRS - From - Counter, LengthRS - From)
+        }
+        else {
 
-        return ValuesRS.slice(LengthRS - From - Counter, LengthRS - From)
+            return []
+        }
     }
-    else {
-
+    catch(Error: any) {
+        console.log("GetInboxMsgFromLocalStorage Error", Error)
+        
         return []
     }
-
 }
 
 export const GetAppAvatar = (logo: string) => {
