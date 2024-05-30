@@ -55,7 +55,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       setChivesLanguage(localLanguage)
     }
     document.documentElement.setAttribute('lang', i18n.language)
-    console.log("currentAddress", currentAddress)
+    console.log("currentAddresscurrentAddresscurrentAddress", currentAddress)
   }, [i18n.language])
 
   /*

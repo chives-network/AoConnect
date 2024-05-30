@@ -35,6 +35,11 @@ const ChivesChat = () => {
   const [toolInfo, setToolInfo] = useState<any>()
 
   const handleSimulatedChivesChat = async function () {
+    
+    if(currentWallet == undefined || currentWallet == null) {
+
+      return
+    }
 
     setIsDisabledButton(true)
     setToolInfo(null)
@@ -1078,16 +1083,16 @@ const ChivesChat = () => {
                 CurrentAddress: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
                 </Typography>
 
-                {toolInfo && Object.keys(toolInfo).map((Item: any)=>{
+                {toolInfo && Object.keys(toolInfo).map((Item: any, Index: number)=>{
 
                   return (
-                    <>
-                    <Tooltip title={toolInfo[Item]}>
-                      <Typography  variant='body2' sx={{my: 2}}>
-                      {Item}: <Typography variant='body2' sx={{display: 'inline', color: 'primary.main', whiteSpace: 'pre-line'}}>{toolInfo[Item]}</Typography>
-                      </Typography>
-                    </Tooltip>
-                    </>
+                    <Fragment key={Index}>
+                      <Tooltip title={toolInfo[Item]}>
+                        <Typography  variant='body2' sx={{my: 2}}>
+                        {Item}: <Typography variant='body2' sx={{display: 'inline', color: 'primary.main', whiteSpace: 'pre-line'}}>{toolInfo[Item]}</Typography>
+                        </Typography>
+                      </Tooltip>
+                    </Fragment>
                   )
 
                 })}

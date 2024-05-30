@@ -6,15 +6,20 @@ const AoConnectReminderProcessTxId = 'AoConnectReminderProcessTxId'
 const AoConnectReminderChatroomTxId = 'AoConnectReminderChatroomTxId'
 const AoConnectEveryTimeGetMsgCount = 10
 
-export const SetAoConnectReminderChatroomTxId = (chatroomTxId: string) => {
-    window.localStorage.setItem(AoConnectReminderChatroomTxId, chatroomTxId)
+export const SetAoConnectReminderChatroomTxId = (Address: string, chatroomTxId: string) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? "{}"
+    const JsonData = JSON.parse(JsonDataText)
+    JsonData[Address] = chatroomTxId
+    window.localStorage.setItem(AoConnectReminderChatroomTxId, JSON.stringify(JsonData))
 
-    return window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? ''
+    return chatroomTxId
 }
 
-export const GetAoConnectReminderChatroomTxId = () => {
-
-    return window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? ''
+export const GetAoConnectReminderChatroomTxId = (Address: string) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? "{}"
+    const JsonData = JSON.parse(JsonDataText)
+    
+    return JsonData[Address] ?? ''
 }
 
 export const SetAoConnectReminderProcessTxId = (processTxId: string) => {

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment } from 'react'
+import { useState, SyntheticEvent, Fragment, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -22,9 +22,12 @@ import { Settings } from 'src/@core/context/settingsContext'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
+import toast from 'react-hot-toast'
 
-import { getAllWallets, getCurrentWalletAddress, setCurrentWallet, getWalletNicknames } from 'src/functions/ChivesweaveWallets'
+import { getAllWallets, getCurrentWalletAddress, setCurrentWallet, getWalletNicknames, generateNewMnemonicAndGetWalletData } from 'src/functions/ChivesweaveWallets'
 import { formatHash} from 'src/configs/functions';
+import { AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
+import { SetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -80,20 +83,55 @@ const UserDropdown = (props: Props) => {
     setAnchorEl(null)
   }
 
-  /*
+  const [getAllWalletsData, setGetAllWalletsData] = useState<any>()
+  const [getCurrentWalletAddressData, setGetCurrentWalletAddressData] = useState<any>()
+  const [getWalletNicknamesData, setGetWalletNicknamesData] = useState<any>()
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
 
-    }, 60000);
+    const chivesWalletsIsGeneratingData = window.localStorage.getItem("chivesWalletsIsGenerating") ?? ''
+    if(chivesWalletsIsGeneratingData == '')  {
+      window.localStorage.setItem("chivesWalletsIsGenerating", "1")
 
-    return () => clearInterval(intervalId);
-  }, []);
-  */
+      return 
+    }
+    window.localStorage.setItem("chivesWalletsIsGenerating", "1")
 
-  const getAllWalletsData = getAllWallets()
-  const getCurrentWalletAddressData = getCurrentWalletAddress()
-  const getWalletNicknamesData = getWalletNicknames()
+    const generateNewMnemonicAndGetWalletMethod = async () => {
+      const generateNewMnemonicAndGetWallet = await generateNewMnemonicAndGetWalletData("");
+      if (generateNewMnemonicAndGetWallet) {
+        setGetAllWalletsData(getAllWallets())
+        setGetCurrentWalletAddressData(generateNewMnemonicAndGetWallet.data.arweave.key)
+        setCurrentWallet(generateNewMnemonicAndGetWallet.data.arweave.key)
+        setAuthContextCurrentAddress(generateNewMnemonicAndGetWallet.data.arweave.key)
+        toast.success("Your wallet has been successfully generated.", {
+          duration: 3000
+        })
+        const ChivesChatProcessTxId = await AoCreateProcessAuto(generateNewMnemonicAndGetWallet.jwk)
+        if(ChivesChatProcessTxId) {
+          SetAoConnectReminderChatroomTxId(generateNewMnemonicAndGetWallet.data.arweave.key, ChivesChatProcessTxId)
+        }
+      }
+    };
   
+    const getAllWalletsDataTemp = getAllWallets()
+    if(getAllWalletsDataTemp && getAllWalletsDataTemp.length == 0) {
+      toast.success("You have not set up an AR wallet yet. The system will generate one for you. Please wait 1-2 minites ...", {
+        duration: 12000
+      })
+      generateNewMnemonicAndGetWalletMethod()
+    }
+    else {
+      setGetAllWalletsData(getAllWalletsDataTemp)
+      setGetCurrentWalletAddressData(getCurrentWalletAddress())
+    }
+
+    const getWalletNicknamesData = getWalletNicknames()
+    setGetWalletNicknamesData(getWalletNicknamesData)
+    
+  }, []);
+  
+
   const styles = {
     py: 2,
     px: 4,
@@ -204,12 +242,4 @@ const UserDropdown = (props: Props) => {
   )
 }
 
-/*
-<MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/faq')}>
-  <Box sx={styles}>
-    <Icon icon='mdi:help-circle-outline' />
-    {`${t(`FAQ`)}`}
-  </Box>
-</MenuItem>
-*/
 export default UserDropdown

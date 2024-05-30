@@ -24,9 +24,11 @@ import { ChatChatInit } from 'src/functions/ChatBook'
 // ** Axios Imports
 import { useAuth } from 'src/hooks/useAuth'
 
-import { GetInboxMsgFromLocalStorage } from 'src/functions/AoConnect/MsgReminder'
+import { GetInboxMsgFromLocalStorage, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
 import { SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
+import {  } from 'src/functions/AoConnect/MsgReminder'
+
 
 
 const AppChat = (props: any) => {
@@ -42,7 +44,8 @@ const AppChat = (props: any) => {
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [counter, setCounter] = useState<number>(0)
 
-  const MyProcessTxId = "Ag2sWWOEn_bQHdB6xWzVc6TNC-89MqLgHOIBQeh7PZA"
+  const MyProcessTxId = GetAoConnectReminderChatroomTxId(currentAddress)
+  console.log("MyProcessTxId", MyProcessTxId)
 
   useEffect(() => {
     let timeoutId: any = null;

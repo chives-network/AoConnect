@@ -45,7 +45,7 @@ const AllApp = () => {
       try {
         setLoading(true)
         const RS = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/collection/chatroom.json', { headers: { 'Content-Type': 'application/json'} }).then(res=>res.data)
-        console.log("RSRSRSRSRS",RS)
+
         if(RS) {
           const appInitial: string[] = []
           RS.map((Item: any)=>{

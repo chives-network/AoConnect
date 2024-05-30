@@ -103,7 +103,7 @@ const AoSendMsgModel = () => {
   };
 
   useEffect(()=>{
-    setChatroomId(GetAoConnectReminderChatroomTxId())
+    setChatroomId(GetAoConnectReminderChatroomTxId(currentAddress))
     setMyProcessTxId(GetAoConnectReminderProcessTxId())
   }, [])
   
@@ -131,7 +131,7 @@ const AoSendMsgModel = () => {
   };
 
   const handleSaveLocalStorage = () => {
-    SetAoConnectReminderChatroomTxId(chatroomId);
+    SetAoConnectReminderChatroomTxId(currentAddress, chatroomId);
     SetAoConnectReminderProcessTxId(myProcessTxId);
     toast.success('Save Success', { 
         position: 'top-right', 

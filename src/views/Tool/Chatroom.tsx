@@ -141,8 +141,12 @@ const Chatroom = () => {
   }, [toolInfo?.UserThree]);
 
 
-
   const handleSimulatedChatroom = async function () {
+    
+    if(currentWallet == undefined || currentWallet == null) {
+
+      return
+    }
 
     setIsDisabledButton(true)
     setToolInfo(null)
@@ -394,12 +398,6 @@ const Chatroom = () => {
     
 
   }
-
-
-  //Loading the all Inbox to IndexedDb
-  useEffect(() => {
-    //GetMyInboxMsgFromAoConnect()
-  }, [])
 
   return (
     <Fragment>

@@ -16,11 +16,6 @@ const ARISNavMenus = [
     path: '/wallet/sendout'
   },
   {
-    title: 'Inbox',
-    icon: 'mdi:email-outline',
-    path: '/inbox'
-  },
-  {
     title: 'Learn',
     icon: 'hugeicons:online-learning-01',
     path: '/learn'

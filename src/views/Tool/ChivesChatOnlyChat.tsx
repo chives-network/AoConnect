@@ -42,6 +42,11 @@ const ChivesChatOnlyChat = () => {
 
   const handleSimulatedChivesChat = async function () {
 
+    if(currentWallet == undefined || currentWallet == null) {
+
+      return
+    }
+    
     setIsDisabledButton(true)
     setToolInfo({ChivesChatProcessTxId: toolInfo.ChivesChatProcessTxId})
     
@@ -377,16 +382,16 @@ const ChivesChatOnlyChat = () => {
                 </Typography>
                 
 
-                {toolInfo && Object.keys(toolInfo).map((Item: any)=>{
+                {toolInfo && Object.keys(toolInfo).map((Item: any, Index: number)=>{
 
                   return (
-                    <>
+                    <Fragment key={Index}>
                     <Tooltip title={toolInfo[Item]}>
                       <Typography  variant='body2' sx={{my: 2}}>
                       {Item}: <Typography variant='body2' sx={{display: 'inline', color: 'primary.main', whiteSpace: 'pre-line'}}>{toolInfo[Item]}</Typography>
                       </Typography>
                     </Tooltip>
-                    </>
+                    </Fragment>
                   )
 
                 })}

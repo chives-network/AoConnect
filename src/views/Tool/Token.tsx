@@ -146,6 +146,11 @@ const TokenModel = () => {
 
   const handleSimulatedToken = async function () {
 
+    if(currentWallet == undefined || currentWallet == null) {
+
+      return
+    }
+
     setIsDisabledButton(true)
     setToolInfo(null)
 
