@@ -21,16 +21,17 @@ const ChatContent = (props: any) => {
     store,
     hidden,
     sendMsg,
+    downloadButtonDisable,
     sendButtonDisable,
     sendButtonLoading,
     sendButtonText,
     sendInputText,
-    chatId,
-    chatName,
+    processingMessage,
     ClearButtonClick,
-    historyCounter,
+    handleGetAllLastMessages,
     app,
-    handleDeleteOneChatLogById
+    handleDeleteOneChatLogById,
+    MyProcessTxId
   } = props
 
   const { t } = useTranslation()
@@ -104,15 +105,16 @@ const ChatContent = (props: any) => {
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Button size="small" onClick={()=>ClearButtonClick()} disabled={historyCounter<=1?true:false}>{t('Clear')}({historyCounter})</Button>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Button size="small" onClick={()=>ClearButtonClick()}>{t('Clear')}</Button>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Button size="small" onClick={()=>handleGetAllLastMessages()} disabled={downloadButtonDisable}>{t('Download')}</Button>
+                  </Box>
                 </Box>
               </Box>
 
-              {store && store.selectedChat && store.userProfile ? 
-                <ChatLog hidden={hidden} data={{ ...store.selectedChat, userContact: store.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
-              : 
-                <ChatLog hidden={hidden} data={{}} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} />
-              }
+              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessage={processingMessage} MyProcessTxId={MyProcessTxId} />
 
               <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows}/>
 

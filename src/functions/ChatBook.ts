@@ -244,7 +244,7 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId:
 
     MsgList.map((Item: any)=>{
         ChatLogList.push({
-            "message": Item.Data,
+            "message": Item.Data + " Ref_:" + Item.Ref_,
             "Timestamp": Item.Timestamp,
             "Sender": Item.Sender,
             "HashId": Item.HashId,

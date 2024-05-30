@@ -107,14 +107,19 @@ export function formatTimestampAge(timestamp: number): string {
   const timeDifference = (currentDate.getTime() - date.getTime()) / 1000;
   if(timestamp == undefined) return ""
   let timeMemo = '';
-  if (timeDifference < 60) {
-    timeMemo =  `${Math.floor(timeDifference)} seconds`;
+  if (timeDifference <= 1) {
+    timeMemo =  `1 second ago`;
+
+    return timeMemo
+  } 
+  else if (timeDifference < 60) {
+    timeMemo =  `${Math.floor(timeDifference)} seconds ago`;
 
     return timeMemo
   } 
   else if (timeDifference < 3600) {
     const minutes = Math.floor(timeDifference / 60);
-    timeMemo =  `${minutes} minute${minutes > 1 ? "s" : ""}`;
+    timeMemo =  `${minutes} minute${minutes > 1 ? "s  ago" : ""}`;
 
     return timeMemo
   } 

@@ -79,75 +79,16 @@ const SystemPromptTemplate = ({text, handleSendMsg}: any) => {
   );
 };
 
-
-const TextToSpeech = ({ text, AudioType, app, userType }: any) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioFilesCache, setAudioFilesCache] = useState<any>({})
-
-  const [audio] = useState(new Audio());
-  const synth = window.speechSynthesis;
-  const { t } = useTranslation()
-  const auth = useAuth()
-
-  const beginPlaying = async () => {
-    if (!isPlaying) {
-      setIsPlaying(true);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      synth.cancel();
-      synth.speak(utterance);
-    }
-  };
-
-  const stopPlaying = () => {
-    if (isPlaying && AudioType == 'Broswer') {
-      setIsPlaying(false);
-      synth.cancel();
-    }
-    if (isPlaying && AudioType != 'Broswer') {
-      setIsPlaying(false);
-      audio.pause();
-      audio.currentTime = 0;
-    }
-  };
-
-  audio.onended = () => {
-    setIsPlaying(false);
-  };
-
-  return (
-    <div>
-      {isPlaying ?
-      (
-        <Tooltip title={t('ReadAloudContent')}>
-          <IconButton aria-label='capture screenshot' color='error' size='small' onClick={stopPlaying} >
-            <Icon icon='material-symbols:stop-circle-outline' fontSize='inherit' />
-          </IconButton>
-        </Tooltip>
-      )
-      :
-      <Tooltip title={t('ReadAloudContent')}>
-        <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={beginPlaying} >
-          <Icon icon='wpf:speaker' fontSize='inherit' />
-        </IconButton>
-      </Tooltip>
-      }
-    </div>
-  );
-};
-
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { data, hidden, app, rowInMsg, maxRows, sendButtonDisable, GetSystemPromptFromAppValue, handleDeleteOneChatLogById, sendMsg, store, userType, questionGuide, GetQuestionGuideFromAppValue, GetTTSFromAppValue } = props
+  const { data, hidden, app, rowInMsg, maxRows, sendButtonDisable, GetSystemPromptFromAppValue, handleDeleteOneChatLogById, sendMsg, store, processingMessage, MyProcessTxId } = props
 
   const handleSendMsg = (msg: string) => {
     if (store && store.selectedChat && msg.trim().length) {
       sendMsg({ ...store.selectedChat, message: msg, template: '' })
     }
   }
-
-  //console.log("QuestionGuide", questionGuide, Array.isArray(questionGuide))
 
   const [contextPreviewOpen, setContextPreviewOpen] = useState<boolean>(false)
   const [contextPreviewData, setContextPreviewData] = useState<any[]>([])
@@ -191,10 +132,12 @@ const ChatLog = (props: any) => {
           HashId: msg?.HashId,
           feedback: msg.feedback
         })
-      } else {
+      } 
+      else {
         chatMessageSender = msg.Sender
 
         formattedChatLog.push(msgGroup)
+
         msgGroup = {
           Sender: msg.Sender,
           messages: [
@@ -208,8 +151,29 @@ const ChatLog = (props: any) => {
         }
       }
 
-      if (index === chatLog.length - 1) formattedChatLog.push(msgGroup)
+      if (index === chatLog.length - 1) {
+        
+        formattedChatLog.push(msgGroup)
+
+        if(processingMessage && processingMessage != "" && MyProcessTxId) {
+          msgGroup = {
+            Sender: MyProcessTxId,
+            messages: [
+              {
+                Timestamp: String(Date.now()),
+                msg: processingMessage,
+                HashId: String(Date.now()),
+                feedback: false
+              }
+            ]
+          }
+          formattedChatLog.push(msgGroup)
+        }
+
+      }
+
     })
+
 
     return formattedChatLog
   }
@@ -289,28 +253,6 @@ const ChatLog = (props: any) => {
             >
               {app.name}
             </CustomAvatar>
-            {sendButtonDisable == true && index == ChatItemMsgList.length - 1  ?
-            <Fragment>
-              <Typography
-                sx={{
-                  boxShadow: 1,
-                  borderRadius: 0.5,
-                  width: 'fit-content',
-                  fontSize: '0.875rem',
-                  p: theme => theme.spacing(0.5, 2, 0.5, 2),
-                  ml: 1,
-                  color: 'text.primary',
-                  backgroundColor: 'background.paper'
-                }}
-                >
-                  <CircularProgress color='success' size={10} sx={{mr: 1}}/>
-                  {t('AI Chat')}
-              </Typography>
-            </Fragment>
-            :
-            null
-            }
-            {(sendButtonDisable == true && index < ChatItemMsgList.length - 1) || (sendButtonDisable == false && index > 0) ?
             <Fragment>
               <Tooltip title={item.Sender}>
                 <Typography sx={{my: 0.5, mx: 1}} variant='body2'>{formatHash(item.Sender, 5)}</Typography>
@@ -327,9 +269,6 @@ const ChatLog = (props: any) => {
                 <Typography sx={{my: 0.5, mx: 1}} variant='body2'>{formatTimestampAge(item.messages[0].Timestamp)}</Typography>
               </Tooltip>
             </Fragment>
-            :
-            null
-            }
 
           </Box>
           }
@@ -368,9 +307,7 @@ const ChatLog = (props: any) => {
                           { /\[.*?\]/.test(chat.msg) ?
                             <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
                           :
-                            <Tooltip title={formatTimestampAge(chat.Timestamp)}>
-                              <ReactMarkdown>{chat.msg?.replace('\n', '  \n')}</ReactMarkdown>
-                            </Tooltip>
+                            <ReactMarkdown>{chat.msg?.replace('\n', '  \n')}</ReactMarkdown>
                           }
                         </Typography>
                         
