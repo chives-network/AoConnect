@@ -9,15 +9,10 @@ import Typography from '@mui/material/Typography'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import Avatar from '@mui/material/Avatar'
 import ListItem from '@mui/material/ListItem';
-import { useAuth } from 'src/hooks/useAuth'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
-import CircularProgress from '@mui/material/CircularProgress'
-
-import ChatContextPreview from 'src/views/Chat/ChatContextPreview'
 
 import { GetAppAvatar } from 'src/functions/AoConnect/MsgReminder'
 
@@ -349,7 +344,6 @@ const ChatLog = (props: any) => {
       <Box sx={{ height: `calc(100% - 6.2rem - ${inputMsgHeight}rem)` }}>
         <ScrollWrapper hidden={hidden}>{renderChats()}</ScrollWrapper>
       </Box>
-      <ChatContextPreview contextPreviewOpen={contextPreviewOpen} setContextPreviewOpen={setContextPreviewOpen} contextPreviewData={contextPreviewData} GetSystemPromptFromAppValue={GetSystemPromptFromAppValue}/>
     </Fragment>
   )
 }

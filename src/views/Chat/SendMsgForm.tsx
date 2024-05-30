@@ -8,9 +8,6 @@ import Box, { BoxProps } from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import TextareaAutosize from '@mui/material/TextareaAutosize'
 
-// ** Types
-import { SendMsgComponentType } from 'src/types/apps/chatTypes'
-
 // ** Styled Components
 const ChatFormWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -27,7 +24,7 @@ const Form = styled('form')(({ theme }) => ({
   padding: theme.spacing(0, 5, 5)
 }))
 
-const SendMsgForm = (props: SendMsgComponentType) => {
+const SendMsgForm = (props: any) => {
   // ** Props
   const { store, sendMsg, sendButtonDisable, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows, setStopMsg} = props
 

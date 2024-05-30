@@ -38,7 +38,6 @@ const AppChat = (props: any) => {
   const currentAddress = auth.currentAddress
 
   const { t } = useTranslation()
-  const router = useRouter()
   const { id, app } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
