@@ -697,10 +697,10 @@
     ramda "^0.30.0"
     zod "^3.23.5"
 
-"@permaweb/aoconnect@0.0.53":
-  version "0.0.53"
-  resolved "https://registry.npmjs.org/@permaweb/aoconnect/-/aoconnect-0.0.53.tgz"
-  integrity sha512-AFfuTBU35d82JzwfHlHMJaHTB544LO2laK6lRSEaemD/Q2YDdqA/Nje7EattksB+GNUMwPbRG9WZjsIGS/ZsdA==
+"@permaweb/aoconnect@^0.0.55":
+  version "0.0.55"
+  resolved "https://registry.npmjs.org/@permaweb/aoconnect/-/aoconnect-0.0.55.tgz"
+  integrity sha512-W2GtLZedVseuDkCKk4CmM9SFmi0DdrMKqvhMBm9xo65z+Mzr/t1TEjMJKRNzEA2qh5IdwM43sWJ5fmbBYLg6TQ==
   dependencies:
     "@permaweb/ao-scheduler-utils" "~0.0.16"
     buffer "^6.0.3"
