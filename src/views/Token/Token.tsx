@@ -31,7 +31,7 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, GetMyInboxMsg } from 'src/functions/AoConnect/AoConnect'
+import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -191,14 +191,6 @@ const Inbox = () => {
     }
   }
 
-
-  const handleTest = async function (TargetTxId: string) {
-    const AoDryRunBalance = await GetMyInboxMsg(currentWallet.jwk,TargetTxId)
-    console.log("GetMyInboxMsg", AoDryRunBalance)
-  }
-
-  
-  handleTest("K4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw")
 
   const handleTokenMint = async function (TokenProcessTxId: string, MintAmount: number) {
 
