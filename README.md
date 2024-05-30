@@ -22,7 +22,7 @@ Package:
 npm run export
 ```
 
-## Deploy Vercel (Not Support)
+## Deploy Vercel
 
 [![][vercel-deploy-shield]][vercel-deploy-link]
 
