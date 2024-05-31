@@ -48,7 +48,7 @@ const AppModel = (props: any) => {
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <Box p={2}>
-                        <Typography variant="h6">{t('Marketplace')}</Typography>
+                        <Typography variant="h6">{t('Chatroom (Under development)')}</Typography>
                       </Box>
                     </Grid>
                   </Grid>
