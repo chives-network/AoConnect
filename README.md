@@ -3,7 +3,11 @@
 ## Introduction
 AOConnect is an application based on the AO Open Network, aiming to become a graphical operating system on the AO network, providing developers with the ability to build and iterate AO applications quickly. The design goal of AOConnect is to reduce the development complexity of AO network applications and provide some classic application scenarios for developers to learn and reference.
 
-Currently in the development phase, the final stage will consider developing a decentralized instant messaging tool based on the AO network, supporting encrypted messages, groups, TOKEN distribution, exchange, staking, rewards, and more. The reference target will be DISCORD, while incorporating some features of the AO network to create an instant encrypted communication tool based on the AO and AR networks.
+Currently in the development stage, the main focus is on visualizing and instantiating AO's official API calls, showcasing the API calls through a graphical interface. Additionally, a more powerful chat room and TOKEN functionality have been added, along with corresponding graphical interfaces. These features aim to provide developers with an intuitive learning experience, improve learning efficiency, reduce learning curves, and expand the audience of the AO community.
+
+The final stage will consider developing a decentralized instant messaging tool based on the AO network, supporting encrypted messages, groups, TOKEN distribution, exchange, staking, rewards, and more. The reference target will be DISCORD, while incorporating some features of the AO network to create an instant encrypted communication tool based on the AO and AR networks.
+
+The final development plan is not yet set in stone. If anyone has better ideas, we can all discuss and collaborate together.
 
 ## Requirements
 - [NodeJS](https://nodejs.org) version 18.17 +
@@ -17,47 +21,50 @@ npm run dev
 
 Build:
 npm run build
-
-Package:
-npm run export
 ```
 
 ## Deploy Vercel
 
 [![][vercel-deploy-shield]][vercel-deploy-link]
 
+## Demo Video
+
+[AOConnect Demo Video](https://www.youtube.com/watch?v=Qf-QkezSoVg)
 
 ## For Developers
-You need to provide information about the following projects.
+  You need to provide information about the following projects.
 
-- **AO Developer's Handbook**: [Link](https://cookbook_ao.g8way.io/)
-- **AOS Command-line based client tool officially released by AO**: [Link](https://github.com/permaweb/aos/)
+  - **AO Developer's Handbook**: [Link](https://cookbook_ao.g8way.io/)
+  - **AOS Command-line based client tool officially released by AO**: [Link](https://github.com/permaweb/aos/)
 
 ### The difference between AOConnect and AOS
-AOS is a command-line based client software officially released by AO, with main functionalities including sending and receiving messages, loading LUA files, and executing function operations.
+  - AOS is a command-line based client software officially released by AO, with main functionalities including sending and receiving messages, loading LUA files, and executing function operations.
 
-Inspired by the design of AOS, AOConnect abandons the command-line design style in favor of a graphical user interface. It also provides online simulation debugging and API invocation features, along with numerous examples to simplify the learning curve for developers. It is an essential tool for learning AO network development.
+  - Inspired by the design of AOS, AOConnect abandons the command-line design style in favor of a graphical user interface. It also provides online simulation debugging and API invocation features, along with numerous examples to simplify the learning curve for developers. It is an essential tool for learning AO network development.
 
-Developers are advised to first learn AOS to gain basic concepts and experience, and then delve into AOConnect for further exploration.
+  - Developers are advised to first learn AOS to gain basic concepts and experience, and then delve into AOConnect for further exploration.
+
+### TData storage
+  - This project is a frontend-only project without using a backend. The storage functionality utilized in the project is the browser's LocalStorage.
 
 ## AOConnect Main Functions
-1. **Wallet**: Integrated a simplified version of an AR wallet.
+  1. **Wallet**: Integrated a simplified version of an AR wallet.
 
-2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
+  2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Learn.png" width="600" />
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Learn.png" width="600" />
 
-3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
+  3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
 
-please go to [AOConnect Application Simulation] section.
+  please go to [AOConnect Application Simulation] section.
 
-4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
+  4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
 
-[Not Ready]
+  [Not Ready]
 
-5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
+  5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
 
 ## AOConnect Application Simulation
 ### Chatroom
