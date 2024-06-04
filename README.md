@@ -39,15 +39,18 @@ npm run build
   - **AO Developer's Handbook**: [Link](https://cookbook_ao.g8way.io/)
   - **AOS Command-line based client tool officially released by AO**: [Link](https://github.com/permaweb/aos/)
 
-### The difference between AOConnect and AOS
+#### 1 The difference between AOConnect and AOS
   - AOS is a command-line based client software officially released by AO, with main functionalities including sending and receiving messages, loading LUA files, and executing function operations.
 
   - Inspired by the design of AOS, AOConnect abandons the command-line design style in favor of a graphical user interface. It also provides online simulation debugging and API invocation features, along with numerous examples to simplify the learning curve for developers. It is an essential tool for learning AO network development.
 
   - Developers are advised to first learn AOS to gain basic concepts and experience, and then delve into AOConnect for further exploration.
 
-### TData storage
+#### 2 Data storage
   - This project is a frontend-only project without using a backend. The storage functionality utilized in the project is the browser's LocalStorage.
+
+#### 3 @permaweb/aoconnect (0.0.53)
+  - Currently, I am using version 0.0.53 of @permaweb/aoconnect. In the system, I need to use the Node version of @permaweb/aoconnect, but for some reason, it always loads the browser version of @permaweb/aoconnect. Therefore, I saved the @permaweb/aoconnect files saved as 'scripts/@permaweb/aoconnect' and forced it to use the Node mode. If anyone can solve this issue, I would be very grateful.
 
 ## AOConnect Main Functions
   1. **Wallet**: Integrated a simplified version of an AR wallet.
@@ -57,11 +60,9 @@ npm run build
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Learn.png" width="600" />
 
   3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
-
   please go to [AOConnect Application Simulation] section.
 
   4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
-
   [Not Ready]
 
   5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
@@ -69,7 +70,7 @@ npm run build
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
 
 ## AOConnect Application Simulation
-### Chatroom
+#### Chatroom
 - **Function**
   1. Register
   2. Broadcast
@@ -79,7 +80,7 @@ npm run build
 
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChatroom.png" width="600" />
 
-### Token
+#### Token
 - **Function**
   1. Token Balances
   2. Create Token
@@ -90,7 +91,7 @@ npm run build
 
   <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedToken.png" width="600" />
 
-### ChivesChat
+#### ChivesChat
 - **Function**
   1. Chatroom support three roles: owner, admin, member.
   2. Owner: Can add or delete admins, add or delete channels, invite members (requiring user agreement), adding members, and deleting members.
