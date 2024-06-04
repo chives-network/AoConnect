@@ -42,7 +42,7 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import MuiTabList, { TabListProps } from '@mui/lab/TabList'
 
-import { winstonToAr } from 'src/functions/ChivesweaveWallets'
+import { winstonToAr } from 'src/functions/ChivesWallets'
 
 import UploadFiles from 'src/views/form/uploadfiles';
 import SendOut from 'src/views/form/sendout';

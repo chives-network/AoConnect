@@ -30,7 +30,7 @@ import Icon from 'src/@core/components/icon'
 
 import UploadWalletJsonFile from 'src/views/form/UploadWalletJsonFile'
 
-import { getAllWallets, getWalletBalance, setWalletNickname, getWalletNicknames, getWalletByAddress, downloadTextFile, removePunctuation, deleteWalletById, parseBundleTx, getCurrentWalletAddress } from 'src/functions/ChivesweaveWallets'
+import { getAllWallets, getWalletBalance, setWalletNickname, getWalletNicknames, getWalletByAddress, downloadTextFile, removePunctuation, deleteWalletById, parseBundleTx, getCurrentWalletAddress } from 'src/functions/ChivesWallets'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'

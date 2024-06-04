@@ -25,7 +25,7 @@ import TextField, { TextFieldProps } from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
-import { generateNewMnemonicAndGetWalletData, importWalletJsonFile, readFileText } from 'src/functions/ChivesweaveWallets'
+import { generateNewMnemonicAndGetWalletData, importWalletJsonFile, readFileText } from 'src/functions/ChivesWallets'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'

@@ -21,7 +21,7 @@ import Icon from 'src/@core/components/icon'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Hooks
-import { isAddress } from 'src/functions/ChivesweaveWallets'
+import { isAddress } from 'src/functions/ChivesWallets'
 
 // ** Third Party Components
 import toast from 'react-hot-toast'

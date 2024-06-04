@@ -22,8 +22,8 @@ import { useAuth } from 'src/hooks/useAuth'
 import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Hooks
-import { sendAmount, getCurrentWallet, getHash, getProcessedData, getChivesLanguage } from 'src/functions/ChivesweaveWallets'
-import {EncryptDataWithKey} from 'src/functions/ChivesweaveEncrypt'
+import { sendAmount, getCurrentWallet, getHash, getProcessedData, getChivesLanguage } from 'src/functions/ChivesWallets'
+import {EncryptDataWithKey} from 'src/functions/ChivesEncrypt'
 
 // ** Third Party Components
 import toast from 'react-hot-toast'

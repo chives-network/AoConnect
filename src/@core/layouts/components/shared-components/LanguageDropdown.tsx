@@ -13,7 +13,7 @@ import OptionsMenu from 'src/@core/components/option-menu'
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
 
-import { getChivesLanguage, setChivesLanguage } from 'src/functions/ChivesweaveWallets'
+import { getChivesLanguage, setChivesLanguage } from 'src/functions/ChivesWallets'
 
 import { useAuth } from 'src/hooks/useAuth'
 

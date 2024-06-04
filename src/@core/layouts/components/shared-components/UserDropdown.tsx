@@ -24,7 +24,7 @@ import { Settings } from 'src/@core/context/settingsContext'
 import { useAuth } from 'src/hooks/useAuth'
 import toast from 'react-hot-toast'
 
-import { getAllWallets, getCurrentWalletAddress, setCurrentWallet, getWalletNicknames, generateNewMnemonicAndGetWalletData } from 'src/functions/ChivesweaveWallets'
+import { getAllWallets, getCurrentWalletAddress, setCurrentWallet, getWalletNicknames, generateNewMnemonicAndGetWalletData } from 'src/functions/ChivesWallets'
 import { formatHash} from 'src/configs/functions';
 import { AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
 import { SetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
