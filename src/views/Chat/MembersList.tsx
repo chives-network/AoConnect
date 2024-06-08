@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, ChangeEvent, ReactNode } from 'react'
+import { useState, useEffect, ChangeEvent, ReactNode, Fragment } from 'react'
 
 // ** Next Imports
 import { useRouter } from 'next/router'
@@ -37,6 +37,8 @@ import { getInitials } from 'src/@core/utils/get-initials'
 // ** Chat App Components Imports
 import UserProfileLeft from 'src/views/Chat/UserProfileLeft'
 
+import { useTranslation } from 'react-i18next'
+
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
   if (hidden) {
     return <Box sx={{ height: '100%', overflow: 'auto' }}>{children}</Box>
@@ -45,7 +47,7 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
   }
 }
 
-const MockData: { chats: ChatsObj[]; contacts: ContactType[]; profileUser: ProfileUserType } = {
+const MockData: { Members: ContactType[]; profileUser: ProfileUserType } = {
   profileUser: {
     id: 11,
     avatar: '/images/avatars/1.png',
@@ -59,14 +61,14 @@ const MockData: { chats: ChatsObj[]; contacts: ContactType[]; profileUser: Profi
       isNotificationsOn: false
     }
   },
-  contacts: [
+  Members: [
     {
       id: 1,
       fullName: 'Felecia Rower',
       role: 'Frontend Developer',
       about: 'Jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
       avatar: '/images/avatars/2.png',
-      status: 'offline'
+      status: 'online'
     },
     {
       id: 2,
@@ -129,66 +131,7 @@ const MockData: { chats: ChatsObj[]; contacts: ContactType[]; profileUser: Profi
         'Bear claw ice cream lollipop gingerbread carrot cake. Brownie gummi bears chocolate muffin croissant jelly I love marzipan wafer.',
       avatar: '/images/avatars/6.png',
       status: 'away'
-    },
-    {
-      id: 9,
-      avatarColor: 'warning',
-      fullName: 'Bridgett Omohundro',
-      role: 'Designer, television/film set',
-      about:
-        'Gummies gummi bears I love candy icing apple pie I love marzipan bear claw. I love tart biscuit I love candy canes pudding chupa chups liquorice croissant.',
-      status: 'offline'
-    },
-    {
-      id: 10,
-      avatarColor: 'error',
-      fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'away'
-    },
-    {
-      id: 11,
-      avatarColor: 'error',
-      fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'away'
-    },
-    {
-      id: 12,
-      avatarColor: 'error',
-      fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'away'
-    },
-    {
-      id: 13,
-      avatarColor: 'error',
-      fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'away'
-    },
-    {
-      id: 14,
-      avatarColor: 'error',
-      fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'away'
-    },
-    {
-      id: 15,
-      avatarColor: 'error',
-      fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'away'
     }
-  ],
-  chats: [
   ]
 }
 
@@ -197,45 +140,49 @@ const MembersList = (props: any) => {
   const {
     hidden,
     mdAbove,
-    dispatch,
     statusObj,
     userStatus,
-    selectChat,
     membersListWidth,
-    setUserStatus,
+    getChivesChatGetMembers,
     leftSidebarOpen,
     userProfileLeftOpen,
-    formatDateToMonthShort,
     handleLeftSidebarToggle,
     handleUserProfileLeftSidebarToggle
   } = props
 
   // ** States
   const [query, setQuery] = useState<string>('')
-  const [filteredChat, setFilteredChat] = useState<ChatsArrType[]>([])
-  const [filteredContacts, setFilteredContacts] = useState<ContactType[]>([])
+  const [filteredMembers, setFilteredMembers] = useState<ContactType[]>([])
   const [active, setActive] = useState<null | { type: string; id: string | number }>(null)
+
+  const { t } = useTranslation()
 
   // ** Hooks
   const router = useRouter()
 
-  const handleChatClick = (type: 'chat' | 'contact', id: number) => {
-    dispatch(selectChat(id))
+  const handleChatClick = (type: 'chat' | 'Member', id: number) => {
     setActive({ type, id })
     if (!mdAbove) {
       handleLeftSidebarToggle()
     }
   }
 
-  useEffect(() => {
-    if (MockData && MockData.chats) {
-      if (active !== null) {
-        if (active.type === 'contact' && active.id === MockData.chats[0].id) {
-          setActive({ type: 'chat', id: active.id })
-        }
-      }
-    }
-  }, [MockData, active])
+  const Admins: string[] = getChivesChatGetMembers[0]
+  const Members: any = getChivesChatGetMembers[1]
+  console.log("getChivesChatGetMembers11", Admins)
+  console.log("getChivesChatGetMembers11", Members)
+
+  const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
+
+    const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
+    const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
+    
+    return {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
+
+  })
+
+  const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) )
+  const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) )
 
   useEffect(() => {
     router.events.on('routeChangeComplete', () => {
@@ -245,41 +192,37 @@ const MembersList = (props: any) => {
     return () => {
       setActive(null)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const hasActiveId = (id: number | string) => {
-    if (MockData.chats !== null) {
-      const arr = MockData.chats.filter(i => i.id === id)
 
-      return !!arr.length
-    }
+    return false
   }
 
-  const renderContacts = () => {
-    if (MockData && MockData.contacts && MockData.contacts.length) {
-      if (query.length && !filteredContacts.length) {
+  const renderMembers = (MembersList: any[]) => {
+    if (MembersList && MembersList.length) {
+      if (query.length && !filteredMembers.length) {
         return (
           <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>No Members Found</Typography>
           </ListItem>
         )
       } 
       else {
-        const arrToMap = MockData.contacts
+        const memberArrayToMap = MembersList
 
-        console.log("arrToMap", arrToMap)
+        console.log("MembersList", MembersList)
 
-        return arrToMap !== null
-          ? arrToMap.map((contact: ContactType, index: number) => {
+        return memberArrayToMap !== null
+          ? memberArrayToMap.map((Member: any, index: number) => {
               const activeCondition =
-                active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id)
+                active !== null && active.id === Member.MemberId && active.type === 'Member' && !hasActiveId(Member.MemberId)
 
               return (
                 <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
                   <ListItemButton
                     disableRipple
-                    onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+                    onClick={() => handleChatClick(hasActiveId(Member.MemberId) ? 'chat' : 'Member', Member.MemberId)}
                     sx={{
                       px: 3,
                       py: 2.5,
@@ -292,10 +235,10 @@ const MembersList = (props: any) => {
                     }}
                   >
                     <ListItemAvatar sx={{ m: 0 }}>
-                      {contact.avatar ? (
+                      {Member.MemberAvatar ? (
                         <MuiAvatar
-                          alt={contact.fullName}
-                          src={contact.avatar}
+                          alt={Member.MemberName}
+                          src={Member.MemberAvatar}
                           sx={{
                             width: 38,
                             height: 38,
@@ -304,7 +247,7 @@ const MembersList = (props: any) => {
                         />
                       ) : (
                         <CustomAvatar
-                          color={contact.avatarColor}
+                          color={Member?.avatarColor ?? 'primary'}
                           skin={activeCondition ? 'light-static' : 'light'}
                           sx={{
                             width: 38,
@@ -313,7 +256,7 @@ const MembersList = (props: any) => {
                             ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
                           }}
                         >
-                          {getInitials(contact.fullName ?? '')}
+                          {getInitials(Member.MemberName ?? '')}
                         </CustomAvatar>
                       )}
                     </ListItemAvatar>
@@ -324,11 +267,11 @@ const MembersList = (props: any) => {
                         ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                       }}
                       primary={
-                        <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{contact.fullName}</Typography>
+                        <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Member.MemberName}</Typography>
                       }
                       secondary={
                         <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
-                          {contact.about}
+                          {Member.MemberAbout}
                         </Typography>
                       }
                     />
@@ -343,9 +286,6 @@ const MembersList = (props: any) => {
 
   const handleFilter = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value)
-    if (MockData.chats !== null && MockData.contacts !== null) {
-      
-    }
   }
 
   return (
@@ -421,7 +361,7 @@ const MembersList = (props: any) => {
             size='small'
             value={query}
             onChange={handleFilter}
-            placeholder='Search for contact...'
+            placeholder='Search for Member...'
             sx={{ '& .MuiInputBase-root': { borderRadius: 5 } }}
             InputProps={{
               startAdornment: (
@@ -441,10 +381,22 @@ const MembersList = (props: any) => {
         <Box sx={{ height: `calc(100% - 4.125rem)` }}>
           <ScrollWrapper hidden={hidden}>
             <Box sx={{ p: theme => theme.spacing(7, 3, 3) }}>
-              <Typography variant='h6' sx={{ ml: 3, mb: 3, color: 'primary.main' }}>
-                Contacts
-              </Typography>
-              <List sx={{ p: 0 }}>{renderContacts()}</List>
+              {AdminsListData && AdminsListData.length > 0 && (
+                <Fragment>
+                  <Typography variant='h6' sx={{ ml: 3, mb: 3, color: 'primary.main' }}>
+                    {t('Admins')}
+                  </Typography>
+                  <List sx={{ p: 0 }}>{renderMembers(AdminsListData)}</List>
+                </Fragment>
+              )}
+              {MembersListData && MembersListData.length > 0 && (
+                <Fragment>
+                  <Typography variant='h6' sx={{ ml: 3, mb: 3, color: 'primary.main' }}>
+                    {t('Members')}
+                  </Typography>
+                  <List sx={{ p: 0 }}>{renderMembers(MembersListData)}</List>
+                </Fragment>
+              )}
             </Box>
           </ScrollWrapper>
         </Box>
@@ -456,7 +408,7 @@ const MembersList = (props: any) => {
         statusObj={statusObj}
         userStatus={userStatus}
         membersListWidth={membersListWidth}
-        setUserStatus={setUserStatus}
+        getChivesChatGetMembers={getChivesChatGetMembers}
         userProfileLeftOpen={userProfileLeftOpen}
         handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
       />

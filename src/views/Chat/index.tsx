@@ -15,15 +15,23 @@ import ChatIndex from 'src/views/Chat/ChatIndex'
 import authConfig from 'src/configs/auth'
 import { useRouter } from 'next/router'
 
+import { useAuth } from 'src/hooks/useAuth'
+
+import { GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
+
 const Chat = () => {
   // ** States
   const [app, setApp] = useState<any>(null)
+  const [myProcessTxId, setMyProcessTxId] = useState<string>('')
 
   // ** Hooks
   const theme = useTheme()
   const { settings } = useSettings()
   const router = useRouter()
   const { id } = router.query
+
+  const auth = useAuth()
+  const currentAddress = auth.currentAddress
 
   useEffect(() => {
     if(id && id.length == 43) {
@@ -36,7 +44,10 @@ const Chat = () => {
           setApp(AppNew[0])
         }
       }
-
+      const MyProcessTxIdData: string = GetAoConnectReminderChatroomTxId(currentAddress)
+      if(MyProcessTxIdData) {
+        setMyProcessTxId(MyProcessTxIdData)
+      }
     }
   }, [id])
 
@@ -60,7 +71,7 @@ const Chat = () => {
           ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
         }}
       >
-        <ChatIndex id={id} app={app}/>
+        <ChatIndex id={id} app={app} myProcessTxId={myProcessTxId}/>
       </Box>
       :
       null

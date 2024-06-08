@@ -30,7 +30,7 @@ const ChatContent = (props: any) => {
     handleGetAllMessages,
     app,
     handleDeleteOneChatLogById,
-    MyProcessTxId
+    myProcessTxId
   } = props
 
   const { t } = useTranslation()
@@ -113,7 +113,7 @@ const ChatContent = (props: any) => {
                 </Box>
               </Box>
 
-              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessages={processingMessages} MyProcessTxId={MyProcessTxId} />
+              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessages={processingMessages} myProcessTxId={myProcessTxId} />
 
               <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows}/>
 

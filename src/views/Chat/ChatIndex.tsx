@@ -23,7 +23,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 
@@ -38,6 +38,10 @@ const AppChat = (props: any) => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState<boolean>(false)
   const [userProfileRightOpen, setUserProfileRightOpen] = useState<boolean>(false)
+
+  const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
+  const [chivesChatGetChannels, setChivesChatGetChannels] = useState<any>()
+  
 
   // ** Hooks
   const theme = useTheme()
@@ -67,17 +71,14 @@ const AppChat = (props: any) => {
   const currentAddress = auth.currentAddress
 
   const { t } = useTranslation()
-  const { id, app } = props
+  const { id, app, myProcessTxId } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [counter, setCounter] = useState<number>(0)
 
-  const MyProcessTxId = GetAoConnectReminderChatroomTxId(currentAddress)
-  console.log("MyProcessTxId", MyProcessTxId)
-
   useEffect(() => {
     let timeoutId: any = null;
-  
+
     const CronTaskLastMessage = () => {
       
       //console.log('This message will appear every 10 seconds');
@@ -95,6 +96,8 @@ const AppChat = (props: any) => {
     if (t && currentAddress && id) {
       CronTaskLastMessage();
       handleGetAllMessages();
+      handleGetAllMembers();
+      handleGetAllChannels();
       setSendButtonText(t("Send") as string);
       setSendInputText(t("Your message...") as string);
     }
@@ -131,6 +134,20 @@ const AppChat = (props: any) => {
     //console.log("handleGetAllMessages counter", counter)
     setDownloadButtonDisable(false)
   }
+
+  const handleGetAllMembers = async function () {
+    const GetChivesChatGetMembers = await ChivesChatGetMembers(id, myProcessTxId)
+    setGetChivesChatGetMembers(GetChivesChatGetMembers)
+    
+    //console.log("GetChivesChatGetMembers", GetChivesChatGetMembers)
+  }
+
+  const handleGetAllChannels = async function () {
+    const GetChivesChatGetChannels = await ChivesChatGetChannels(id, myProcessTxId)
+    setChivesChatGetChannels(GetChivesChatGetChannels)
+    
+    //console.log("GetChivesChatGetChannels", GetChivesChatGetChannels)
+  }
   
   const getChatLogList = async function () {
     if(id && currentAddress) {
@@ -142,7 +159,7 @@ const AppChat = (props: any) => {
         const selectedChat = {
           "chat": {
               "id": 1,
-              "userId": MyProcessTxId,
+              "userId": myProcessTxId,
               "unseenMsgs": 0,
               "chat": ChatChatInitList
           }
@@ -150,7 +167,7 @@ const AppChat = (props: any) => {
         const storeInit = {
           "chats": [],
           "userProfile": {
-              "id": MyProcessTxId,
+              "id": myProcessTxId,
               "avatar": "/images/avatars/1.png",
               "fullName": "Current User",
           },
@@ -228,10 +245,10 @@ const AppChat = (props: any) => {
       setSendInputText(t("Answering...") as string)
       setRefreshChatCounter(refreshChatCounter + 1)
       
-      const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, MyProcessTxId, Obj.message)
+      const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, myProcessTxId, Obj.message)
       if(SendMessageToChatroomDataUserOne && SendMessageToChatroomDataUserOne.id && SendMessageToChatroomDataUserOne.NanoId) {
         const messageInfor = {
-          Sender: MyProcessTxId,
+          Sender: myProcessTxId,
           NanoId: SendMessageToChatroomDataUserOne.NanoId,
           messages: [
             {
@@ -291,7 +308,7 @@ const AppChat = (props: any) => {
         handleGetAllMessages={handleGetAllMessages}
         app={app}
         handleDeleteOneChatLogById={handleDeleteOneChatLogById}
-        MyProcessTxId={MyProcessTxId}
+        myProcessTxId={myProcessTxId}
       />
       <MembersList
         store={store}
@@ -300,7 +317,7 @@ const AppChat = (props: any) => {
         statusObj={statusObj}
         userStatus={userStatus}
         membersListWidth={membersListWidth}
-        setUserStatus={setUserStatus}
+        getChivesChatGetMembers={getChivesChatGetMembers}
         leftSidebarOpen={leftSidebarOpen}
         userProfileLeftOpen={userProfileLeftOpen}
         handleLeftSidebarToggle={handleLeftSidebarToggle}

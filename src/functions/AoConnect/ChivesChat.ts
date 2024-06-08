@@ -490,17 +490,17 @@ export const ChivesChatGetMembers = async (TargetTxId: string, processTxId: stri
 
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
-            return result.Messages[0].Data
+            return JSON.parse(result.Messages[0].Data)
         }
         else {
 
-            return 
+            return [[], {}]
         }
     }
     catch(Error: any) {
-        console.error("AoTokenBalanceDryRun Error:", Error)
+        console.error("ChivesChatGetMembers Error:", Error)
 
-        return 
+        return [[], {}]
     }
 }
 
