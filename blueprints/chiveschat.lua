@@ -118,7 +118,12 @@ Handlers.add(
             break
         end
     end
-    if Members[msg.From] or isAdmin then
+    if isAdmin then
+      ao.send({
+        Target = msg.From,
+        Data = require('json').encode({Admins, Members, Applicants})
+      })
+    elseif Members[msg.From] then
       ao.send({
         Target = msg.From,
         Data = require('json').encode({Admins, Members})
