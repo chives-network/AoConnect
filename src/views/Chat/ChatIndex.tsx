@@ -7,9 +7,6 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import toast from 'react-hot-toast'
 
-// ** Types
-import { StatusObjType } from 'src/types/apps/chatTypes'
-
 // ** Hooks
 import { useSettings } from 'src/@core/hooks/useSettings'
 
@@ -27,12 +24,43 @@ import { useAuth } from 'src/hooks/useAuth'
 import { GetInboxMsgFromLocalStorage, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
 import { SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
-import {  } from 'src/functions/AoConnect/MsgReminder'
+import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
+import MembersList from 'src/views/Chat/MembersList'
 
+import {  } from 'src/functions/AoConnect/MsgReminder'
 
 
 const AppChat = (props: any) => {
   // ** Hook
+
+  // ** States
+  const [userStatus, setUserStatus] = useState<StatusType>('online')
+  const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
+  const [userProfileLeftOpen, setUserProfileLeftOpen] = useState<boolean>(false)
+  const [userProfileRightOpen, setUserProfileRightOpen] = useState<boolean>(false)
+
+  // ** Hooks
+  const theme = useTheme()
+  const { settings } = useSettings()
+  const hidden = useMediaQuery(theme.breakpoints.down('lg'))
+
+  // ** Vars
+  const smAbove = useMediaQuery(theme.breakpoints.up('sm'))
+  const membersListWidth = smAbove ? 270 : 200
+
+  const { skin } = settings
+  const mdAbove = useMediaQuery(theme.breakpoints.up('md'))
+  const statusObj: StatusObjType = {
+    busy: 'error',
+    away: 'warning',
+    online: 'success',
+    offline: 'secondary'
+  }
+
+  const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
+  const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen)
+  const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen)
+
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
@@ -190,9 +218,7 @@ const AppChat = (props: any) => {
   const [processingMessages, setProcessingMessages] = useState<any[]>([])
   
   // ** Hooks
-  const theme = useTheme()
-  const { settings } = useSettings()
-  const hidden = false
+  //const hidden = false
 
   const sendMsg = async (Obj: any) => {
     if(currentAddress && t) {
@@ -234,16 +260,6 @@ const AppChat = (props: any) => {
     }
   }
 
-  // ** Vars
-  const { skin } = settings
-  const mdAbove = useMediaQuery(theme.breakpoints.up('md'))
-  const statusObj: StatusObjType = {
-    busy: 'error',
-    away: 'warning',
-    online: 'success',
-    offline: 'secondary'
-  }
-
   return (
     <Fragment>
       <Box
@@ -276,6 +292,19 @@ const AppChat = (props: any) => {
         app={app}
         handleDeleteOneChatLogById={handleDeleteOneChatLogById}
         MyProcessTxId={MyProcessTxId}
+      />
+      <MembersList
+        store={store}
+        hidden={hidden}
+        mdAbove={mdAbove}
+        statusObj={statusObj}
+        userStatus={userStatus}
+        membersListWidth={membersListWidth}
+        setUserStatus={setUserStatus}
+        leftSidebarOpen={leftSidebarOpen}
+        userProfileLeftOpen={userProfileLeftOpen}
+        handleLeftSidebarToggle={handleLeftSidebarToggle}
+        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
       />
       </Box>
     </Fragment>

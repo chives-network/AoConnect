@@ -88,7 +88,7 @@ export type ChatContentType = {
   hidden: boolean
   mdAbove: boolean
   store: ChatStoreType
-  sidebarWidth: number
+  membersListWidth: number
   dispatch: Dispatch<any>
   statusObj: StatusObjType
   userProfileRightOpen: boolean
@@ -102,7 +102,7 @@ export type ChatSidebarLeftType = {
   hidden: boolean
   mdAbove: boolean
   store: ChatStoreType
-  sidebarWidth: number
+  membersListWidth: number
   userStatus: StatusType
   dispatch: Dispatch<any>
   leftSidebarOpen: boolean
@@ -120,7 +120,7 @@ export type ChatSidebarLeftType = {
 export type UserProfileLeftType = {
   hidden: boolean
   store: ChatStoreType
-  sidebarWidth: number
+  membersListWidth: number
   userStatus: StatusType
   statusObj: StatusObjType
   userProfileLeftOpen: boolean
@@ -131,7 +131,7 @@ export type UserProfileLeftType = {
 export type UserProfileRightType = {
   hidden: boolean
   store: ChatStoreType
-  sidebarWidth: number
+  membersListWidth: number
   statusObj: StatusObjType
   userProfileRightOpen: boolean
   getInitials: (val: string) => string
