@@ -95,43 +95,46 @@ const MembersList = (props: any) => {
   const [ApplicantsList, setApplicantsList] = useState<any[]>([])
 
   useEffect(() => {
-    const Admins: string[] = getChivesChatGetMembers[0] ?? []
-    const Members: any = getChivesChatGetMembers[1] ?? {}
-    const Applicants: any = getChivesChatGetMembers[2] ?? {}
-    console.log("getChivesChatGetMembers11 Admins", Admins)
-    console.log("getChivesChatGetMembers11 Members", Members)
-    console.log("getChivesChatGetMembers11 Applicants", Applicants)
+    if(getChivesChatGetMembers && t)   {
+      const Admins: string[] = getChivesChatGetMembers[0] ?? []
+      const Members: any = getChivesChatGetMembers[1] ?? {}
+      const Applicants: any = getChivesChatGetMembers[2] ?? {}
+      console.log("getChivesChatGetMembers11 getChivesChatGetMembers", getChivesChatGetMembers)
+      console.log("getChivesChatGetMembers11 Admins", Admins)
+      console.log("getChivesChatGetMembers11 Members", Members)
+      console.log("getChivesChatGetMembers11 Applicants", Applicants)
 
-    const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
+      const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
 
-      const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
-      const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
-      
-      return {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
+        const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
+        const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
+        
+        return {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
 
-    })
+      })
 
-    console.log("query", query)
-    if(query == '') {
-      const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) )
-      const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) )
+      console.log("query", query)
+      if(query == '') {
+        const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) )
+        const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) )
 
-      setAdminsList(AdminsListData)
-      setMembersList(MembersListData)
-      setApplicantsList(Applicants)
-    }
-    else {
-      const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) && (item.MemberId.toLowerCase().includes(query) || item.MemberName.toLowerCase().includes(query.toLowerCase())) )
-      const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) && (item.MemberId.toLowerCase().includes(query) || item.MemberName.toLowerCase().includes(query.toLowerCase())) )
+        setAdminsList(AdminsListData)
+        setMembersList(MembersListData)
+        setApplicantsList(Applicants)
+      }
+      else {
+        const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) && (item.MemberId.toLowerCase().includes(query) || item.MemberName.toLowerCase().includes(query.toLowerCase())) )
+        const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) && (item.MemberId.toLowerCase().includes(query) || item.MemberName.toLowerCase().includes(query.toLowerCase())) )
 
-      setAdminsList(AdminsListData)
-      setMembersList(MembersListData)
-      setApplicantsList(Applicants)
+        setAdminsList(AdminsListData)
+        setMembersList(MembersListData)
+        setApplicantsList(Applicants)
 
+      }
     }
     
 
-  }, [query])
+  }, [query, t, getChivesChatGetMembers])
 
   
   const handleChatClick = (type: 'chat' | 'Member', id: number) => {

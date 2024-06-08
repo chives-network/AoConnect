@@ -51,56 +51,57 @@ const ChannelsList = (props: any) => {
   } = props
 
   // ** States
-  const [active, setActive] = useState<null | { type: string; id: string | number }>(null)
+  const [active, setActive] = useState<string>('')
+  const [ChannelsGroupList, setChannelsGroupList] = useState<string[]>([])
+  const [getChivesChatGetChannelsMap, setGetChivesChatGetChannelsMap] = useState<any>({})
 
   const { t } = useTranslation()
 
   // ** Hooks
   const router = useRouter()
 
-  const handleChatClick = (type: 'chat' | 'Channel', id: number) => {
-    setActive({ type, id })
+  const handleChatClick = (id: string) => {
+    setActive(id)
     if (!mdAbove) {
       handleLeftSidebarToggle()
     }
   }
 
-  const getChivesChatGetChannelsValues = Object.values(getChivesChatGetChannels)
-  getChivesChatGetChannelsValues.sort((a: any, b: any) => {
-    return Number(a.ChannelSort) - Number(b.ChannelSort);
-  });
-  
-  const getChivesChatGetChannelsMap: any = {}
-  getChivesChatGetChannelsValues.map((item: any)=>{
-    if(getChivesChatGetChannelsMap[item.ChannelGroup] == undefined) {
-        getChivesChatGetChannelsMap[item.ChannelGroup] = []
-    }
-    getChivesChatGetChannelsMap[item.ChannelGroup].push(item)
-  })
-
-  const ChannelsGroupList = Object.keys(getChivesChatGetChannelsMap)
-
-  console.log("getChivesChatGetChannelsMap", getChivesChatGetChannelsMap)
-
-
-  const ChannelsListData: any[] = getChivesChatGetChannels && Object.values(getChivesChatGetChannels).map((item: any)=>{
-
-    return {...item}
-
-  })
-  console.log("ChannelsListData", ChannelsListData)
-
   useEffect(() => {
     router.events.on('routeChangeComplete', () => {
-      setActive(null)
+      setActive('')
     })
+    
+    if(getChivesChatGetChannels)   {
+      const getChivesChatGetChannelsValues: any[] = Object.values(getChivesChatGetChannels)
+      getChivesChatGetChannelsValues.sort((a: any, b: any) => {
+          return Number(a.ChannelSort) - Number(b.ChannelSort);
+      });
+      
+      const getChivesChatGetChannelsMap: any = {}
+      getChivesChatGetChannelsValues.map((item: any)=>{
+          if(getChivesChatGetChannelsMap[item.ChannelGroup] == undefined) {
+              getChivesChatGetChannelsMap[item.ChannelGroup] = []
+          }
+          getChivesChatGetChannelsMap[item.ChannelGroup].push(item)
+      })
 
-    return () => {
-      setActive(null)
+      const ChannelsGroupList = Object.keys(getChivesChatGetChannelsMap)
+
+      console.log("getChivesChatGetChannelsValues", getChivesChatGetChannelsValues)
+
+      setChannelsGroupList(ChannelsGroupList)
+      setGetChivesChatGetChannelsMap(getChivesChatGetChannelsMap)
+
+      if(getChivesChatGetChannelsValues && getChivesChatGetChannelsValues.length > 0 && getChivesChatGetChannelsValues[0] && getChivesChatGetChannelsValues[0].ChannelId && active == '') {
+        setActive(getChivesChatGetChannelsValues[0].ChannelId)
+      }
+
     }
-  }, [])
+    
+  }, [getChivesChatGetChannels])
 
-  const hasActiveId = (id: number | string) => {
+  const hasActiveId = (id: string) => {
 
     return false
   }
@@ -114,13 +115,13 @@ const ChannelsList = (props: any) => {
         return channelArrayToMap !== null
           ? channelArrayToMap.map((Channel: any, index: number) => {
               const activeCondition =
-                active !== null && active.id === Channel.ChannelId && active.type === 'Channel' && !hasActiveId(Channel.ChannelId)
+                active !== null && active === Channel.ChannelId && !hasActiveId(Channel.ChannelId)
 
               return (
                 <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
                   <ListItemButton
                     disableRipple
-                    onClick={() => handleChatClick(hasActiveId(Channel.ChannelId) ? 'chat' : 'Channel', Channel.ChannelId)}
+                    onClick={() => handleChatClick(Channel.ChannelId)}
                     sx={{
                       px: 3,
                       py: 1.5,
