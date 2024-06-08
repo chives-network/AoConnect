@@ -567,7 +567,7 @@ export const ChivesChatGetInboxs = async (TargetTxId: string, processTxId: strin
         }
     }
     catch(Error: any) {
-        console.error("AoTokenBalanceDryRun Error:", Error)
+        console.error("ChivesChatGetInboxs Error:", Error)
 
         return 
     }
