@@ -24,7 +24,7 @@ import Icon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-import { ChivesChatAddMember, SendMessageToChivesChat } from 'src/functions/AoConnect/ChivesChat'
+import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetInboxs } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -46,6 +46,27 @@ const ChivesChatOnlyChat = () => {
 
       return
     }
+
+    if(toolInfo.ChivesChatProcessTxId && toolInfo.ChivesChatProcessTxId.length == 43) {
+      const ChivesChatGetInboxsData = await ChivesChatGetInboxs(toolInfo.ChivesChatProcessTxId, toolInfo.ChivesChatProcessTxId, '1', '9')
+      const ChivesChatGetInboxsDataJson = JSON.parse(ChivesChatGetInboxsData)
+      const ChivesChatGetInboxsList = ChivesChatGetInboxsDataJson[0]
+      const ChivesChatGetInboxsMaxRecords = ChivesChatGetInboxsDataJson[1]
+      const ChivesChatGetInboxsListRs = ChivesChatGetInboxsList.map((item: any, index: number)=>{
+        if(item && item.Data) {
+        
+          return {index, Data: item?.Data, Sender: item?.Tags?.Sender, NanoId: item?.Tags?.NanoId}
+        }
+      })
+      console.log("ChivesChatGetInboxsDataJson", ChivesChatGetInboxsDataJson)
+      console.log("ChivesChatGetInboxsListRs", ChivesChatGetInboxsListRs)
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        'ChivesChatGetInboxsMaxRecords': ChivesChatGetInboxsMaxRecords,
+        'ChivesChatGetInboxsListRs': ChivesChatGetInboxsListRs
+      }))
+    }
+
     
     setIsDisabledButton(true)
     setToolInfo({ChivesChatProcessTxId: toolInfo.ChivesChatProcessTxId})

@@ -70,17 +70,19 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "GetInboxs"),
   function (msg)
     local totalRecords = #Inbox
+    local startIndex = tonumber(msg.Tags.startIndex)
+    local endIndex = tonumber(msg.Tags.endIndex)
     
-    if msg.startIndex <= 0 or msg.startIndex > totalRecords or msg.endIndex < msg.startIndex then
+    if startIndex <= 0 or startIndex > totalRecords or endIndex < startIndex then
         return {}, totalRecords
     end
     
-    if msg.endIndex > totalRecords then
-      msg.endIndex = totalRecords
+    if endIndex > totalRecords then
+      endIndex = totalRecords
     end
     
     local records = {}
-    for i = msg.startIndex, msg.endIndex do
+    for i = startIndex, endIndex do
         table.insert(records, Inbox[i])
     end
 

@@ -537,6 +537,42 @@ export const ChivesChatGetApplicants = async (TargetTxId: string, processTxId: s
     }
 }
 
+export const ChivesChatGetInboxs = async (TargetTxId: string, processTxId: string, startIndex: string, endIndex: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            Id: getNanoid(32),
+            data: "ChivesChatGetInboxs",
+            tags: [
+                { name: 'Action', value: 'GetInboxs' },
+                { name: 'Target', value: processTxId },
+                { name: 'startIndex', value: startIndex },
+                { name: 'endIndex', value: endIndex },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return result.Messages[0].Data
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenBalanceDryRun Error:", Error)
+
+        return 
+    }
+}
+
 export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, Message: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
