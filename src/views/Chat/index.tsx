@@ -71,7 +71,7 @@ const Chat = () => {
           ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
         }}
       >
-        <ChatIndex id={id} app={app} myProcessTxId={myProcessTxId}/>
+        <ChatIndex id={id} app={app} myProcessTxId={myProcessTxId} currentAddress={currentAddress} />
       </Box>
       :
       null

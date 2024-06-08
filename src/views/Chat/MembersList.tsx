@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
-import Chip from '@mui/material/Chip'
 import Badge from '@mui/material/Badge'
 import Drawer from '@mui/material/Drawer'
 import MuiAvatar from '@mui/material/Avatar'
@@ -27,7 +26,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import Icon from 'src/@core/components/icon'
 
 // ** Types
-import { ContactType, ChatsArrType, ChatsObj, ProfileUserType } from 'src/types/apps/chatTypes'
+import { ContactType, ProfileUserType } from 'src/types/apps/chatTypes'
 
 // ** Custom Components Import
 import CustomAvatar from 'src/@core/components/mui/avatar'
@@ -38,6 +37,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import UserProfileLeft from 'src/views/Chat/UserProfileLeft'
 
 import { useTranslation } from 'react-i18next'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
   if (hidden) {
@@ -75,7 +75,8 @@ const MembersList = (props: any) => {
     leftSidebarOpen,
     userProfileLeftOpen,
     handleLeftSidebarToggle,
-    handleUserProfileLeftSidebarToggle
+    handleUserProfileLeftSidebarToggle,
+    loadingGetMembers
   } = props
 
   // ** States
@@ -95,10 +96,11 @@ const MembersList = (props: any) => {
     }
   }
 
-  const Admins: string[] = getChivesChatGetMembers[0]
-  const Members: any = getChivesChatGetMembers[1]
-  console.log("getChivesChatGetMembers11", Admins)
-  console.log("getChivesChatGetMembers11", Members)
+  const Admins: string[] = getChivesChatGetMembers[0] ?? []
+  const Members: any = getChivesChatGetMembers[1] ?? {}
+  console.log("getChivesChatGetMembers11 getChivesChatGetMembers", getChivesChatGetMembers)
+  console.log("getChivesChatGetMembers11 Admins", Admins)
+  console.log("getChivesChatGetMembers11 Members", Members)
 
   const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
 
@@ -249,8 +251,10 @@ const MembersList = (props: any) => {
           sx={{
             px: 3,
             py: 2,
+            height: '57px',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'space-between', // 将内容显示在左右两端
             borderBottom: theme => `1px solid ${theme.palette.divider}`
           }}
         >
@@ -284,21 +288,27 @@ const MembersList = (props: any) => {
               />
             </Badge>
           ) : null}
-          <TextField
-            fullWidth
-            size='small'
-            value={query}
-            onChange={handleFilter}
-            placeholder='Search for Member...'
-            sx={{ '& .MuiInputBase-root': { borderRadius: 5 } }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start' sx={{ color: 'text.secondary' }}>
-                  <Icon icon='mdi:magnify' fontSize={20} />
-                </InputAdornment>
-              )
-            }}
-          />
+
+          {!loadingGetMembers && 
+            <TextField
+              fullWidth
+              size='small'
+              value={query}
+              onChange={handleFilter}
+              placeholder='Search for Member...'
+              sx={{ '& .MuiInputBase-root': { borderRadius: 5 } }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start' sx={{ color: 'text.secondary' }}>
+                    <Icon icon='mdi:magnify' fontSize={20} />
+                  </InputAdornment>
+                )
+              }}
+            />
+          }
+          
+          {loadingGetMembers && <CircularProgress size={20} /> }
+
           {!mdAbove ? (
             <IconButton sx={{ p: 1, ml: 1 }} onClick={handleLeftSidebarToggle}>
               <Icon icon='mdi:close' fontSize='1.375rem' />

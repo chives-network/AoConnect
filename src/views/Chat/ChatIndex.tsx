@@ -21,7 +21,7 @@ import { ChatChatInit } from 'src/functions/ChatBook'
 // ** Axios Imports
 import { useAuth } from 'src/hooks/useAuth'
 
-import { GetInboxMsgFromLocalStorage, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
+import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
 import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
@@ -40,6 +40,8 @@ const AppChat = (props: any) => {
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState<boolean>(false)
   const [userProfileRightOpen, setUserProfileRightOpen] = useState<boolean>(false)
 
+  const [loadingGetMembers, setLoadingGetMembers] = useState<boolean>(false)
+  const [loadingGetChannels, setLoadingGetChannels] = useState<boolean>(false)
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
   const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
   
@@ -70,10 +72,9 @@ const AppChat = (props: any) => {
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
-  const currentAddress = auth.currentAddress
 
   const { t } = useTranslation()
-  const { id, app, myProcessTxId } = props
+  const { id, app, myProcessTxId, currentAddress } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [counter, setCounter] = useState<number>(0)
@@ -88,7 +89,7 @@ const AppChat = (props: any) => {
       
       //console.log(`Simulating a long running process: ${delay}ms`);
       timeoutId = setTimeout(() => {
-        handleGetLastMessage();
+        //handleGetLastMessage();
         
         //console.log('Finished long running process');
         timeoutId = setTimeout(CronTaskLastMessage, 10000);
@@ -138,26 +139,39 @@ const AppChat = (props: any) => {
   }
 
   const handleGetAllMembers = async function () {
+    if(currentAddress) {
+      const GetAoConnectMembersData = GetAoConnectMembers(currentAddress)
+      setGetChivesChatGetMembers(GetAoConnectMembersData)
+    }
     if(id && myProcessTxId)  {
+      setLoadingGetMembers(true)
       const GetChivesChatGetMembers = await ChivesChatGetMembers(id, myProcessTxId)
       if(GetChivesChatGetMembers) {
         setGetChivesChatGetMembers(GetChivesChatGetMembers)
+        SetAoConnectMembers(currentAddress, GetChivesChatGetMembers)
         console.log("GetChivesChatGetMembers", GetChivesChatGetMembers)
       }
+      setLoadingGetMembers(false)
     }
   }
 
   const handleGetAllChannels = async function () {
+    if(currentAddress) {
+      const GetAoConnectChannelsData = GetAoConnectChannels(currentAddress)
+      setGetChivesChatGetChannels(GetAoConnectChannelsData)
+    }
     if(id && myProcessTxId)  {
+      setLoadingGetChannels(true)
       const GetChivesChatGetChannels = await ChivesChatGetChannels(id, myProcessTxId)
       if(GetChivesChatGetChannels) {
         setGetChivesChatGetChannels(GetChivesChatGetChannels)
+        SetAoConnectChannels(currentAddress, GetChivesChatGetChannels)
         console.log("GetChivesChatGetChannels", GetChivesChatGetChannels)
       }
+      setLoadingGetChannels(false)
     }
   }
 
-  
   const getChatLogList = async function () {
     if(id && currentAddress) {
       const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(id, 0, 20)
@@ -313,6 +327,7 @@ const AppChat = (props: any) => {
         userProfileLeftOpen={userProfileLeftOpen}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+        loadingGetChannels={loadingGetChannels}
       />
       <ChatContent
         store={store}
@@ -344,11 +359,13 @@ const AppChat = (props: any) => {
         userProfileLeftOpen={userProfileLeftOpen}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+        loadingGetMembers={loadingGetMembers}
       />
       </Box>
     </Fragment>
   )
 }
+
 
 //AppChat.contentHeightFixed = true
 

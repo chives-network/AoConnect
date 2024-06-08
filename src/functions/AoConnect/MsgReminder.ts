@@ -4,7 +4,53 @@ const AoConnectLocalStorage = 'AoConnectDb'
 const AoConnectLastCursor = 'AoConnectLastCursor'
 const AoConnectReminderProcessTxId = 'AoConnectReminderProcessTxId'
 const AoConnectReminderChatroomTxId = 'AoConnectReminderChatroomTxId'
+const AoConnectMembers = 'AoConnectMembers'
+const AoConnectChannels = 'AoConnectChannels'
 const AoConnectEveryTimeGetMsgCount = 10
+
+export const SetAoConnectMembers = (Address: string, Members: any) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectMembers) ?? "{}"
+    const JsonData = JSON.parse(JsonDataText)
+    JsonData[Address] = Members
+    window.localStorage.setItem(AoConnectMembers, JSON.stringify(JsonData))
+
+    return Members
+}
+
+export const GetAoConnectMembers = (Address: string) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectMembers) ?? "{}"
+    try{
+        const JsonData = JSON.parse(JsonDataText)
+
+        return JsonData[Address] ?? [[], {}]
+    }
+    catch(Error: any) {
+
+        return [[], {}]
+    }
+}
+
+export const SetAoConnectChannels = (Address: string, Channels: any) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectChannels) ?? "{}"
+    const JsonData = JSON.parse(JsonDataText)
+    JsonData[Address] = Channels
+    window.localStorage.setItem(AoConnectChannels, JSON.stringify(JsonData))
+
+    return Channels
+}
+
+export const GetAoConnectChannels = (Address: string) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectChannels) ?? "{}"
+    try{
+        const JsonData = JSON.parse(JsonDataText)
+
+        return JsonData[Address] ?? {}
+    }
+    catch(Error: any) {
+
+        return {}
+    }
+}
 
 export const SetAoConnectReminderChatroomTxId = (Address: string, chatroomTxId: string) => {
     const JsonDataText: string = window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? "{}"

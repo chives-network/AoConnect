@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, ChangeEvent, ReactNode, Fragment } from 'react'
+import { useState, useEffect, ReactNode, Fragment } from 'react'
 
 // ** Next Imports
 import { useRouter } from 'next/router'
@@ -7,18 +7,13 @@ import { useRouter } from 'next/router'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
-import Chip from '@mui/material/Chip'
-import Badge from '@mui/material/Badge'
 import Drawer from '@mui/material/Drawer'
-import MuiAvatar from '@mui/material/Avatar'
 import ListItem from '@mui/material/ListItem'
-import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemButton from '@mui/material/ListItemButton'
-import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Third Party Components
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -26,40 +21,20 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Types
-import { ContactType, ChatsArrType, ChatsObj, ProfileUserType } from 'src/types/apps/chatTypes'
-
 // ** Custom Components Import
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
 import { getInitials } from 'src/@core/utils/get-initials'
 
-// ** Chat App Components Imports
-import UserProfileLeft from 'src/views/Chat/UserProfileLeft'
-
 import { useTranslation } from 'react-i18next'
+
+import CircularProgress from '@mui/material/CircularProgress'
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
   if (hidden) {
     return <Box sx={{ height: '100%', overflow: 'auto' }}>{children}</Box>
   } else {
     return <PerfectScrollbar options={{ wheelPropagation: false }}>{children}</PerfectScrollbar>
-  }
-}
-
-const MockData: { profileUser: ProfileUserType } = {
-  profileUser: {
-    id: 11,
-    avatar: '/images/avatars/1.png',
-    fullName: 'John Doe',
-    role: 'admin',
-    about:
-      'Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.',
-    status: 'online',
-    settings: {
-      isTwoStepAuthVerificationEnabled: true,
-      isNotificationsOn: false
-    }
   }
 }
 
@@ -72,11 +47,10 @@ const ChannelsList = (props: any) => {
     getChivesChatGetChannels,
     leftSidebarOpen,
     handleLeftSidebarToggle,
+    loadingGetChannels
   } = props
 
   // ** States
-  const [query, setQuery] = useState<string>('')
-  const [filteredChannels, setFilteredChannels] = useState<ContactType[]>([])
   const [active, setActive] = useState<null | { type: string; id: string | number }>(null)
 
   const { t } = useTranslation()
@@ -97,7 +71,7 @@ const ChannelsList = (props: any) => {
   });
   
   const getChivesChatGetChannelsMap: any = {}
-  getChivesChatGetChannelsValues.map((item: any, index: number)=>{
+  getChivesChatGetChannelsValues.map((item: any)=>{
     if(getChivesChatGetChannelsMap[item.ChannelGroup] == undefined) {
         getChivesChatGetChannelsMap[item.ChannelGroup] = []
     }
@@ -109,7 +83,7 @@ const ChannelsList = (props: any) => {
   console.log("getChivesChatGetChannelsMap", getChivesChatGetChannelsMap)
 
 
-  const ChannelsListData: any[] = getChivesChatGetChannels && Object.values(getChivesChatGetChannels).map((item: any, index: number)=>{
+  const ChannelsListData: any[] = getChivesChatGetChannels && Object.values(getChivesChatGetChannels).map((item: any)=>{
 
     return {...item}
 
@@ -133,14 +107,6 @@ const ChannelsList = (props: any) => {
 
   const renderChannels = (ChannelsList: any[]) => {
     if (ChannelsList && ChannelsList.length) {
-      if (query.length && !filteredChannels.length) {
-        return (
-          <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Channels Found</Typography>
-          </ListItem>
-        )
-      } 
-      else {
         const channelArrayToMap = ChannelsList
 
         console.log("ChannelsList", ChannelsList)
@@ -195,7 +161,6 @@ const ChannelsList = (props: any) => {
               )
             })
           : null
-      }
     }
   }
 
@@ -229,23 +194,20 @@ const ChannelsList = (props: any) => {
         }}
       >
         <Box
-          sx={{
-            px: 3,
-            py: 2,
-            height: '57px',
-            display: 'flex',
-            alignItems: 'center',
-            borderBottom: theme => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <Typography>{t('All Channels')}</Typography>
-
-          {!mdAbove ? (
-            <IconButton sx={{ p: 1, ml: 1 }} onClick={handleLeftSidebarToggle}>
-              <Icon icon='mdi:close' fontSize='1.375rem' />
-            </IconButton>
-          ) : null}
+            sx={{
+                px: 3,
+                py: 2,
+                height: '57px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between', // 将内容显示在左右两端
+                borderBottom: theme => `1px solid ${theme.palette.divider}`
+            }}
+            >
+            <Typography>{t('All Channels')}</Typography>
+            {loadingGetChannels && <CircularProgress size={20} /> }
         </Box>
+
 
         <Box sx={{ height: `calc(100% - 4.125rem)` }}>
           <ScrollWrapper hidden={hidden}>
