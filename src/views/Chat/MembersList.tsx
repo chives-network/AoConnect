@@ -89,30 +89,57 @@ const MembersList = (props: any) => {
   // ** Hooks
   const router = useRouter()
 
+  
+  const [AdminsList, setAdminsList] = useState<any[]>([])
+  const [MembersList, setMembersList] = useState<any[]>([])
+  const [ApplicantsList, setApplicantsList] = useState<any[]>([])
+
+  useEffect(() => {
+    const Admins: string[] = getChivesChatGetMembers[0] ?? []
+    const Members: any = getChivesChatGetMembers[1] ?? {}
+    const Applicants: any = getChivesChatGetMembers[2] ?? {}
+    console.log("getChivesChatGetMembers11 Admins", Admins)
+    console.log("getChivesChatGetMembers11 Members", Members)
+    console.log("getChivesChatGetMembers11 Applicants", Applicants)
+
+    const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
+
+      const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
+      const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
+      
+      return {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
+
+    })
+
+    console.log("query", query)
+    if(query == '') {
+      const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) )
+      const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) )
+
+      setAdminsList(AdminsListData)
+      setMembersList(MembersListData)
+      setApplicantsList(Applicants)
+    }
+    else {
+      const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) && (item.MemberId.toLowerCase().includes(query) || item.MemberName.toLowerCase().includes(query.toLowerCase())) )
+      const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) && (item.MemberId.toLowerCase().includes(query) || item.MemberName.toLowerCase().includes(query.toLowerCase())) )
+
+      setAdminsList(AdminsListData)
+      setMembersList(MembersListData)
+      setApplicantsList(Applicants)
+
+    }
+    
+
+  }, [query])
+
+  
   const handleChatClick = (type: 'chat' | 'Member', id: number) => {
     setActive({ type, id })
     if (!mdAbove) {
       handleLeftSidebarToggle()
     }
   }
-
-  const Admins: string[] = getChivesChatGetMembers[0] ?? []
-  const Members: any = getChivesChatGetMembers[1] ?? {}
-  console.log("getChivesChatGetMembers11 getChivesChatGetMembers", getChivesChatGetMembers)
-  console.log("getChivesChatGetMembers11 Admins", Admins)
-  console.log("getChivesChatGetMembers11 Members", Members)
-
-  const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
-
-    const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
-    const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
-    
-    return {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
-
-  })
-
-  const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) )
-  const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) )
 
   useEffect(() => {
     router.events.on('routeChangeComplete', () => {
@@ -130,87 +157,85 @@ const MembersList = (props: any) => {
   }
 
   const renderMembers = (MembersList: any[]) => {
-    if (MembersList && MembersList.length) {
-      if (query.length && !filteredMembers.length) {
-        return (
-          <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Members Found</Typography>
-          </ListItem>
-        )
-      } 
-      else {
-        const memberArrayToMap = MembersList
+    if (MembersList && MembersList.length == 0) {
+      return (
+        <ListItem>
+          <Typography sx={{ color: 'text.secondary' }}>No Members Found</Typography>
+        </ListItem>
+      )
+    } 
+    else {
+      const memberArrayToMap = MembersList
 
-        console.log("MembersList", MembersList)
+      console.log("MembersList", MembersList)
 
-        return memberArrayToMap !== null
-          ? memberArrayToMap.map((Member: any, index: number) => {
-              const activeCondition =
-                active !== null && active.id === Member.MemberId && active.type === 'Member' && !hasActiveId(Member.MemberId)
+      return memberArrayToMap !== null
+        ? memberArrayToMap.map((Member: any, index: number) => {
+            const activeCondition =
+              active !== null && active.id === Member.MemberId && active.type === 'Member' && !hasActiveId(Member.MemberId)
 
-              return (
-                <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
-                  <ListItemButton
-                    disableRipple
-                    onClick={() => handleChatClick(hasActiveId(Member.MemberId) ? 'chat' : 'Member', Member.MemberId)}
+            return (
+              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
+                <ListItemButton
+                  disableRipple
+                  onClick={() => handleChatClick(hasActiveId(Member.MemberId) ? 'chat' : 'Member', Member.MemberId)}
+                  sx={{
+                    px: 3,
+                    py: 1.5,
+                    width: '100%',
+                    borderRadius: 1,
+                    ...(activeCondition && {
+                      backgroundImage: theme =>
+                        `linear-gradient(98deg, ${theme.palette.customColors.primaryGradient}, ${theme.palette.primary.main} 94%)`
+                    })
+                  }}
+                >
+                  <ListItemAvatar sx={{ m: 0 }}>
+                    {Member.MemberAvatar ? (
+                      <MuiAvatar
+                        alt={Member.MemberName}
+                        src={Member.MemberAvatar}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
+                        }}
+                      />
+                    ) : (
+                      <CustomAvatar
+                        color={Member?.avatarColor ?? 'primary'}
+                        skin={activeCondition ? 'light-static' : 'light'}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          fontSize: '1rem',
+                          ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
+                        }}
+                      >
+                        {getInitials(Member.MemberName ?? '')}
+                      </CustomAvatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
                     sx={{
-                      px: 3,
-                      py: 1.5,
-                      width: '100%',
-                      borderRadius: 1,
-                      ...(activeCondition && {
-                        backgroundImage: theme =>
-                          `linear-gradient(98deg, ${theme.palette.customColors.primaryGradient}, ${theme.palette.primary.main} 94%)`
-                      })
+                      my: 0,
+                      ml: 4,
+                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
-                  >
-                    <ListItemAvatar sx={{ m: 0 }}>
-                      {Member.MemberAvatar ? (
-                        <MuiAvatar
-                          alt={Member.MemberName}
-                          src={Member.MemberAvatar}
-                          sx={{
-                            width: 38,
-                            height: 38,
-                            ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
-                          }}
-                        />
-                      ) : (
-                        <CustomAvatar
-                          color={Member?.avatarColor ?? 'primary'}
-                          skin={activeCondition ? 'light-static' : 'light'}
-                          sx={{
-                            width: 38,
-                            height: 38,
-                            fontSize: '1rem',
-                            ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
-                          }}
-                        >
-                          {getInitials(Member.MemberName ?? '')}
-                        </CustomAvatar>
-                      )}
-                    </ListItemAvatar>
-                    <ListItemText
-                      sx={{
-                        my: 0,
-                        ml: 4,
-                        ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
-                      }}
-                      primary={
-                        <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Member.MemberName}</Typography>
-                      }
-                      secondary={
-                        <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
-                          {Member.MemberAbout}
-                        </Typography>
-                      }
-                    />
-                  </ListItemButton>
-                </ListItem>
-              )
-            })
-          : null
-      }
+                    primary={
+                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Member.MemberName}</Typography>
+                    }
+                    secondary={
+                      <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
+                        {Member.MemberAbout}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            )
+          })
+        : null
     }
   }
 
@@ -319,20 +344,20 @@ const MembersList = (props: any) => {
         <Box sx={{ height: `calc(100% - 4.125rem)` }}>
           <ScrollWrapper hidden={hidden}>
             <Box sx={{ p: theme => theme.spacing(2, 3, 3, 3) }}>
-              {AdminsListData && AdminsListData.length > 0 && (
+              {AdminsList && AdminsList.length > 0 && (
                 <Fragment>
                   <Typography variant='h6' sx={{ ml: 3, mb: 1, color: 'primary.main' }}>
                     {t('Admins')}
                   </Typography>
-                  <List sx={{ p: 0 }}>{renderMembers(AdminsListData)}</List>
+                  <List sx={{ p: 0 }}>{renderMembers(AdminsList)}</List>
                 </Fragment>
               )}
-              {MembersListData && MembersListData.length > 0 && (
+              {MembersList && MembersList.length > 0 && (
                 <Fragment>
                   <Typography variant='h6' sx={{ ml: 3, mb: 1, color: 'primary.main' }}>
                     {t('Members')}
                   </Typography>
-                  <List sx={{ p: 0 }}>{renderMembers(MembersListData)}</List>
+                  <List sx={{ p: 0 }}>{renderMembers(MembersList)}</List>
                 </Fragment>
               )}
             </Box>
