@@ -9,7 +9,6 @@ import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import Drawer from '@mui/material/Drawer'
 import ListItem from '@mui/material/ListItem'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
@@ -17,9 +16,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 
 // ** Third Party Components
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Custom Components Import
 import CustomAvatar from 'src/@core/components/mui/avatar'
@@ -101,11 +97,6 @@ const ChannelsList = (props: any) => {
     
   }, [getChivesChatGetChannels])
 
-  const hasActiveId = (id: string) => {
-
-    return false
-  }
-
   const renderChannels = (ChannelsList: any[]) => {
     if (ChannelsList && ChannelsList.length) {
         const channelArrayToMap = ChannelsList
@@ -115,7 +106,7 @@ const ChannelsList = (props: any) => {
         return channelArrayToMap !== null
           ? channelArrayToMap.map((Channel: any, index: number) => {
               const activeCondition =
-                active !== null && active === Channel.ChannelId && !hasActiveId(Channel.ChannelId)
+                active !== null && active === Channel.ChannelId
 
               return (
                 <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>

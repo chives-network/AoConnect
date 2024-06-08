@@ -10,8 +10,6 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
 
-import { GetAppAvatar } from 'src/functions/AoConnect/MsgReminder'
-
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -30,7 +28,7 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { re
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { data, hidden, app, rowInMsg, maxRows, handleDeleteOneChatLogById, processingMessages, setUserProfileRightOpen, setMember } = props
+  const { data, hidden, app, rowInMsg, maxRows, handleDeleteOneChatLogById, processingMessages, setUserProfileRightOpen, setMember, allMembers } = props
 
   // ** Ref
   const chatArea = useRef(null)
@@ -181,13 +179,13 @@ const ChatLog = (props: any) => {
                 fontSize: '0.875rem',
               }}
               {...{
-                src: GetAppAvatar(app.logo),
+                src: allMembers[item.Sender]?.MemberAvatar,
                 alt: app.name
               }}
               onClick={
                 ()=>{
                   setUserProfileRightOpen(true)
-                  setMember({MemberId: item.Sender, MemberName: app.name, MemberAvatar: app.logo})
+                  setMember(allMembers[item.Sender])
                 }
               }
             >

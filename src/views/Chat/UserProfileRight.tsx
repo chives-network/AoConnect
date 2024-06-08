@@ -33,7 +33,6 @@ const UserProfileRight = (props: UserProfileRightType) => {
   const {
     member,
     hidden,
-    statusObj,
     membersListWidth,
     userProfileRightOpen,
     handleUserProfileRightSidebarToggle
@@ -143,20 +142,20 @@ const UserProfileRight = (props: UserProfileRightType) => {
                       </ListItemIcon>
                       <ListItemText
                         sx={{ textTransform: 'lowercase' }}
-                        primary={`${member.MemberName.replace(/\s/g, '_')}@email.com`}
+                        primary={`${member.MemberId}@ao.com`}
                       />
                     </ListItem>
                     <ListItem sx={{ px: 2 }}>
                       <ListItemIcon sx={{ mr: 2, color: 'text.primary' }}>
                         <Icon icon='mdi:phone-outline' fontSize='1.375rem' />
                       </ListItemIcon>
-                      <ListItemText primary='+1(123) 456 - 7890' />
+                      <ListItemText primary='+1 (***) *** - ****' />
                     </ListItem>
                     <ListItem sx={{ px: 2 }}>
                       <ListItemIcon sx={{ mr: 2, color: 'text.primary' }}>
                         <Icon icon='mdi:clock-time-five-outline' fontSize='1.375rem' />
                       </ListItemIcon>
-                      <ListItemText primary='Mon - Fri 10AM - 8PM' />
+                      <ListItemText primary='Mon - Fri 9AM - 6PM' />
                     </ListItem>
                   </List>
                 </Box>

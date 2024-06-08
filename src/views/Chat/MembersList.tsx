@@ -26,15 +26,12 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import Icon from 'src/@core/components/icon'
 
 // ** Types
-import { ContactType, ProfileUserType } from 'src/types/apps/chatTypes'
+import { ProfileUserType } from 'src/types/apps/chatTypes'
 
 // ** Custom Components Import
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
 import { getInitials } from 'src/@core/utils/get-initials'
-
-// ** Chat App Components Imports
-import UserProfileLeft from 'src/views/Chat/UserProfileLeft'
 
 import { useTranslation } from 'react-i18next'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -74,17 +71,16 @@ const MembersList = (props: any) => {
     membersListWidth,
     getChivesChatGetMembers,
     leftSidebarOpen,
-    userProfileLeftOpen,
     handleLeftSidebarToggle,
     handleUserProfileLeftSidebarToggle,
     loadingGetMembers,
     setMember,
-    setUserProfileRightOpen
+    setUserProfileRightOpen,
+    setAllMembers
   } = props
 
   // ** States
   const [query, setQuery] = useState<string>('')
-  const [filteredMembers, setFilteredMembers] = useState<ContactType[]>([])
   const [active, setActive] = useState<null | { type: string; id: string | number }>(null)
 
   const { t } = useTranslation()
@@ -105,16 +101,20 @@ const MembersList = (props: any) => {
       console.log("getChivesChatGetMembers11 getChivesChatGetMembers", getChivesChatGetMembers)
       console.log("getChivesChatGetMembers11 Admins", Admins)
       console.log("getChivesChatGetMembers11 Members", Members)
-      console.log("getChivesChatGetMembers11 Applicants", Applicants)
+      console.log("getChivesChatGetMembers11 Applicants", Applicants, ApplicantsList)
 
+      const allMembersTemp: any = {}
       const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
 
         const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
         const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
-        
-        return {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
+        const Member = {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
+        allMembersTemp[item.MemberId] = Member
 
+        return Member
       })
+
+      setAllMembers(allMembersTemp)
 
       console.log("query", query)
       if(query == '') {
@@ -156,15 +156,6 @@ const MembersList = (props: any) => {
     }
   }, [])
 
-  const hasActiveId = (id: number | string) => {
-
-    return false
-  }
-
-  const handleOptionClick = () => {
-    
-  }
-
   const renderMembers = (MembersList: any[]) => {
     if (MembersList && MembersList.length == 0) {
       return (
@@ -181,13 +172,13 @@ const MembersList = (props: any) => {
       return memberArrayToMap !== null
         ? memberArrayToMap.map((Member: any, index: number) => {
             const activeCondition =
-              active !== null && active.id === Member.MemberId && active.type === 'Member' && !hasActiveId(Member.MemberId)
+              active !== null && active.id === Member.MemberId && active.type === 'Member'
 
             return (
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
                 <ListItemButton
                   disableRipple
-                  onClick={() => handleChatClick(hasActiveId(Member.MemberId) ? 'chat' : 'Member', Member.MemberId)}
+                  onClick={() => handleChatClick('Member', Member.MemberId)}
                   sx={{
                     px: 3,
                     py: 1.5,
@@ -260,6 +251,7 @@ const MembersList = (props: any) => {
                         menuItemProps: {
                           sx: { py: 2 },
                           onClick: () => {
+                            navigator.clipboard.writeText(Member.MemberId);
                           }
                         }
                       },
@@ -268,6 +260,7 @@ const MembersList = (props: any) => {
                         menuItemProps: {
                           sx: { py: 2 },
                           onClick: () => {
+                            navigator.clipboard.writeText(Member.MemberId);
                           }
                         }
                       },
@@ -276,6 +269,7 @@ const MembersList = (props: any) => {
                         menuItemProps: {
                           sx: { py: 2 },
                           onClick: () => {
+                            navigator.clipboard.writeText(Member.MemberId);
                           }
                         }
                       },
@@ -293,6 +287,7 @@ const MembersList = (props: any) => {
                         menuItemProps: {
                           sx: { py: 2 },
                           onClick: () => {
+                            navigator.clipboard.writeText(Member.MemberId);
                           }
                         }
                       }
@@ -432,16 +427,6 @@ const MembersList = (props: any) => {
         </Box>
       </Drawer>
 
-      <UserProfileLeft
-        store={MockData}
-        hidden={hidden}
-        statusObj={statusObj}
-        userStatus={userStatus}
-        membersListWidth={membersListWidth}
-        getChivesChatGetMembers={getChivesChatGetMembers}
-        userProfileLeftOpen={userProfileLeftOpen}
-        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-      />
     </div>
   )
 }

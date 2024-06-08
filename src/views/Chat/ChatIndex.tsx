@@ -45,6 +45,7 @@ const AppChat = (props: any) => {
   const [loadingGetChannels, setLoadingGetChannels] = useState<boolean>(false)
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
   const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
+  const [allMembers, setAllMembers] = useState<any>({})
 
   const [member, setMember] = useState<any>(null)
   
@@ -87,6 +88,8 @@ const AppChat = (props: any) => {
   useEffect(() => {
     let timeoutId: any = null;
 
+    setUserStatus('online')
+
     const CronTaskLastMessage = () => {
       
       //console.log('This message will appear every 10 seconds');
@@ -94,7 +97,7 @@ const AppChat = (props: any) => {
       
       //console.log(`Simulating a long running process: ${delay}ms`);
       timeoutId = setTimeout(() => {
-        //handleGetLastMessage();
+        handleGetLastMessage();
         
         //console.log('Finished long running process');
         timeoutId = setTimeout(CronTaskLastMessage, 10000);
@@ -353,6 +356,7 @@ const AppChat = (props: any) => {
         myProcessTxId={myProcessTxId}
         setMember={setMember}
         setUserProfileRightOpen={setUserProfileRightOpen}
+        allMembers={allMembers}
       />
       <MembersList
         store={store}
@@ -369,12 +373,13 @@ const AppChat = (props: any) => {
         loadingGetMembers={loadingGetMembers}
         setMember={setMember}
         setUserProfileRightOpen={setUserProfileRightOpen}
+        setAllMembers={setAllMembers}
       />
       <UserProfileRight
         member={member}
         hidden={hidden}
         statusObj={statusObj}
-        membersListWidth={(membersListWidth+150)}
+        membersListWidth={(membersListWidth+200)}
         userProfileRightOpen={userProfileRightOpen}
         handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
       />
