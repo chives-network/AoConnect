@@ -457,17 +457,17 @@ export const ChivesChatGetChannels = async (TargetTxId: string, processTxId: str
 
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
-            return result.Messages[0].Data
+            return JSON.parse(result.Messages[0].Data)
         }
         else {
 
-            return 
+            return {}
         }
     }
     catch(Error: any) {
         console.error("AoTokenBalanceDryRun Error:", Error)
 
-        return 
+        return {}
     }
 }
 

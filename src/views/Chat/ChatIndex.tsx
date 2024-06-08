@@ -26,6 +26,7 @@ import { GetMyInboxMsg, GetMyInboxLastMsg, sleep } from 'src/functions/AoConnect
 import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
+import ChannelsList from 'src/views/Chat/ChannelsList'
 
 import {  } from 'src/functions/AoConnect/MsgReminder'
 
@@ -40,7 +41,7 @@ const AppChat = (props: any) => {
   const [userProfileRightOpen, setUserProfileRightOpen] = useState<boolean>(false)
 
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
-  const [chivesChatGetChannels, setChivesChatGetChannels] = useState<any>()
+  const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
   
 
   // ** Hooks
@@ -51,6 +52,7 @@ const AppChat = (props: any) => {
   // ** Vars
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'))
   const membersListWidth = smAbove ? 270 : 200
+  const channelsListWidth = smAbove ? 210 : 200
 
   const { skin } = settings
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'))
@@ -136,18 +138,25 @@ const AppChat = (props: any) => {
   }
 
   const handleGetAllMembers = async function () {
-    const GetChivesChatGetMembers = await ChivesChatGetMembers(id, myProcessTxId)
-    setGetChivesChatGetMembers(GetChivesChatGetMembers)
-    
-    //console.log("GetChivesChatGetMembers", GetChivesChatGetMembers)
+    if(id && myProcessTxId)  {
+      const GetChivesChatGetMembers = await ChivesChatGetMembers(id, myProcessTxId)
+      if(GetChivesChatGetMembers) {
+        setGetChivesChatGetMembers(GetChivesChatGetMembers)
+        console.log("GetChivesChatGetMembers", GetChivesChatGetMembers)
+      }
+    }
   }
 
   const handleGetAllChannels = async function () {
-    const GetChivesChatGetChannels = await ChivesChatGetChannels(id, myProcessTxId)
-    setChivesChatGetChannels(GetChivesChatGetChannels)
-    
-    //console.log("GetChivesChatGetChannels", GetChivesChatGetChannels)
+    if(id && myProcessTxId)  {
+      const GetChivesChatGetChannels = await ChivesChatGetChannels(id, myProcessTxId)
+      if(GetChivesChatGetChannels) {
+        setGetChivesChatGetChannels(GetChivesChatGetChannels)
+        console.log("GetChivesChatGetChannels", GetChivesChatGetChannels)
+      }
+    }
   }
+
   
   const getChatLogList = async function () {
     if(id && currentAddress) {
@@ -292,6 +301,19 @@ const AppChat = (props: any) => {
           ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
         }}
       >
+      <ChannelsList
+        store={store}
+        hidden={hidden}
+        mdAbove={mdAbove}
+        statusObj={statusObj}
+        userStatus={userStatus}
+        channelsListWidth={channelsListWidth}
+        getChivesChatGetChannels={getChivesChatGetChannels}
+        leftSidebarOpen={leftSidebarOpen}
+        userProfileLeftOpen={userProfileLeftOpen}
+        handleLeftSidebarToggle={handleLeftSidebarToggle}
+        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+      />
       <ChatContent
         store={store}
         hidden={hidden}

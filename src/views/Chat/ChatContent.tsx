@@ -96,9 +96,6 @@ const ChatContent = (props: any) => {
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                         {app.name}
                       </Typography>
-                      <Typography variant='caption' sx={{ color: 'primary.secondary', ml: '8px', pt: 0.4 }}>
-                        {app.id}
-                      </Typography>
                     </Box>
 
                   </Box>

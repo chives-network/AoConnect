@@ -63,24 +63,20 @@ const MockData: { profileUser: ProfileUserType } = {
   }
 }
 
-const MembersList = (props: any) => {
+const ChannelsList = (props: any) => {
   // ** Props
   const {
     hidden,
     mdAbove,
-    statusObj,
-    userStatus,
-    membersListWidth,
-    getChivesChatGetMembers,
+    channelsListWidth,
+    getChivesChatGetChannels,
     leftSidebarOpen,
-    userProfileLeftOpen,
     handleLeftSidebarToggle,
-    handleUserProfileLeftSidebarToggle
   } = props
 
   // ** States
   const [query, setQuery] = useState<string>('')
-  const [filteredMembers, setFilteredMembers] = useState<ContactType[]>([])
+  const [filteredChannels, setFilteredChannels] = useState<ContactType[]>([])
   const [active, setActive] = useState<null | { type: string; id: string | number }>(null)
 
   const { t } = useTranslation()
@@ -88,29 +84,37 @@ const MembersList = (props: any) => {
   // ** Hooks
   const router = useRouter()
 
-  const handleChatClick = (type: 'chat' | 'Member', id: number) => {
+  const handleChatClick = (type: 'chat' | 'Channel', id: number) => {
     setActive({ type, id })
     if (!mdAbove) {
       handleLeftSidebarToggle()
     }
   }
 
-  const Admins: string[] = getChivesChatGetMembers[0]
-  const Members: any = getChivesChatGetMembers[1]
-  console.log("getChivesChatGetMembers11", Admins)
-  console.log("getChivesChatGetMembers11", Members)
-
-  const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
-
-    const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
-    const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
-    
-    return {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
-
+  const getChivesChatGetChannelsValues = Object.values(getChivesChatGetChannels)
+  getChivesChatGetChannelsValues.sort((a: any, b: any) => {
+    return Number(a.ChannelSort) - Number(b.ChannelSort);
+  });
+  
+  const getChivesChatGetChannelsMap: any = {}
+  getChivesChatGetChannelsValues.map((item: any, index: number)=>{
+    if(getChivesChatGetChannelsMap[item.ChannelGroup] == undefined) {
+        getChivesChatGetChannelsMap[item.ChannelGroup] = []
+    }
+    getChivesChatGetChannelsMap[item.ChannelGroup].push(item)
   })
 
-  const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) )
-  const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) )
+  const ChannelsGroupList = Object.keys(getChivesChatGetChannelsMap)
+
+  console.log("getChivesChatGetChannelsMap", getChivesChatGetChannelsMap)
+
+
+  const ChannelsListData: any[] = getChivesChatGetChannels && Object.values(getChivesChatGetChannels).map((item: any, index: number)=>{
+
+    return {...item}
+
+  })
+  console.log("ChannelsListData", ChannelsListData)
 
   useEffect(() => {
     router.events.on('routeChangeComplete', () => {
@@ -127,30 +131,30 @@ const MembersList = (props: any) => {
     return false
   }
 
-  const renderMembers = (MembersList: any[]) => {
-    if (MembersList && MembersList.length) {
-      if (query.length && !filteredMembers.length) {
+  const renderChannels = (ChannelsList: any[]) => {
+    if (ChannelsList && ChannelsList.length) {
+      if (query.length && !filteredChannels.length) {
         return (
           <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Members Found</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>No Channels Found</Typography>
           </ListItem>
         )
       } 
       else {
-        const memberArrayToMap = MembersList
+        const channelArrayToMap = ChannelsList
 
-        console.log("MembersList", MembersList)
+        console.log("ChannelsList", ChannelsList)
 
-        return memberArrayToMap !== null
-          ? memberArrayToMap.map((Member: any, index: number) => {
+        return channelArrayToMap !== null
+          ? channelArrayToMap.map((Channel: any, index: number) => {
               const activeCondition =
-                active !== null && active.id === Member.MemberId && active.type === 'Member' && !hasActiveId(Member.MemberId)
+                active !== null && active.id === Channel.ChannelId && active.type === 'Channel' && !hasActiveId(Channel.ChannelId)
 
               return (
                 <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
                   <ListItemButton
                     disableRipple
-                    onClick={() => handleChatClick(hasActiveId(Member.MemberId) ? 'chat' : 'Member', Member.MemberId)}
+                    onClick={() => handleChatClick(hasActiveId(Channel.ChannelId) ? 'chat' : 'Channel', Channel.ChannelId)}
                     sx={{
                       px: 3,
                       py: 1.5,
@@ -163,44 +167,27 @@ const MembersList = (props: any) => {
                     }}
                   >
                     <ListItemAvatar sx={{ m: 0 }}>
-                      {Member.MemberAvatar ? (
-                        <MuiAvatar
-                          alt={Member.MemberName}
-                          src={Member.MemberAvatar}
-                          sx={{
-                            width: 38,
-                            height: 38,
-                            ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
-                          }}
-                        />
-                      ) : (
                         <CustomAvatar
-                          color={Member?.avatarColor ?? 'primary'}
+                          color={Channel?.avatarColor ?? 'primary'}
                           skin={activeCondition ? 'light-static' : 'light'}
                           sx={{
-                            width: 38,
-                            height: 38,
+                            width: 24,
+                            height: 24,
                             fontSize: '1rem',
                             ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
                           }}
                         >
-                          {getInitials(Member.MemberName ?? '')}
+                          {getInitials(Channel.ChannelName ?? '')}
                         </CustomAvatar>
-                      )}
                     </ListItemAvatar>
                     <ListItemText
                       sx={{
                         my: 0,
-                        ml: 4,
-                        ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                        ml: 2,
+                        pt: 0
                       }}
                       primary={
-                        <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Member.MemberName}</Typography>
-                      }
-                      secondary={
-                        <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
-                          {Member.MemberAbout}
-                        </Typography>
+                        <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Channel.ChannelName}</Typography>
                       }
                     />
                   </ListItemButton>
@@ -210,10 +197,6 @@ const MembersList = (props: any) => {
           : null
       }
     }
-  }
-
-  const handleFilter = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value)
   }
 
   return (
@@ -233,7 +216,7 @@ const MembersList = (props: any) => {
           position: mdAbove ? 'static' : 'absolute',
           '& .MuiDrawer-paper': {
             boxShadow: 'none',
-            width: membersListWidth,
+            width: channelsListWidth,
             position: mdAbove ? 'static' : 'absolute',
             borderTopLeftRadius: theme => theme.shape.borderRadius,
             borderBottomLeftRadius: theme => theme.shape.borderRadius
@@ -249,56 +232,14 @@ const MembersList = (props: any) => {
           sx={{
             px: 3,
             py: 2,
+            height: '57px',
             display: 'flex',
             alignItems: 'center',
             borderBottom: theme => `1px solid ${theme.palette.divider}`
           }}
         >
-          {MockData && MockData.profileUser ? (
-            <Badge
-              overlap='circular'
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-              sx={{ mr: 4 }}
-              onClick={handleUserProfileLeftSidebarToggle}
-              badgeContent={
-                <Box
-                  component='span'
-                  sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    color: `${statusObj[userStatus]}.main`,
-                    backgroundColor: `${statusObj[userStatus]}.main`,
-                    boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`
-                  }}
-                />
-              }
-            >
-              <MuiAvatar
-                src={MockData.profileUser.avatar}
-                alt={MockData.profileUser.fullName}
-                sx={{ width: '2.375rem', height: '2.375rem', cursor: 'pointer' }}
-              />
-            </Badge>
-          ) : null}
-          <TextField
-            fullWidth
-            size='small'
-            value={query}
-            onChange={handleFilter}
-            placeholder='Search for Member...'
-            sx={{ '& .MuiInputBase-root': { borderRadius: 5 } }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start' sx={{ color: 'text.secondary' }}>
-                  <Icon icon='mdi:magnify' fontSize={20} />
-                </InputAdornment>
-              )
-            }}
-          />
+          <Typography>{t('All Channels')}</Typography>
+
           {!mdAbove ? (
             <IconButton sx={{ p: 1, ml: 1 }} onClick={handleLeftSidebarToggle}>
               <Icon icon='mdi:close' fontSize='1.375rem' />
@@ -309,39 +250,25 @@ const MembersList = (props: any) => {
         <Box sx={{ height: `calc(100% - 4.125rem)` }}>
           <ScrollWrapper hidden={hidden}>
             <Box sx={{ p: theme => theme.spacing(2, 3, 3, 3) }}>
-              {AdminsListData && AdminsListData.length > 0 && (
-                <Fragment>
-                  <Typography variant='h6' sx={{ ml: 3, mb: 1, color: 'primary.main' }}>
-                    {t('Admins')}
-                  </Typography>
-                  <List sx={{ p: 0 }}>{renderMembers(AdminsListData)}</List>
-                </Fragment>
-              )}
-              {MembersListData && MembersListData.length > 0 && (
-                <Fragment>
-                  <Typography variant='h6' sx={{ ml: 3, mb: 1, color: 'primary.main' }}>
-                    {t('Members')}
-                  </Typography>
-                  <List sx={{ p: 0 }}>{renderMembers(MembersListData)}</List>
-                </Fragment>
-              )}
+              {ChannelsGroupList && ChannelsGroupList.length > 0 && ChannelsGroupList.map((ChannelGroupName: string, index: number)=>{
+
+                return (
+                    <Fragment key={index}>
+                        <Typography variant='h6' sx={{ ml: 3, mb: 1, color: 'primary.main' }}>
+                            {t(ChannelGroupName)}
+                        </Typography>
+                        <List sx={{ p: 0 }}>{renderChannels(getChivesChatGetChannelsMap[ChannelGroupName])}</List>
+                    </Fragment>
+                )
+              })
+              }
             </Box>
           </ScrollWrapper>
         </Box>
       </Drawer>
 
-      <UserProfileLeft
-        store={MockData}
-        hidden={hidden}
-        statusObj={statusObj}
-        userStatus={userStatus}
-        membersListWidth={membersListWidth}
-        getChivesChatGetMembers={getChivesChatGetMembers}
-        userProfileLeftOpen={userProfileLeftOpen}
-        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-      />
     </div>
   )
 }
 
-export default MembersList
+export default ChannelsList
