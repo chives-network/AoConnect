@@ -27,6 +27,7 @@ import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels } 
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
+import UserProfileRight from 'src/views/Chat/UserProfileRight'
 
 import {  } from 'src/functions/AoConnect/MsgReminder'
 
@@ -44,8 +45,9 @@ const AppChat = (props: any) => {
   const [loadingGetChannels, setLoadingGetChannels] = useState<boolean>(false)
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
   const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
-  
 
+  const [member, setMember] = useState<any>(null)
+  
   // ** Hooks
   const theme = useTheme()
   const { settings } = useSettings()
@@ -67,7 +69,10 @@ const AppChat = (props: any) => {
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen)
-  const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen)
+  const handleUserProfileRightSidebarToggle = () => {
+    setUserProfileRightOpen(!userProfileRightOpen)
+    setMember(null)
+  }
 
 
   const auth = useAuth()
@@ -346,6 +351,8 @@ const AppChat = (props: any) => {
         app={app}
         handleDeleteOneChatLogById={handleDeleteOneChatLogById}
         myProcessTxId={myProcessTxId}
+        setMember={setMember}
+        setUserProfileRightOpen={setUserProfileRightOpen}
       />
       <MembersList
         store={store}
@@ -360,6 +367,16 @@ const AppChat = (props: any) => {
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
         loadingGetMembers={loadingGetMembers}
+        setMember={setMember}
+        setUserProfileRightOpen={setUserProfileRightOpen}
+      />
+      <UserProfileRight
+        member={member}
+        hidden={hidden}
+        statusObj={statusObj}
+        membersListWidth={(membersListWidth+150)}
+        userProfileRightOpen={userProfileRightOpen}
+        handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
       />
       </Box>
     </Fragment>

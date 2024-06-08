@@ -30,7 +30,7 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { re
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { data, hidden, app, rowInMsg, maxRows, handleDeleteOneChatLogById, processingMessages } = props
+  const { data, hidden, app, rowInMsg, maxRows, handleDeleteOneChatLogById, processingMessages, setUserProfileRightOpen, setMember } = props
 
   // ** Ref
   const chatArea = useRef(null)
@@ -137,8 +137,8 @@ const ChatLog = (props: any) => {
           {isSender ?
           <Box display="flex" alignItems="center" justifyContent="right" borderRadius="8px" p={0} mb={1} >
             <Tooltip title={item.Sender}>
-                <Typography sx={{my: 0.5, mx: 1}} variant='body2'>{formatHash(item.Sender, 5)}</Typography>
-              </Tooltip>
+              <Typography sx={{my: 0.5, mx: 1}} variant='body2'>{formatHash(item.Sender, 5)}</Typography>
+            </Tooltip>
             <Tooltip title={t('Copy')}>
               <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                 navigator.clipboard.writeText(item.Sender);
@@ -184,6 +184,12 @@ const ChatLog = (props: any) => {
                 src: GetAppAvatar(app.logo),
                 alt: app.name
               }}
+              onClick={
+                ()=>{
+                  setUserProfileRightOpen(true)
+                  setMember({MemberId: item.Sender, MemberName: app.name, MemberAvatar: app.logo})
+                }
+              }
             >
               {app.name}
             </CustomAvatar>

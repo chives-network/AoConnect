@@ -130,11 +130,10 @@ export type UserProfileLeftType = {
 
 export type UserProfileRightType = {
   hidden: boolean
-  store: ChatStoreType
+  member: any
   membersListWidth: number
   statusObj: StatusObjType
   userProfileRightOpen: boolean
-  getInitials: (val: string) => string
   handleUserProfileRightSidebarToggle: () => void
 }
 

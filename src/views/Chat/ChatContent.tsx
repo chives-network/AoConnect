@@ -30,7 +30,9 @@ const ChatContent = (props: any) => {
     handleGetAllMessages,
     app,
     handleDeleteOneChatLogById,
-    myProcessTxId
+    myProcessTxId,
+    setMember,
+    setUserProfileRightOpen
   } = props
 
   const { t } = useTranslation()
@@ -90,6 +92,12 @@ const ChatContent = (props: any) => {
                         src={GetAppAvatar(app.logo)}
                         alt={app.name}
                         sx={{ width: '2rem', height: '2rem' }}
+                        onClick={
+                          ()=>{
+                            //setUserProfileRightOpen(true)
+                            //setMember({MemberId: app.id, MemberName: app.name, MemberAvatar: app.logo})
+                          }
+                        }
                       />
                     </Badge>
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -110,7 +118,7 @@ const ChatContent = (props: any) => {
                 </Box>
               </Box>
 
-              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessages={processingMessages} myProcessTxId={myProcessTxId} />
+              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessages={processingMessages} myProcessTxId={myProcessTxId} setUserProfileRightOpen={setUserProfileRightOpen} setMember={setMember}/>
 
               <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows}/>
 

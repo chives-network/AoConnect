@@ -38,6 +38,7 @@ import UserProfileLeft from 'src/views/Chat/UserProfileLeft'
 
 import { useTranslation } from 'react-i18next'
 import CircularProgress from '@mui/material/CircularProgress'
+import OptionsMenu from 'src/@core/components/option-menu'
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
   if (hidden) {
@@ -76,7 +77,9 @@ const MembersList = (props: any) => {
     userProfileLeftOpen,
     handleLeftSidebarToggle,
     handleUserProfileLeftSidebarToggle,
-    loadingGetMembers
+    loadingGetMembers,
+    setMember,
+    setUserProfileRightOpen
   } = props
 
   // ** States
@@ -95,7 +98,7 @@ const MembersList = (props: any) => {
   const [ApplicantsList, setApplicantsList] = useState<any[]>([])
 
   useEffect(() => {
-    if(getChivesChatGetMembers && t)   {
+    if(getChivesChatGetMembers)   {
       const Admins: string[] = getChivesChatGetMembers[0] ?? []
       const Members: any = getChivesChatGetMembers[1] ?? {}
       const Applicants: any = getChivesChatGetMembers[2] ?? {}
@@ -133,7 +136,6 @@ const MembersList = (props: any) => {
       }
     }
     
-
   }, [query, t, getChivesChatGetMembers])
 
   
@@ -157,6 +159,10 @@ const MembersList = (props: any) => {
   const hasActiveId = (id: number | string) => {
 
     return false
+  }
+
+  const handleOptionClick = () => {
+    
   }
 
   const renderMembers = (MembersList: any[]) => {
@@ -233,6 +239,64 @@ const MembersList = (props: any) => {
                         {Member.MemberAbout}
                       </Typography>
                     }
+                  />
+                  <OptionsMenu
+                    icon={<Icon icon='mdi:dots-vertical' fontSize='1.25rem' />}
+                    menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4, minWidth: 130 } } }}
+                    iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                    options={[
+                      {
+                        text: 'Profile',
+                        menuItemProps: {
+                          sx: { py: 2 },
+                          onClick: () => {
+                            setMember(Member)
+                            setUserProfileRightOpen(true)
+                          }
+                        }
+                      },
+                      {
+                        text: 'Message',
+                        menuItemProps: {
+                          sx: { py: 2 },
+                          onClick: () => {
+                          }
+                        }
+                      },
+                      {
+                        text: 'Add Friend',
+                        menuItemProps: {
+                          sx: { py: 2 },
+                          onClick: () => {
+                          }
+                        }
+                      },
+                      {
+                        text: 'Block',
+                        menuItemProps: {
+                          sx: { py: 2 },
+                          onClick: () => {
+                          }
+                        }
+                      },
+                      {
+                        text: 'Copy UserId',
+                        menuItemProps: {
+                          sx: { py: 2 },
+                          onClick: () => {
+                            navigator.clipboard.writeText(Member.MemberId);
+                          }
+                        }
+                      },
+                      {
+                        text: 'Set Admin',
+                        menuItemProps: {
+                          sx: { py: 2 },
+                          onClick: () => {
+                          }
+                        }
+                      }
+                    ]}
                   />
                 </ListItemButton>
               </ListItem>
