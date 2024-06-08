@@ -66,6 +66,32 @@ function Welcome()
 end
 
 Handlers.add(
+  "GetInboxs",
+  Handlers.utils.hasMatchingTag("Action", "GetInboxs"),
+  function (msg)
+    local totalRecords = #Inbox
+    
+    if msg.startIndex <= 0 or msg.startIndex > totalRecords or msg.endIndex < msg.startIndex then
+        return {}, totalRecords
+    end
+    
+    if msg.endIndex > totalRecords then
+      msg.endIndex = totalRecords
+    end
+    
+    local records = {}
+    for i = msg.startIndex, msg.endIndex do
+        table.insert(records, Inbox[i])
+    end
+
+    ao.send({
+      Target = msg.From,
+      Data = require('json').encode({records, totalRecords})
+    })
+  end
+)
+
+Handlers.add(
   "GetChannels",
   Handlers.utils.hasMatchingTag("Action", "GetChannels"),
   function (msg)
