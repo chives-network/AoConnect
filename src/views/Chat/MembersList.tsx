@@ -21,6 +21,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Third Party Components
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import Fab from '@mui/material/Fab'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -79,7 +80,8 @@ const MembersList = (props: any) => {
     setAllMembers,
     handleAddChannelAdmin,
     handleDelChannelAdmin,
-    isOwner
+    isOwner,
+    setOpenMembersInvite
   } = props
 
   // ** States
@@ -96,6 +98,7 @@ const MembersList = (props: any) => {
   const [MembersList, setMembersList] = useState<any[]>([])
   const [ApplicantsList, setApplicantsList] = useState<any[]>([])
 
+  
   useEffect(() => {
     if(getChivesChatGetMembers)   {
       const Admins: string[] = getChivesChatGetMembers[0] ?? []
@@ -397,21 +400,29 @@ const MembersList = (props: any) => {
           ) : null}
 
           {!loadingGetMembers && 
-            <TextField
-              fullWidth
-              size='small'
-              value={query}
-              onChange={handleFilter}
-              placeholder='Search for Member...'
-              sx={{ '& .MuiInputBase-root': { borderRadius: 5 } }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start' sx={{ color: 'text.secondary' }}>
-                    <Icon icon='mdi:magnify' fontSize={20} />
-                  </InputAdornment>
-                )
-              }}
-            />
+            <Fragment>
+              <TextField
+                fullWidth
+                size='small'
+                value={query}
+                onChange={handleFilter}
+                placeholder='Search ...'
+                sx={{ '& .MuiInputBase-root': { borderRadius: 5 }, width: '150px' }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start' sx={{ color: 'text.secondary' }}>
+                      <Icon icon='mdi:magnify' fontSize={20} />
+                    </InputAdornment>
+                  )
+                }}
+              />
+              <Fab color='primary' aria-label='add' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
+                setOpenMembersInvite(true)
+              }}>
+                <Icon icon='mdi:plus' />
+              </Fab>
+            </Fragment>
+            
           }
           
           {loadingGetMembers && <CircularProgress size={20} /> }
@@ -446,7 +457,6 @@ const MembersList = (props: any) => {
           </ScrollWrapper>
         </Box>
       </Drawer>
-
     </div>
   )
 }

@@ -23,11 +23,12 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
 import UserProfileRight from 'src/views/Chat/UserProfileRight'
+import MembersInvite from 'src/views/Chat/MembersInvite'
 
 import {  } from 'src/functions/AoConnect/MsgReminder'
 
@@ -49,6 +50,8 @@ const AppChat = (props: any) => {
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
   const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
   const [allMembers, setAllMembers] = useState<any>({})
+  const [openMembersInvite, setOpenMembersInvite] = useState<boolean>(false)
+  const [valueMembersInvite, setValueMembersInvite] = useState<string>('W8KNkIsXPTxIM9dBlVkZD7AM2IjyHrHIoSbQPZ3fOFk\nK4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw\nJQbi-qZBHWQCCl3BoPEwWOfGzNlYhxK0DmlwQlBb4cM')
 
   const [member, setMember] = useState<any>(null)
   
@@ -203,6 +206,35 @@ const AppChat = (props: any) => {
       }
     }
   }
+
+  const handleInviteMember = async function () {
+    toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+    if(id != myProcessTxId)  {
+      toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+    }
+    const ChivesChatAddInvitesUserOne = await ChivesChatAddInvites(currentWallet.jwk, id, myProcessTxId, valueMembersInvite.replace(/\n/g, '\\n'), "Invite Member", "Hope you join this chatroom")
+    if(ChivesChatAddInvitesUserOne) {
+      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+      console.log("handleInviteMember ChivesChatAddInvitesUserOne", ChivesChatAddInvitesUserOne)
+      if(ChivesChatAddInvitesUserOne?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatAddInvitesUserOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          console.log("handleInviteMember formatText", formatText)
+
+          //Read message from inbox
+          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+            }
+          }
+          
+        }
+      }
+    }
+  }
+
 
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
@@ -447,6 +479,8 @@ const AppChat = (props: any) => {
         handleAddChannelAdmin={handleAddChannelAdmin}
         handleDelChannelAdmin={handleDelChannelAdmin}
         isOwner={id == myProcessTxId ? true : false}
+        app={app}
+        setOpenMembersInvite={setOpenMembersInvite}
       />
       <UserProfileRight
         member={member}
@@ -456,6 +490,7 @@ const AppChat = (props: any) => {
         userProfileRightOpen={userProfileRightOpen}
         handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
       />
+      <MembersInvite openMembersInvite={openMembersInvite} setOpenMembersInvite={setOpenMembersInvite} valueMembersInvite={valueMembersInvite} setValueMembersInvite={setValueMembersInvite} handleInviteMember={handleInviteMember} />
       </Box>
     </Fragment>
   )

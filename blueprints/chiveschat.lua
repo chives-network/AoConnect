@@ -357,6 +357,64 @@ Handlers.add(
 )
 
 Handlers.add(
+  "AddInvites",
+  Handlers.utils.hasMatchingTag("Action", "AddInvites"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+    
+    if isAdmin then
+      local addresses = {}
+      for address in string.gmatch(msg.MemberId, '([^\n]+)') do
+        if #address == 43 then
+          table.insert(addresses, address)
+        end
+      end
+
+      for _, address in ipairs(addresses) do
+        if not Invites[address] then
+          Invites[address] = {
+            MemberId = address,
+            MemberName = msg.MemberName,
+            MemberReason = msg.MemberReason
+          }
+          ao.send({
+            Target = msg.From,
+            Data = "Successfully invite member " .. address
+          })
+          ao.send({
+            Target = address,
+            Data = "You have been invited to join chatroom " .. ao.id
+          })
+        else
+          ao.send({
+            Target = msg.From,
+            Action = 'AddInvite-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'You have already invited this member ' .. address
+          })
+        end
+      end
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'AddInvite-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only an administrator can invite a member'
+      })
+    end
+  end
+)
+
+Handlers.add(
   "AgreeInvite",
   Handlers.utils.hasMatchingTag("Action", "AgreeInvite"),
   function (msg)
