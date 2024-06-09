@@ -76,7 +76,10 @@ const MembersList = (props: any) => {
     loadingGetMembers,
     setMember,
     setUserProfileRightOpen,
-    setAllMembers
+    setAllMembers,
+    handleAddChannelAdmin,
+    handleDelChannelAdmin,
+    isOwner
   } = props
 
   // ** States
@@ -88,7 +91,7 @@ const MembersList = (props: any) => {
   // ** Hooks
   const router = useRouter()
 
-  
+  const [AdminsTxidList, setAdminsTxidList] = useState<string[]>([])
   const [AdminsList, setAdminsList] = useState<any[]>([])
   const [MembersList, setMembersList] = useState<any[]>([])
   const [ApplicantsList, setApplicantsList] = useState<any[]>([])
@@ -98,6 +101,7 @@ const MembersList = (props: any) => {
       const Admins: string[] = getChivesChatGetMembers[0] ?? []
       const Members: any = getChivesChatGetMembers[1] ?? {}
       const Applicants: any = getChivesChatGetMembers[2] ?? {}
+      setAdminsTxidList(Admins)
       console.log("getChivesChatGetMembers11 getChivesChatGetMembers", getChivesChatGetMembers)
       console.log("getChivesChatGetMembers11 Admins", Admins)
       console.log("getChivesChatGetMembers11 Members", Members)
@@ -171,8 +175,80 @@ const MembersList = (props: any) => {
 
       return memberArrayToMap !== null
         ? memberArrayToMap.map((Member: any, index: number) => {
-            const activeCondition =
-              active !== null && active.id === Member.MemberId && active.type === 'Member'
+            const activeCondition = active !== null && active.id === Member.MemberId && active.type === 'Member'
+
+            const optionsMenus = [
+              {
+                text: 'Profile',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    setMember(Member)
+                    setUserProfileRightOpen(true)
+                  }
+                }
+              },
+              {
+                text: 'Message',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    navigator.clipboard.writeText(Member.MemberId);
+                  }
+                }
+              },
+              {
+                text: 'Add Friend',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    navigator.clipboard.writeText(Member.MemberId);
+                  }
+                }
+              },
+              {
+                text: 'Block',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    navigator.clipboard.writeText(Member.MemberId);
+                  }
+                }
+              },
+              {
+                text: 'Copy UserId',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    navigator.clipboard.writeText(Member.MemberId);
+                  }
+                }
+              }
+            ]
+
+            if(isOwner && !AdminsTxidList.includes(Member.MemberId)) {
+              optionsMenus.push({
+                text: 'Set Admin',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    handleAddChannelAdmin(Member.MemberId)
+                  }
+                }
+              })
+            }
+
+            if(isOwner && AdminsTxidList.includes(Member.MemberId)) {
+              optionsMenus.push({
+                text: 'Cancel Admin',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    handleDelChannelAdmin(Member.MemberId)
+                  }
+                }
+              })
+            }
 
             return (
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
@@ -235,63 +311,7 @@ const MembersList = (props: any) => {
                     icon={<Icon icon='mdi:dots-vertical' fontSize='1.25rem' />}
                     menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4, minWidth: 130 } } }}
                     iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                    options={[
-                      {
-                        text: 'Profile',
-                        menuItemProps: {
-                          sx: { py: 2 },
-                          onClick: () => {
-                            setMember(Member)
-                            setUserProfileRightOpen(true)
-                          }
-                        }
-                      },
-                      {
-                        text: 'Message',
-                        menuItemProps: {
-                          sx: { py: 2 },
-                          onClick: () => {
-                            navigator.clipboard.writeText(Member.MemberId);
-                          }
-                        }
-                      },
-                      {
-                        text: 'Add Friend',
-                        menuItemProps: {
-                          sx: { py: 2 },
-                          onClick: () => {
-                            navigator.clipboard.writeText(Member.MemberId);
-                          }
-                        }
-                      },
-                      {
-                        text: 'Block',
-                        menuItemProps: {
-                          sx: { py: 2 },
-                          onClick: () => {
-                            navigator.clipboard.writeText(Member.MemberId);
-                          }
-                        }
-                      },
-                      {
-                        text: 'Copy UserId',
-                        menuItemProps: {
-                          sx: { py: 2 },
-                          onClick: () => {
-                            navigator.clipboard.writeText(Member.MemberId);
-                          }
-                        }
-                      },
-                      {
-                        text: 'Set Admin',
-                        menuItemProps: {
-                          sx: { py: 2 },
-                          onClick: () => {
-                            navigator.clipboard.writeText(Member.MemberId);
-                          }
-                        }
-                      }
-                    ]}
+                    options={optionsMenus}
                   />
                 </ListItemButton>
               </ListItem>

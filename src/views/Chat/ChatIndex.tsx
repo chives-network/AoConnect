@@ -22,14 +22,17 @@ import { ChatChatInit } from 'src/functions/ChatBook'
 import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
-import { GetMyInboxMsg, GetMyInboxLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels } from 'src/functions/AoConnect/ChivesChat'
+import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
 import UserProfileRight from 'src/views/Chat/UserProfileRight'
 
 import {  } from 'src/functions/AoConnect/MsgReminder'
+
+const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+
 
 
 const AppChat = (props: any) => {
@@ -84,6 +87,10 @@ const AppChat = (props: any) => {
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [counter, setCounter] = useState<number>(0)
+  const [membersCounter, setMembersCounter] = useState<number>(0)
+  
+  //const [channelsCounter, setChannelsCounter] = useState<number>(0)
+  //const [messagesCounter, setMessagesCounter] = useState<number>(0)
 
   useEffect(() => {
     let timeoutId: any = null;
@@ -119,6 +126,12 @@ const AppChat = (props: any) => {
       }
     };
   }, [t, currentAddress, id]);
+
+  useEffect(() => {
+    if(membersCounter>0) {
+      handleGetAllMembers();
+    }
+  }, [membersCounter]);
   
   const handleGetLastMessage = async function () {
     await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox-2]')
@@ -133,13 +146,70 @@ const AppChat = (props: any) => {
     //console.log("handleGetLastMessage counter", counter)
   }
 
+  const handleAddChannelAdmin = async function (MemberId: string) {
+    toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+    if(id != myProcessTxId)  {
+      toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+    }
+    const AddAdminByMemberId = await ChivesChatAddAdmin(currentWallet.jwk, id, myProcessTxId, MemberId)
+    if(AddAdminByMemberId) {
+      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+      console.log("handleAddChannelAdmin AddAdminByMemberId", AddAdminByMemberId)
+      if(AddAdminByMemberId?.msg?.Output?.data?.output)  {
+        const formatText = AddAdminByMemberId?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          console.log("handleAddChannelAdmin formatText", formatText)
+
+          //Read message from inbox
+          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+            }
+          }
+          setMembersCounter(membersCounter + 1)
+
+        }
+      }
+    }
+  }
+
+  const handleDelChannelAdmin = async function (MemberId: string) {
+    toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+    if(id != myProcessTxId)  {
+      toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+    }
+    const DelAdminByMemberId = await ChivesChatDelAdmin(currentWallet.jwk, id, myProcessTxId, MemberId)
+    if(DelAdminByMemberId) {
+      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+      console.log("handleDelChannelAdmin DelAdminByMemberId", DelAdminByMemberId)
+      if(DelAdminByMemberId?.msg?.Output?.data?.output)  {
+        const formatText = DelAdminByMemberId?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          console.log("handleDelChannelAdmin formatText", formatText)
+
+          //Read message from inbox
+          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+            }
+          }
+          setMembersCounter(membersCounter + 1)
+
+        }
+      }
+    }
+  }
+
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
     getChatLogList()
     await GetMyInboxMsg(currentWallet.jwk, id)
     
     //setProcessingMessages([])
-    setCounter(counter+1)
     getChatLogList()
     
     //console.log("handleGetAllMessages counter", counter)
@@ -374,6 +444,9 @@ const AppChat = (props: any) => {
         setMember={setMember}
         setUserProfileRightOpen={setUserProfileRightOpen}
         setAllMembers={setAllMembers}
+        handleAddChannelAdmin={handleAddChannelAdmin}
+        handleDelChannelAdmin={handleDelChannelAdmin}
+        isOwner={id == myProcessTxId ? true : false}
       />
       <UserProfileRight
         member={member}
