@@ -23,12 +23,13 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
 import UserProfileRight from 'src/views/Chat/UserProfileRight'
 import MembersInvite from 'src/views/Chat/MembersInvite'
+import MembersApplicant from 'src/views/Chat/MembersApplicant'
 
 import {  } from 'src/functions/AoConnect/MsgReminder'
 
@@ -50,8 +51,12 @@ const AppChat = (props: any) => {
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
   const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
   const [allMembers, setAllMembers] = useState<any>({})
+
   const [openMembersInvite, setOpenMembersInvite] = useState<boolean>(false)
   const [valueMembersInvite, setValueMembersInvite] = useState<string>('W8KNkIsXPTxIM9dBlVkZD7AM2IjyHrHIoSbQPZ3fOFk\nK4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw\nJQbi-qZBHWQCCl3BoPEwWOfGzNlYhxK0DmlwQlBb4cM')
+
+  const [openMembersApplicant, setOpenMembersApplicant] = useState<boolean>(false)
+  const [valueMembersApplicant, setValueMembersApplicant] = useState<any[]>([])
 
   const [member, setMember] = useState<any>(null)
   
@@ -235,6 +240,36 @@ const AppChat = (props: any) => {
     }
   }
 
+  const handleApplicantMember = async function (Applicants: string, Action: string) {
+    toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+    if(id != myProcessTxId)  {
+      toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+    }
+    console.log("Action", Action)
+
+    const ChivesChatApprovalApplyMembers = await ChivesChatApprovalApply(currentWallet.jwk, id, myProcessTxId, Applicants, "Applicant Member", "Administrator approval your request")
+    if(ChivesChatApprovalApplyMembers) {
+      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+      console.log("handleApplicantMember ChivesChatApprovalApplyMembers", ChivesChatApprovalApplyMembers)
+      if(ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          console.log("handleApplicantMember formatText", formatText)
+
+          //Read message from inbox
+          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+            }
+          }
+          setMembersCounter(membersCounter + 1)
+          
+        }
+      }
+    }
+  }
 
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
@@ -481,6 +516,7 @@ const AppChat = (props: any) => {
         isOwner={id == myProcessTxId ? true : false}
         app={app}
         setOpenMembersInvite={setOpenMembersInvite}
+        setOpenMembersApplicant={setOpenMembersApplicant}
       />
       <UserProfileRight
         member={member}
@@ -491,6 +527,7 @@ const AppChat = (props: any) => {
         handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
       />
       <MembersInvite openMembersInvite={openMembersInvite} setOpenMembersInvite={setOpenMembersInvite} valueMembersInvite={valueMembersInvite} setValueMembersInvite={setValueMembersInvite} handleInviteMember={handleInviteMember} />
+      <MembersApplicant openMembersApplicant={openMembersApplicant} setOpenMembersApplicant={setOpenMembersApplicant} valueMembersApplicant={valueMembersApplicant} setValueMembersApplicant={setValueMembersApplicant} handleApplicantMember={handleApplicantMember} />
       </Box>
     </Fragment>
   )

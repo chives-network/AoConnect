@@ -9,6 +9,7 @@ import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import Badge from '@mui/material/Badge'
 import Drawer from '@mui/material/Drawer'
+import Button from '@mui/material/Button'
 import MuiAvatar from '@mui/material/Avatar'
 import ListItem from '@mui/material/ListItem'
 import TextField from '@mui/material/TextField'
@@ -81,7 +82,9 @@ const MembersList = (props: any) => {
     handleAddChannelAdmin,
     handleDelChannelAdmin,
     isOwner,
-    setOpenMembersInvite
+    setOpenMembersInvite,
+    setOpenMembersApplicant,
+    setValueMembersApplicant
   } = props
 
   // ** States
@@ -97,6 +100,7 @@ const MembersList = (props: any) => {
   const [AdminsList, setAdminsList] = useState<any[]>([])
   const [MembersList, setMembersList] = useState<any[]>([])
   const [ApplicantsList, setApplicantsList] = useState<any[]>([])
+  const [ApplicantsRecords, setApplicantsRecords] = useState<any[]>([])
 
   
   useEffect(() => {
@@ -131,6 +135,8 @@ const MembersList = (props: any) => {
         setAdminsList(AdminsListData)
         setMembersList(MembersListData)
         setApplicantsList(Applicants)
+        setApplicantsRecords(Object.values(Applicants))
+        setValueMembersApplicant(Object.values(Applicants))
       }
       else {
         const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) && (item.MemberId.toLowerCase().includes(query) || item.MemberName.toLowerCase().includes(query.toLowerCase())) )
@@ -139,7 +145,8 @@ const MembersList = (props: any) => {
         setAdminsList(AdminsListData)
         setMembersList(MembersListData)
         setApplicantsList(Applicants)
-
+        setApplicantsRecords(Object.values(Applicants))
+        setValueMembersApplicant(Object.values(Applicants))
       }
     }
     
@@ -399,7 +406,7 @@ const MembersList = (props: any) => {
             </Badge>
           ) : null}
 
-          {!loadingGetMembers && 
+          {!loadingGetMembers && ApplicantsRecords.length == 0 && 
             <Fragment>
               <TextField
                 fullWidth
@@ -422,8 +429,26 @@ const MembersList = (props: any) => {
                 <Icon icon='mdi:plus' />
               </Fab>
             </Fragment>
-            
           }
+
+          {!loadingGetMembers && ApplicantsRecords.length > 0 && 
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Fragment>
+                <Button variant='contained' endIcon={<Icon icon='mdi:bell-outline' />} onClick={()=>{
+                  setOpenMembersApplicant(true)
+                }}>
+                  {ApplicantsRecords.length}
+                </Button>
+                <Fab color='primary' aria-label='add' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
+                  setOpenMembersInvite(true)
+                }}>
+                  <Icon icon='mdi:plus' />
+                </Fab>
+              </Fragment>
+            </div>
+          }
+
+
           
           {loadingGetMembers && <CircularProgress size={20} /> }
 
