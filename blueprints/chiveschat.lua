@@ -621,50 +621,34 @@ Handlers.add(
     end
 
     if isAdmin then
-      local memberIds = {}
-      for memberId in string.gmatch(msg.MemberId, '([^\\n]+)') do
-        table.insert(memberIds, memberId)
-      end
-
-      for _, memberId in ipairs(memberIds) do
-        if #memberId == 43 then
-          if not Members[memberId] then
-            if Applicants[memberId] then
-              Members[memberId] = Applicants[memberId]
-              Applicants[memberId] = nil
-              ao.send({
-                Target = msg.From,
-                Data = "User successfully approved " .. memberId
-              })
-              ao.send({
-                Target = memberId,
-                Data = "Your application has been approved. Welcome to the chatroom " .. ao.id
-              })
-            else 
-              ao.send({
-                Target = msg.From,
-                Action = 'ApprovalApply-Error',
-                ['Message-Id'] = msg.Id,
-                Error = 'This member is not listed in the applicants or has already been approved'
-              })
-            end
-          else
-            Applicants[memberId] = nil
-            ao.send({
-              Target = msg.From,
-              Action = 'ApprovalApply-Error',
-              ['Message-Id'] = msg.Id,
-              Error = 'This member has joined'
-            })
-          end
-        else
+      if not Members[msg.MemberId] then
+        if Applicants[msg.MemberId] then
+          Members[msg.MemberId] = Applicants[msg.MemberId]
+          Applicants[msg.MemberId] = nil
+          ao.send({
+            Target = msg.From,
+            Data = "User successfully approved " .. msg.MemberId
+          })
+          ao.send({
+            Target = msg.MemberId,
+            Data = "Your application has been approved. Welcome to the chatroom " .. ao.id
+          })
+        else 
           ao.send({
             Target = msg.From,
             Action = 'ApprovalApply-Error',
             ['Message-Id'] = msg.Id,
-            Error = 'Invalid member ID length'
+            Error = 'This member is not listed in the applicants or has already been approved'
           })
         end
+      else
+        Applicants[msg.MemberId] = nil
+        ao.send({
+          Target = msg.From,
+          Action = 'ApprovalApply-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'This member has joined'
+        })
       end
     else 
       ao.send({
