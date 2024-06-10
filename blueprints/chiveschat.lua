@@ -696,8 +696,10 @@ Handlers.add(
 
     if isAdmin then
       local memberIds = {}
-      for memberId in string.gmatch(msg.MemberId, '([^\\n]+)') do
-        table.insert(memberIds, memberId)
+      for memberId in string.gmatch(msg.MemberId, '([^*]+)') do
+        if #memberId == 43 then
+          table.insert(memberIds, memberId)
+        end
       end
       for _, memberId in ipairs(memberIds) do
         if #memberId == 43 then
@@ -736,39 +738,6 @@ Handlers.add(
         Error = 'Only administrators can approve'
       })
     end
-  end
-)
-
-Handlers.add(
-  "RefuseApply",
-  Handlers.utils.hasMatchingTag("Action", "RefuseApply"),
-  function (msg)
-    local isAdmin = false
-    if msg.From == ao.id then
-      isAdmin = true
-    end
-    for _, Admin in ipairs(Admins) do
-        if Admin == msg.From then
-            isAdmin = true
-            break
-        end
-    end
-
-    if isAdmin then
-      if Applicants[msg.MemberId] then
-        
-      else
-          
-      end
-    else 
-      ao.send({
-        Target = msg.From,
-        Action = 'RefuseApply-Error',
-        ['Message-Id'] = msg.Id,
-        Error = 'Only an administrator can refuse a invite'
-      })
-    end
-
   end
 )
 
