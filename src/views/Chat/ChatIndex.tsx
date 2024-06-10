@@ -23,7 +23,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
@@ -256,25 +256,51 @@ const AppChat = (props: any) => {
     }
     console.log("Action", Action)
 
-    const ChivesChatApprovalApplyMembers = await ChivesChatApprovalApply(currentWallet.jwk, id, myProcessTxId, Applicants, "Applicant Member", "Administrator approval your request")
-    if(ChivesChatApprovalApplyMembers) {
-      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-      console.log("handleApplicantMember ChivesChatApprovalApplyMembers", ChivesChatApprovalApplyMembers)
-      if(ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-          console.log("handleApplicantMember formatText", formatText)
+    if(Action == 'Accept')  {
+      const ChivesChatApprovalApplyMembers = await ChivesChatApprovalApply(currentWallet.jwk, id, myProcessTxId, Applicants, "Applicant Member", "Administrator approval your request")
+      if(ChivesChatApprovalApplyMembers) {
+        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+        console.log("handleApplicantMember ChivesChatApprovalApplyMembers", ChivesChatApprovalApplyMembers)
+        if(ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+            console.log("handleApplicantMember formatText", formatText)
 
-          //Read message from inbox
-          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+            //Read message from inbox
+            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+              }
             }
+            setMembersCounter(membersCounter + 1)
+            
           }
-          setMembersCounter(membersCounter + 1)
-          
+        }
+      }
+    }
+    if(Action == 'Refuse')  {
+      const ChivesChatRefuseApplyMembers = await ChivesChatRefuseApply(currentWallet.jwk, id, myProcessTxId, Applicants, "Applicant Member", "Administrator approval your request")
+      if(ChivesChatRefuseApplyMembers) {
+        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+        console.log("handleApplicantMember ChivesChatRefuseApplyMembers", ChivesChatRefuseApplyMembers)
+        if(ChivesChatRefuseApplyMembers?.msg?.Output?.data?.output)  {
+          const formatText = ChivesChatRefuseApplyMembers?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+            console.log("handleApplicantMember formatText", formatText)
+
+            //Read message from inbox
+            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+              }
+            }
+            setMembersCounter(membersCounter + 1)
+            
+          }
         }
       }
     }

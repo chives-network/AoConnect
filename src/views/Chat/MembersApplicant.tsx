@@ -112,7 +112,13 @@ const MembersApplicant = (props: any) => {
                 <Button size="small" variant='outlined' disabled={isDisabledButton} onClick={
                     () => { 
                         setOpenMembersApplicant(false)
-                        handleApplicantMember("ALL", "Refuse")
+                        const AllApplicantsList = valueMembersApplicant.map((Applicant: any) => {  
+
+                            return Applicant.MemberId;
+                        });
+                        const ApplicantsListAll = AllApplicantsList.join('****');
+                        console.log("ApplicantsListAll", ApplicantsListAll);
+                        handleApplicantMember(ApplicantsListAll, "Refuse")
                     }
                 }>
                 {t("Refuse All")}
@@ -120,7 +126,13 @@ const MembersApplicant = (props: any) => {
                 <Button size="small" variant='contained' disabled={isDisabledButton} onClick={
                     () => { 
                         setOpenMembersApplicant(false)
-                        handleApplicantMember("ALL", "Accept")
+                        const AllApplicantsList = valueMembersApplicant.map((Applicant: any) => {  
+
+                            return Applicant.MemberId;
+                        });
+                        const ApplicantsListAll = AllApplicantsList.join('****');
+                        console.log("ApplicantsListAll", ApplicantsListAll);
+                        handleApplicantMember(ApplicantsListAll, "Accept")
                     }
                 }>
                 {t('Accept All')}
