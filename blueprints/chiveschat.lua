@@ -36,12 +36,12 @@
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
 -- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
 -- Setting Channels (need owner role to call)
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "1", ChannelName = "Announcement", ChannelGroup = "Welcome", ChannelSort = "1", ChannelWritePermission = "Owner" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "2", ChannelName = "Rules", ChannelGroup = "Welcome", ChannelSort = "2", ChannelWritePermission = "Owner" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "3", ChannelName = "Introduction", ChannelGroup = "Introduction", ChannelSort = "3" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "4", ChannelName = "Community", ChannelGroup = "Community", ChannelSort = "4" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "5", ChannelName = "Support", ChannelGroup = "Community", ChannelSort = "5" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "6", ChannelName = "Admin Team", ChannelGroup = "Administrators", ChannelSort = "6", ChannelReadPermission = "Owner,Admin" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "1", ChannelName = "Announcement", ChannelGroup = "Welcome", ChannelSort = "1", ChannelIntro = "ChannelIntro", ChannelWritePermission = "Owner" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "2", ChannelName = "Rules", ChannelGroup = "Welcome", ChannelSort = "2", ChannelIntro = "ChannelIntro", ChannelWritePermission = "Owner" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "3", ChannelName = "Introduction", ChannelGroup = "Introduction", ChannelSort = "3", ChannelIntro = "ChannelIntro" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "4", ChannelName = "Community", ChannelGroup = "Community", ChannelSort = "4", ChannelIntro = "ChannelIntro" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "5", ChannelName = "Support", ChannelGroup = "Community", ChannelSort = "5", ChannelIntro = "ChannelIntro" })
+-- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "6", ChannelName = "Admin Team", ChannelGroup = "Administrators", ChannelSort = "6", ChannelIntro = "ChannelIntro", ChannelReadPermission = "Owner,Admin" })
 
 Owners = Owners or {}
 Admins = Admins or {}
@@ -175,7 +175,8 @@ Handlers.add(
           ChannelId = msg.ChannelId,
           ChannelName = msg.ChannelName,
           ChannelGroup = msg.ChannelGroup,
-          ChannelSort = msg.ChannelSort
+          ChannelSort = msg.ChannelSort,
+          ChannelIntro = msg.ChannelIntro
         }
         Handlers.utils.reply("Has save channel")(msg)
         ao.send({
@@ -189,6 +190,35 @@ Handlers.add(
           Action = 'AddChannel-Error',
           ['Message-Id'] = msg.Id,
           Error = 'Only the owner can add a channel'
+        })
+    end
+  end
+)
+
+Handlers.add(
+  "EditChannel",
+  Handlers.utils.hasMatchingTag("Action", "EditChannel"),
+  function (msg)
+    if msg.From == ao.id then
+        Channels[msg.ChannelId] = {
+          ChannelId = msg.ChannelId,
+          ChannelName = msg.ChannelName,
+          ChannelGroup = msg.ChannelGroup,
+          ChannelSort = msg.ChannelSort,
+          ChannelIntro = msg.ChannelIntro
+        }
+        Handlers.utils.reply("Has save channel")(msg)
+        ao.send({
+            Target = msg.From,
+            Data = "Successfully edit a channel"
+        })
+
+    else
+        ao.send({
+          Target = msg.From,
+          Action = 'EditChannel-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'Only the owner can edit a channel'
         })
     end
   end

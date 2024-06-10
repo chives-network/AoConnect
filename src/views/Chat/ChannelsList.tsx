@@ -24,7 +24,9 @@ import { getInitials } from 'src/@core/utils/get-initials'
 
 import { useTranslation } from 'react-i18next'
 
+import Icon from 'src/@core/components/icon'
 import CircularProgress from '@mui/material/CircularProgress'
+import OptionsMenu from 'src/@core/components/option-menu'
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
   if (hidden) {
@@ -43,7 +45,10 @@ const ChannelsList = (props: any) => {
     getChivesChatGetChannels,
     leftSidebarOpen,
     handleLeftSidebarToggle,
-    loadingGetChannels
+    loadingGetChannels,
+    isOwner,
+    setOpenChannelEdit,
+    handleAddOrEditOrDelChannel
   } = props
 
   // ** States
@@ -105,8 +110,57 @@ const ChannelsList = (props: any) => {
 
         return channelArrayToMap !== null
           ? channelArrayToMap.map((Channel: any, index: number) => {
-              const activeCondition =
-                active !== null && active === Channel.ChannelId
+              const activeCondition = active !== null && active === Channel.ChannelId
+
+              const optionsMenus = [
+                {
+                  text: 'Copy ChannelId',
+                  menuItemProps: {
+                    sx: { py: 2 },
+                    onClick: () => {
+                      navigator.clipboard.writeText(Channel.ChannelId);
+                    }
+                  }
+                }
+              ]
+  
+              if(isOwner) {
+                optionsMenus.push({
+                  text: 'Edit Channel',
+                  menuItemProps: {
+                    sx: { py: 2 },
+                    onClick: () => {
+                      setOpenChannelEdit((prevState: any)=>({
+                        ...prevState,
+                        add: false,
+                        edit: true,
+                        del: false,
+                        open: true,
+                        Channel: Channel
+                      }))
+                    }
+                  }
+                })
+              }
+  
+              if(isOwner) {
+                optionsMenus.push({
+                  text: 'Del Channel',
+                  menuItemProps: {
+                    sx: { py: 2 },
+                    onClick: () => {
+                      setOpenChannelEdit((prevState: any)=>({
+                        ...prevState,
+                        add: false,
+                        edit: false,
+                        del: true,
+                        open: false
+                      }))
+                      handleAddOrEditOrDelChannel('Del')
+                    }
+                  }
+                })
+              }
 
               return (
                 <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
@@ -148,6 +202,14 @@ const ChannelsList = (props: any) => {
                         <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Channel.ChannelName}</Typography>
                       }
                     />
+                    {optionsMenus && optionsMenus.length > 0 && (
+                      <OptionsMenu
+                        icon={<Icon icon='mdi:dots-vertical' fontSize='1.25rem' />}
+                        menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4, minWidth: 130 } } }}
+                        iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                        options={optionsMenus}
+                      />
+                    )}
                   </ListItemButton>
                 </ListItem>
               )

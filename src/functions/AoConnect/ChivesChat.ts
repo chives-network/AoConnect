@@ -440,7 +440,7 @@ export const ChivesChatDelMember = async (currentWalletJwk: any, chatroomTxId: s
   
 }
 
-export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, ChannelId: string, ChannelName: string, ChannelGroup: string, ChannelSort: string, ChannelWritePermission: string) => {
+export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, ChannelId: string, ChannelName: string, ChannelGroup: string, ChannelSort: string, ChannelIntro: string, ChannelWritePermission: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -448,7 +448,7 @@ export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: 
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + chatroomTxId + '", Action = "AddChannel", ChannelId = "' + ChannelId + '", ChannelName = "' + ChannelName + '", ChannelGroup = "' + ChannelGroup + '", ChannelSort = "' + ChannelSort + '", ChannelWritePermission = "' + ChannelWritePermission + '"})',
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "AddChannel", ChannelId = "' + ChannelId + '", ChannelName = "' + ChannelName + '", ChannelGroup = "' + ChannelGroup + '", ChannelSort = "' + ChannelSort + '", ChannelIntro = "' + ChannelIntro + '", ChannelWritePermission = "' + ChannelWritePermission + '"})',
         });
         console.log("ChivesChatAddChannel GetChivesChatAddChannelResult", GetChivesChatAddChannelResult)
         
@@ -464,6 +464,62 @@ export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: 
     }
     catch(Error: any) {
         console.error("ChivesChatAddChannel Error:", Error)
+    }
+  
+}
+
+export const ChivesChatEditChannel = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, ChannelId: string, ChannelName: string, ChannelGroup: string, ChannelSort: string, ChannelIntro: string, ChannelWritePermission: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatEditChannelResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "EditChannel", ChannelId = "' + ChannelId + '", ChannelName = "' + ChannelName + '", ChannelGroup = "' + ChannelGroup + '", ChannelSort = "' + ChannelSort + '", ChannelIntro = "' + ChannelIntro + '", ChannelWritePermission = "' + ChannelWritePermission + '"})',
+        });
+        console.log("ChivesChatEditChannel GetChivesChatEditChannelResult", GetChivesChatEditChannelResult)
+        
+        if(GetChivesChatEditChannelResult && GetChivesChatEditChannelResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatEditChannelResult)
+
+            return { id: GetChivesChatEditChannelResult, msg: MsgContent };
+        }
+        else {
+            
+            return { id: GetChivesChatEditChannelResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesChatEditChannel Error:", Error)
+    }
+  
+}
+
+export const ChivesChatDelChannel = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, ChannelId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetChivesChatDelChannelResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + chatroomTxId + '", Action = "DelChannel", ChannelId = "' + ChannelId + '"})',
+        });
+        console.log("ChivesChatDelChannel GetChivesChatDelChannelResult", GetChivesChatDelChannelResult)
+        
+        if(GetChivesChatDelChannelResult && GetChivesChatDelChannelResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelChannelResult)
+
+            return { id: GetChivesChatDelChannelResult, msg: MsgContent };
+        }
+        else {
+            
+            return { id: GetChivesChatDelChannelResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesChatDelChannel Error:", Error)
     }
   
 }

@@ -23,18 +23,19 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatDelMember } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
 import UserProfileRight from 'src/views/Chat/UserProfileRight'
 import MembersInvite from 'src/views/Chat/MembersInvite'
 import MembersApplicant from 'src/views/Chat/MembersApplicant'
+import ChannelEdit from 'src/views/Chat/ChannelEdit'
+
 
 import {  } from 'src/functions/AoConnect/MsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-
 
 
 const AppChat = (props: any) => {
@@ -57,6 +58,9 @@ const AppChat = (props: any) => {
 
   const [openMembersApplicant, setOpenMembersApplicant] = useState<boolean>(false)
   const [valueMembersApplicant, setValueMembersApplicant] = useState<any[]>([])
+
+  const [openChannelEdit, setOpenChannelEdit] = useState<any>({add: false, edit: false, del: false, open: false})
+  
 
   const [member, setMember] = useState<any>(null)
   
@@ -86,7 +90,6 @@ const AppChat = (props: any) => {
     setMember(null)
   }
 
-
   const auth = useAuth()
   const currentWallet = auth.currentWallet
 
@@ -96,8 +99,8 @@ const AppChat = (props: any) => {
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [counter, setCounter] = useState<number>(0)
   const [membersCounter, setMembersCounter] = useState<number>(0)
+  const [channelsCounter, setChannelsCounter] = useState<number>(0)
   
-  //const [channelsCounter, setChannelsCounter] = useState<number>(0)
   //const [messagesCounter, setMessagesCounter] = useState<number>(0)
 
   useEffect(() => {
@@ -140,6 +143,12 @@ const AppChat = (props: any) => {
       handleGetAllMembers();
     }
   }, [membersCounter]);
+
+  useEffect(() => {
+    if(channelsCounter>0) {
+      handleGetAllChannels();
+    }
+  }, [channelsCounter]);
   
   const handleGetLastMessage = async function () {
     await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox-2]')
@@ -421,6 +430,96 @@ const AppChat = (props: any) => {
       }
     }
   }
+
+  const handleAddOrEditOrDelChannel = async function (Action: string) {
+    if(Action=='Add')  {
+      toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+      if(id != myProcessTxId)  {
+        toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+      }
+      const AddChannel = await ChivesChatAddChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort, openChannelEdit.Channel.ChannelIntro, "Owner")
+      if(AddChannel) {
+        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+        console.log("handleAddOrEditOrDelChannel AddChannel", AddChannel)
+        if(AddChannel?.msg?.Output?.data?.output)  {
+          const formatText = AddChannel?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+            console.log("handleAddOrEditOrDelChannel formatText", formatText)
+
+            //Read message from inbox
+            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+              }
+            }
+            setChannelsCounter(channelsCounter + 1)
+
+          }
+        }
+      }
+    }
+
+    if(Action=='Edit')  {
+      toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+      if(id != myProcessTxId)  {
+        toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+      }
+      const EditChannel = await ChivesChatEditChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort, openChannelEdit.Channel.ChannelIntro, "Owner")
+      if(EditChannel) {
+        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+        console.log("handleEditOrEditOrDelChannel EditChannel", EditChannel)
+        if(EditChannel?.msg?.Output?.data?.output)  {
+          const formatText = EditChannel?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+            console.log("handleEditOrEditOrDelChannel formatText", formatText)
+
+            //Read message from inbox
+            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+              }
+            }
+            setChannelsCounter(channelsCounter + 1)
+
+          }
+        }
+      }
+    }
+
+    if(Action=='Del')  {
+      toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+      if(id != myProcessTxId)  {
+        toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+      }
+      const DelChannel = await ChivesChatDelChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId)
+      if(DelChannel) {
+        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+        console.log("handleDelOrEditOrDelChannel DelChannel", DelChannel)
+        if(DelChannel?.msg?.Output?.data?.output)  {
+          const formatText = DelChannel?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+            console.log("handleDelOrEditOrDelChannel formatText", formatText)
+
+            //Read message from inbox
+            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+              }
+            }
+            setChannelsCounter(channelsCounter + 1)
+
+          }
+        }
+      }
+    }
+
+  }
   
   // ** States
   const [store, setStore] = useState<any>(null)
@@ -489,6 +588,7 @@ const AppChat = (props: any) => {
           ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
         }}
       >
+
       <ChannelsList
         store={store}
         hidden={hidden}
@@ -502,7 +602,11 @@ const AppChat = (props: any) => {
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
         loadingGetChannels={loadingGetChannels}
+        isOwner={id == myProcessTxId ? true : false}
+        setOpenChannelEdit={setOpenChannelEdit}
+        handleAddOrEditOrDelChannel={handleAddOrEditOrDelChannel}
       />
+
       <ChatContent
         store={store}
         hidden={hidden}
@@ -524,6 +628,7 @@ const AppChat = (props: any) => {
         setUserProfileRightOpen={setUserProfileRightOpen}
         allMembers={allMembers}
       />
+
       <MembersList
         store={store}
         hidden={hidden}
@@ -549,6 +654,7 @@ const AppChat = (props: any) => {
         setOpenMembersApplicant={setOpenMembersApplicant}
         setValueMembersApplicant={setValueMembersApplicant}
       />
+
       <UserProfileRight
         member={member}
         hidden={hidden}
@@ -557,8 +663,13 @@ const AppChat = (props: any) => {
         userProfileRightOpen={userProfileRightOpen}
         handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
       />
+
       <MembersInvite openMembersInvite={openMembersInvite} setOpenMembersInvite={setOpenMembersInvite} valueMembersInvite={valueMembersInvite} setValueMembersInvite={setValueMembersInvite} handleInviteMember={handleInviteMember} />
+      
       <MembersApplicant openMembersApplicant={openMembersApplicant} setOpenMembersApplicant={setOpenMembersApplicant} valueMembersApplicant={valueMembersApplicant} handleApplicantMember={handleApplicantMember} />
+
+      <ChannelEdit openChannelEdit={openChannelEdit} setOpenChannelEdit={setOpenChannelEdit} handleAddOrEditOrDelChannel={handleAddOrEditOrDelChannel} />
+      
       </Box>
     </Fragment>
   )
