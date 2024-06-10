@@ -142,6 +142,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
+    await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminOne, AdminOne, "AdminOne", "AdminOne Reason")
     const ChivesChatAddAdminOne = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminOne)
     if(ChivesChatAddAdminOne) {
       console.log("ChivesChatAddAdminOne", ChivesChatAddAdminOne)
@@ -187,6 +188,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
+    await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminOne, AdminTwo, "AdminTwo", "AdminTwo Reason")
     const ChivesChatAddAdminTwo = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminTwo)
     if(ChivesChatAddAdminTwo) {
       console.log("ChivesChatAddAdminTwo", ChivesChatAddAdminTwo)

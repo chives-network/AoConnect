@@ -591,60 +591,6 @@ Handlers.add(
     end
 
     if isAdmin then
-      if not Members[msg.MemberId] then
-        if Applicants[msg.MemberId] then
-          Members[msg.MemberId] = Applicants[msg.MemberId]
-          ao.send({
-            Target = msg.From,
-            Data = "User successfully approved " .. msg.MemberId
-          })
-          ao.send({
-            Target = msg.MemberId,
-            Data = "Your application has been approved. Welcome to the chatroom " .. ao.id
-          })
-        else 
-          ao.send({
-            Target = msg.From,
-            Action = 'ApprovalApply-Error',
-            ['Message-Id'] = msg.Id,
-            Error = 'This member is not listed in the applicants or has already been approved'
-          })
-        end
-      else
-        ao.send({
-          Target = msg.From,
-          Action = 'ApprovalApply-Error',
-          ['Message-Id'] = msg.Id,
-          Error = 'This member has joined'
-        })
-      end
-    else 
-      ao.send({
-        Target = msg.From,
-        Action = 'ApprovalApply-Error',
-        ['Message-Id'] = msg.Id,
-        Error = 'Only administrators can approve'
-      })
-    end
-  end
-)
-
-Handlers.add(
-  "ApprovalApplyMulti",
-  Handlers.utils.hasMatchingTag("Action", "ApprovalApplyMulti"),
-  function (msg)
-    local isAdmin = false
-    if msg.From == ao.id then
-      isAdmin = true
-    end
-    for _, Admin in ipairs(Admins) do
-        if Admin == msg.From then
-            isAdmin = true
-            break
-        end
-    end
-
-    if isAdmin then
       local memberIds = {}
       for memberId in string.gmatch(msg.MemberId, '([^\\n]+)') do
         table.insert(memberIds, memberId)
