@@ -127,7 +127,7 @@ const ChivesChat = () => {
       ...prevState,
       'Testing Admin Role': '....................................................'
     }))
-
+    
     const ChivesChatAdmins1st = await GetChivesChatAdmins(currentWallet.jwk, ChivesChatProcessTxId)
     if(ChivesChatAdmins1st) {
       console.log("ChivesChatAdmins1st", ChivesChatAdmins1st)
@@ -970,7 +970,7 @@ const ChivesChat = () => {
     }
 
     await sleep(500)
-
+       
     const ChivesChatAddChannel5 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "5", "Support", "Community", "5", "")
     if(ChivesChatAddChannel5) {
       console.log("ChivesChatAddChannel5", ChivesChatAddChannel5)
@@ -1037,7 +1037,7 @@ const ChivesChat = () => {
     if(ChivesChatGetChannelsData) {
       setToolInfo((prevState: any)=>({
         ...prevState,
-        'ChivesChatGetChannelsData(2 channels)': ChivesChatGetChannelsData
+        'ChivesChatGetChannelsData(2 channels)': JSON.stringify(ChivesChatGetChannelsData)
       }))
     }
 
