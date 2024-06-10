@@ -81,6 +81,7 @@ const MembersList = (props: any) => {
     setAllMembers,
     handleAddChannelAdmin,
     handleDelChannelAdmin,
+    handleKickOutMember,
     isOwner,
     setOpenMembersInvite,
     setOpenMembersApplicant,
@@ -260,6 +261,18 @@ const MembersList = (props: any) => {
               })
             }
 
+            if(isOwner && !AdminsTxidList.includes(Member.MemberId)) {
+              optionsMenus.push({
+                text: 'Kick Out',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    handleKickOutMember(Member.MemberId)
+                  }
+                }
+              })
+            }
+
             return (
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
                 <ListItemButton
@@ -423,7 +436,7 @@ const MembersList = (props: any) => {
                   )
                 }}
               />
-              <Fab color='primary' aria-label='add' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
+              <Fab color='primary' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
                 setOpenMembersInvite(true)
               }}>
                 <Icon icon='mdi:plus' />

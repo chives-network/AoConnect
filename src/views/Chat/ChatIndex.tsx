@@ -23,7 +23,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatDelMember } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
@@ -271,6 +271,35 @@ const AppChat = (props: any) => {
     }
   }
 
+  const handleKickOutMember = async function (MemberId: string) {
+    toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+    if(id != myProcessTxId)  {
+      toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+    }
+    const KictOutMemberByMemberId = await ChivesChatDelMember(currentWallet.jwk, id, myProcessTxId, MemberId)
+    if(KictOutMemberByMemberId) {
+      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
+      console.log("handleKickOutMember KictOutMemberByMemberId", KictOutMemberByMemberId)
+      if(KictOutMemberByMemberId?.msg?.Output?.data?.output)  {
+        const formatText = KictOutMemberByMemberId?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          console.log("handleKickOutMember formatText", formatText)
+
+          //Read message from inbox
+          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
+          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+            }
+          }
+          setMembersCounter(membersCounter + 1)
+
+        }
+      }
+    }
+  }
+
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
     getChatLogList()
@@ -513,6 +542,7 @@ const AppChat = (props: any) => {
         setAllMembers={setAllMembers}
         handleAddChannelAdmin={handleAddChannelAdmin}
         handleDelChannelAdmin={handleDelChannelAdmin}
+        handleKickOutMember={handleKickOutMember}
         isOwner={id == myProcessTxId ? true : false}
         app={app}
         setOpenMembersInvite={setOpenMembersInvite}
