@@ -619,6 +619,7 @@ Handlers.add(
               })
             end
           else
+            Applicants[memberId] = nil
             ao.send({
               Target = msg.From,
               Action = 'ApprovalApply-Error',
@@ -662,23 +663,70 @@ Handlers.add(
     end
 
     if isAdmin then
-      if Applicants[msg.MemberId] then
-        Applicants[msg.MemberId] = nil
-        ao.send({
-          Target = msg.From,
-          Data = "You have refused user " .. msg.MemberName .. " entry to this chatroom " .. ao.id
-        })
-        ao.send({
-          Target = msg.MemberId,
-          Data = "You have been refused entry to this chatroom " .. ao.id .. " Reason: " .. msg.MemberReason
-        })
-      else
+      local memberIds = {}
+      for memberId in string.gmatch(msg.MemberId, '([^\\n]+)') do
+        table.insert(memberIds, memberId)
+      end
+      for _, memberId in ipairs(memberIds) do
+        if #memberId == 43 then
+          if Applicants[memberId] then
+            Applicants[memberId] = nil
+            ao.send({
+              Target = msg.From,
+              Data = "You have refused user " .. msg.MemberName .. " entry to this chatroom " .. ao.id
+            })
+            ao.send({
+              Target = msg.MemberId,
+              Data = "You have been refused entry to this chatroom " .. ao.id .. " Reason: " .. msg.MemberReason
+            })
+          else 
+            ao.send({
+              Target = msg.From,
+              Action = 'RefuseApply-Error',
+              ['Message-Id'] = msg.Id,
+              Error = 'Does not have an invite or has already processed'
+            })
+          end
+        else
           ao.send({
             Target = msg.From,
-            Action = 'RefuseApply-Error',
+            Action = 'ApprovalApply-Error',
             ['Message-Id'] = msg.Id,
-            Error = 'Does not have an invite or has already processed'
+            Error = 'Invalid member ID length'
           })
+        end
+      end
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'ApprovalApply-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only administrators can approve'
+      })
+    end
+  end
+)
+
+Handlers.add(
+  "RefuseApply",
+  Handlers.utils.hasMatchingTag("Action", "RefuseApply"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+
+    if isAdmin then
+      if Applicants[msg.MemberId] then
+        
+      else
+          
       end
     else 
       ao.send({
