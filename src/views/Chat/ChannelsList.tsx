@@ -27,6 +27,8 @@ import { useTranslation } from 'react-i18next'
 import Icon from 'src/@core/components/icon'
 import CircularProgress from '@mui/material/CircularProgress'
 import OptionsMenu from 'src/@core/components/option-menu'
+import IconButton from '@mui/material/IconButton'
+import { getNanoid } from 'src/functions/string.tools'
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
   if (hidden) {
@@ -270,9 +272,23 @@ const ChannelsList = (props: any) => {
 
                 return (
                     <Fragment key={index}>
-                        <Typography variant='h6' sx={{ ml: 3, mb: 1, color: 'primary.main' }}>
-                            {t(ChannelGroupName)}
-                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant='h6' sx={{ color: 'primary.main' }}>
+                                {t(ChannelGroupName)}
+                            </Typography>
+                            <IconButton size="small" edge="end" onClick={()=>{
+                              setOpenChannelEdit((prevState: any)=>({
+                                ...prevState,
+                                add: true,
+                                edit: false,
+                                del: false,
+                                open: true,
+                                Channel: {ChannelId: getNanoid(32), ChannelName: '', ChannelGroup: ChannelGroupName, ChannelIntro: ''}
+                              }))
+                            }} aria-label="add">
+                                <Icon icon='mdi:add' />
+                            </IconButton>
+                        </Box>
                         <List sx={{ p: 0 }}>{renderChannels(getChivesChatGetChannelsMap[ChannelGroupName])}</List>
                     </Fragment>
                 )

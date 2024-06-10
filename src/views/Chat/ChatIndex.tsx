@@ -432,12 +432,13 @@ const AppChat = (props: any) => {
   }
 
   const handleAddOrEditOrDelChannel = async function (Action: string) {
-    if(Action=='Add')  {
+    console.log("Action", Action, openChannelEdit)
+    if(Action == 'Add')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
       if(id != myProcessTxId)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
       }
-      const AddChannel = await ChivesChatAddChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort, openChannelEdit.Channel.ChannelIntro, "Owner")
+      const AddChannel = await ChivesChatAddChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
       if(AddChannel) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
         console.log("handleAddOrEditOrDelChannel AddChannel", AddChannel)
@@ -461,12 +462,12 @@ const AppChat = (props: any) => {
       }
     }
 
-    if(Action=='Edit')  {
+    else if(Action == 'Edit')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
       if(id != myProcessTxId)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
       }
-      const EditChannel = await ChivesChatEditChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort, openChannelEdit.Channel.ChannelIntro, "Owner")
+      const EditChannel = await ChivesChatEditChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
       if(EditChannel) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
         console.log("handleEditOrEditOrDelChannel EditChannel", EditChannel)
@@ -490,7 +491,7 @@ const AppChat = (props: any) => {
       }
     }
 
-    if(Action=='Del')  {
+    else if(Action == 'Del')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
       if(id != myProcessTxId)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })

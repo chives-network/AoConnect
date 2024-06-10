@@ -45,7 +45,7 @@ const ChannelEdit = (props: any) => {
     }>
         <DialogTitle>
             <Box display="flex" alignItems="center">
-                <Typography sx={{pl: 2}}>{t('Edit Channel Name') as string}</Typography>
+                <Typography sx={{pl: 2}}>{t('Channel Detail') as string}</Typography>
                 <Box position={'absolute'} right={'5px'} top={'1px'}>
                     <IconButton size="small" edge="end" onClick={
                         () => { 
@@ -66,7 +66,7 @@ const ChannelEdit = (props: any) => {
                     size="small"
                     value={openChannelEdit?.Channel?.ChannelGroup ?? ''}
                     sx={{ width: '100%', resize: 'both', '& .MuiInputBase-input': { fontSize: '0.875rem' } }}
-                    placeholder={t("Support entering multiple addresses, with each address on a separate line") as string}
+                    placeholder={t("ChannelGroup") as string}
                     onChange={(e: any) => {
                         const ChannelNameNew = { ...openChannelEdit.Channel, ChannelGroup: e.target.value }
                         setOpenChannelEdit((prevState: any)=>({
@@ -79,7 +79,7 @@ const ChannelEdit = (props: any) => {
                     size="small"
                     value={openChannelEdit?.Channel?.ChannelName ?? ''}
                     sx={{ width: '100%', mt: 3, resize: 'both', '& .MuiInputBase-input': { fontSize: '0.875rem' } }}
-                    placeholder={t("Support entering multiple addresses, with each address on a separate line") as string}
+                    placeholder={t("ChannelName") as string}
                     onChange={(e: any) => {
                         const ChannelNameNew = { ...openChannelEdit.Channel, ChannelName: e.target.value }
                         setOpenChannelEdit((prevState: any)=>({
@@ -122,7 +122,12 @@ const ChannelEdit = (props: any) => {
                         ...prevState,
                         open: false,
                     }))
-                    handleAddOrEditOrDelChannel('Edit')
+                    if(openChannelEdit.edit) {
+                        handleAddOrEditOrDelChannel('Edit')
+                    }
+                    else {
+                        handleAddOrEditOrDelChannel('Add')
+                    }
                 }
             }>
             {t('Submit')}
