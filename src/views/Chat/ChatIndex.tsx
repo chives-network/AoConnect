@@ -517,6 +517,7 @@ const AppChat = (props: any) => {
         app={app}
         setOpenMembersInvite={setOpenMembersInvite}
         setOpenMembersApplicant={setOpenMembersApplicant}
+        setValueMembersApplicant={setValueMembersApplicant}
       />
       <UserProfileRight
         member={member}
@@ -527,7 +528,7 @@ const AppChat = (props: any) => {
         handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
       />
       <MembersInvite openMembersInvite={openMembersInvite} setOpenMembersInvite={setOpenMembersInvite} valueMembersInvite={valueMembersInvite} setValueMembersInvite={setValueMembersInvite} handleInviteMember={handleInviteMember} />
-      <MembersApplicant openMembersApplicant={openMembersApplicant} setOpenMembersApplicant={setOpenMembersApplicant} valueMembersApplicant={valueMembersApplicant} setValueMembersApplicant={setValueMembersApplicant} handleApplicantMember={handleApplicantMember} />
+      <MembersApplicant openMembersApplicant={openMembersApplicant} setOpenMembersApplicant={setOpenMembersApplicant} valueMembersApplicant={valueMembersApplicant} handleApplicantMember={handleApplicantMember} />
       </Box>
     </Fragment>
   )
