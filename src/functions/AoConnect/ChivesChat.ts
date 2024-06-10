@@ -211,11 +211,13 @@ export const ChivesChatApplyJoin = async (currentWalletJwk: any, chatroomTxId: s
 export const ChivesChatApprovalApply = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, MemberId: string, MemberName: string, MemberReason: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + chatroomTxId + '", Action = "ApprovalApply", MemberId = "' + MemberId + '", MemberName = "' + MemberName + '", MemberReason = "' + MemberReason + '" })'
+        console.log("SendData", SendData)
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + chatroomTxId + '", Action = "ApprovalApply", MemberId = "' + MemberId + '", MemberName = "' + MemberName + '", MemberReason = "' + MemberReason + '" })',
+            data: SendData,
         }
         console.log("ChivesChatApprovalApply Data", Data)
         const GetChivesChatApprovalApplyResult = await message(Data);
