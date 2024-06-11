@@ -23,7 +23,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
@@ -99,8 +99,20 @@ const AppChat = (props: any) => {
   const [counter, setCounter] = useState<number>(0)
   const [membersCounter, setMembersCounter] = useState<number>(0)
   const [channelsCounter, setChannelsCounter] = useState<number>(0)
+  const [currentMemberStatus, setCurrentMemberStatus] = useState<boolean[]>([false, false, false, false])
   
   //const [messagesCounter, setMessagesCounter] = useState<number>(0)
+  useEffect(() => {
+    const checkChivesChatIsMember = async () => {
+        const ChivesChatIsMemberData = await ChivesChatIsMember(id, myProcessTxId)
+        if (ChivesChatIsMemberData) {
+          console.log("ChivesChatIsMemberData", ChivesChatIsMemberData)
+          setCurrentMemberStatus(ChivesChatIsMemberData)
+        }
+    };
+    checkChivesChatIsMember();
+  }, [id, myProcessTxId]);
+
 
   useEffect(() => {
     let timeoutId: any = null;
@@ -658,73 +670,76 @@ const AppChat = (props: any) => {
         }}
       >
 
-      <ChannelsList
-        store={store}
-        hidden={hidden}
-        mdAbove={mdAbove}
-        statusObj={statusObj}
-        userStatus={userStatus}
-        channelsListWidth={channelsListWidth}
-        getChivesChatGetChannels={getChivesChatGetChannels}
-        leftSidebarOpen={leftSidebarOpen}
-        userProfileLeftOpen={userProfileLeftOpen}
-        handleLeftSidebarToggle={handleLeftSidebarToggle}
-        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-        loadingGetChannels={loadingGetChannels}
-        isOwner={id == myProcessTxId ? true : false}
-        setOpenChannelEdit={setOpenChannelEdit}
-        handleAddOrEditOrDelChannel={handleAddOrEditOrDelChannel}
-      />
-
-      <ChatContent
-        store={store}
-        hidden={hidden}
-        sendMsg={sendMsg}
-        mdAbove={mdAbove}
-        statusObj={statusObj}
-        downloadButtonDisable={downloadButtonDisable}
-        sendButtonDisable={sendButtonDisable}
-        sendButtonLoading={sendButtonLoading}
-        sendButtonText={sendButtonText}
-        sendInputText={sendInputText}
-        processingMessages={processingMessages}
-        ClearButtonClick={ClearButtonClick}
-        handleGetAllMessages={handleGetAllMessages}
-        app={app}
-        handleDeleteOneChatLogById={handleDeleteOneChatLogById}
-        myProcessTxId={myProcessTxId}
-        setMember={setMember}
-        setUserProfileRightOpen={setUserProfileRightOpen}
-        allMembers={allMembers}
-      />
-
-      <MembersList
-        store={store}
-        hidden={hidden}
-        mdAbove={mdAbove}
-        statusObj={statusObj}
-        userStatus={userStatus}
-        membersListWidth={membersListWidth}
-        getChivesChatGetMembers={getChivesChatGetMembers}
-        leftSidebarOpen={leftSidebarOpen}
-        userProfileLeftOpen={userProfileLeftOpen}
-        handleLeftSidebarToggle={handleLeftSidebarToggle}
-        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-        loadingGetMembers={loadingGetMembers}
-        setMember={setMember}
-        setUserProfileRightOpen={setUserProfileRightOpen}
-        setAllMembers={setAllMembers}
-        handleAddChannelAdmin={handleAddChannelAdmin}
-        handleDelChannelAdmin={handleDelChannelAdmin}
-        handleKickOutMember={handleKickOutMember}
-        isOwner={id == myProcessTxId ? true : false}
-        app={app}
-        setOpenMembersInvite={setOpenMembersInvite}
-        setOpenMembersApplicant={setOpenMembersApplicant}
-        valueMembersApplicant={valueMembersApplicant}
-        setValueMembersApplicant={setValueMembersApplicant}
-      />
-
+      {currentMemberStatus && currentMemberStatus[0] && currentMemberStatus[1] && (
+        <Fragment>
+          <ChannelsList
+            store={store}
+            hidden={hidden}
+            mdAbove={mdAbove}
+            statusObj={statusObj}
+            userStatus={userStatus}
+            channelsListWidth={channelsListWidth}
+            getChivesChatGetChannels={getChivesChatGetChannels}
+            leftSidebarOpen={leftSidebarOpen}
+            userProfileLeftOpen={userProfileLeftOpen}
+            handleLeftSidebarToggle={handleLeftSidebarToggle}
+            handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+            loadingGetChannels={loadingGetChannels}
+            isOwner={id == myProcessTxId ? true : false}
+            setOpenChannelEdit={setOpenChannelEdit}
+            handleAddOrEditOrDelChannel={handleAddOrEditOrDelChannel}
+          />
+          <ChatContent
+            store={store}
+            hidden={hidden}
+            sendMsg={sendMsg}
+            mdAbove={mdAbove}
+            statusObj={statusObj}
+            downloadButtonDisable={downloadButtonDisable}
+            sendButtonDisable={sendButtonDisable}
+            sendButtonLoading={sendButtonLoading}
+            sendButtonText={sendButtonText}
+            sendInputText={sendInputText}
+            processingMessages={processingMessages}
+            ClearButtonClick={ClearButtonClick}
+            handleGetAllMessages={handleGetAllMessages}
+            app={app}
+            handleDeleteOneChatLogById={handleDeleteOneChatLogById}
+            myProcessTxId={myProcessTxId}
+            setMember={setMember}
+            setUserProfileRightOpen={setUserProfileRightOpen}
+            allMembers={allMembers}
+          />
+          <MembersList
+            store={store}
+            hidden={hidden}
+            mdAbove={mdAbove}
+            statusObj={statusObj}
+            userStatus={userStatus}
+            membersListWidth={membersListWidth}
+            getChivesChatGetMembers={getChivesChatGetMembers}
+            leftSidebarOpen={leftSidebarOpen}
+            userProfileLeftOpen={userProfileLeftOpen}
+            handleLeftSidebarToggle={handleLeftSidebarToggle}
+            handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+            loadingGetMembers={loadingGetMembers}
+            setMember={setMember}
+            setUserProfileRightOpen={setUserProfileRightOpen}
+            setAllMembers={setAllMembers}
+            handleAddChannelAdmin={handleAddChannelAdmin}
+            handleDelChannelAdmin={handleDelChannelAdmin}
+            handleKickOutMember={handleKickOutMember}
+            isOwner={id == myProcessTxId ? true : false}
+            app={app}
+            setOpenMembersInvite={setOpenMembersInvite}
+            setOpenMembersApplicant={setOpenMembersApplicant}
+            valueMembersApplicant={valueMembersApplicant}
+            setValueMembersApplicant={setValueMembersApplicant}
+          />
+        </Fragment>
+      )}
+      
+      
       <UserProfileRight
         member={member}
         hidden={hidden}

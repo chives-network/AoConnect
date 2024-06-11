@@ -22,11 +22,11 @@ export const GetAoConnectMembers = (Address: string) => {
     try{
         const JsonData = JSON.parse(JsonDataText)
 
-        return JsonData[Address] ?? [[], {}]
+        return JsonData[Address] ?? [[], {}, {}]
     }
     catch(Error: any) {
 
-        return [[], {}]
+        return [[], {}, {}]
     }
 }
 
