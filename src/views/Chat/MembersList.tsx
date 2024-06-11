@@ -85,6 +85,7 @@ const MembersList = (props: any) => {
     isOwner,
     setOpenMembersInvite,
     setOpenMembersApplicant,
+    valueMembersApplicant,
     setValueMembersApplicant
   } = props
 
@@ -101,9 +102,7 @@ const MembersList = (props: any) => {
   const [AdminsList, setAdminsList] = useState<any[]>([])
   const [MembersList, setMembersList] = useState<any[]>([])
   const [ApplicantsList, setApplicantsList] = useState<any[]>([])
-  const [ApplicantsRecords, setApplicantsRecords] = useState<any[]>([])
 
-  
   useEffect(() => {
     if(getChivesChatGetMembers)   {
       const Admins: string[] = getChivesChatGetMembers[0] ?? []
@@ -136,7 +135,6 @@ const MembersList = (props: any) => {
         setAdminsList(AdminsListData)
         setMembersList(MembersListData)
         setApplicantsList(Applicants)
-        setApplicantsRecords(Object.values(Applicants))
         setValueMembersApplicant(Object.values(Applicants))
       }
       else {
@@ -146,7 +144,6 @@ const MembersList = (props: any) => {
         setAdminsList(AdminsListData)
         setMembersList(MembersListData)
         setApplicantsList(Applicants)
-        setApplicantsRecords(Object.values(Applicants))
         setValueMembersApplicant(Object.values(Applicants))
       }
     }
@@ -421,7 +418,7 @@ const MembersList = (props: any) => {
             </Badge>
           ) : null}
 
-          {!loadingGetMembers && ApplicantsRecords.length == 0 && 
+          {!loadingGetMembers && Object.values(getChivesChatGetMembers[2] ?? {}).length == 0 && 
             <Fragment>
               <TextField
                 fullWidth
@@ -446,13 +443,13 @@ const MembersList = (props: any) => {
             </Fragment>
           }
 
-          {!loadingGetMembers && ApplicantsRecords.length > 0 && 
+          {!loadingGetMembers && Object.values(getChivesChatGetMembers[2] ?? {}).length > 0 && 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Fragment>
                 <Button variant='contained' endIcon={<Icon icon='mdi:bell-outline' />} onClick={()=>{
                   setOpenMembersApplicant(true)
                 }}>
-                  {ApplicantsRecords.length}
+                  {valueMembersApplicant.length}
                 </Button>
                 <Fab color='primary' aria-label='add' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
                   setOpenMembersInvite(true)

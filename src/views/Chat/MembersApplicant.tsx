@@ -24,7 +24,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 
 const MembersApplicant = (props: any) => {
     // ** Props
-    const {openMembersApplicant, setOpenMembersApplicant, valueMembersApplicant, handleApplicantMember } = props
+    const {openMembersApplicant, setOpenMembersApplicant, valueMembersApplicant, setValueMembersApplicant, handleApplicantMember } = props
 
     // ** Hook
     const { t } = useTranslation()
@@ -119,6 +119,7 @@ const MembersApplicant = (props: any) => {
                         const ApplicantsListAll = AllApplicantsList.join('****');
                         console.log("ApplicantsListAll", ApplicantsListAll);
                         handleApplicantMember(ApplicantsListAll, "Refuse")
+                        setValueMembersApplicant([])
                     }
                 }>
                 {t("Refuse All")}
@@ -133,6 +134,7 @@ const MembersApplicant = (props: any) => {
                         const ApplicantsListAll = AllApplicantsList.join('****');
                         console.log("ApplicantsListAll", ApplicantsListAll);
                         handleApplicantMember(ApplicantsListAll, "Accept")
+                        setValueMembersApplicant([])
                     }
                 }>
                 {t('Accept All')}

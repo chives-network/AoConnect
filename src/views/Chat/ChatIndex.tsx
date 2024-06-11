@@ -49,7 +49,7 @@ const AppChat = (props: any) => {
 
   const [loadingGetMembers, setLoadingGetMembers] = useState<boolean>(false)
   const [loadingGetChannels, setLoadingGetChannels] = useState<boolean>(false)
-  const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}])
+  const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}, {}])
   const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
   const [allMembers, setAllMembers] = useState<any>({})
 
@@ -60,7 +60,6 @@ const AppChat = (props: any) => {
   const [valueMembersApplicant, setValueMembersApplicant] = useState<any[]>([])
 
   const [openChannelEdit, setOpenChannelEdit] = useState<any>({add: false, edit: false, del: false, open: false})
-  
 
   const [member, setMember] = useState<any>(null)
   
@@ -121,9 +120,39 @@ const AppChat = (props: any) => {
         timeoutId = setTimeout(CronTaskLastMessage, 10000);
       }, delay);
     };
+
+    const CronTaskGetMembers = () => {
+      
+      //console.log('This message will appear every 10 seconds');
+      const delay = Math.random() * 180000;
+      
+      //console.log(`Simulating a long running process: ${delay}ms`);
+      timeoutId = setTimeout(() => {
+        handleGetAllMembers();
+        
+        //console.log('Finished long running process');
+        timeoutId = setTimeout(CronTaskGetMembers, 180000);
+      }, delay);
+    };
+
+    const CronTaskGetChannels = () => {
+      
+      //console.log('This message will appear every 10 seconds');
+      const delay = Math.random() * 600000;
+      
+      //console.log(`Simulating a long running process: ${delay}ms`);
+      timeoutId = setTimeout(() => {
+        handleGetAllChannels();
+        
+        //console.log('Finished long running process');
+        timeoutId = setTimeout(CronTaskGetChannels, 600000);
+      }, delay);
+    };
   
     if (t && currentAddress && id) {
       CronTaskLastMessage();
+      CronTaskGetMembers();
+      CronTaskGetChannels();
       handleGetAllMessages();
       handleGetAllMembers();
       handleGetAllChannels();
@@ -255,6 +284,19 @@ const AppChat = (props: any) => {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
     }
     console.log("Action", Action)
+
+    //Clearn the local var
+    const ApplicantsList = Applicants.split("****")
+    const ApplicantsTemp = getChivesChatGetMembers[2] ?? {}
+    const ApplicantsTempNew: any = {}
+    if(ApplicantsTemp && ApplicantsList && ApplicantsList.length > 0)  {
+      Object.values(ApplicantsTemp).map((item: any)=>{
+        if(!ApplicantsList.includes(item.MemberId)) {
+          ApplicantsTempNew[item.MemberId] = item
+        }
+      })
+      setGetChivesChatGetMembers([getChivesChatGetMembers[0], getChivesChatGetMembers[1], ApplicantsTempNew])
+    }
 
     if(Action == 'Accept')  {
       const ChivesChatApprovalApplyMembers = await ChivesChatApprovalApply(currentWallet.jwk, id, myProcessTxId, Applicants, "Applicant Member", "Administrator approval your request")
@@ -679,6 +721,7 @@ const AppChat = (props: any) => {
         app={app}
         setOpenMembersInvite={setOpenMembersInvite}
         setOpenMembersApplicant={setOpenMembersApplicant}
+        valueMembersApplicant={valueMembersApplicant}
         setValueMembersApplicant={setValueMembersApplicant}
       />
 
@@ -693,7 +736,7 @@ const AppChat = (props: any) => {
 
       <MembersInvite openMembersInvite={openMembersInvite} setOpenMembersInvite={setOpenMembersInvite} valueMembersInvite={valueMembersInvite} setValueMembersInvite={setValueMembersInvite} handleInviteMember={handleInviteMember} />
       
-      <MembersApplicant openMembersApplicant={openMembersApplicant} setOpenMembersApplicant={setOpenMembersApplicant} valueMembersApplicant={valueMembersApplicant} handleApplicantMember={handleApplicantMember} />
+      <MembersApplicant openMembersApplicant={openMembersApplicant} setOpenMembersApplicant={setOpenMembersApplicant} valueMembersApplicant={valueMembersApplicant} setValueMembersApplicant={setValueMembersApplicant} handleApplicantMember={handleApplicantMember} />
 
       <ChannelEdit openChannelEdit={openChannelEdit} setOpenChannelEdit={setOpenChannelEdit} handleAddOrEditOrDelChannel={handleAddOrEditOrDelChannel} />
       

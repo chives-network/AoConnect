@@ -24,7 +24,7 @@ import Icon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetInboxs } from 'src/functions/AoConnect/ChivesChat'
+import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetInboxs, ChivesChatApplyJoin } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -121,6 +121,22 @@ const ChivesChatOnlyChat = () => {
       setToolInfo((prevState: any)=>({
         ...prevState,
         UserFive: UserFive
+      }))
+    }
+
+    const UserSix = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserSix) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        UserSix: UserSix
+      }))
+    }
+
+    const UserSeven = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserSeven) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        UserSeven: UserSeven
       }))
     }
 
@@ -264,6 +280,64 @@ const ChivesChatOnlyChat = () => {
               setToolInfo((prevState: any)=>({
                 ...prevState,
                 ChivesChatAdminAddUserFive: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    const ChivesChatUserSixApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserSix, "UserSix", "Hope join this chatroom")
+    if(ChivesChatUserSixApplyJoin) {
+      console.log("ChivesChatUserSixApplyJoin", ChivesChatUserSixApplyJoin)
+      if(ChivesChatUserSixApplyJoin?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatUserSixApplyJoin?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatUserSixApplyJoin: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserSix)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatUserSixApplyJoin: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    const ChivesChatUserSevenApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserSeven, "UserSeven", "Hope join this chatroom")
+    if(ChivesChatUserSevenApplyJoin) {
+      console.log("ChivesChatUserSevenApplyJoin", ChivesChatUserSevenApplyJoin)
+      if(ChivesChatUserSevenApplyJoin?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatUserSevenApplyJoin?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatUserSevenApplyJoin: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserSeven)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatUserSevenApplyJoin: formatText2
               }))
             }
           }
