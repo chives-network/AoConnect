@@ -66,6 +66,7 @@ const MockData: { profileUser: ProfileUserType } = {
 const MembersList = (props: any) => {
   // ** Props
   const {
+    id,
     hidden,
     mdAbove,
     statusObj,
@@ -114,7 +115,9 @@ const MembersList = (props: any) => {
       console.log("getChivesChatGetMembers11 Members", Members)
       console.log("getChivesChatGetMembers11 Applicants", Applicants, ApplicantsList)
 
+
       const allMembersTemp: any = {}
+      allMembersTemp[id] = {MemberAbout: 'Owner', MemberAvatar: '/images/chives.png', MemberId: id, MemberName: 'Owner', MemberReason: '', MemberRole: 'Admins', MemberStatus: 'online' }
       const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
 
         const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
@@ -124,6 +127,7 @@ const MembersList = (props: any) => {
 
         return Member
       })
+      console.log("allMembersTemp", allMembersTemp)
 
       setAllMembers(allMembersTemp)
 

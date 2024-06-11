@@ -4,7 +4,8 @@ import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
 import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, AoLoadBlueprintModule } from 'src/functions/AoConnect/AoConnect'
 
-import { getNanoid } from 'src/functions/string.tools';
+import { getNanoid } from 'src/functions/string.tools'
+import authConfig from 'src/configs/auth'
 
 
 export const AoLoadBlueprintChivesChat = async (currentWalletJwk: any, processTxId: string) => {
@@ -734,7 +735,14 @@ export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxI
   
 }
 
-
+export const GetChatroomAvatar = (Logo: string) => {
+    if(Logo && Logo.length == 43)  {
+        return authConfig.backEndApi + "/" + Logo
+    }
+    else {
+        return '/images/chives.png'
+    }
+}
 
 
 

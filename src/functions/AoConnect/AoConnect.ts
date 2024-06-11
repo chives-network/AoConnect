@@ -178,16 +178,17 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
         data: 'Inbox',
     });
     
-    //console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult)
+    console.log("GetMyInboxMsg GetMyInboxMsgResult", GetMyInboxMsgResult, "processTxId", processTxId)
 
     if(GetMyInboxMsgResult && GetMyInboxMsgResult.length == 43) {
         const MsgContent = await AoGetMessage(processTxId, GetMyInboxMsgResult)
+        console.log("GetMyInboxMsg MsgContent", MsgContent)
         if(MsgContent && MsgContent.Output && MsgContent.Output.data && MsgContent.Output.data.output) {
             const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
             const InboxMsgList: any[] = ConvertInboxMessageFormatAndStorage(formatText, processTxId, true)
 
-            //console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
+            console.log("GetMyInboxMsg InboxMsgList", InboxMsgList)
             
             return { id: GetMyInboxMsgResult, msg: InboxMsgList };
         }

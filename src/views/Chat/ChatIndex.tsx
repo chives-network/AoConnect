@@ -2,7 +2,6 @@
 import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import toast from 'react-hot-toast'
@@ -15,6 +14,15 @@ import ChatContent from 'src/views/Chat/ChatContent'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import Card from '@mui/material/Card'
+import Divider from '@mui/material/Divider'
+import Typography from '@mui/material/Typography'
+import CardContent from '@mui/material/CardContent'
+import CustomAvatar from 'src/@core/components/mui/avatar'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import { ChatChatInit } from 'src/functions/ChatBook'
 
@@ -23,7 +31,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember, GetChatroomAvatar, ChivesChatApplyJoin } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
@@ -31,9 +39,6 @@ import UserProfileRight from 'src/views/Chat/UserProfileRight'
 import MembersInvite from 'src/views/Chat/MembersInvite'
 import MembersApplicant from 'src/views/Chat/MembersApplicant'
 import ChannelEdit from 'src/views/Chat/ChannelEdit'
-
-
-import {  } from 'src/functions/AoConnect/MsgReminder'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -99,85 +104,91 @@ const AppChat = (props: any) => {
   const [counter, setCounter] = useState<number>(0)
   const [membersCounter, setMembersCounter] = useState<number>(0)
   const [channelsCounter, setChannelsCounter] = useState<number>(0)
-  const [currentMemberStatus, setCurrentMemberStatus] = useState<boolean[]>([false, false, false, false])
+  const [currentMemberStatus, setCurrentMemberStatus] = useState<boolean[] | null[]>([null, null, null, null])
+  
+  const GetChatroomAvatarData = GetChatroomAvatar(app.logo)
   
   //const [messagesCounter, setMessagesCounter] = useState<number>(0)
+
   useEffect(() => {
     const checkChivesChatIsMember = async () => {
         const ChivesChatIsMemberData = await ChivesChatIsMember(id, myProcessTxId)
+        console.log("ChivesChatIsMemberData", ChivesChatIsMemberData)
         if (ChivesChatIsMemberData) {
-          console.log("ChivesChatIsMemberData", ChivesChatIsMemberData)
           setCurrentMemberStatus(ChivesChatIsMemberData)
         }
     };
     checkChivesChatIsMember();
   }, [id, myProcessTxId]);
 
+  console.log("GetChatroomAvatarData app", app, GetChatroomAvatarData)
 
   useEffect(() => {
-    let timeoutId: any = null;
+    if(currentMemberStatus[0] == true || currentMemberStatus[1] == true)  {
+      let timeoutId: any = null;
 
-    setUserStatus('online')
+      setUserStatus('online')
 
-    const CronTaskLastMessage = () => {
-      
-      //console.log('This message will appear every 10 seconds');
-      const delay = Math.random() * 10000;
-      
-      //console.log(`Simulating a long running process: ${delay}ms`);
-      timeoutId = setTimeout(() => {
-        handleGetLastMessage();
+      const CronTaskLastMessage = () => {
         
-        //console.log('Finished long running process');
-        timeoutId = setTimeout(CronTaskLastMessage, 10000);
-      }, delay);
-    };
+        //console.log('This message will appear every 10 seconds');
+        const delay = Math.random() * 10000;
+        
+        //console.log(`Simulating a long running process: ${delay}ms`);
+        timeoutId = setTimeout(() => {
+          handleGetLastMessage();
+          
+          //console.log('Finished long running process');
+          timeoutId = setTimeout(CronTaskLastMessage, 10000);
+        }, delay);
+      };
 
-    const CronTaskGetMembers = () => {
-      
-      //console.log('This message will appear every 10 seconds');
-      const delay = Math.random() * 180000;
-      
-      //console.log(`Simulating a long running process: ${delay}ms`);
-      timeoutId = setTimeout(() => {
+      const CronTaskGetMembers = () => {
+        
+        //console.log('This message will appear every 10 seconds');
+        const delay = Math.random() * 180000;
+        
+        //console.log(`Simulating a long running process: ${delay}ms`);
+        timeoutId = setTimeout(() => {
+          handleGetAllMembers();
+          
+          //console.log('Finished long running process');
+          timeoutId = setTimeout(CronTaskGetMembers, 180000);
+        }, delay);
+      };
+
+      const CronTaskGetChannels = () => {
+        
+        //console.log('This message will appear every 10 seconds');
+        const delay = Math.random() * 600000;
+        
+        //console.log(`Simulating a long running process: ${delay}ms`);
+        timeoutId = setTimeout(() => {
+          handleGetAllChannels();
+          
+          //console.log('Finished long running process');
+          timeoutId = setTimeout(CronTaskGetChannels, 600000);
+        }, delay);
+      };
+    
+      if (t && currentAddress && id) {
+        CronTaskLastMessage();
+        CronTaskGetMembers();
+        CronTaskGetChannels();
+        handleGetAllMessages();
         handleGetAllMembers();
-        
-        //console.log('Finished long running process');
-        timeoutId = setTimeout(CronTaskGetMembers, 180000);
-      }, delay);
-    };
-
-    const CronTaskGetChannels = () => {
-      
-      //console.log('This message will appear every 10 seconds');
-      const delay = Math.random() * 600000;
-      
-      //console.log(`Simulating a long running process: ${delay}ms`);
-      timeoutId = setTimeout(() => {
         handleGetAllChannels();
-        
-        //console.log('Finished long running process');
-        timeoutId = setTimeout(CronTaskGetChannels, 600000);
-      }, delay);
-    };
-  
-    if (t && currentAddress && id) {
-      CronTaskLastMessage();
-      CronTaskGetMembers();
-      CronTaskGetChannels();
-      handleGetAllMessages();
-      handleGetAllMembers();
-      handleGetAllChannels();
-      setSendButtonText(t("Send") as string);
-      setSendInputText(t("Your message...") as string);
-    }
-  
-    return () => {
-      if (timeoutId !== null) {
-        clearTimeout(timeoutId);
+        setSendButtonText(t("Send") as string);
+        setSendInputText(t("Your message...") as string);
       }
-    };
-  }, [t, currentAddress, id]);
+    
+      return () => {
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId)
+        }
+      }
+    }
+  }, [t, currentAddress, id, currentMemberStatus]);
 
   useEffect(() => {
     if(membersCounter>0) {
@@ -192,10 +203,6 @@ const AppChat = (props: any) => {
   }, [channelsCounter]);
   
   const handleGetLastMessage = async function () {
-    await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox-2]')
-    sleep(500)
-    await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox-1]')
-    sleep(500)
     await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox]')
     sleep(500)
     setCounter(counter+1)
@@ -392,11 +399,11 @@ const AppChat = (props: any) => {
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
     getChatLogList()
-    await GetMyInboxMsg(currentWallet.jwk, id)
+    await GetMyInboxMsg(currentWallet.jwk, myProcessTxId)
     
     //setProcessingMessages([])
     getChatLogList()
-    
+
     //console.log("handleGetAllMessages counter", counter)
     setDownloadButtonDisable(false)
   }
@@ -437,9 +444,9 @@ const AppChat = (props: any) => {
 
   const getChatLogList = async function () {
     if(id && currentAddress) {
-      const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(id, 0, 20)
+      const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(myProcessTxId, 0, 20)
       
-      //console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
+      console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
       if(GetInboxMsgFromLocalStorageData)  {
         const ChatChatInitList = ChatChatInit(GetInboxMsgFromLocalStorageData, app.systemPrompt, id)
         const selectedChat = {
@@ -601,6 +608,29 @@ const AppChat = (props: any) => {
     }
 
   }
+
+  const handleChivesChatApplyJoin = async function () {
+    const ChivesChatUserApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, id, myProcessTxId, "User" + myProcessTxId.substring(0, 6), "Hope join this chatroom")
+    if(ChivesChatUserApplyJoin) {
+      console.log("ChivesChatUserApplyJoin", ChivesChatUserApplyJoin)
+      if(ChivesChatUserApplyJoin?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatUserApplyJoin?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, myProcessTxId)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+            }
+          }
+
+        }
+
+      }
+    }
+  }
   
   // ** States
   const [store, setStore] = useState<any>(null)
@@ -670,7 +700,7 @@ const AppChat = (props: any) => {
         }}
       >
 
-      {currentMemberStatus && currentMemberStatus[0] && currentMemberStatus[1] && (
+      {currentMemberStatus && (currentMemberStatus[0] == true || currentMemberStatus[1] == true) && (
         <Fragment>
           <ChannelsList
             store={store}
@@ -711,7 +741,7 @@ const AppChat = (props: any) => {
             allMembers={allMembers}
           />
           <MembersList
-            store={store}
+            id={id}
             hidden={hidden}
             mdAbove={mdAbove}
             statusObj={statusObj}
@@ -736,6 +766,73 @@ const AppChat = (props: any) => {
             valueMembersApplicant={valueMembersApplicant}
             setValueMembersApplicant={setValueMembersApplicant}
           />
+        </Fragment>
+      )}
+
+      {currentMemberStatus && (currentMemberStatus[0]!=true && currentMemberStatus[1]!=true) && (
+        <Fragment>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <CustomAvatar
+                      src={GetChatroomAvatarData}
+                      variant='rounded'
+                      alt={app.id}
+                      sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+                    />
+                    <Typography variant='h6' sx={{ mb: 4 }}>
+                      {app.name}
+                    </Typography>
+                    <Typography sx={{ mr: 2, mb: 2, fontWeight: 500, fontSize: '0.875rem' }}>
+                      ChatroomId: {app.id}
+                    </Typography>
+                    <Typography sx={{ mr: 2, mb: 2, fontWeight: 500, fontSize: '0.875rem' }}>
+                      MyId: {myProcessTxId}
+                    </Typography>
+                    {currentMemberStatus[2]==false && (
+                      <Button sx={{textTransform: 'none', }} variant='contained' onClick={
+                          () => { handleChivesChatApplyJoin() }
+                      }>
+                      {t('Join in')}
+                      </Button>
+                    )}
+                    {currentMemberStatus[2]==true && (
+                      <Button sx={{textTransform: 'none', }} variant='contained' disabled>
+                      {t('Waiting approval')}
+                      </Button>
+                    )}
+                    {currentMemberStatus[2]==null && (
+                      <CircularProgress size={40}/>
+                    )}
+                </CardContent>
+                
+                <CardContent>
+                  <Typography variant='h6'>{`${t(`Introduction`)}`}</Typography>
+                  <Divider sx={{ my: theme => `${theme.spacing(4)} !important` }} />
+                  <Box sx={{ pb: 1 }}>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{`${t(`Name`)}`}:</Typography>
+                      <Typography variant='body2'>{app?.inputName}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{`${t(`Email`)}`}:</Typography>
+                      <Typography variant='body2'>{app?.inputEmail}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{`${t(`Twitter`)}`}:</Typography>
+                      <Typography variant='body2'>{app?.inputTwitter}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{`${t(`Github`)}`}:</Typography>
+                      <Typography variant='body2'>{app?.inputGithub}</Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+
+          </Grid>
         </Fragment>
       )}
       

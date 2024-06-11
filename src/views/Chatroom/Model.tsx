@@ -21,7 +21,7 @@ import { useRouter } from 'next/router'
 import Icon from 'src/@core/components/icon'
 
 import { useTranslation } from 'react-i18next'
-
+import { GetChatroomAvatar } from 'src/functions/AoConnect/ChivesChat'
 
 const AppModel = (props: any) => {
   // ** Hook
@@ -37,6 +37,8 @@ const AppModel = (props: any) => {
     show,
     setShow
   } = props
+
+  const ChatroomAvatar = GetChatroomAvatar('Chives')
 
   const renderContent = () => {
       return (
@@ -64,7 +66,7 @@ const AppModel = (props: any) => {
                             sx={{cursor: 'pointer'}}
                           >
                             <Box display="flex" alignItems="center">
-                            <Avatar src={'/images/chives.png'} sx={{ mr: 3, width: 35, height: 35 }} />
+                            <Avatar src={ChatroomAvatar} sx={{ mr: 3, width: 35, height: 35 }} />
                               <Typography 
                                   sx={{
                                       fontWeight: 500,
