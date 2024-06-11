@@ -597,6 +597,44 @@ export const ChivesChatGetMembers = async (TargetTxId: string, processTxId: stri
     }
 }
 
+export const ChivesChatIsMember = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'IsMember' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            if(result.Messages[0].Data[0] == '[' || result.Messages[0].Data[0] == '{')  {
+                return JSON.parse(result.Messages[0].Data)
+            }
+            else {
+                return [result.Messages[0].Data, '', '']
+            }
+        }
+        else {
+
+            return [[], {}]
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesChatGetMembers Error:", Error)
+
+        return [[], {}]
+    }
+}
+
 export const ChivesChatGetApplicants = async (TargetTxId: string, processTxId: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );

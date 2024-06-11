@@ -167,6 +167,39 @@ Handlers.add(
 )
 
 Handlers.add(
+  "IsMember",
+  Handlers.utils.hasMatchingTag("Action", "IsMember"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == ao.id then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+    local isMember = false
+    if Members[msg.From] then
+      isMember = true
+    end
+    local isApplicant = false
+    if Applicants[msg.From] then
+      isApplicant = true
+    end
+    local isInvite = false
+    if Invites[msg.From] then
+      isInvite = true
+    end
+    ao.send({
+      Target = msg.From,
+      Data = require('json').encode({isAdmin, isMember, isApplicant, isInvite})
+    })
+  end
+)
+
+Handlers.add(
   "AddChannel",
   Handlers.utils.hasMatchingTag("Action", "AddChannel"),
   function (msg)

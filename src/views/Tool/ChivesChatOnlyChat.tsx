@@ -24,7 +24,7 @@ import Icon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetInboxs, ChivesChatApplyJoin } from 'src/functions/AoConnect/ChivesChat'
+import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetInboxs, ChivesChatApplyJoin, ChivesChatIsMember } from 'src/functions/AoConnect/ChivesChat'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -171,6 +171,15 @@ const ChivesChatOnlyChat = () => {
         }
 
       }
+    }
+
+    const ChivesChatIsMemberUserOne = await ChivesChatIsMember(ChivesChatProcessTxId, UserOne)
+    if(ChivesChatIsMemberUserOne) {
+      console.log("ChivesChatIsMemberUserOne", ChivesChatIsMemberUserOne)
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        ChivesChatIsMemberUserOne: JSON.stringify(ChivesChatIsMemberUserOne)
+      }))
     }
 
     const ChivesChatAdminAddUserTwo = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, UserTwo, "UserTwo", "UserTwo Reason")
