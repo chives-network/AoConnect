@@ -7,6 +7,7 @@
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/myprocesstxids.lua
 
 -- Function
+-- Save user's setting data, every user have his own data.
 -- 1. Save user chatroom process tx ids.
 -- 2. Save user token process tx ids.
 -- 3. Save user lottery process tx ids.
