@@ -49,7 +49,7 @@ export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxI
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + ', TokenSort = "' + TokenSort + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '" })',
         }
         console.log("MyProcessTxIdsAddToken Data", Data)
         const GetMyProcessTxIdsAddTokenResult = await message(Data);
@@ -143,7 +143,7 @@ export const MyProcessTxIdsAddChatroom = async (currentWalletJwk: any, MyProcess
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddChatroom", ChatroomId = "' + ChatroomId + ', ChatroomSort = "' + ChatroomSort + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddChatroom", ChatroomId = "' + ChatroomId + '", ChatroomSort = "' + ChatroomSort + '" })',
         }
         console.log("MyProcessTxIdsAddChatroom Data", Data)
         const GetMyProcessTxIdsAddChatroomResult = await message(Data);
@@ -238,7 +238,7 @@ export const MyProcessTxIdsAddGuess = async (currentWalletJwk: any, MyProcessTxI
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddGuess", GuessId = "' + GuessId + ', Guessesort = "' + Guessesort + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddGuess", GuessId = "' + GuessId + '", Guessesort = "' + Guessesort + '" })',
         }
         console.log("MyProcessTxIdsAddGuess Data", Data)
         const GetMyProcessTxIdsAddGuessResult = await message(Data);
@@ -333,7 +333,7 @@ export const MyProcessTxIdsAddLottery = async (currentWalletJwk: any, MyProcessT
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddLottery", LotteryId = "' + LotteryId + ', Lotteriesort = "' + Lotteriesort + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddLottery", LotteryId = "' + LotteryId + '", Lotteriesort = "' + Lotteriesort + '" })',
         }
         console.log("MyProcessTxIdsAddLottery Data", Data)
         const GetMyProcessTxIdsAddLotteryResult = await message(Data);
