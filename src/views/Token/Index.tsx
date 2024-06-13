@@ -58,6 +58,8 @@ const AppChat = () => {
   const [addTokenFavorite, setAddTokenFavorite] = useState<boolean>(false)
   const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
 
+  const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
+  const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
   
   useEffect(() => {
     if(currentAddress && currentAddress.length == 43) {
@@ -170,6 +172,8 @@ const AppChat = () => {
             setAddTokenFavorite={setAddTokenFavorite}
             tokenCreate={tokenCreate}
             setTokenCreate={setTokenCreate}
+            leftSidebarOpen={leftSidebarOpen}
+            handleLeftSidebarToggle={handleLeftSidebarToggle}
           />
           <TokenIndex 
             handleAddToken={handleAddToken}  

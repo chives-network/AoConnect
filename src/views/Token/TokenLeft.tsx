@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next'
 import CircularProgress from '@mui/material/CircularProgress'
 import MuiAvatar from '@mui/material/Avatar'
 import { GetAppAvatar } from 'src/functions/AoConnect/MsgReminder'
+import { formatHash} from 'src/configs/functions';
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
   if (hidden) {
@@ -48,7 +49,9 @@ const TokenLeft = (props: any) => {
     setAddTokenButtonText,
     setAddTokenButtonDisabled,
     setAddTokenFavorite,
-    setTokenCreate
+    setTokenCreate,
+    leftSidebarOpen,
+    handleLeftSidebarToggle
   } = props
 
   // ** States
@@ -63,6 +66,12 @@ const TokenLeft = (props: any) => {
     setAddTokenButtonText('Have favorite')
     setAddTokenFavorite(false)
   }
+
+  useEffect(()=>{
+    if(tokenLeft && tokenLeft[0]) {
+      handleTokenClick(tokenLeft[0].Id)
+    }
+  }, [tokenLeft])
 
   const renderTokens = (tokenLeft: any[]) => {
     if (tokenLeft && tokenLeft.length == 0) {
@@ -129,9 +138,14 @@ const TokenLeft = (props: any) => {
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Token.Name}</Typography>
                     }
                     secondary={
-                      <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
-                        {Token.Ticker}
-                      </Typography>
+                      <Box display="flex" flexDirection="row">
+                          <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
+                              {Token.Ticker} 
+                          </Typography>
+                          <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }), ml: 3 }}>
+                              {formatHash(Token.Id, 4)} 
+                          </Typography>
+                      </Box>
                     }
                   />
                 </ListItemButton>
@@ -145,6 +159,8 @@ const TokenLeft = (props: any) => {
   return (
     <div>
       <Drawer
+        open={leftSidebarOpen}
+        onClose={handleLeftSidebarToggle}
         variant={mdAbove ? 'permanent' : 'temporary'}
         ModalProps={{
           disablePortal: true,
@@ -182,11 +198,13 @@ const TokenLeft = (props: any) => {
             >
             <Typography>{t('My Tokens')}</Typography>
             {loadingGetTokens && <CircularProgress size={20} /> }
-            <Fab color='primary' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
-              setAddTokenFavorite(true)
-            }}>
-              <Icon icon='mdi:plus' />
-            </Fab>
+            {!loadingGetTokens && (
+              <Fab color='primary' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
+                setAddTokenFavorite(true)
+              }}>
+                <Icon icon='mdi:plus' />
+              </Fab>
+            )}
         </Box>
 
 

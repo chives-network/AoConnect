@@ -46,6 +46,7 @@ const Inbox = (prop: any) => {
 
   const { handleAddToken, 
           searchToken, 
+          setSearchToken,
           addTokenButtonText, 
           addTokenButtonDisabled, 
           addTokenFavorite, 
@@ -59,6 +60,8 @@ const Inbox = (prop: any) => {
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
+  const [isSearchTokenModelOpen, setIsSearchTokenModelOpen] = useState<boolean>(false)
+
   // ** State
   //const [isLoading, setIsLoading] = useState(false);
 
@@ -68,10 +71,13 @@ const Inbox = (prop: any) => {
     }
   }, [searchToken])
 
+
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 
 
     setIsDisabledButton(true)
+    setIsSearchTokenModelOpen(true)
+    setSearchToken(CurrentToken)
 
     setTokenGetInfor((prevState: any)=>({
       ...prevState,
@@ -134,7 +140,10 @@ const Inbox = (prop: any) => {
     }
     else {
       TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
-      console.log("TokenProcessTxId", TokenProcessTxId)
+      while(TokenProcessTxId && TokenProcessTxId.length != 43) {
+        TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+        console.log("TokenProcessTxId", TokenProcessTxId)
+      }
     }
 
     if (TokenProcessTxId) {
@@ -176,28 +185,33 @@ const Inbox = (prop: any) => {
   const handleAoTokenBalancesDryRun = async function (CurrentToken: string) {
     const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
     if(AoDryRunBalances) {
-      console.log("AoDryRunBalances", AoDryRunBalances)
-      const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
-      const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
-                        .sort((a: any, b: any) => b[1] - a[1])
-                        .reduce((acc: any, [key, value]) => {
-                            acc[key] = FormatBalance(Number(value));
-                            
-                            return acc;
-                        }, {} as { [key: string]: number });
-      const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
-      const TokenHolders = TokenMap.length
-      let CirculatingSupply = BigNumber(0)
-      TokenMap.map((Item: any)=>{
-        CirculatingSupply = CirculatingSupply.plus(Item)
-      })
-      setTokenGetInfor((prevState: any)=>({
-        ...prevState,
-        TokenBalances: AoDryRunBalancesJsonSorted,
-        TokenHolders: TokenHolders,
-        CirculatingSupply: CirculatingSupply.toString()
-      }))
-      console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+      try{
+        console.log("AoDryRunBalances", AoDryRunBalances)
+        const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+        const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
+                          .sort((a: any, b: any) => b[1] - a[1])
+                          .reduce((acc: any, [key, value]) => {
+                              acc[key] = FormatBalance(Number(value));
+                              
+                              return acc;
+                          }, {} as { [key: string]: number });
+        const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
+        const TokenHolders = TokenMap.length
+        let CirculatingSupply = BigNumber(0)
+        TokenMap.map((Item: any)=>{
+          CirculatingSupply = CirculatingSupply.plus(Item)
+        })
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          TokenBalances: AoDryRunBalancesJsonSorted,
+          TokenHolders: TokenHolders,
+          CirculatingSupply: CirculatingSupply.toString()
+        }))
+        console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+      }
+      catch(Error: any) {
+        console.log("handleAoTokenBalancesDryRun Error", Error)
+      }
     }
   }
 
@@ -350,137 +364,140 @@ const Inbox = (prop: any) => {
                       </Grid>
                     )}
 
-                    {addTokenFavorite == false && (
-                      <Grid item sx={{ display: 'column', m: 2 }}>
-                        <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                          Token: {searchToken}
-                        </Typography>
-                      </Grid>
-                    )}
-                    
+                    {(addTokenFavorite == false || isSearchTokenModelOpen) && (
+                      <Fragment>
+                        <Grid item sx={{ display: 'column', m: 2 }}>
+                          <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                            Token: {searchToken}
+                          </Typography>
+                        </Grid>
 
-                    <Grid item sx={{ display: 'column', m: 2 }}>
-                      
-                      <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} handleAddToken={handleAddToken} setCounter={setCounter}/>
+                        <Grid item sx={{ display: 'column', m: 2 }}>
+                        
+                          <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} handleAddToken={handleAddToken} setCounter={setCounter}/>
 
-                      <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
+                          <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
 
-                      <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                          () => { 
-                            setTokenGetInfor((prevState: any)=>({
-                              ...prevState,
-                              openMintToken: true
-                            }))
-                          }
-                      }>
-                      {t("Mint")}
-                      </Button>
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                              () => { 
+                                setTokenGetInfor((prevState: any)=>({
+                                  ...prevState,
+                                  openMintToken: true
+                                }))
+                              }
+                          }>
+                          {t("Mint")}
+                          </Button>
 
-                      <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                          () => { setTokenGetInfor((prevState: any)=>({
-                              ...prevState,
-                              openSendOutToken: true,
-                              SendOutToken: "",
-                          })) }
-                      }>
-                      {t("Send")}
-                      </Button>
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                              () => { setTokenGetInfor((prevState: any)=>({
+                                  ...prevState,
+                                  openSendOutToken: true,
+                                  SendOutToken: "",
+                              })) }
+                          }>
+                          {t("Send")}
+                          </Button>
 
-                    </Grid>
-                    
-                    <Grid item sx={{ display: 'column', m: 2 }}>
-                      {tokenGetInfor && tokenGetInfor.Name && (
-                        <>
-                        <Box
-                          sx={{
-                            py: 3,
-                            px: 5,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            borderBottom: theme => `1px solid ${theme.palette.divider}`,
-                            borderTop: theme => `1px solid ${theme.palette.divider}`
-                          }}
-                          >            
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center'}} >
-                              <Badge
-                                overlap='circular'
-                                anchorOrigin={{
-                                  vertical: 'bottom',
-                                  horizontal: 'right'
-                                }}
-                                sx={{ mr: 3 }}
-                                badgeContent={
-                                  <Box
-                                    component='span'
-                                    sx={{
-                                      width: 8,
-                                      height: 8,
-                                      borderRadius: '50%',
-                                      color: `primary.main`,
-                                      boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
-                                      backgroundColor: `primary.main`
+                        </Grid>
+                        
+                        <Grid item sx={{ display: 'column', m: 2 }}>
+                          {tokenGetInfor && tokenGetInfor.Name && (
+                            <>
+                            <Box
+                              sx={{
+                                py: 3,
+                                px: 5,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                borderBottom: theme => `1px solid ${theme.palette.divider}`,
+                                borderTop: theme => `1px solid ${theme.palette.divider}`
+                              }}
+                              >            
+                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center'}} >
+                                  <Badge
+                                    overlap='circular'
+                                    anchorOrigin={{
+                                      vertical: 'bottom',
+                                      horizontal: 'right'
                                     }}
-                                  />
-                                }
-                              >
-                                <MuiAvatar
-                                  src={authConfig.backEndApi + '/' + tokenGetInfor?.Logo}
-                                  alt={tokenGetInfor?.Name}
-                                  sx={{ width: '2.5rem', height: '2.5rem' }}
-                                />
-                              </Badge>
-                              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                                <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                                  {tokenGetInfor?.Name}
-                                  <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance}</Typography>
-                                </Typography>
-                                <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
-                                  {tokenGetInfor?.Ticker}
-                                  <Link href={`https://www.ao.link/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
-                                    <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
-                                  </Link>
-                                </Typography>
+                                    sx={{ mr: 3 }}
+                                    badgeContent={
+                                      <Box
+                                        component='span'
+                                        sx={{
+                                          width: 8,
+                                          height: 8,
+                                          borderRadius: '50%',
+                                          color: `primary.main`,
+                                          boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
+                                          backgroundColor: `primary.main`
+                                        }}
+                                      />
+                                    }
+                                  >
+                                    <MuiAvatar
+                                      src={authConfig.backEndApi + '/' + tokenGetInfor?.Logo}
+                                      alt={tokenGetInfor?.Name}
+                                      sx={{ width: '2.5rem', height: '2.5rem' }}
+                                    />
+                                  </Badge>
+                                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                                      {tokenGetInfor?.Name}
+                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance}</Typography>
+                                    </Typography>
+                                    <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
+                                      {tokenGetInfor?.Ticker}
+                                      <Link href={`https://www.ao.link/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
+                                        <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
+                                      </Link>
+                                    </Typography>
+                                  </Box>
+
+                                </Box>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
+                                  <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                                    {t('Token holders')}
+                                  </Typography>
+                                  <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
+                                    {t('Circulating supply')}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
+                                  <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                                    {tokenGetInfor?.TokenHolders}
+                                  </Typography>
+                                  <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
+                                    {tokenGetInfor?.CirculatingSupply}
+                                  </Typography>
+                                </Box>
                               </Box>
 
                             </Box>
-                          </Box>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
-                              <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                                {t('Token holders')}
-                              </Typography>
-                              <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
-                                {t('Circulating supply')}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
-                              <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                                {tokenGetInfor?.TokenHolders}
-                              </Typography>
-                              <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
-                                {tokenGetInfor?.CirculatingSupply}
-                              </Typography>
-                            </Box>
-                          </Box>
 
-                        </Box>
+                            <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} />
 
-                        <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} />
+                            {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
+                              <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
+                            )}
+                            
 
-                        {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
-                          <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
-                        )}
-                        
+                            </>
 
-                        </>
+                          )}
 
-                      )}
-
+                        </Grid>
                       
-                      
-                    </Grid>
+                      </Fragment>
+                    )}
+                    
+
+                    
                       
                 </Card>
               </Grid>

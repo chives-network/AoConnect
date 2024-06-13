@@ -190,7 +190,7 @@ export const AoCreateProcessAuto = async (currentWalletJwk: any) => {
         console.error("AoCreateProcessAuto Error:", Error)
         if(Error && Error.message) {
 
-            return { status: 'error', msg: Error.message };
+            return Error.message
         }
     }
 }

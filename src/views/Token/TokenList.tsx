@@ -9,6 +9,7 @@ import TableBody from '@mui/material/TableBody'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import { useTranslation } from 'react-i18next'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const TokenList = (prop: any) => {
   
@@ -58,6 +59,15 @@ const TokenList = (prop: any) => {
                 )
                 
             })}
+
+            {tokenGetInfor && tokenGetInfor.TokenBalances == null && (
+                <TableRow sx={{my: 0, py: 0}}>
+                    <TableCell sx={{my: 0, py: 0}}>
+                        <CircularProgress />
+                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('Loading token txs...')}</Typography>
+                    </TableCell>
+                </TableRow>
+            )}
         
             </TableBody>
             </Table>
