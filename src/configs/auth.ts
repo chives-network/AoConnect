@@ -20,5 +20,6 @@ export default {
   chivesReferee: 'ChivesReferee',
   'App-Name': 'AoConnect',
   'App-Version': '0.1',
-  'App-Instance': ''
+  'App-Instance': '',
+  AoConnectBlockTxIds: ['tXnvoxbygi1OIgYzcFC1Qjgrf2Sq9MHgoYBKJkXMV2E']
 }

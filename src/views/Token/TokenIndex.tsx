@@ -73,13 +73,24 @@ const Inbox = (prop: any) => {
 
   useEffect(()=>{
     if(searchToken && searchToken.length == 43) {
+      setIsDisabledButton(true)
       handleTokenSearch(searchToken)
+      setIsDisabledButton(false)
     }
   }, [searchToken])
 
 
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 
+
+    if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
+      
+      toast.error(t('This token is not allowed to search'), {
+        duration: 4000
+      })
+
+      return 
+    }
 
     setIsDisabledButton(true)
     setIsSearchTokenModelOpen(true)
@@ -104,6 +115,7 @@ const Inbox = (prop: any) => {
     }
 
     const TokenGetMap = await AoTokenInfoDryRun(CurrentToken)
+
     if(TokenGetMap)  {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
@@ -131,7 +143,7 @@ const Inbox = (prop: any) => {
       }))
     }
 
-    console.log("TokenGetMap", TokenGetMap)
+    
 
     await handleAoTokenBalancesDryRun(CurrentToken)
 

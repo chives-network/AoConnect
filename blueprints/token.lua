@@ -1,5 +1,16 @@
+-- Name: ChivesToken
+-- Author: Chives-Network
+-- Email: chivescoin@gmail.com
+-- Copyright: MIT
+-- Version: 20240613
+-- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/token.lua
+
+-- Function
+-- 1. Support Balances Pagination.
+
 local bint = require('.bint')(256)
 local ao = require('ao')
+
 --[[
   This module implements the ao Standard Token Specification.
 
@@ -43,8 +54,20 @@ local utils = {
   end,
   toNumber = function (a)
     return tonumber(a)
+  end,
+  compare = function (a, b)
+    return a[2] > b[2]
   end
 }
+
+
+function Welcome()
+  return(
+      "Welcome to Chives Token V0.1!\n\n" ..
+      "Main functoin:\n\n" ..
+      "1. Support Balances Pagination.\n" ..
+      "Have fun, be respectful !")
+end
 
 
 --[[
@@ -110,8 +133,33 @@ end)
      Balances
    ]]
 --
-Handlers.add('balances', Handlers.utils.hasMatchingTag('Action', 'Balances'),
-  function(msg) ao.send({ Target = msg.From, Data = json.encode(Balances) }) end)
+Handlers.add('BalancesPage', 
+  Handlers.utils.hasMatchingTag('Action', 'BalancesPage'), 
+  function(msg) 
+
+    local sortedBalances = {}
+    for id, balance in pairs(Balances) do
+        table.insert(sortedBalances, {id, balance})
+    end
+
+    table.sort(sortedBalances, utils.compare)
+
+    local filterBalances = {}
+    local startIndex = tonumber(msg.Tags.startIndex)
+    local endIndex = tonumber(msg.Tags.endIndex)
+    for i = startIndex, endIndex do
+        local record = sortedBalances[i]
+        if record then
+            local id = record[1]
+            local balance = record[2]
+            filterBalances[id] = balance
+        end
+    end
+
+    ao.send({ Target = msg.From, Data = json.encode(filterBalances) }) 
+    
+  end
+)
 
 --[[
      Transfer
@@ -225,3 +273,6 @@ Handlers.add('totalSupply', Handlers.utils.hasMatchingTag('Action', 'Total-Suppl
     Ticker = Ticker
   })
 end)
+
+
+return Welcome()
