@@ -51,7 +51,8 @@ const TokenLeft = (props: any) => {
     setAddTokenFavorite,
     setTokenCreate,
     leftSidebarOpen,
-    handleLeftSidebarToggle
+    handleLeftSidebarToggle,
+    setTokenGetInfor
   } = props
 
   // ** States
@@ -74,10 +75,17 @@ const TokenLeft = (props: any) => {
   }, [tokenLeft])
 
   const renderTokens = (tokenLeft: any[]) => {
-    if (tokenLeft && tokenLeft.length == 0) {
+    if (tokenLeft && tokenLeft.length == 0 && loadingGetTokens == true) {
       return (
         <ListItem>
-          <Typography sx={{ color: 'text.secondary' }}>No Tokens</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{t('Loading...')}</Typography>
+        </ListItem>
+      )
+    } 
+    else if (tokenLeft && tokenLeft.length == 0 && loadingGetTokens == false) {
+      return (
+        <ListItem>
+          <Typography sx={{ color: 'text.secondary' }}>{t('No token')}</Typography>
         </ListItem>
       )
     } 
@@ -201,6 +209,16 @@ const TokenLeft = (props: any) => {
             {!loadingGetTokens && (
               <Fab color='primary' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
                 setAddTokenFavorite(true)
+                setSearchToken('')
+                setTokenGetInfor((prevState: any)=>({
+                  ...prevState,
+                  TokenProcessTxId: '',
+                  CurrentToken: '',
+                  TokenBalance: 0,
+                  TokenBalances: null,
+                  TokenHolders: null,
+                  CirculatingSupply: null
+                }))
               }}>
                 <Icon icon='mdi:plus' />
               </Fab>

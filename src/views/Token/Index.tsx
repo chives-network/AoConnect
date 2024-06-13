@@ -52,11 +52,12 @@ const AppChat = () => {
   const [tokenLeft, setTokenLeft] = useState<any[]>([])
   const [counter, setCounter] = useState<number>(0)
   const [searchToken, setSearchToken] = useState<string>('')
-  const [loadingGetTokens, setLoadingGetTokens] = useState<boolean>(false)
+  const [loadingGetTokens, setLoadingGetTokens] = useState<boolean>(true)
   const [addTokenButtonText, setAddTokenButtonText] = useState<string>('Add Favorite')
   const [addTokenButtonDisabled, setAddTokenButtonDisabled] = useState<boolean>(false)
   const [addTokenFavorite, setAddTokenFavorite] = useState<boolean>(false)
   const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
+  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
@@ -102,7 +103,6 @@ const AppChat = () => {
             const filteredTokens = AllTokens.filter(token => token);
             if (filteredTokens.length > 0) {
                 setTokenLeft(filteredTokens);
-                console.log("tokenLeft", tokenLeft);
                 console.log("tokenLeft AllTokens", AllTokens);
             }
         }
@@ -110,7 +110,6 @@ const AppChat = () => {
     setLoadingGetTokens(false)
   }
 
-  console.log("tokenLeft", tokenLeft);
 
   const handleAddToken = async (WantToSaveTokenProcessTxId: string) => {
     setAddTokenButtonDisabled(true)
@@ -119,6 +118,7 @@ const AppChat = () => {
     if(WantToSaveTokenProcessTxIdData) {
       console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
       if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {
+        setCounter(counter + 1)
         const formatText = WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
 
@@ -130,6 +130,7 @@ const AppChat = () => {
               toast.success(formatText2, {
                 duration: 2000
               })
+              setAddTokenButtonText('have add')
             }
           }
 
@@ -137,7 +138,6 @@ const AppChat = () => {
 
       }
     }
-    setAddTokenButtonText('have add')
   }
   
   return (
@@ -174,9 +174,11 @@ const AppChat = () => {
             setTokenCreate={setTokenCreate}
             leftSidebarOpen={leftSidebarOpen}
             handleLeftSidebarToggle={handleLeftSidebarToggle}
+            setTokenGetInfor={setTokenGetInfor}
           />
           <TokenIndex 
-            handleAddToken={handleAddToken}  
+            tokenLeft={tokenLeft}
+            handleAddToken={handleAddToken}
             searchToken={searchToken}
             setSearchToken={setSearchToken}
             addTokenButtonText={addTokenButtonText}
@@ -187,6 +189,10 @@ const AppChat = () => {
             setTokenCreate={setTokenCreate}
             counter={counter}
             setCounter={setCounter}
+            tokenGetInfor={tokenGetInfor}
+            setTokenGetInfor={setTokenGetInfor}
+            setAddTokenButtonText={setAddTokenButtonText}
+            setAddTokenButtonDisabled={setAddTokenButtonDisabled}
           />
         </Fragment>
 

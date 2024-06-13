@@ -9,6 +9,8 @@ import TableBody from '@mui/material/TableBody'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import { useTranslation } from 'react-i18next'
+import IconButton from '@mui/material/IconButton'
+import Icon from 'src/@core/components/icon'
 import CircularProgress from '@mui/material/CircularProgress'
 
 const TokenList = (prop: any) => {
@@ -39,7 +41,14 @@ const TokenList = (prop: any) => {
                         <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Index + 1}</Typography>
                     </TableCell>
                     <TableCell sx={{my: 0, py: 0}}>
-                        <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Item}</Typography>
+                        <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 1, display: 'inline', my: 0, py: 0 }}>{Item}</Typography>
+                        {Item && (
+                            <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                navigator.clipboard.writeText(Item);
+                            }}>
+                                <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                            </IconButton>
+                        )}
                     </TableCell>
                     <TableCell sx={{my: 0, py: 0}}>
                         <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{tokenGetInfor.TokenBalances[Item]}</Typography>

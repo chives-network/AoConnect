@@ -22,6 +22,7 @@ import Icon from 'src/@core/components/icon'
 import toast from 'react-hot-toast'
 import MuiAvatar from '@mui/material/Avatar'
 import authConfig from 'src/configs/auth'
+import IconButton from '@mui/material/IconButton'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -44,7 +45,8 @@ const Inbox = (prop: any) => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
-  const { handleAddToken, 
+  const { tokenLeft,
+          handleAddToken, 
           searchToken, 
           setSearchToken,
           addTokenButtonText, 
@@ -53,12 +55,16 @@ const Inbox = (prop: any) => {
           tokenCreate,
           setTokenCreate,
           counter,
-          setCounter
+          setCounter,
+          tokenGetInfor,
+          setTokenGetInfor,
+          setAddTokenButtonText,
+          setAddTokenButtonDisabled
         } = prop
 
   //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
+  
 
   const [isSearchTokenModelOpen, setIsSearchTokenModelOpen] = useState<boolean>(false)
 
@@ -103,6 +109,15 @@ const Inbox = (prop: any) => {
         ...prevState,
         ...TokenGetMap
       }))
+      const isFavorite = tokenLeft.some((item: any) => item.Id == CurrentToken)
+      if(isFavorite) {
+        setAddTokenButtonText('Have favorite')
+        setAddTokenButtonDisabled(true)
+      }
+      else {
+        setAddTokenButtonText('Add favorite')
+        setAddTokenButtonDisabled(false)
+      }
     }
     else {
 
@@ -364,12 +379,20 @@ const Inbox = (prop: any) => {
                       </Grid>
                     )}
 
-                    {(addTokenFavorite == false || isSearchTokenModelOpen) && (
+                    {(addTokenFavorite == false || isSearchTokenModelOpen) && tokenGetInfor && tokenGetInfor.CurrentToken && (
                       <Fragment>
-                        <Grid item sx={{ display: 'column', m: 2 }}>
-                          <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                            Token: {searchToken}
+                        <Grid item sx={{ display: 'flex', flexDirection: 'row', m: 2 }}>
+                          <Typography sx={{ fontWeight: 500, fontSize: '0.875rem', pt: 0.8 }}>
+                              Token: {searchToken}
                           </Typography>
+                          {searchToken && (
+                            <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                navigator.clipboard.writeText(searchToken);
+                                toast.success(t('Copied success') as string, { duration: 1000 })
+                            }}>
+                                <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                            </IconButton>
+                          )}
                         </Grid>
 
                         <Grid item sx={{ display: 'column', m: 2 }}>
@@ -452,8 +475,15 @@ const Inbox = (prop: any) => {
                                     <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
                                       {tokenGetInfor?.Ticker}
                                       <Link href={`https://www.ao.link/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
-                                        <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
+                                        <Typography noWrap variant='body2' sx={{ml: 2, mr: 1, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
                                       </Link>
+                                      {tokenGetInfor?.TokenProcessTxId && (
+                                          <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                              navigator.clipboard.writeText(tokenGetInfor?.TokenProcessTxId);
+                                          }}>
+                                              <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                                          </IconButton>
+                                      )}
                                     </Typography>
                                   </Box>
 
@@ -496,9 +526,6 @@ const Inbox = (prop: any) => {
                       </Fragment>
                     )}
                     
-
-                    
-                      
                 </Card>
               </Grid>
             </Grid>
