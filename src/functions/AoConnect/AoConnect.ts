@@ -28,7 +28,11 @@ export const AoSendMsg = async (currentWalletJwk: any, processTxId: string, Msg:
     }
     catch(Error: any) {
 
-        console.log("AoSendMsg Error", Error);
+        console.log("AoSendMsg Error", Error)
+        if(Error && Error.message) {
+
+            return Error.message;
+        };
     }
 }
 
@@ -44,7 +48,7 @@ export const AoGetLastPage = async (processTxId: string, Sort = 'DESC', Limit = 
         return resultsOut
     }
     catch(Error: any) {
-        console.error("AoGetPageRecords Error:", Error)
+        console.error("AoGetLastPage Error:", Error)
 
         return []
     }
@@ -61,7 +65,11 @@ export const AoGetRecord = async (processTxId: string, messageTxId: string) => {
         return resultsOut
     }
     catch(Error: any) {
-        console.error("AoGetPageRecords Error:", Error)
+        console.error("AoGetRecord Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
 }
 
@@ -76,7 +84,7 @@ export const AoGetMessage = async (processTxId: string, messageTxId: string) => 
         return resultsOut
     }
     catch(Error: any) {
-        console.error("AoGetPageRecords Error:", Error)
+        console.error("AoGetMessage Error:", Error)
     }
 }
 
@@ -94,6 +102,10 @@ export const AoGetPageRecords = async (processTxId: string, Sort = 'DESC', Limit
     }
     catch(Error: any) {
         console.error("AoGetPageRecords Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
 }
 
@@ -113,7 +125,11 @@ export const AoCreateProcess = async (currentWalletJwk: any, moduleTxId: string,
         return processTxId;
     }
     catch(Error: any) {
-        console.error("AoGetPageRecords Error:", Error)
+        console.error("AoCreateProcess Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
 }
 
@@ -131,7 +147,11 @@ export const AoMonitor = async (currentWalletJwk: any, processTxId: string) => {
         return result;
     }
     catch(Error: any) {
-        console.error("AoGetPageRecords Error:", Error)
+        console.error("AoMonitor Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
 }
 
@@ -149,7 +169,11 @@ export const AoUnMonitor = async (currentWalletJwk: any, processTxId: string) =>
         return result;
     }
     catch(Error: any) {
-        console.error("AoGetPageRecords Error:", Error)
+        console.error("AoUnMonitor Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
 }
 
@@ -164,6 +188,10 @@ export const AoCreateProcessAuto = async (currentWalletJwk: any) => {
     }
     catch(Error: any) {
         console.error("AoCreateProcessAuto Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
 }
 
@@ -261,6 +289,10 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
     }
     catch(Error: any) {
         console.error("GetMyLastMsg Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }

@@ -121,7 +121,7 @@ const AppChat = (props: any) => {
     checkChivesChatIsMember();
   }, [id, myProcessTxId]);
 
-  console.log("GetChatroomAvatarData app", app, GetChatroomAvatarData)
+  //console.log("GetChatroomAvatarData app", app, GetChatroomAvatarData)
 
   useEffect(() => {
     if(currentMemberStatus[0] == true || currentMemberStatus[1] == true)  {
@@ -608,11 +608,24 @@ const AppChat = (props: any) => {
     }
 
   }
-
+  
+  // ** States
+  const [store, setStore] = useState<any>(null)
+  const [downloadButtonDisable, setDownloadButtonDisable] = useState<boolean>(false)
+  const [sendButtonDisable, setSendButtonDisable] = useState<boolean>(false)
+  const [sendButtonLoading, setSendButtonLoading] = useState<boolean>(false)
+  const [sendButtonText, setSendButtonText] = useState<string>('')
+  const [sendInputText, setSendInputText] = useState<string>('')
+  const [processingMessages, setProcessingMessages] = useState<any[]>([])
+  
   const handleChivesChatApplyJoin = async function () {
+    setSendButtonDisable(true)
     const ChivesChatUserApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, id, myProcessTxId, "User" + myProcessTxId.substring(0, 6), "Hope join this chatroom")
     if(ChivesChatUserApplyJoin) {
       console.log("ChivesChatUserApplyJoin", ChivesChatUserApplyJoin)
+      if(ChivesChatUserApplyJoin.status == 'error' && ChivesChatUserApplyJoin.msg)  {
+        toast.success(t(ChivesChatUserApplyJoin.msg) as string, { duration: 2500, position: 'top-center' })
+      }
       if(ChivesChatUserApplyJoin?.msg?.Output?.data?.output)  {
         const formatText = ChivesChatUserApplyJoin?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
@@ -630,17 +643,11 @@ const AppChat = (props: any) => {
 
       }
     }
+
+    setSendButtonDisable(false)
   }
-  
-  // ** States
-  const [store, setStore] = useState<any>(null)
-  const [downloadButtonDisable, setDownloadButtonDisable] = useState<boolean>(false)
-  const [sendButtonDisable, setSendButtonDisable] = useState<boolean>(false)
-  const [sendButtonLoading, setSendButtonLoading] = useState<boolean>(false)
-  const [sendButtonText, setSendButtonText] = useState<string>('')
-  const [sendInputText, setSendInputText] = useState<string>('')
-  const [processingMessages, setProcessingMessages] = useState<any[]>([])
-  
+
+
   // ** Hooks
   //const hidden = false
 

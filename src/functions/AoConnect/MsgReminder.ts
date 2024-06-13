@@ -270,6 +270,10 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
     }
     catch(Error: any) {
         console.log("ConvertInboxMessageFormatAndStorage Error", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
         
         return 
     }
@@ -292,6 +296,10 @@ export const GetInboxMsgFromLocalStorage = (processTxId: string, From: number, C
     }
     catch(Error: any) {
         console.log("GetInboxMsgFromLocalStorage Error", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
         
         return []
     }

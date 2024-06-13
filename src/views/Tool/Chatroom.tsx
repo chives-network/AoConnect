@@ -187,7 +187,7 @@ const Chatroom = () => {
       
       //Delay 5s code begin
 
-      const LoadBlueprintChatroom = await AoLoadBlueprintChatroom(currentWallet.jwk, ChatroomProcessTxId)
+      const LoadBlueprintChatroom: any = await AoLoadBlueprintChatroom(currentWallet.jwk, ChatroomProcessTxId)
       if(LoadBlueprintChatroom) {
         console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
         if(LoadBlueprintChatroom?.msg?.Output?.data?.output)  {
@@ -201,7 +201,7 @@ const Chatroom = () => {
       console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
 
       /*
-      const LoadBlueprintChat = await AoLoadBlueprintChat(currentWallet.jwk, ChatroomProcessTxId)
+      const LoadBlueprintChat: any = await AoLoadBlueprintChat(currentWallet.jwk, ChatroomProcessTxId)
       if(LoadBlueprintChat) {
         console.log("LoadBlueprintChat", LoadBlueprintChat)
         if(LoadBlueprintChat?.msg?.Output?.data?.output)  {

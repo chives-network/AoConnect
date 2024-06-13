@@ -62,7 +62,7 @@ const MyProcessTxIds = () => {
 
     await sleep(10000)
 
-    const LoadBlueprintMyProcessTxIds = await AoLoadBlueprintMyProcessTxIds(currentWallet.jwk, MyProcessTxIds)
+    const LoadBlueprintMyProcessTxIds: any = await AoLoadBlueprintMyProcessTxIds(currentWallet.jwk, MyProcessTxIds)
     if(LoadBlueprintMyProcessTxIds) {
       console.log("LoadBlueprintMyProcessTxIds", LoadBlueprintMyProcessTxIds)
       if(LoadBlueprintMyProcessTxIds?.msg?.Output?.data?.output)  {

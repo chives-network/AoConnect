@@ -27,15 +27,19 @@ export const GetChivesChatMembersByOwner = async (currentWalletJwk: any, process
         if(GetChivesChatMembersByOwnerResult && GetChivesChatMembersByOwnerResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChivesChatMembersByOwnerResult)
 
-            return { id: GetChivesChatMembersByOwnerResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatMembersByOwnerResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatMembersByOwnerResult };
+            return { status: 'ok', id: GetChivesChatMembersByOwnerResult };
         }
     }
     catch(Error: any) {
         console.error("GetChivesChatMembersByOwner Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -55,15 +59,19 @@ export const GetChivesChatInvites = async (currentWalletJwk: any, processTxId: s
         if(GetChivesChatInvitesResult && GetChivesChatInvitesResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChivesChatInvitesResult)
 
-            return { id: GetChivesChatInvitesResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatInvitesResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatInvitesResult };
+            return { status: 'ok', id: GetChivesChatInvitesResult };
         }
     }
     catch(Error: any) {
         console.error("GetChivesChatInvites Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -83,15 +91,19 @@ export const GetChivesChatApplicants = async (currentWalletJwk: any, processTxId
         if(GetChivesChatApplicantsResult && GetChivesChatApplicantsResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChivesChatApplicantsResult)
 
-            return { id: GetChivesChatApplicantsResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatApplicantsResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatApplicantsResult };
+            return { status: 'ok', id: GetChivesChatApplicantsResult };
         }
     }
     catch(Error: any) {
         console.error("GetChivesChatApplicants Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -111,15 +123,19 @@ export const GetChivesChatAdmins = async (currentWalletJwk: any, processTxId: st
         if(GetChivesChatAdminsResult && GetChivesChatAdminsResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChivesChatAdminsResult)
 
-            return { id: GetChivesChatAdminsResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatAdminsResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatAdminsResult };
+            return { status: 'ok', id: GetChivesChatAdminsResult };
         }
     }
     catch(Error: any) {
         console.error("GetChivesChatAdmins Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -139,15 +155,19 @@ export const ChivesChatAddAdmin = async (currentWalletJwk: any, chatroomTxId: st
         if(GetChivesChatAddAdminResult && GetChivesChatAddAdminResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddAdminResult)
 
-            return { id: GetChivesChatAddAdminResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatAddAdminResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatAddAdminResult };
+            return { status: 'ok', id: GetChivesChatAddAdminResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatAddAdmin Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -167,15 +187,19 @@ export const ChivesChatDelAdmin = async (currentWalletJwk: any, chatroomTxId: st
         if(GetChivesChatDelAdminResult && GetChivesChatDelAdminResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelAdminResult)
 
-            return { id: GetChivesChatDelAdminResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatDelAdminResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatDelAdminResult };
+            return { status: 'ok', id: GetChivesChatDelAdminResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatDelAdmin Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -196,15 +220,19 @@ export const ChivesChatApplyJoin = async (currentWalletJwk: any, chatroomTxId: s
         if(GetChivesChatApplyJoinResult && GetChivesChatApplyJoinResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatApplyJoinResult)
 
-            return { id: GetChivesChatApplyJoinResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatApplyJoinResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatApplyJoinResult };
+            return { status: 'ok', id: GetChivesChatApplyJoinResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatApplyJoin Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -227,15 +255,19 @@ export const ChivesChatApprovalApply = async (currentWalletJwk: any, chatroomTxI
         if(GetChivesChatApprovalApplyResult && GetChivesChatApprovalApplyResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatApprovalApplyResult)
 
-            return { id: GetChivesChatApprovalApplyResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatApprovalApplyResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatApprovalApplyResult };
+            return { status: 'ok', id: GetChivesChatApprovalApplyResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatApprovalApply Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -256,15 +288,19 @@ export const ChivesChatRefuseApply = async (currentWalletJwk: any, chatroomTxId:
         if(GetChivesChatRefuseApplyResult && GetChivesChatRefuseApplyResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatRefuseApplyResult)
 
-            return { id: GetChivesChatRefuseApplyResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatRefuseApplyResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatRefuseApplyResult };
+            return { status: 'ok', id: GetChivesChatRefuseApplyResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatRefuseApply Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -285,15 +321,19 @@ export const ChivesChatAddMember = async (currentWalletJwk: any, chatroomTxId: s
         if(GetChivesChatAddMemberResult && GetChivesChatAddMemberResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddMemberResult)
 
-            return { id: GetChivesChatAddMemberResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatAddMemberResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatAddMemberResult };
+            return { status: 'ok', id: GetChivesChatAddMemberResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatAddMember Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -314,15 +354,19 @@ export const ChivesChatAddInvite = async (currentWalletJwk: any, chatroomTxId: s
         if(GetChivesChatAddInviteResult && GetChivesChatAddInviteResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddInviteResult)
 
-            return { id: GetChivesChatAddInviteResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatAddInviteResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatAddInviteResult };
+            return { status: 'ok', id: GetChivesChatAddInviteResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatAddInvite Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -344,15 +388,19 @@ export const ChivesChatAddInvites = async (currentWalletJwk: any, chatroomTxId: 
         if(GetChivesChatAddInviteResult && GetChivesChatAddInviteResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddInviteResult)
 
-            return { id: GetChivesChatAddInviteResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatAddInviteResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatAddInviteResult };
+            return { status: 'ok', id: GetChivesChatAddInviteResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatAddInvites Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -373,15 +421,19 @@ export const ChivesChatAgreeInvite = async (currentWalletJwk: any, chatroomTxId:
         if(GetChivesChatAgreeInviteResult && GetChivesChatAgreeInviteResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAgreeInviteResult)
 
-            return { id: GetChivesChatAgreeInviteResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatAgreeInviteResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatAgreeInviteResult };
+            return { status: 'ok', id: GetChivesChatAgreeInviteResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatAgreeInvite Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -402,15 +454,19 @@ export const ChivesChatRefuseInvite = async (currentWalletJwk: any, chatroomTxId
         if(GetChivesChatRefuseInviteResult && GetChivesChatRefuseInviteResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatRefuseInviteResult)
 
-            return { id: GetChivesChatRefuseInviteResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatRefuseInviteResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatRefuseInviteResult };
+            return { status: 'ok', id: GetChivesChatRefuseInviteResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatRefuseInvite Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -430,15 +486,19 @@ export const ChivesChatDelMember = async (currentWalletJwk: any, chatroomTxId: s
         if(GetChivesChatDelMemberResult && GetChivesChatDelMemberResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelMemberResult)
 
-            return { id: GetChivesChatDelMemberResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatDelMemberResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChivesChatDelMemberResult };
+            return { status: 'ok', id: GetChivesChatDelMemberResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatDelMember Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -458,15 +518,19 @@ export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: 
         if(GetChivesChatAddChannelResult && GetChivesChatAddChannelResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatAddChannelResult)
 
-            return { id: GetChivesChatAddChannelResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatAddChannelResult, msg: MsgContent };
         }
         else {
             
-            return { id: GetChivesChatAddChannelResult };
+            return { status: 'ok', id: GetChivesChatAddChannelResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatAddChannel Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -486,15 +550,19 @@ export const ChivesChatEditChannel = async (currentWalletJwk: any, chatroomTxId:
         if(GetChivesChatEditChannelResult && GetChivesChatEditChannelResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatEditChannelResult)
 
-            return { id: GetChivesChatEditChannelResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatEditChannelResult, msg: MsgContent };
         }
         else {
             
-            return { id: GetChivesChatEditChannelResult };
+            return { status: 'ok', id: GetChivesChatEditChannelResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatEditChannel Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -514,15 +582,19 @@ export const ChivesChatDelChannel = async (currentWalletJwk: any, chatroomTxId: 
         if(GetChivesChatDelChannelResult && GetChivesChatDelChannelResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesChatDelChannelResult)
 
-            return { id: GetChivesChatDelChannelResult, msg: MsgContent };
+            return { status: 'ok', id: GetChivesChatDelChannelResult, msg: MsgContent };
         }
         else {
             
-            return { id: GetChivesChatDelChannelResult };
+            return { status: 'ok', id: GetChivesChatDelChannelResult };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatDelChannel Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -555,6 +627,10 @@ export const ChivesChatGetChannels = async (TargetTxId: string, processTxId: str
     }
     catch(Error: any) {
         console.error("AoTokenBalanceDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return {}
     }
@@ -593,6 +669,10 @@ export const ChivesChatGetMembers = async (TargetTxId: string, processTxId: stri
     }
     catch(Error: any) {
         console.error("ChivesChatGetMembers Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return [[], {}]
     }
@@ -631,6 +711,10 @@ export const ChivesChatIsMember = async (TargetTxId: string, processTxId: string
     }
     catch(Error: any) {
         console.error("ChivesChatGetMembers Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return [[], {}]
     }
@@ -664,6 +748,10 @@ export const ChivesChatGetApplicants = async (TargetTxId: string, processTxId: s
     }
     catch(Error: any) {
         console.error("AoTokenBalanceDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return 
     }
@@ -695,13 +783,17 @@ export const ChivesChatGetInboxs = async (TargetTxId: string, processTxId: strin
         }
         else {
 
-            return 
+            return { status: 'error', msg: 'Unknown return data parsed' };
         }
     }
     catch(Error: any) {
         console.error("ChivesChatGetInboxs Error:", Error)
+        if(Error && Error.message) {
 
-        return 
+            return { status: 'error', msg: Error.message };
+        }
+
+        return { status: 'error', msg: 'Unknown' };
     }
 }
 
@@ -722,15 +814,19 @@ export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxI
         if(SendMessageResult && SendMessageResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, SendMessageResult)
 
-            return { id: SendMessageResult, msg: MsgContent, NanoId: NanoId };
+            return { status: 'ok', id: SendMessageResult, msg: MsgContent, NanoId: NanoId };
         }
         else {
             
-            return { id: SendMessageResult };
+            return { status: 'ok', id: SendMessageResult };
         }
     }
     catch(Error: any) {
         console.error("SendMessageToChivesChat Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }

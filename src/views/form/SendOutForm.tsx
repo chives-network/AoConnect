@@ -125,12 +125,12 @@ const SendOutForm = () => {
     setIsDisabledButton(true)
     setUploadingButton(`${t('Submitting...')}`)
 
-    const titleData = await AoSendMsg(currentWallet.jwk, "KHruEP5dOP_MgNHava2kEPleihEc915GlRRr3rQ5Jz4", "Test Data", [])
-    console.log("titleData", titleData)
+    const Result = await AoSendMsg(currentWallet.jwk, "KHruEP5dOP_MgNHava2kEPleihEc915GlRRr3rQ5Jz4", "Test Data", [])
+    console.log("Result", Result)
     
-    if(titleData!=null) {
+    if(Result || Result.length != 43) {
       //Insufficient balance
-      toast.error(titleData, { duration: 4000 })
+      toast.error(Result as string, { duration: 4000 })
       setIsDisabledButton(false)
       setUploadingButton(`${t('Submit')}`)
     }

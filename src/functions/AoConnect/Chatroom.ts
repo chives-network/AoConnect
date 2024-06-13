@@ -23,15 +23,19 @@ export const GetChatroomMembers = async (currentWalletJwk: any, processTxId: str
         if(GetChatroomMembersResult && GetChatroomMembersResult.length == 43) {
             const MsgContent = await AoGetRecord(processTxId, GetChatroomMembersResult)
 
-            return { id: GetChatroomMembersResult, msg: MsgContent };
+            return { status: 'ok', id: GetChatroomMembersResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChatroomMembersResult };
+            return { status: 'ok', id: GetChatroomMembersResult };
         }
     }
     catch(Error: any) {
         console.error("GetChatroomMembers Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -51,15 +55,19 @@ export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId
         if(GetChatroomMembersResult && GetChatroomMembersResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChatroomMembersResult)
 
-            return { id: GetChatroomMembersResult, msg: MsgContent };
+            return { status: 'ok', id: GetChatroomMembersResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetChatroomMembersResult };
+            return { status: 'ok', id: GetChatroomMembersResult };
         }
     }
     catch(Error: any) {
         console.error("GetChatroomMembers Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -79,15 +87,19 @@ export const SendMessageToChatroom = async (currentWalletJwk: any, chatroomTxId:
         if(SendMessageResult && SendMessageResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, SendMessageResult)
 
-            return { id: SendMessageResult, msg: MsgContent };
+            return { status: 'ok', id: SendMessageResult, msg: MsgContent };
         }
         else {
 
-            return { id: SendMessageResult };
+            return { status: 'ok', id: SendMessageResult };
         }
     }
     catch(Error: any) {
         console.error("SendMessageToChatroom Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }

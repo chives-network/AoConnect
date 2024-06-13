@@ -110,7 +110,7 @@ const ChivesChat = () => {
 
     //setTimeout(async () => {
       
-    const LoadBlueprintChivesChat = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId)
+    const LoadBlueprintChivesChat: any = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId)
     if(LoadBlueprintChivesChat) {
       console.log("LoadBlueprintChivesChat", LoadBlueprintChivesChat)
       if(LoadBlueprintChivesChat?.msg?.Output?.data?.output)  {

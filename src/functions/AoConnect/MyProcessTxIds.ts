@@ -36,6 +36,10 @@ export const MyProcessTxIdsGetTokens = async (TargetTxId: string, processTxId: s
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsGetTokens Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return {}
     }
@@ -58,15 +62,19 @@ export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxI
         if(GetMyProcessTxIdsAddTokenResult && GetMyProcessTxIdsAddTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsAddTokenResult)
 
-            return { id: GetMyProcessTxIdsAddTokenResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsAddTokenResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsAddTokenResult };
+            return { status: 'ok', id: GetMyProcessTxIdsAddTokenResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsAddToken Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -88,15 +96,19 @@ export const MyProcessTxIdsDelToken = async (currentWalletJwk: any, MyProcessTxI
         if(GetMyProcessTxIdsDelTokenResult && GetMyProcessTxIdsDelTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsDelTokenResult)
 
-            return { id: GetMyProcessTxIdsDelTokenResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsDelTokenResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsDelTokenResult };
+            return { status: 'ok', id: GetMyProcessTxIdsDelTokenResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsDelToken Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -130,6 +142,10 @@ export const MyProcessTxIdsGetChatrooms = async (TargetTxId: string, processTxId
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsGetChatrooms Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return {}
     }
@@ -152,15 +168,19 @@ export const MyProcessTxIdsAddChatroom = async (currentWalletJwk: any, MyProcess
         if(GetMyProcessTxIdsAddChatroomResult && GetMyProcessTxIdsAddChatroomResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsAddChatroomResult)
 
-            return { id: GetMyProcessTxIdsAddChatroomResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsAddChatroomResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsAddChatroomResult };
+            return { status: 'ok', id: GetMyProcessTxIdsAddChatroomResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsAddChatroom Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -182,15 +202,19 @@ export const MyProcessTxIdsDelChatroom = async (currentWalletJwk: any, MyProcess
         if(GetMyProcessTxIdsDelChatroomResult && GetMyProcessTxIdsDelChatroomResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsDelChatroomResult)
 
-            return { id: GetMyProcessTxIdsDelChatroomResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsDelChatroomResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsDelChatroomResult };
+            return { status: 'ok', id: GetMyProcessTxIdsDelChatroomResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsDelChatroom Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -225,6 +249,10 @@ export const MyProcessTxIdsGetGuesses = async (TargetTxId: string, processTxId: 
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsGetGuesses Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return {}
     }
@@ -247,15 +275,19 @@ export const MyProcessTxIdsAddGuess = async (currentWalletJwk: any, MyProcessTxI
         if(GetMyProcessTxIdsAddGuessResult && GetMyProcessTxIdsAddGuessResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsAddGuessResult)
 
-            return { id: GetMyProcessTxIdsAddGuessResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsAddGuessResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsAddGuessResult };
+            return { status: 'ok', id: GetMyProcessTxIdsAddGuessResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsAddGuess Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -277,15 +309,19 @@ export const MyProcessTxIdsDelGuess = async (currentWalletJwk: any, MyProcessTxI
         if(GetMyProcessTxIdsDelGuessResult && GetMyProcessTxIdsDelGuessResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsDelGuessResult)
 
-            return { id: GetMyProcessTxIdsDelGuessResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsDelGuessResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsDelGuessResult };
+            return { status: 'ok', id: GetMyProcessTxIdsDelGuessResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsDelGuess Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -320,6 +356,10 @@ export const MyProcessTxIdsGetLotteries = async (TargetTxId: string, processTxId
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsGetLotteries Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return {}
     }
@@ -342,15 +382,19 @@ export const MyProcessTxIdsAddLottery = async (currentWalletJwk: any, MyProcessT
         if(GetMyProcessTxIdsAddLotteryResult && GetMyProcessTxIdsAddLotteryResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsAddLotteryResult)
 
-            return { id: GetMyProcessTxIdsAddLotteryResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsAddLotteryResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsAddLotteryResult };
+            return { status: 'ok', id: GetMyProcessTxIdsAddLotteryResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsAddLottery Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -372,15 +416,19 @@ export const MyProcessTxIdsDelLottery = async (currentWalletJwk: any, MyProcessT
         if(GetMyProcessTxIdsDelLotteryResult && GetMyProcessTxIdsDelLotteryResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsDelLotteryResult)
 
-            return { id: GetMyProcessTxIdsDelLotteryResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyProcessTxIdsDelLotteryResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyProcessTxIdsDelLotteryResult };
+            return { status: 'ok', id: GetMyProcessTxIdsDelLotteryResult };
         }
     }
     catch(Error: any) {
         console.error("MyProcessTxIdsDelLottery Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }

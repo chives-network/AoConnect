@@ -40,15 +40,19 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
             const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
             console.log("AoLoadBlueprintModule MsgContent", module, MsgContent)
 
-            return { id: GetMyLastMsgResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyLastMsgResult, msg: MsgContent };
         }
         else {
 
-            return { id: GetMyLastMsgResult };
+            return { status: 'ok', id: GetMyLastMsgResult };
         }
     }
     catch(Error: any) {
         console.error("AoLoadBlueprintChatroom Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
 }
 
@@ -67,15 +71,19 @@ export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, m
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, SendTokenResult)
 
-            return { id: SendTokenResult, msg: MsgContent };
+            return { status: 'ok', id: SendTokenResult, msg: MsgContent };
         }
         else {
 
-            return { id: SendTokenResult };
+            return { status: 'ok', id: SendTokenResult };
         }
     }
     catch(Error: any) {
         console.error("AoTokenBalance Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -95,15 +103,19 @@ export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) 
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(tokenTxId, SendTokenResult)
 
-            return { id: SendTokenResult, msg: MsgContent };
+            return { status: 'ok', id: SendTokenResult, msg: MsgContent };
         }
         else {
 
-            return { id: SendTokenResult };
+            return { status: 'ok', id: SendTokenResult };
         }
     }
     catch(Error: any) {
         console.error("AoTokenBalances Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -123,15 +135,19 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(myTokenProcessTxId, SendTokenResult)
 
-            return { id: SendTokenResult, msg: MsgContent };
+            return { status: 'ok', id: SendTokenResult, msg: MsgContent };
         }
         else {
 
-            return { id: SendTokenResult };
+            return { status: 'ok', id: SendTokenResult };
         }
     }
     catch(Error: any) {
         console.error("AoTokenTransfer Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -151,15 +167,19 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(tokenTxId, SendTokenResult)
 
-            return { id: SendTokenResult, msg: MsgContent };
+            return { status: 'ok', id: SendTokenResult, msg: MsgContent };
         }
         else {
 
-            return { id: SendTokenResult };
+            return { status: 'ok', id: SendTokenResult };
         }
     }
     catch(Error: any) {
         console.error("AoTokenTransfer Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
     }
   
 }
@@ -193,6 +213,10 @@ export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: stri
     }
     catch(Error: any) {
         console.error("AoTokenBalanceDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return 
     }
@@ -226,6 +250,10 @@ export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
     }
     catch(Error: any) {
         console.error("AoTokenBalancesDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return 
     }
@@ -263,6 +291,10 @@ export const AoTokenInfoDryRun = async (TargetTxId: string) => {
     }
     catch(Error: any) {
         console.error("AoTokenInfoDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return 
     }
@@ -300,6 +332,10 @@ export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
     }
     catch(Error: any) {
         console.error("AoTokenInfoDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
 
         return 
     }

@@ -132,7 +132,7 @@ const Inbox = () => {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
-          const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate);
+          const LoadBlueprintToken: any = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate);
           if (LoadBlueprintToken) {
             console.log("LoadBlueprintToken", LoadBlueprintToken);
             if (LoadBlueprintToken?.msg?.Output?.data?.output) {

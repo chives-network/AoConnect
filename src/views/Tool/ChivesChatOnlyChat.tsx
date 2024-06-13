@@ -57,20 +57,30 @@ const ChivesChatOnlyChat = () => {
 
     if(toolInfo.ChivesChatProcessTxId && toolInfo.ChivesChatProcessTxId.length == 43) {
       const ChivesChatGetInboxsData = await ChivesChatGetInboxs(toolInfo.ChivesChatProcessTxId, toolInfo.ChivesChatProcessTxId, '1', '9')
-      const ChivesChatGetInboxsDataJson = JSON.parse(ChivesChatGetInboxsData)
-      const ChivesChatGetInboxsList = ChivesChatGetInboxsDataJson[0]
-      const ChivesChatGetInboxsMaxRecords = ChivesChatGetInboxsDataJson[1]
-      const ChivesChatGetInboxsListRs = ChivesChatGetInboxsList.map((item: any, index: number)=>{
-        
-          return {index, Data: item?.Data ?? '', Sender: item?.Tags?.Sender ?? '', NanoId: item?.Tags?.NanoId ?? ''}
-      })
-      console.log("ChivesChatGetInboxsDataJson", ChivesChatGetInboxsDataJson)
-      console.log("ChivesChatGetInboxsListRs", ChivesChatGetInboxsListRs)
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        'ChivesChatGetInboxsMaxRecords': ChivesChatGetInboxsMaxRecords,
-        'ChivesChatGetInboxsListRs': JSON.stringify(ChivesChatGetInboxsListRs)
-      }))
+      console.log("ChivesChatGetInboxsData", ChivesChatGetInboxsData)
+      if(ChivesChatGetInboxsData && ChivesChatGetInboxsData.status == 'error') {
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          'ChivesChatGetInboxsMaxRecords': ChivesChatGetInboxsData.status,
+          'ChivesChatGetInboxsListRs': ChivesChatGetInboxsData.msg
+        }))
+      }
+      else {
+        const ChivesChatGetInboxsDataJson = JSON.parse(ChivesChatGetInboxsData)
+        const ChivesChatGetInboxsList = ChivesChatGetInboxsDataJson[0]
+        const ChivesChatGetInboxsMaxRecords = ChivesChatGetInboxsDataJson[1]
+        const ChivesChatGetInboxsListRs = ChivesChatGetInboxsList.map((item: any, index: number)=>{
+          
+            return {index, Data: item?.Data ?? '', Sender: item?.Tags?.Sender ?? '', NanoId: item?.Tags?.NanoId ?? ''}
+        })
+        console.log("ChivesChatGetInboxsDataJson", ChivesChatGetInboxsDataJson)
+        console.log("ChivesChatGetInboxsListRs", ChivesChatGetInboxsListRs)
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          'ChivesChatGetInboxsMaxRecords': ChivesChatGetInboxsMaxRecords,
+          'ChivesChatGetInboxsListRs': JSON.stringify(ChivesChatGetInboxsListRs)
+        }))
+      }
     }
 
     const ChivesChatProcessTxId = toolInfo?.ChivesChatProcessTxId

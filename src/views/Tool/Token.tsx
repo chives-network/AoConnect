@@ -194,7 +194,7 @@ const TokenModel = () => {
 
     await sleep(5000)
 
-    const LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
+    const LoadBlueprintToken: any = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
     if(LoadBlueprintToken) {
       console.log("LoadBlueprintToken", LoadBlueprintToken)
       if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
