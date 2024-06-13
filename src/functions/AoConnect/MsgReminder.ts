@@ -1,4 +1,5 @@
 import { AoGetPageRecords } from './AoConnect'
+import authConfig from 'src/configs/auth'
 
 const AoConnectLocalStorage = 'AoConnectDb'
 const AoConnectLastCursor = 'AoConnectLastCursor'
@@ -308,7 +309,7 @@ export const GetInboxMsgFromLocalStorage = (processTxId: string, From: number, C
 export const GetAppAvatar = (logo: string) => {
     if(logo && logo.length == 43) {
 
-        return "https://arweave.org/" + logo
+        return authConfig.backEndApi + "/" + logo
     }
     else {
 

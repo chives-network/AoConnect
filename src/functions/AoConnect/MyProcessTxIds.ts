@@ -49,12 +49,14 @@ export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxI
     try {
         console.log("MyProcessTxIdsAddToken TokenId", TokenId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '" })'
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '" })',
+            data: SendData,
         }
+        console.log("MyProcessTxIdsAddToken SendData", SendData)
         console.log("MyProcessTxIdsAddToken Data", Data)
         const GetMyProcessTxIdsAddTokenResult = await message(Data);
         console.log("MyProcessTxIdsAddToken GetMyProcessTxIdsAddTokenResult", GetMyProcessTxIdsAddTokenResult)

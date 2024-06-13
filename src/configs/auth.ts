@@ -8,6 +8,7 @@ export default {
   AoConnectGithub: 'https://github.com/chives-network/AoConnect',
   backEndApiChatBook: '',
   AoConnectChatRoom: 'AoConnectChatRoom',
+  AoConnectMyProcessTxIds: 'w6HQkGKz9VKszy1pT9JcqWUlElv5smxDI_Inv1OOeqc', // lua file MyProcessTxIds wallet: t5SrAnDXhQnpzNMBSZB7tU8k3BX7YkGnJFS2O9UgEc4
   
   chivesWallets: 'ChivesWallets',
   chivesCurrentWallet: 'ChivesCurrentWallet',
