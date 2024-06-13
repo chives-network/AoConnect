@@ -33,7 +33,7 @@ import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -210,11 +210,16 @@ const Inbox = (prop: any) => {
   }
 
   const handleAoTokenBalancesDryRun = async function (CurrentToken: string) {
-    const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
+    const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '3')
     if(AoDryRunBalances) {
       try{
         console.log("AoDryRunBalances", AoDryRunBalances)
-        const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+        const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
+        console.log("AoDryRunBalancesData", AoDryRunBalancesData)
+        const AoDryRunBalancesJson = AoDryRunBalancesData[0]
+        const TokenHolders = AoDryRunBalancesData[1]
+        const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2])
+        console.log("AoDryRunBalancesData TotalRecords", TokenHolders)
         const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
                           .sort((a: any, b: any) => b[1] - a[1])
                           .reduce((acc: any, [key, value]) => {
@@ -223,11 +228,6 @@ const Inbox = (prop: any) => {
                               return acc;
                           }, {} as { [key: string]: number });
         const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
-        const TokenHolders = TokenMap.length
-        let CirculatingSupply = BigNumber(0)
-        TokenMap.map((Item: any)=>{
-          CirculatingSupply = CirculatingSupply.plus(Item)
-        })
         setTokenGetInfor((prevState: any)=>({
           ...prevState,
           TokenBalances: AoDryRunBalancesJsonSorted,
@@ -241,6 +241,7 @@ const Inbox = (prop: any) => {
       }
     }
   }
+  
 
 
   const handleTokenMint = async function (TokenProcessTxId: string, MintAmount: number) {

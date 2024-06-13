@@ -145,9 +145,11 @@ Handlers.add('BalancesPage',
   Handlers.utils.hasMatchingTag('Action', 'BalancesPage'), 
   function(msg) 
 
+    local circulatingSupply = 0
     local sortedBalances = {}
     for id, balance in pairs(Balances) do
         table.insert(sortedBalances, {id, balance})
+        circulatingSupply = circulatingSupply + balance
     end
 
     table.sort(sortedBalances, utils.compare)
@@ -165,7 +167,7 @@ Handlers.add('BalancesPage',
         end
     end
 
-    ao.send({ Target = msg.From, Data = json.encode({filterBalances, totalRecords}) }) 
+    ao.send({ Target = msg.From, Data = json.encode({filterBalances, totalRecords, circulatingSupply}) }) 
     
   end
 )

@@ -259,6 +259,45 @@ export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
     }
 }
 
+export const AoTokenBalancesPageDryRun = async (TargetTxId: string, startIndex: string, endIndex: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'BalancesPage' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'startIndex', value: startIndex },
+                { name: 'endIndex', value: endIndex },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return result.Messages[0].Data
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenBalancesPageDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
 export const AoTokenInfoDryRun = async (TargetTxId: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
