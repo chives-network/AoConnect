@@ -26,7 +26,7 @@ import IconButton from '@mui/material/IconButton'
 
 const TokenCreate = (props: any) => {
     // ** Props
-    const {tokenCreate, setTokenCreate, handleTokenCreate, handleTokenSearch } = props
+    const {tokenCreate, setTokenCreate, handleTokenCreate, handleTokenSearch, handleAddToken } = props
 
     // ** Hook
     const { t } = useTranslation()
@@ -105,6 +105,7 @@ const TokenCreate = (props: any) => {
             toast.success('Your token have created', { duration: 4000 })
             toast.success('Token: ' + handleTokenCreateResult.Token, { duration: 4000 })
             handleTokenSearch(handleTokenCreateResult.Token)
+            handleAddToken(handleTokenCreateResult.Token)
         }
 
         setTokenCreate( (prevState: any) => ({ 

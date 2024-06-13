@@ -194,9 +194,13 @@ const TokenModel = () => {
 
     await sleep(5000)
 
-    const LoadBlueprintToken: any = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo)
+    let LoadBlueprintToken: any = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo);
+    while(LoadBlueprintToken && LoadBlueprintToken.status == 'ok' && LoadBlueprintToken.msg && LoadBlueprintToken.msg.error)  {
+      sleep(6000)
+      LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo);
+      console.log("handleSimulatedToken LoadBlueprintToken:", LoadBlueprintToken);
+    }
     if(LoadBlueprintToken) {
-      console.log("LoadBlueprintToken", LoadBlueprintToken)
       if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
         const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
         setToolInfo((prevState: any)=>({
@@ -205,7 +209,7 @@ const TokenModel = () => {
         }))
       }
     }
-    console.log("LoadBlueprintToken", LoadBlueprintToken)
+    console.log("handleSimulatedToken LoadBlueprintToken", LoadBlueprintToken)
 
     await sleep(2000)
 
@@ -243,6 +247,12 @@ const TokenModel = () => {
     const SendTokenToUserOneData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserOne, 1001)
     if(SendTokenToUserOneData) {
       console.log("SendTokenToUserOneData", SendTokenToUserOneData)
+      if(SendTokenToUserOneData?.msg?.error)  {
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          SendUserOne1001: SendTokenToUserOneData?.msg?.error
+        }))
+      }
       if(SendTokenToUserOneData?.msg?.Output?.data?.output)  {
         const formatText = SendTokenToUserOneData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
@@ -305,6 +315,12 @@ const TokenModel = () => {
     const SendTokenToUserTwoData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserTwo, 1002)
     if(SendTokenToUserTwoData) {
       console.log("SendTokenToUserTwoData", SendTokenToUserTwoData)
+      if(SendTokenToUserTwoData?.msg?.error)  {
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          SendUserTwo1002: SendTokenToUserTwoData?.msg?.error
+        }))
+      }
       if(SendTokenToUserTwoData?.msg?.Output?.data?.output)  {
         const formatText = SendTokenToUserTwoData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
@@ -367,6 +383,12 @@ const TokenModel = () => {
     const SendTokenToUserThreeData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserThree, 1003)
     if(SendTokenToUserThreeData) {
       console.log("SendTokenToUserThreeData", SendTokenToUserThreeData)
+      if(SendTokenToUserThreeData?.msg?.error)  {
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          SendUserThree1003: SendTokenToUserThreeData?.msg?.error
+        }))
+      }
       if(SendTokenToUserThreeData?.msg?.Output?.data?.output)  {
         const formatText = SendTokenToUserThreeData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {

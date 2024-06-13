@@ -24,7 +24,7 @@ import Avatar from '@mui/material/Avatar'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
+import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintChatroom, GetChatroomMembers, RegisterChatroomMember, SendMessageToChatroom } from 'src/functions/AoConnect/Chatroom'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 
@@ -187,7 +187,12 @@ const Chatroom = () => {
       
       //Delay 5s code begin
 
-      const LoadBlueprintChatroom: any = await AoLoadBlueprintChatroom(currentWallet.jwk, ChatroomProcessTxId)
+      let LoadBlueprintChatroom: any = await AoLoadBlueprintChatroom(currentWallet.jwk, ChatroomProcessTxId);
+      while(LoadBlueprintChatroom && LoadBlueprintChatroom.status == 'ok' && LoadBlueprintChatroom.msg && LoadBlueprintChatroom.msg.error)  {
+        sleep(6000)
+        LoadBlueprintChatroom = await AoLoadBlueprintChatroom(currentWallet.jwk, ChatroomProcessTxId);
+        console.log("handleSimulatedToken LoadBlueprintChatroom:", LoadBlueprintChatroom);
+      }
       if(LoadBlueprintChatroom) {
         console.log("LoadBlueprintChatroom", LoadBlueprintChatroom)
         if(LoadBlueprintChatroom?.msg?.Output?.data?.output)  {
@@ -378,7 +383,7 @@ const Chatroom = () => {
       const SendMessageToChatroomDataUserThree = await SendMessageToChatroom(currentWallet.jwk, ChatroomProcessTxId, UserThree, "003 Msg from UserThree ["+UserThree+"]")
       if(SendMessageToChatroomDataUserThree) {
         console.log("SendMessageToChatroomDataUserThree", SendMessageToChatroomDataUserThree)
-        if(SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data)  {
+        if(SendMessageToChatroomDataUserThree?.msg?.Messages && SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data)  {
           const formatText = SendMessageToChatroomDataUserThree?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
           console.log("SendMessageToChatroomDataUserThree formatText", formatText)
           setToolInfo((prevState: any)=>({

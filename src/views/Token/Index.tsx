@@ -50,10 +50,15 @@ const AppChat = () => {
 
   const [myProcessTxId, setMyProcessTxId] = useState<string>('')
   const [tokenLeft, setTokenLeft] = useState<any[]>([])
+  const [counter, setCounter] = useState<number>(0)
   const [searchToken, setSearchToken] = useState<string>('')
   const [loadingGetTokens, setLoadingGetTokens] = useState<boolean>(false)
+  const [addTokenButtonText, setAddTokenButtonText] = useState<string>('Add Favorite')
+  const [addTokenButtonDisabled, setAddTokenButtonDisabled] = useState<boolean>(false)
+  const [addTokenFavorite, setAddTokenFavorite] = useState<boolean>(false)
+  const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
 
-
+  
   useEffect(() => {
     if(currentAddress && currentAddress.length == 43) {
 
@@ -68,7 +73,7 @@ const AppChat = () => {
     if(myProcessTxId && myProcessTxId.length == 43) {      
       handleGetTokenInfo()
     }
-  }, [myProcessTxId])
+  }, [myProcessTxId, counter])
 
 
   const handleGetTokenInfo = async () => {
@@ -106,6 +111,8 @@ const AppChat = () => {
   console.log("tokenLeft", tokenLeft);
 
   const handleAddToken = async (WantToSaveTokenProcessTxId: string) => {
+    setAddTokenButtonDisabled(true)
+    setAddTokenButtonText('waiting')
     const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId, '666')
     if(WantToSaveTokenProcessTxIdData) {
       console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
@@ -128,6 +135,7 @@ const AppChat = () => {
 
       }
     }
+    setAddTokenButtonText('have add')
   }
   
   return (
@@ -136,6 +144,7 @@ const AppChat = () => {
         className='app-chat'
         sx={{
           width: '100%',
+          height: '100%',
           display: 'flex',
           borderRadius: 1,
           overflow: 'hidden',
@@ -155,11 +164,25 @@ const AppChat = () => {
             searchToken={searchToken}
             setSearchToken={setSearchToken}
             loadingGetTokens={loadingGetTokens}
+            setAddTokenButtonText={setAddTokenButtonText}
+            setAddTokenButtonDisabled={setAddTokenButtonDisabled}
+            addTokenFavorite={addTokenFavorite}
+            setAddTokenFavorite={setAddTokenFavorite}
+            tokenCreate={tokenCreate}
+            setTokenCreate={setTokenCreate}
           />
           <TokenIndex 
             handleAddToken={handleAddToken}  
             searchToken={searchToken}
             setSearchToken={setSearchToken}
+            addTokenButtonText={addTokenButtonText}
+            addTokenButtonDisabled={addTokenButtonDisabled}
+            addTokenFavorite={addTokenFavorite}
+            setAddTokenFavorite={setAddTokenFavorite}
+            tokenCreate={tokenCreate}
+            setTokenCreate={setTokenCreate}
+            counter={counter}
+            setCounter={setCounter}
           />
         </Fragment>
 

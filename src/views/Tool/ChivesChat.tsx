@@ -109,8 +109,13 @@ const ChivesChat = () => {
     await sleep(5000)
 
     //setTimeout(async () => {
-      
-    const LoadBlueprintChivesChat: any = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId)
+    
+    let LoadBlueprintChivesChat: any = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId);
+    while(LoadBlueprintChivesChat && LoadBlueprintChivesChat.status == 'ok' && LoadBlueprintChivesChat.msg && LoadBlueprintChivesChat.msg.error)  {
+      sleep(6000)
+      LoadBlueprintChivesChat = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId);
+      console.log("handleSimulatedToken LoadBlueprintChivesChat:", LoadBlueprintChivesChat);
+    }
     if(LoadBlueprintChivesChat) {
       console.log("LoadBlueprintChivesChat", LoadBlueprintChivesChat)
       if(LoadBlueprintChivesChat?.msg?.Output?.data?.output)  {

@@ -62,7 +62,12 @@ const MyProcessTxIds = () => {
 
     await sleep(10000)
 
-    const LoadBlueprintMyProcessTxIds: any = await AoLoadBlueprintMyProcessTxIds(currentWallet.jwk, MyProcessTxIds)
+    let LoadBlueprintMyProcessTxIds: any = await AoLoadBlueprintMyProcessTxIds(currentWallet.jwk, MyProcessTxIds);
+    while(LoadBlueprintMyProcessTxIds && LoadBlueprintMyProcessTxIds.status == 'ok' && LoadBlueprintMyProcessTxIds.msg && LoadBlueprintMyProcessTxIds.msg.error)  {
+      sleep(6000)
+      LoadBlueprintMyProcessTxIds = await AoLoadBlueprintMyProcessTxIds(currentWallet.jwk, MyProcessTxIds);
+      console.log("handleSimulatedToken LoadBlueprintMyProcessTxIds:", LoadBlueprintMyProcessTxIds);
+    }
     if(LoadBlueprintMyProcessTxIds) {
       console.log("LoadBlueprintMyProcessTxIds", LoadBlueprintMyProcessTxIds)
       if(LoadBlueprintMyProcessTxIds?.msg?.Output?.data?.output)  {

@@ -31,7 +31,7 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance } from 'src/functions/AoConnect/AoConnect'
+import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -44,12 +44,19 @@ const Inbox = (prop: any) => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
-  const { handleAddToken, searchToken } = prop
+  const { handleAddToken, 
+          searchToken, 
+          addTokenButtonText, 
+          addTokenButtonDisabled, 
+          addTokenFavorite, 
+          tokenCreate,
+          setTokenCreate,
+          counter,
+          setCounter
+        } = prop
 
-  
   //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
   // ** State
@@ -127,6 +134,7 @@ const Inbox = (prop: any) => {
     }
     else {
       TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+      console.log("TokenProcessTxId", TokenProcessTxId)
     }
 
     if (TokenProcessTxId) {
@@ -140,22 +148,16 @@ const Inbox = (prop: any) => {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
-          const LoadBlueprintToken: any = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate);
-          if (LoadBlueprintToken) {
-            console.log("LoadBlueprintToken", LoadBlueprintToken);
-            if (LoadBlueprintToken?.msg?.Output?.data?.output) {
-
-              // const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              // setTokenGetInfor((prevState: any) => ({
-              //   ...prevState,
-              //   LoadBlueprintToken: formatText
-              // }));
-
-            }
+          let LoadBlueprintToken: any = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate);
+          while(LoadBlueprintToken && LoadBlueprintToken.status == 'ok' && LoadBlueprintToken.msg && LoadBlueprintToken.msg.error)  {
+            sleep(6000)
+            LoadBlueprintToken = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenCreate);
+            console.log("handleTokenCreate LoadBlueprintToken:", LoadBlueprintToken);
           }
   
           const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId);
           if (AoDryRunBalance) {
+            setCounter(counter + 1)
             setTokenGetInfor((prevState: any) => ({
               ...prevState,
               TokenBalance: FormatBalance(AoDryRunBalance)
@@ -305,61 +307,61 @@ const Inbox = (prop: any) => {
               </Grid>
               <Grid item xs={12} sx={{my: 2}}>
                 <Card>
-                    <Grid item sx={{ display: 'column', m: 2 }}>
-                      <TextField
-                          sx={{ml: 2, my: 2}}
-                          size="small"
-                          label={`${t('CurrentToken')}`}
-                          placeholder={`${t('CurrentToken')}`}
-                          value={tokenGetInfor?.CurrentToken ?? ''}
-                          onChange={(e: any)=>{
-                            setTokenGetInfor((prevState: any)=>({
-                              ...prevState,
-                              CurrentToken: e.target.value
-                            }))
-                          }}
-                          InputProps={{
-                              startAdornment: (
-                                  <InputAdornment position='start'>
-                                  <Icon icon='mdi:account-outline' />
-                                  </InputAdornment>
-                              )
-                          }}
-                      />
 
-                      <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                          () => { handleTokenSearch(tokenGetInfor?.CurrentToken) }
-                      }>
-                      {t("Search Token")}
-                      </Button>
+                    {addTokenFavorite == true && (
+                      <Grid item sx={{ display: 'column', m: 2 }}>
+                        <TextField
+                            sx={{ml: 2, my: 2}}
+                            size="small"
+                            label={`${t('CurrentToken')}`}
+                            placeholder={`${t('CurrentToken')}`}
+                            value={tokenGetInfor?.CurrentToken ?? ''}
+                            onChange={(e: any)=>{
+                              setTokenGetInfor((prevState: any)=>({
+                                ...prevState,
+                                CurrentToken: e.target.value
+                              }))
+                            }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Icon icon='mdi:account-outline' />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
 
-                      <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                          () => { 
-                            if(tokenGetInfor.CurrentToken) {
-                              handleAddToken(tokenGetInfor.CurrentToken)
+                        <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                            () => { handleTokenSearch(tokenGetInfor?.CurrentToken) }
+                        }>
+                        {t("Search Token")}
+                        </Button>
+
+                        <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={addTokenButtonDisabled} size="small" variant='outlined' onClick={
+                            () => { 
+                              if(tokenGetInfor.CurrentToken) {
+                                handleAddToken(tokenGetInfor.CurrentToken)
+                              }
                             }
-                           }
-                      }>
-                      {t("Add Favarite")}
-                      </Button>
+                        }>
+                        {t(addTokenButtonText)}
+                        </Button>
 
-                    </Grid>
+                      </Grid>
+                    )}
 
+                    {addTokenFavorite == false && (
+                      <Grid item sx={{ display: 'column', m: 2 }}>
+                        <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                          Token: {searchToken}
+                        </Typography>
+                      </Grid>
+                    )}
                     
+
                     <Grid item sx={{ display: 'column', m: 2 }}>
                       
-                      <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} />
-
-                      <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} size="small" variant='outlined' onClick={
-                          () => { 
-                            setTokenCreate((prevState: any)=>({
-                              ...prevState,
-                              openCreateToken: true
-                            }))
-                          }
-                      }>
-                      {t("Create Token")}
-                      </Button>
+                      <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} handleAddToken={handleAddToken} setCounter={setCounter}/>
 
                       <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
 

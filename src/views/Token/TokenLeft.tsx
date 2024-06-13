@@ -5,11 +5,14 @@ import { useState, ReactNode } from 'react'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import Drawer from '@mui/material/Drawer'
+import Button from '@mui/material/Button'
 import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemButton from '@mui/material/ListItemButton'
+import Icon from 'src/@core/components/icon'
+import Fab from '@mui/material/Fab'
 
 // ** Third Party Components
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -41,7 +44,11 @@ const TokenLeft = (props: any) => {
     tokenLeftWidth,
     tokenLeft,
     setSearchToken,
-    loadingGetTokens
+    loadingGetTokens,
+    setAddTokenButtonText,
+    setAddTokenButtonDisabled,
+    setAddTokenFavorite,
+    setTokenCreate
   } = props
 
   // ** States
@@ -52,6 +59,9 @@ const TokenLeft = (props: any) => {
   const handleTokenClick = (id: string) => {
     setActive(id)
     setSearchToken(id)
+    setAddTokenButtonDisabled(true)
+    setAddTokenButtonText('Have favorite')
+    setAddTokenFavorite(false)
   }
 
   const renderTokens = (tokenLeft: any[]) => {
@@ -66,8 +76,6 @@ const TokenLeft = (props: any) => {
 
       return tokenLeft && tokenLeft.map((Token: any, index: number) => {
             const activeCondition = active !== null && active === Token.Id
-
-            console.log("Token.Logo", GetAppAvatar(Token.Logo))
 
             return (
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
@@ -174,16 +182,45 @@ const TokenLeft = (props: any) => {
             >
             <Typography>{t('My Tokens')}</Typography>
             {loadingGetTokens && <CircularProgress size={20} /> }
+            <Fab color='primary' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
+              setAddTokenFavorite(true)
+            }}>
+              <Icon icon='mdi:plus' />
+            </Fab>
         </Box>
 
 
-        <Box sx={{ height: `calc(100% - 4.125rem)` }}>
+        <Box sx={{ height: `calc(100% - 7rem)` }}>
           <ScrollWrapper hidden={hidden}>
             <Box sx={{ p: theme => theme.spacing(2, 3, 3, 3) }}>
               <List sx={{ p: 0 }}>{renderTokens(tokenLeft)}</List>
             </Box>
           </ScrollWrapper>
         </Box>
+
+        <Box
+            sx={{
+                px: 3,
+                py: 2,
+                height: '57px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between', // 将内容显示在左右两端
+                borderTop: theme => `1px solid ${theme.palette.divider}`
+            }}
+            >
+            <Button size="small" variant='outlined' onClick={
+                () => { 
+                  setTokenCreate((prevState: any)=>({
+                    ...prevState,
+                    openCreateToken: true
+                  }))
+                }
+            }>
+            {t("Create Token")}
+            </Button>
+        </Box>
+
       </Drawer>
 
     </div>
