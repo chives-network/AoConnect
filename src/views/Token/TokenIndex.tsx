@@ -1,8 +1,6 @@
 // ** React Imports
 import { useState, Fragment, useEffect } from 'react'
 
-import { BigNumber } from 'bignumber.js';
-
 // ** MUI Imports
 import Button from '@mui/material/Button'
 import Badge from '@mui/material/Badge'
