@@ -133,6 +133,14 @@ end)
      Balances
    ]]
 --
+
+Handlers.add('balances', 
+  Handlers.utils.hasMatchingTag('Action', 'Balances'),
+  function(msg) 
+    ao.send({ Target = msg.From, Data = json.encode(Balances) }) 
+  end
+)
+
 Handlers.add('BalancesPage', 
   Handlers.utils.hasMatchingTag('Action', 'BalancesPage'), 
   function(msg) 
@@ -143,6 +151,7 @@ Handlers.add('BalancesPage',
     end
 
     table.sort(sortedBalances, utils.compare)
+    local totalRecords = #sortedBalances
 
     local filterBalances = {}
     local startIndex = tonumber(msg.Tags.startIndex)
@@ -156,7 +165,7 @@ Handlers.add('BalancesPage',
         end
     end
 
-    ao.send({ Target = msg.From, Data = json.encode(filterBalances) }) 
+    ao.send({ Target = msg.From, Data = json.encode({filterBalances, totalRecords}) }) 
     
   end
 )
