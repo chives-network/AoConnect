@@ -2,7 +2,7 @@
 -- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
--- Version: 20240613
+-- Version: 20240615
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/token.lua
 
 -- Function
@@ -100,7 +100,9 @@ Handlers.add('info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(m
     Name = Name,
     Ticker = Ticker,
     Logo = Logo,
-    Denomination = tostring(Denomination)
+    Denomination = tostring(Denomination),
+    Release = 'ChivesToken',
+    Version = '20240615'
   })
 end)
 

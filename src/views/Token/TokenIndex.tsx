@@ -115,7 +115,7 @@ const Inbox = (prop: any) => {
     }
 
     const TokenGetMap = await AoTokenInfoDryRun(CurrentToken)
-
+    console.log("TokenGetMap", TokenGetMap)
     if(TokenGetMap)  {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
@@ -210,16 +210,14 @@ const Inbox = (prop: any) => {
   }
 
   const handleAoTokenBalancesDryRun = async function (CurrentToken: string) {
-    const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '3')
+    const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '10')
     if(AoDryRunBalances) {
       try{
-        console.log("AoDryRunBalances", AoDryRunBalances)
         const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
         console.log("AoDryRunBalancesData", AoDryRunBalancesData)
         const AoDryRunBalancesJson = AoDryRunBalancesData[0]
         const TokenHolders = AoDryRunBalancesData[1]
         const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2])
-        console.log("AoDryRunBalancesData TotalRecords", TokenHolders)
         const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
                           .sort((a: any, b: any) => b[1] - a[1])
                           .reduce((acc: any, [key, value]) => {
@@ -227,7 +225,6 @@ const Inbox = (prop: any) => {
                               
                               return acc;
                           }, {} as { [key: string]: number });
-        const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
         setTokenGetInfor((prevState: any)=>({
           ...prevState,
           TokenBalances: AoDryRunBalancesJsonSorted,
@@ -241,7 +238,6 @@ const Inbox = (prop: any) => {
       }
     }
   }
-  
 
 
   const handleTokenMint = async function (TokenProcessTxId: string, MintAmount: number) {
