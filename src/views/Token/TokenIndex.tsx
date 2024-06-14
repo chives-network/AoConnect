@@ -83,15 +83,6 @@ const Inbox = (prop: any) => {
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 
 
-    if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
-      
-      toast.error(t('This token is not allowed to search'), {
-        duration: 4000
-      })
-
-      return 
-    }
-
     setIsDisabledButton(true)
     setIsSearchTokenModelOpen(true)
     setSearchToken(CurrentToken)
@@ -103,7 +94,9 @@ const Inbox = (prop: any) => {
       TokenBalance: 0,
       TokenBalances: null,
       TokenHolders: null,
-      CirculatingSupply: null
+      CirculatingSupply: null,
+      Version: null,
+      Release: null
     }))
 
     const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
@@ -119,6 +112,8 @@ const Inbox = (prop: any) => {
     if(TokenGetMap)  {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
+        Version: null,
+        Release: null,
         ...TokenGetMap
       }))
       const isFavorite = tokenLeft.some((item: any) => item.Id == CurrentToken)
@@ -139,7 +134,9 @@ const Inbox = (prop: any) => {
         Name: null,
         Ticker: null,
         Balance: null,
-        Logo: null
+        Logo: null,
+        Version: null,
+        Release: null
       }))
     }
 
@@ -208,6 +205,11 @@ const Inbox = (prop: any) => {
   }
 
   const handleAoTokenBalancesDryRun = async function (CurrentToken: string, Release: string | undefined) {
+    if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
+      console.log("handleAoTokenBalancesDryRun", "This token can not search txs records, due to txs are too large.")
+
+      return 
+    }
     if(Release && Release == "ChivesToken")  {
       const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '10')
       if(AoDryRunBalances) {
@@ -512,6 +514,7 @@ const Inbox = (prop: any) => {
                                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                                       {tokenGetInfor?.Name}
                                       <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance}</Typography>
+                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Version: {tokenGetInfor?.Version ?? ''}</Typography>
                                     </Typography>
                                     <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
                                       {tokenGetInfor?.Ticker}
