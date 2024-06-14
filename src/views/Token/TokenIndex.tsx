@@ -67,8 +67,8 @@ const Inbox = (prop: any) => {
   //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   
-
   const [isSearchTokenModelOpen, setIsSearchTokenModelOpen] = useState<boolean>(false)
+  const [isOwnerStatus, setIsOwnerStatus] = useState<boolean>(false)
 
   // ** State
   //const [isLoading, setIsLoading] = useState(false);
@@ -92,6 +92,7 @@ const Inbox = (prop: any) => {
     if(!currentAddress) return 
     const isOwnerData = await isOwner(CurrentToken, currentAddress)
     if(isOwnerData) {
+      setIsOwnerStatus(true)
       setMyProcessTxId(CurrentToken)
       const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
       if(AoDryRunBalance) {
@@ -479,16 +480,19 @@ const Inbox = (prop: any) => {
 
                           <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
 
-                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                              () => { 
-                                setTokenGetInfor((prevState: any)=>({
-                                  ...prevState,
-                                  openMintToken: true
-                                }))
-                              }
-                          }>
-                          {t("Mint")}
-                          </Button>
+                          {isOwnerStatus && (
+                            <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                () => { 
+                                  setTokenGetInfor((prevState: any)=>({
+                                    ...prevState,
+                                    openMintToken: true
+                                  }))
+                                }
+                            }>
+                            {t("Mint")}
+                            </Button>
+                          )}
+                          
 
                           <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
                               () => { setTokenGetInfor((prevState: any)=>({
