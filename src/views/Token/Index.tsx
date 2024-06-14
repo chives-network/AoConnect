@@ -93,11 +93,13 @@ const AppChat = () => {
         const TokenList = Object.values(MyProcessTxIdsGetTokensData);
         if (TokenList) {
             const AllTokens = await Promise.all(TokenList.map(async (item: any) => {
-                const TokenGetMap: any = await AoTokenInfoDryRun(item.TokenId);
-                console.log("tokenLeft TokenGetMap", TokenGetMap);
-                if (TokenGetMap && TokenGetMap.Ticker && TokenGetMap.Name) {
+                if(item.TokenId && item.TokenId.length == 43)   {
+                  const TokenGetMap: any = await AoTokenInfoDryRun(item.TokenId);
+                  console.log("MyProcessTxIdsGetTokensData", TokenGetMap);
+                  if (TokenGetMap && TokenGetMap.Ticker && TokenGetMap.Name) {
 
-                    return {...TokenGetMap, Id: item.TokenId};
+                      return {...TokenGetMap, Id: item.TokenId};
+                  }
                 }
             }));
             const filteredTokens = AllTokens.filter(token => token);

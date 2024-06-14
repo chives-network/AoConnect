@@ -112,7 +112,7 @@ const Inbox = (prop: any) => {
       }))
     }
 
-    const TokenGetMap = await AoTokenInfoDryRun(CurrentToken)
+    const TokenGetMap: any = await AoTokenInfoDryRun(CurrentToken)
     console.log("TokenGetMap", TokenGetMap)
     if(TokenGetMap)  {
       setTokenGetInfor((prevState: any)=>({
@@ -141,9 +141,7 @@ const Inbox = (prop: any) => {
       }))
     }
 
-    
-
-    await handleAoTokenBalancesDryRun(CurrentToken)
+    await handleAoTokenBalancesDryRun(CurrentToken, TokenGetMap?.Release)
 
     setIsDisabledButton(false)
 
@@ -207,33 +205,38 @@ const Inbox = (prop: any) => {
     
   }
 
-  const handleAoTokenBalancesDryRun = async function (CurrentToken: string) {
-    const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '10')
-    if(AoDryRunBalances) {
-      try{
-        const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
-        console.log("AoDryRunBalancesData", AoDryRunBalancesData)
-        const AoDryRunBalancesJson = AoDryRunBalancesData[0]
-        const TokenHolders = AoDryRunBalancesData[1]
-        const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2])
-        const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
-                          .sort((a: any, b: any) => b[1] - a[1])
-                          .reduce((acc: any, [key, value]) => {
-                              acc[key] = FormatBalance(Number(value));
-                              
-                              return acc;
-                          }, {} as { [key: string]: number });
-        setTokenGetInfor((prevState: any)=>({
-          ...prevState,
-          TokenBalances: AoDryRunBalancesJsonSorted,
-          TokenHolders: TokenHolders,
-          CirculatingSupply: CirculatingSupply.toString()
-        }))
-        console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+  const handleAoTokenBalancesDryRun = async function (CurrentToken: string, Release: string | undefined) {
+    if(Release && Release == "ChivesToken")  {
+      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '10')
+      if(AoDryRunBalances) {
+        try{
+          const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
+          console.log("AoDryRunBalancesData", AoDryRunBalancesData)
+          const AoDryRunBalancesJson = AoDryRunBalancesData[0]
+          const TokenHolders = AoDryRunBalancesData[1]
+          const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2])
+          const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
+                            .sort((a: any, b: any) => b[1] - a[1])
+                            .reduce((acc: any, [key, value]) => {
+                                acc[key] = FormatBalance(Number(value));
+                                
+                                return acc;
+                            }, {} as { [key: string]: number });
+          setTokenGetInfor((prevState: any)=>({
+            ...prevState,
+            TokenBalances: AoDryRunBalancesJsonSorted,
+            TokenHolders: TokenHolders,
+            CirculatingSupply: CirculatingSupply.toString()
+          }))
+          console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+        }
+        catch(Error: any) {
+          console.log("handleAoTokenBalancesDryRun Error", Error)
+        }
       }
-      catch(Error: any) {
-        console.log("handleAoTokenBalancesDryRun Error", Error)
-      }
+    }
+    else {
+      
     }
   }
 
@@ -306,7 +309,7 @@ const Inbox = (prop: any) => {
               })
             }
             
-            await handleAoTokenBalancesDryRun(TokenProcessTxId)
+            await handleAoTokenBalancesDryRun(TokenProcessTxId, tokenGetInfor?.Release)
 
             const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId)
             if(AoDryRunBalance) {

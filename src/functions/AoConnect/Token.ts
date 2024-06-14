@@ -10,6 +10,11 @@ import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes } from 'src/func
 
 export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: string, tokenInfo: any) => {
     try {
+        if(processTxId && processTxId.length != 43) {
+
+            return
+        }
+
         let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/token.lua', { headers: { }, params: { } }).then(res => res.data)
         
         //Filter Token Infor
@@ -58,6 +63,10 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
 
 export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, myProcessTxId: string) => {
     try {
+        if(tokenTxId && tokenTxId.length != 43) {
+
+            return
+        }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendTokenResult = await message({
@@ -90,6 +99,10 @@ export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, m
 
 export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) => {
     try {
+        if(tokenTxId && tokenTxId.length != 43) {
+
+            return
+        }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendTokenResult = await message({
@@ -122,6 +135,11 @@ export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) 
 
 export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, myTokenProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
     try {
+        if(tokenTxId && tokenTxId.length != 43) {
+
+            return
+        }
+        
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendTokenResult = await message({
@@ -154,6 +172,11 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
 
 export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mintAmount: number) => {
     try {
+        if(tokenTxId && tokenTxId.length != 43) {
+
+            return
+        }
+        
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendTokenResult = await message({
@@ -187,6 +210,11 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
 
 export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: string) => {
     try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
@@ -224,6 +252,11 @@ export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: stri
 
 export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
     try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
@@ -261,6 +294,11 @@ export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
 
 export const AoTokenBalancesPageDryRun = async (TargetTxId: string, startIndex: string, endIndex: string) => {
     try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
@@ -300,6 +338,11 @@ export const AoTokenBalancesPageDryRun = async (TargetTxId: string, startIndex: 
 
 export const AoTokenInfoDryRun = async (TargetTxId: string) => {
     try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
@@ -341,6 +384,11 @@ export const AoTokenInfoDryRun = async (TargetTxId: string) => {
 
 export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
     try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({

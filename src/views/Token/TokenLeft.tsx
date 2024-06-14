@@ -146,14 +146,9 @@ const TokenLeft = (props: any) => {
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Token.Name}</Typography>
                     }
                     secondary={
-                      <Box display="flex" flexDirection="row">
-                          <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
-                              {Token.Ticker} 
-                          </Typography>
-                          <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }), ml: 3 }}>
-                              {formatHash(Token.Id, 4)} 
-                          </Typography>
-                      </Box>
+                      <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
+                          {Token.Ticker}  {formatHash(Token.Id, 4)}
+                      </Typography>
                     }
                   />
                 </ListItemButton>

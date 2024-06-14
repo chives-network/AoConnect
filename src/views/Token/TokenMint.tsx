@@ -101,7 +101,7 @@ const TokenMint = (props: any) => {
     }
 
   return (
-    <Dialog fullWidth open={tokenGetInfor.openMintToken} onClose={
+    <Dialog fullWidth open={tokenGetInfor.openMintToken ?? false} onClose={
         () => { setTokenGetInfor( (prevState: any) => ({ ...prevState, openMintToken: false }) ) }
     }>
         <DialogTitle>
