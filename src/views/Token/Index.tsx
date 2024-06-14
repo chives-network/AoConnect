@@ -181,6 +181,7 @@ const AppChat = () => {
           />
           <TokenIndex 
             myProcessTxId={myProcessTxId}
+            setMyProcessTxId={setMyProcessTxId}
             tokenLeft={tokenLeft}
             handleAddToken={handleAddToken}
             searchToken={searchToken}

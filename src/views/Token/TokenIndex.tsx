@@ -46,6 +46,7 @@ const Inbox = (prop: any) => {
   const currentAddress = auth.currentAddress
   
   const { myProcessTxId,
+          setMyProcessTxId,
           tokenLeft,
           handleAddToken, 
           searchToken, 
@@ -80,12 +81,31 @@ const Inbox = (prop: any) => {
     }
   }, [searchToken])
 
+  useEffect(()=>{
+    if(searchToken && searchToken.length == 43 && currentAddress && currentAddress.length == 43) {
+      handleCheckIsOwner(searchToken, currentAddress)
+    }
+  }, [searchToken, currentAddress])
+
+  const handleCheckIsOwner = async function (CurrentToken: string, currentAddress: string) {
+    if(!CurrentToken) return 
+    if(!currentAddress) return 
+    const isOwnerData = await isOwner(CurrentToken, currentAddress)
+    if(isOwnerData) {
+      setMyProcessTxId(CurrentToken)
+      const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
+      if(AoDryRunBalance) {
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          TokenBalance: FormatBalance(AoDryRunBalance)
+        }))
+      }
+    }
+    console.log("isOwnerData", isOwnerData)
+  }
 
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 
-
-    const isOwnerData = await isOwner(CurrentToken, currentAddress)
-    console.log("isOwnerData", isOwnerData)
 
     setIsDisabledButton(true)
     setIsSearchTokenModelOpen(true)
