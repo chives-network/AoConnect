@@ -211,7 +211,7 @@ const Inbox = (prop: any) => {
       return 
     }
     if(Release && Release == "ChivesToken")  {
-      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '10')
+      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '1000')
       if(AoDryRunBalances) {
         try{
           const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)

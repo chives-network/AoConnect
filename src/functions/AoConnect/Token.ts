@@ -14,6 +14,10 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
 
             return
         }
+        if(typeof processTxId != 'string') {
+
+            return 
+        }
 
         let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivestoken.lua', { headers: { }, params: { } }).then(res => res.data)
         
@@ -67,6 +71,14 @@ export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, m
 
             return
         }
+        if(myProcessTxId && myProcessTxId.length != 43) {
+
+            return
+        }
+        if(typeof tokenTxId != 'string' || typeof myProcessTxId != 'string') {
+
+            return 
+        }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendTokenResult = await message({
@@ -103,6 +115,10 @@ export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) 
 
             return
         }
+        if(typeof tokenTxId != 'string') {
+
+            return 
+        }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendTokenResult = await message({
@@ -138,6 +154,18 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
         if(tokenTxId && tokenTxId.length != 43) {
 
             return
+        }
+        if(myTokenProcessTxId && myTokenProcessTxId.length != 43) {
+
+            return
+        }
+        if(sendOutProcessTxId && sendOutProcessTxId.length != 43) {
+
+            return
+        }
+        if(typeof tokenTxId != 'string' || typeof myTokenProcessTxId != 'string' || typeof sendOutProcessTxId != 'string') {
+
+            return 
         }
         
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -176,6 +204,10 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
 
             return
         }
+        if(typeof tokenTxId != 'string') {
+
+            return 
+        }
         
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -213,6 +245,14 @@ export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: stri
         if(TargetTxId && TargetTxId.length != 43) {
 
             return
+        }
+        if(processTxId && processTxId.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string' || typeof processTxId != 'string') {
+
+            return 
         }
         
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -256,6 +296,10 @@ export const AoTokenBalancesDryRun = async (TargetTxId: string) => {
 
             return
         }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
         
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -297,6 +341,10 @@ export const AoTokenBalancesPageDryRun = async (TargetTxId: string, startIndex: 
         if(TargetTxId && TargetTxId.length != 43) {
 
             return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
         }
         
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -341,6 +389,10 @@ export const AoTokenInfoDryRun = async (TargetTxId: string) => {
         if(TargetTxId && TargetTxId.length != 43) {
 
             return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
         }
 
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -387,6 +439,10 @@ export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
         if(TargetTxId && TargetTxId.length != 43) {
 
             return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
         }
 
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );

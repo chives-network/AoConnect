@@ -6,6 +6,7 @@ import ChivesChat from './ChivesChat'
 import ChivesChatOnlyChat from './ChivesChatOnlyChat'
 import Chatroom from './Chatroom'
 import Token from './Token'
+import TokenOnlySendAndMint from './TokenOnlySendAndMint'
 import MyProcessTxIds from './MyProcessTxIds'
 
 const LearnCenter = () => {
@@ -31,6 +32,11 @@ const LearnCenter = () => {
       <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
           <Token />
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card sx={{ padding: '0 8px' }}>
+          <TokenOnlySendAndMint />
         </Card>
       </Grid>
       <Grid item xs={12}>
