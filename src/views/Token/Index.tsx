@@ -161,6 +161,7 @@ const AppChat = () => {
 
         <Fragment>
           <TokenLeft
+            myProcessTxId={myProcessTxId}
             hidden={hidden}
             mdAbove={mdAbove}
             tokenLeftWidth={tokenLeftWidth}
@@ -179,6 +180,7 @@ const AppChat = () => {
             setTokenGetInfor={setTokenGetInfor}
           />
           <TokenIndex 
+            myProcessTxId={myProcessTxId}
             tokenLeft={tokenLeft}
             handleAddToken={handleAddToken}
             searchToken={searchToken}

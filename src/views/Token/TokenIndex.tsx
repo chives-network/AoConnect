@@ -43,9 +43,9 @@ const Inbox = (prop: any) => {
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
-  const currentAddress = auth.currentAddress
 
-  const { tokenLeft,
+  const { myProcessTxId,
+          tokenLeft,
           handleAddToken, 
           searchToken, 
           setSearchToken,
@@ -99,7 +99,7 @@ const Inbox = (prop: any) => {
       Release: null
     }))
 
-    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
+    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxId)
     if(AoDryRunBalance) {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
@@ -186,7 +186,7 @@ const Inbox = (prop: any) => {
             console.log("handleTokenCreate LoadBlueprintToken:", LoadBlueprintToken);
           }
   
-          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId);
+          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxId);
           if (AoDryRunBalance) {
             setCounter(counter + 1)
             setTokenGetInfor((prevState: any) => ({
@@ -327,13 +327,13 @@ const Inbox = (prop: any) => {
     
     setIsDisabledButton(true)
 
-    const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, ReceivedAddress, Number(Amount))
+    const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, myProcessTxId, ReceivedAddress, Number(Amount))
     if(AoTokenTransferData) {
       console.log("AoTokenTransferData", AoTokenTransferData)
       if(AoTokenTransferData?.msg?.Output?.data?.output)  {
         const formatText = AoTokenTransferData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
-          const AoTokenTransferInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+          const AoTokenTransferInboxData = await GetMyLastMsg(currentWallet.jwk, myProcessTxId)
           if(AoTokenTransferInboxData?.msg?.Output?.data?.output)  {
             const formatText2 = AoTokenTransferInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
@@ -344,7 +344,7 @@ const Inbox = (prop: any) => {
             
             await handleAoTokenBalancesDryRun(TokenProcessTxId, tokenGetInfor?.Release)
 
-            const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, TokenProcessTxId)
+            const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxId)
             if(AoDryRunBalance) {
               setTokenGetInfor((prevState: any)=>({
                 ...prevState,
@@ -366,13 +366,24 @@ const Inbox = (prop: any) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card sx={{ padding: '0 8px' }}>
-            {currentAddress ?
+            {myProcessTxId ?
             <Grid container>
               <Grid item xs={12}>
                 <Card>
                     <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography noWrap variant='body1' sx={{my: 2, ml: 2}}>
-                        {t("Token Management")} ( CurrentAddress: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography> )
+                        {t("Token Management")} 
+                        ( MyAoAddress: 
+                        <Typography noWrap variant='body2' sx={{ml:2, display: 'inline', color: 'primary.main'}}>{myProcessTxId}</Typography> 
+                          {searchToken && (
+                            <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                navigator.clipboard.writeText(myProcessTxId);
+                                toast.success(t('Copied success') as string, { duration: 1000 })
+                            }}>
+                                <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                            </IconButton>
+                          )}
+                          )
                         </Typography>
                     </Grid>
                 </Card>

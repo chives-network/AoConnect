@@ -40,6 +40,7 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 const TokenLeft = (props: any) => {
   // ** Props
   const {
+    myProcessTxId,
     hidden,
     mdAbove,
     tokenLeftWidth,
@@ -59,6 +60,8 @@ const TokenLeft = (props: any) => {
   const [active, setActive] = useState<string>('')
 
   const { t } = useTranslation()
+
+  console.log("TokenLeft myProcessTxId", myProcessTxId)
 
   const handleTokenClick = (id: string) => {
     setActive(id)
