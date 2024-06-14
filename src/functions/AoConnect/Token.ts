@@ -239,6 +239,68 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
   
 }
 
+export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, AddressList: string, AmountList: string) => {
+    try {
+        if(tokenTxId && tokenTxId.length != 43) {
+
+            return
+        }
+        if(typeof tokenTxId != 'string') {
+
+            return 
+        }
+
+        const AddressListData = AddressList.split('****')
+        AddressListData.map((item: string, index: number)=>{
+            if(item && item.length != 43) {
+                console.log("AoTokenAirdrop AddressListData address length not equal 43, line: ", index, " Address: ", item)
+
+                return 
+            }
+        })
+        const AmountListData = AmountList.split('****')
+        AmountListData.map((item: string, index: number)=>{
+            if(item && Number(item) <= 0) {
+                console.log("AoTokenAirdrop AmountListData Amount < 0, line: ", index, " Amount: ", item)
+
+                return 
+            }
+        })
+        const AmountListArray = AmountList.split('****')
+        const AmountListFilter = AmountListArray.map(item => String(BalanceTimes(Number(item))))
+        const AmountListString = AmountListFilter.join('****')
+        
+        
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendTokenResult = await message({
+            process: tokenTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Airdrop", Recipient = "' + AddressList + '", Quantity = "' + AmountListString + '" }})',
+        });
+        console.log("AoTokenAirdrop Airdrop", SendTokenResult)
+        
+        if(SendTokenResult && SendTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(tokenTxId, SendTokenResult)
+
+            return { status: 'ok', id: SendTokenResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: SendTokenResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenAirdrop Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
 
 export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: string) => {
     try {

@@ -29,9 +29,10 @@ import TokenList from './TokenList'
 import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
+import TokenAirdrop from './TokenAirdrop'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 import { BigNumber } from 'bignumber.js'
 
@@ -346,6 +347,54 @@ const Inbox = (prop: any) => {
 
   }
 
+  const handleTokenAirdrop = async function (TokenProcessTxId: string, AddressList: string, AmountList: string) {
+
+    if(AddressList == null) return
+    if(AmountList == null) return
+
+    const TokenGetMap = await AoTokenInfoDryRun(TokenProcessTxId)
+    if(TokenGetMap == null) {
+      toast.error(t('This token not exist, please create first'), {
+        duration: 4000
+      })
+
+      return 
+    }
+
+    setIsDisabledButton(true)
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      disabledSendOutButton: true
+    }))
+
+    const MintTokenData = await AoTokenAirdrop(currentWallet.jwk, TokenProcessTxId, AddressList, AmountList)
+    if(MintTokenData) {
+      console.log("MintTokenData", MintTokenData)
+      if(MintTokenData?.msg?.Output?.data?.output)  {
+        const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
+          if(MintTokenInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(formatText2, {
+                duration: 2000
+              })
+            }
+            await handleTokenSearch(TokenProcessTxId)
+          }
+        }
+      }
+    }
+
+    setIsDisabledButton(false)
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      disabledSendOutButton: false
+    }))
+
+  }
+
   const handleTokenSendOut = async function (TokenProcessTxId: string, ReceivedAddress: string, Amount: number) {
 
     if(Amount == null || Number(Amount) <= 0) return
@@ -480,17 +529,31 @@ const Inbox = (prop: any) => {
 
                           <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
 
+                          <TokenAirdrop tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenAirdrop={handleTokenAirdrop} handleTokenSearch={handleTokenSearch} />
+
                           {isOwnerStatus && (
-                            <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                () => { 
-                                  setTokenGetInfor((prevState: any)=>({
-                                    ...prevState,
-                                    openMintToken: true
-                                  }))
-                                }
-                            }>
-                            {t("Mint")}
-                            </Button>
+                            <Fragment>
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenGetInfor((prevState: any)=>({
+                                      ...prevState,
+                                      openAirdropToken: true
+                                    }))
+                                  }
+                              }>
+                              {t("Airdrop")}
+                              </Button>
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenGetInfor((prevState: any)=>({
+                                      ...prevState,
+                                      openMintToken: true
+                                    }))
+                                  }
+                              }>
+                              {t("Mint")}
+                              </Button>
+                            </Fragment>
                           )}
                           
 

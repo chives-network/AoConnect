@@ -6,7 +6,8 @@
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/token.lua
 
 -- Function
--- 1. Support Balances Pagination.
+-- 1. Support Airdrop.
+-- 2. Support Balances Pagination.
 
 local bint = require('.bint')(256)
 local ao = require('ao')
@@ -65,7 +66,8 @@ function Welcome()
   return(
       "Welcome to Chives Token V0.1!\n\n" ..
       "Main functoin:\n\n" ..
-      "1. Support Balances Pagination.\n" ..
+      "1. Support Airdrop.\n" ..
+      "2. Support Balances Pagination.\n" ..
       "Have fun, be respectful !")
 end
 
@@ -94,7 +96,7 @@ Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
      Info
    ]]
 --
-Handlers.add('info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
+Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
   ao.send({
     Target = msg.From,
     Name = Name,
@@ -110,7 +112,7 @@ end)
      Balance
    ]]
 --
-Handlers.add('balance', Handlers.utils.hasMatchingTag('Action', 'Balance'), function(msg)
+Handlers.add('Balance', Handlers.utils.hasMatchingTag('Action', 'Balance'), function(msg)
   local bal = '0'
 
   -- If not Recipient is provided, then return the Senders balance
@@ -136,7 +138,7 @@ end)
    ]]
 --
 
-Handlers.add('balances', 
+Handlers.add('Balances', 
   Handlers.utils.hasMatchingTag('Action', 'Balances'),
   function(msg) 
     ao.send({ Target = msg.From, Data = json.encode(Balances) }) 
@@ -178,7 +180,7 @@ Handlers.add('BalancesPage',
      Transfer
    ]]
 --
-Handlers.add('transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), function(msg)
+Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), function(msg)
   assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint.__lt(0, bint(msg.Quantity)), 'Quantity must be greater than 0')
@@ -199,7 +201,7 @@ Handlers.add('transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
       -- Debit-Notice message template, that is sent to the Sender of the transfer
       local debitNotice = {
         Target = msg.From,
-        Action = 'Debit-Notice',
+        Action = 'ChivesToken-Debit-Notice',
         Recipient = msg.Recipient,
         Quantity = msg.Quantity,
         Data = Colors.gray ..
@@ -209,7 +211,7 @@ Handlers.add('transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
       -- Credit-Notice message template, that is sent to the Recipient of the transfer
       local creditNotice = {
         Target = msg.Recipient,
-        Action = 'Credit-Notice',
+        Action = 'ChivesToken-Credit-Notice',
         Sender = msg.From,
         Quantity = msg.Quantity,
         Data = Colors.gray ..
@@ -233,18 +235,102 @@ Handlers.add('transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
   else
     ao.send({
       Target = msg.From,
-      Action = 'Transfer-Error',
+      Action = 'ChivesToken-Transfer-Error',
       ['Message-Id'] = msg.Id,
       Error = 'Insufficient Balance!'
     })
   end
 end)
 
+Handlers.add('Airdrop', Handlers.utils.hasMatchingTag('Action', 'Airdrop'), function(msg)
+  if msg.From == ao.id then
+    local recipientListIds = {}
+    for recipientId in string.gmatch(msg.Recipient, '([^*]+)') do
+      table.insert(recipientListIds, recipientId)
+    end
+    local quantityListIds = {}
+    for quantityId in string.gmatch(msg.Quantity, '([^*]+)') do
+      table.insert(quantityListIds, quantityId)
+    end
+    for index, recipientId in ipairs(recipientListIds) do
+      local quantityId = quantityListIds[index]
+      assert(#recipientId == 43, 'Recipient length require 43!')
+      assert(type(recipientId) == 'string', 'Recipient is required!')
+      assert(type(quantityId) == 'string', 'Quantity is required!')
+      assert(bint.__lt(0, bint(quantityId)), 'Quantity must be greater than 0')
+
+      if not Balances[msg.From] then Balances[msg.From] = "0" end
+      if not Balances[recipientId] then Balances[recipientId] = "0" end
+
+      if bint(quantityId) <= bint(Balances[msg.From]) then
+        Balances[msg.From] = utils.subtract(Balances[msg.From], quantityId)
+        Balances[recipientId] = utils.add(Balances[recipientId], quantityId)
+
+        --[[
+            Only send the notifications to the Sender and Recipient
+            if the Cast tag is not set on the Transfer message
+          ]]
+        --
+        if not msg.Cast then
+          -- Debit-Notice message template, that is sent to the Sender of the transfer
+          local debitNotice = {
+            Target = msg.From,
+            Action = 'Airdrop-Debit-Notice',
+            Recipient = recipientId,
+            Quantity = quantityId,
+            Data = Colors.gray ..
+                "You transferred " ..
+                Colors.blue .. quantityId .. Colors.gray .. " to " .. Colors.green .. recipientId .. Colors.reset
+          }
+          -- Credit-Notice message template, that is sent to the Recipient of the transfer
+          local creditNotice = {
+            Target = recipientId,
+            Action = 'Airdrop-Credit-Notice',
+            Sender = msg.From,
+            Quantity = quantityId,
+            Data = Colors.gray ..
+                "You received " ..
+                Colors.blue .. quantityId .. Colors.gray .. " from " .. Colors.green .. msg.From .. Colors.reset
+          }
+
+          -- Add forwarded tags to the credit and debit notice messages
+          for tagName, tagValue in pairs(msg) do
+            -- Tags beginning with "X-" are forwarded
+            if string.sub(tagName, 1, 2) == "X-" then
+              debitNotice[tagName] = tagValue
+              creditNotice[tagName] = tagValue
+            end
+          end
+
+          -- Send Debit-Notice and Credit-Notice
+          ao.send(debitNotice)
+          ao.send(creditNotice)
+        end
+      else
+        ao.send({
+          Target = msg.From,
+          Action = 'Airdrop-Transfer-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'Insufficient Balance!'
+        })
+      end
+    end
+  else 
+    ao.send({
+      Target = msg.From,
+      Action = 'Airdrop-Error',
+      ['Message-Id'] = msg.Id,
+      Error = 'Only owner can Airdrop'
+    })
+  end
+
+end)
+
 --[[
     Mint
    ]]
 --
-Handlers.add('mint', Handlers.utils.hasMatchingTag('Action', 'Mint'), function(msg)
+Handlers.add('Mint', Handlers.utils.hasMatchingTag('Action', 'Mint'), function(msg)
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint(0) < bint(msg.Quantity), 'Quantity must be greater than zero!')
 
@@ -271,7 +357,7 @@ end)
      Total Supply
    ]]
 --
-Handlers.add('totalSupply', Handlers.utils.hasMatchingTag('Action', 'Total-Supply'), function(msg)
+Handlers.add('Total-Supply', Handlers.utils.hasMatchingTag('Action', 'Total-Supply'), function(msg)
   assert(msg.From ~= ao.id, 'Cannot call Total-Supply from the same process!')
 
   local totalSupply = bint(0)
