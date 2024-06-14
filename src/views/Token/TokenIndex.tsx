@@ -30,7 +30,7 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
-import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep } from 'src/functions/AoConnect/AoConnect'
+import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 import { BigNumber } from 'bignumber.js'
@@ -43,7 +43,8 @@ const Inbox = (prop: any) => {
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
-
+  const currentAddress = auth.currentAddress
+  
   const { myProcessTxId,
           tokenLeft,
           handleAddToken, 
@@ -82,6 +83,9 @@ const Inbox = (prop: any) => {
 
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 
+
+    const isOwnerData = await isOwner(CurrentToken, currentAddress)
+    console.log("isOwnerData", isOwnerData)
 
     setIsDisabledButton(true)
     setIsSearchTokenModelOpen(true)

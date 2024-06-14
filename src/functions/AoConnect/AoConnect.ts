@@ -366,3 +366,39 @@ export const sleep = (ms: number) => {
 
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export const isOwner = async (myProcessTxId: string, CurrentAddress: string) => {
+        
+    const endpoint = authConfig.AoConnectGraphql;
+
+    const query = `{
+        transactions(ids: ["`+myProcessTxId+`"]) {
+            edges {
+                node {
+                    id
+                    owner {
+                        address
+                    }
+                }
+            }
+        }
+    }
+    `;
+
+    try {
+        const res = await axios.post(endpoint, { query, operationName: null, variables: {} }).then(res=>res.data);
+        console.log("isOwner", res)
+        if(res && res.data && res.data.transactions && res.data.transactions.edges) {
+            const edges: any[] = res.data.transactions.edges
+            if(edges && edges[0] && edges[0].node && edges[0].node.owner && edges[0].node.owner.address) {
+                if(edges[0].node.owner.address == CurrentAddress && CurrentAddress) {
+                    return true
+                }
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+    return false
+}

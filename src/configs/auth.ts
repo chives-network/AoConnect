@@ -3,6 +3,7 @@ export default {
   tokenName: 'AR',
   backEndApi: 'https://arweave.net',
   AoConnectWebSite: "https://www.ao.link",
+  AoConnectGraphql: 'https://arweave-search.goldsky.com/graphql',
   AoConnectModule: '1PdCJiXhNafpJbvC-sjxWTeNzbf9Q_RfUNs84GYoPm0',
   AoConnectScheduler: 'fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY',
   AoConnectGithub: 'https://github.com/chives-network/AoConnect',
