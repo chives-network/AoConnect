@@ -31,7 +31,9 @@ import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+
+import { BigNumber } from 'bignumber.js'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -231,12 +233,41 @@ const Inbox = (prop: any) => {
           console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
         }
         catch(Error: any) {
-          console.log("handleAoTokenBalancesDryRun Error", Error)
+          console.log("handleAoTokenBalancesDryRun AoTokenBalancesPageDryRun Error", Error)
         }
       }
     }
     else {
-      
+      const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
+      if(AoDryRunBalances) {
+        try{
+          console.log("AoDryRunBalances", AoDryRunBalances)
+          const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+          const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
+                            .sort((a: any, b: any) => b[1] - a[1])
+                            .reduce((acc: any, [key, value]) => {
+                                acc[key] = FormatBalance(Number(value));
+                                
+                                return acc;
+                            }, {} as { [key: string]: number });
+          const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
+          const TokenHolders = TokenMap.length
+          let CirculatingSupply = BigNumber(0)
+          TokenMap.map((Item: any)=>{
+            CirculatingSupply = CirculatingSupply.plus(Item)
+          })
+          setTokenGetInfor((prevState: any)=>({
+            ...prevState,
+            TokenBalances: AoDryRunBalancesJsonSorted,
+            TokenHolders: TokenHolders,
+            CirculatingSupply: CirculatingSupply.toString()
+          }))
+          console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+        }
+        catch(Error: any) {
+          console.log("handleAoTokenBalancesDryRun Error", Error)
+        }
+      }
     }
   }
 
