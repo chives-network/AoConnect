@@ -134,8 +134,9 @@ const ChivesLotteryModel = () => {
     }
 
     await sleep(2000)
+    const SendFrom = "tmRWlxyqbXzcOU7V66CwrhZTNMl6xSjjfcUrjZAIFus"
     const SendTo = "CUbKNSpGPy58S5fFIbLvv0QfZx87JZTw-rZW_skI_A8"
-    const SendLotteryToUserOneData = await AoLotteryCredit(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId, SendTo, 0.1234)
+    const SendLotteryToUserOneData = await AoLotteryCredit(currentWallet.jwk, LotteryProcessTxId, SendFrom, SendTo, 0.1111)
     if(SendLotteryToUserOneData) {
       console.log("SendLotteryToUserOneData", SendLotteryToUserOneData)
       if(SendLotteryToUserOneData?.msg?.error)  {

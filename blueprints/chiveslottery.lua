@@ -183,14 +183,18 @@ Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), functi
   assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint.__lt(0, bint(msg.Quantity)), 'Quantity must be greater than 0')
+  ao.send({
+    Target = msg.From,
+    Data = 'Lottery Balance1 ' .. utils.divide(LOTTERY_BALANCE, 1e12)
+  })
   assert(bint.__le(bint(msg.Quantity), LOTTERY_BALANCE), 'Balance must be greater than quantity')
 
-  Send({ Target = LOTTERY_PROCESS, Action = "Transfer", Recipient = msg.Recipient, Quantity = msg.Quantity })
+  Send({ Target = LOTTERY_PROCESS, Action = "Transfer", Recipient = msg.Recipient, Quantity = msg.Quantity, Tags = { Target = ao.id } })
   Send({ Target = LOTTERY_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
 
   ao.send({
     Target = msg.From,
-    Data = 'Lottery Balance: ' .. utils.divide(LOTTERY_BALANCE, 1e12)
+    Data = 'Lottery Balance2: ' .. utils.divide(LOTTERY_BALANCE, 1e12)
   })
   
 end)
