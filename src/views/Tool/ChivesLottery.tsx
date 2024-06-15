@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 //import { AoLoadBlueprintLottery, AoLotteryCheckBalance, AoLotteryCredit, AoLotteryUpdateBalance } from 'src/functions/AoConnect/ChivesLottery'
 
 import { GetMyLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLotteryCheckBalance, AoLotteryCredit } from 'src/functions/AoConnect/ChivesLottery'
+import { AoLotteryCheckBalance, AoLotteryDeposit } from 'src/functions/AoConnect/ChivesLottery'
 
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -135,6 +135,79 @@ const ChivesLotteryModel = () => {
 
     await sleep(2000)
     const SendFrom = "tmRWlxyqbXzcOU7V66CwrhZTNMl6xSjjfcUrjZAIFus"
+    const LOTTERY_PROCESS = "NTNTSp5xdaL3BiqgwAnWK7QZ4ces-xVEK6IOHQUkQIE"
+    const DepositLotteryData = await AoLotteryDeposit(currentWallet.jwk, LOTTERY_PROCESS, SendFrom, LotteryProcessTxId, 2.2222)
+    if(DepositLotteryData) {
+        console.log("DepositLotteryData", DepositLotteryData)
+        if(DepositLotteryData?.msg?.error)  {
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            DepositLotteryData: DepositLotteryData?.msg?.error
+          }))
+        }
+
+        if(DepositLotteryData?.msg?.Output?.data?.output)  {
+          const formatText = DepositLotteryData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+  
+            setToolInfo((prevState: any)=>({
+              ...prevState,
+              DepositLotteryData1: formatText
+            }))
+  
+            //Read message from inbox
+            const UserOneInboxData1 = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+            if(UserOneInboxData1?.msg?.Output?.data?.output)  {
+              const formatText2 = UserOneInboxData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  LotteryProcessTxId1: formatText2
+                }))
+              }
+            }
+            const UserOneInboxData2 = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+            if(UserOneInboxData2?.msg?.Output?.data?.output)  {
+              const formatText2 = UserOneInboxData2?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  LotteryProcessTxId2: formatText2
+                }))
+              }
+            }
+            const UserOneInboxData4 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
+            if(UserOneInboxData4?.msg?.Output?.data?.output)  {
+              const formatText2 = UserOneInboxData4?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  SendFrom1: formatText2
+                }))
+              }
+            }
+            const UserOneInboxData3 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
+            if(UserOneInboxData3?.msg?.Output?.data?.output)  {
+              const formatText2 = UserOneInboxData3?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                setToolInfo((prevState: any)=>({
+                  ...prevState,
+                  SendFrom2: formatText2
+                }))
+              }
+            }
+  
+          }
+  
+        }
+
+        setToolInfo((prevState: any)=>({
+            ...prevState,
+            Divider: '--------------------------------------'
+        }))
+    }
+    
+    /*
     const SendTo = "CUbKNSpGPy58S5fFIbLvv0QfZx87JZTw-rZW_skI_A8"
     const SendLotteryToUserOneData = await AoLotteryCredit(currentWallet.jwk, LotteryProcessTxId, SendFrom, SendTo, 0.1111)
     if(SendLotteryToUserOneData) {
@@ -200,6 +273,7 @@ const ChivesLotteryModel = () => {
 
       }
     }
+    */
 
 
     setToolInfo((prevState: any)=>({

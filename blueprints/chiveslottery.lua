@@ -63,6 +63,8 @@ periodicLotteryNumber = 100
 LOTTERY_PROCESS = LOTTERY_PROCESS or "NTNTSp5xdaL3BiqgwAnWK7QZ4ces-xVEK6IOHQUkQIE" -- Staking and Received Token Process Tx Id
 LOTTERY_BALANCE = '-1'
 
+LOTTERY_RECEIVED = '-1'
+
 Balances = Balances or {}
 Name = Name or 'AoConnectLottery' 
 Denomination = Denomination or 12
@@ -134,9 +136,30 @@ local prizeRatios = {
     0.0012552, 0.0012305, 0.0012058, 0.0011811, 0.0011564, 0.0011317
 }
 
--- Update lottery balance automation
+-- Monitor received txs action from LOTTERY_PROCESS & Update lottery balance automation
 Handlers.add(
-    "UpdateLotteryBalance",
+    "MonitorReceivedTxActions",
+    function(msg)
+      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == LOTTERY_PROCESS then
+        if msg.Tags.Action == 'Credit-Notice' or msg.Tags.Action == 'ChivesToken-Credit-Notice' then
+          return true
+        else 
+          return true
+        end
+      else 
+        return false
+      end
+    end,
+    function(msg)
+      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == LOTTERY_PROCESS then
+        LOTTERY_RECEIVED = json.encode({msg.Tags.Sender, msg.Tags.Quantity, msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_})
+      end 
+    end
+)
+
+-- Monitor send out txs action & lottery balance automation
+Handlers.add(
+    "MonitorSendOutTxActions",
     function(msg)
       if msg.From == LOTTERY_PROCESS and msg.Tags.Balance then
           return true

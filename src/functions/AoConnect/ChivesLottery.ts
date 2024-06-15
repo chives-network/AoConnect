@@ -5,7 +5,7 @@ import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 import axios from 'axios'
 
 import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes } from 'src/functions/AoConnect/AoConnect'
-
+import { AoTokenTransfer } from 'src/functions/AoConnect/Token'
 
 
 export const AoLoadBlueprintLottery = async (currentWalletJwk: any, processTxId: string, LotteryInfo: any) => {
@@ -197,3 +197,9 @@ export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string
     }
   
 }
+
+export const AoLotteryDeposit = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
+
+    return await AoTokenTransfer(currentWalletJwk, LotteryTxId, myLotteryProcessTxId, sendOutProcessTxId, sendOutAmount)
+}
+
