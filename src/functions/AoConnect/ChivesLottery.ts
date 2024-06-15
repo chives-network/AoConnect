@@ -149,7 +149,7 @@ export const AoLotteryUpdateBalance = async (currentWalletJwk: any, LotteryTxId:
   
 }
 
-export const AoLotteryTransfer = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
+export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
     try {
         if(LotteryTxId && LotteryTxId.length != 43) {
 
@@ -174,9 +174,9 @@ export const AoLotteryTransfer = async (currentWalletJwk: any, LotteryTxId: stri
             process: myLotteryProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + LotteryTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount) + '"})',
+            data: 'Send({ Target = "' + LotteryTxId + '", Action = "Credit", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount) + '"})',
         });
-        console.log("AoLotteryTransfer Transfer", SendLotteryResult)
+        console.log("AoLotteryCredit Credit", SendLotteryResult)
         
         if(SendLotteryResult && SendLotteryResult.length == 43) {
             const MsgContent = await AoGetRecord(myLotteryProcessTxId, SendLotteryResult)
@@ -189,7 +189,7 @@ export const AoLotteryTransfer = async (currentWalletJwk: any, LotteryTxId: stri
         }
     }
     catch(Error: any) {
-        console.error("AoLotteryTransfer Error:", Error)
+        console.error("AoLotteryCredit Error:", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };

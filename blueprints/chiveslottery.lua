@@ -178,8 +178,8 @@ Handlers.add('CheckBalance', Handlers.utils.hasMatchingTag('Action', 'CheckBalan
   end
 end)
 
--- Transfer token one time
-Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), function(msg)
+-- Credit token one time
+Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), function(msg)
   assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint.__lt(0, bint(msg.Quantity)), 'Quantity must be greater than 0')

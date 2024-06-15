@@ -15,10 +15,10 @@ import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 
 //import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-//import { AoLoadBlueprintLottery, AoLotteryCheckBalance, AoLotteryTransfer, AoLotteryUpdateBalance } from 'src/functions/AoConnect/ChivesLottery'
+//import { AoLoadBlueprintLottery, AoLotteryCheckBalance, AoLotteryCredit, AoLotteryUpdateBalance } from 'src/functions/AoConnect/ChivesLottery'
 
 import { GetMyLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLotteryCheckBalance } from 'src/functions/AoConnect/ChivesLottery'
+import { AoLotteryCheckBalance, AoLotteryCredit } from 'src/functions/AoConnect/ChivesLottery'
 
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -133,10 +133,9 @@ const ChivesLotteryModel = () => {
       }
     }
 
-    /*
-    await sleep(3000)
-    const UserOne = "30ntYN_xlw3dijw9cp02APFP0oOtLFSFDORgxs_ur1U"
-    const SendLotteryToUserOneData = await AoLotteryTransfer(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId, UserOne, 0.088)
+    await sleep(2000)
+    const SendTo = "CUbKNSpGPy58S5fFIbLvv0QfZx87JZTw-rZW_skI_A8"
+    const SendLotteryToUserOneData = await AoLotteryCredit(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId, SendTo, 0.1234)
     if(SendLotteryToUserOneData) {
       console.log("SendLotteryToUserOneData", SendLotteryToUserOneData)
       if(SendLotteryToUserOneData?.msg?.error)  {
@@ -180,7 +179,6 @@ const ChivesLotteryModel = () => {
 
       }
     }
-    */
 
 
     setToolInfo((prevState: any)=>({
