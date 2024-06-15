@@ -12,7 +12,7 @@
 --[[
 While from a user perspective, there will be a smooth experience and seem like one contest, there’ll actually be two draws: one for the lottery and one for the jackpot. Both will run simultaneously. Note that wagering puts you in for a chance of winning both, however, there are some key differences between the lottery and the jackpot:
 
-Lottery winners will always be paid out every 20 hours, with 100 prizes, or the total amount of players if less than 100, paid out regularly and the chance of winning depending on the amount of Token a user wagers.
+Lottery winners will always be paid out every 20 hours, with 100 prizes, or the total amount of players if less than 100, paid out regularly and the chance of winning depending on the amount of TokenA user wagers.
 
 There’s a 2% chance that the jackpot will be won every 20 hours and a 0.1% chance that the entire Jackpot prize pool is won. If the jackpot is not won, it is rolled over to the next round and the prize pool increases until it is won.
 
@@ -30,18 +30,33 @@ There’s a 2% chance that the jackpot will be won every 20 hours and a 0.1% cha
 
 抽奖设计原理草稿:
 当管理员初始化当前LUA文件,得到一个PROCESSTXID,管理员就对当前程序拥有有管理权限
-当其它用户存入一定量的TOKEN A的时候,可以根据时间区间,当前程序ID,TOKEN A的ID, 得到所有用户存入TOKEN A的明细记录
+当其它用户存入一定量的TokenA的时候,可以根据时间区间,当前程序ID,TokenA的ID, 得到所有用户存入TokenA的明细记录
 当时间截止,使用当前LUA的算法进行抽奖计算结果,并且把计算结果进行保存以供查询.
-当有了抽奖结果以后,使用这个结果给所有中奖的用户进行发送对应的TOKEN A, 使用ChivesToken lua可以一次性发送多个地址和金额,这样可以一次性操作来完成整个结算过程．
+当有了抽奖结果以后,使用这个结果给所有中奖的用户进行发送对应的TokenA, 使用ChivesToken lua可以一次性发送多个地址和金额,这样可以一次性操作来完成整个结算过程．
 注意:
 1 这个发送过程,目前还需要管理员来操作,无法完全链上执行,因为发送金额需要签名授权来完成,这个需要依赖用户的私钥.
 2 时间截止触发机制,需要使用到一个定时任务来实现,而这个定时任务,需要使用到客户端来实现,初期可以搞一个Electron的客户端来实现.
 
+抽奖程序逻辑和步骤
+1 抽奖RrocessTxId: 这个是主要是初始化当前LUA文件得来的,相当于某一个抽奖的ID
+2 抽奖所需要存入的TOKEN的ProcessTxId: 比如前抽奖需要用户存入的是哪一个TOKEN, 比如TokenA
+3 存入: 当前用户向[抽奖RrocessTxId]存入一定数量的TokenA, 当完成转账的时候,[抽奖RrocessTxId]会收到一个消息,告诉系统收到了哪个地址的多少金额的TokenA, 然后捕捉到这个事件, 把相关信息写入到[抽奖RrocessTxId]的数据里面
+4 计算: 使用一定的算法来计算获奖名单
+5 支出: 根据用户存入的不同金额,然后使用相关的算法,得到最终需要转账的地址和金额的名单, 然后使用Send函数在lua内进行调用结算功能, 目前发现不敢是谁调用都可以,调用者本身不会损失任何金额. 这个结果过程是从[抽奖RrocessTxId]在TokenA中的余额,发送给不同的用户. 是否支持其它用户来调用,目前需要更多的测试.
+6 已经完成本期的抽奖记录转入历史记录,用于保存和查看, 查看时支持分页显示.
+
+抽奖概念说明
+1 每一个小时或24个小时为一个周期
+2 每个周期内所有可以使用的金额, 分为三部分, 1%做为手续费, 余下的部分分为两部分,30%和70%, 30%做为头奖, 70%做为周期性抽奖. 
+3 头奖: 中奖概率为0.2%, 如果有人中头奖, 会则拿走整个池子里面所有的金额, 如果没有人中头奖, 则会累各进入下一轮.
+4 周期性抽奖: 每次会抽出100个人, 按照名次进行分配不同的金额,说见分配表prizeRatios.如果参与人员不足100人, 则按名次发送中奖金额, 余下部分则进入下一轮.
+2 链上自动结算,无需人工干预(有待于最终确认)
+
 Lottery Design Principle Draft:
 When the administrator initializes the current LUA file and obtains a PROCESSTXID, the administrator gains management rights over the current program.
-When other users deposit a certain amount of TOKEN A, detailed records of all users depositing TOKEN A can be obtained based on the time interval, current program ID, and TOKEN A ID.
+When other users deposit a certain amount of TokenA, detailed records of all users depositing TokenA can be obtained based on the time interval, current program ID, and TokenA ID.
 When the time expires, the lottery calculation result is generated using the current LUA algorithm, and the result is saved for future queries.
-After obtaining the lottery result, this result is used to send the corresponding TOKEN A to all winning users. Using the ChivesToken Lua, multiple addresses and amounts can be sent at once, thus completing the entire settlement process in one operation.
+After obtaining the lottery result, this result is used to send the corresponding TokenA to all winning users. Using the ChivesToken Lua, multiple addresses and amounts can be sent at once, thus completing the entire settlement process in one operation.
 Note:
 1. The current sending process still requires administrator intervention and cannot be fully executed on-chain because sending the amount requires signature authorization, which depends on the user's private key.
 2. The time expiration triggering mechanism requires the implementation of a scheduled task, which needs to be done using a client. Initially, an Electron client can be developed for this purpose.
@@ -63,7 +78,6 @@ periodicLotteryNumber = 100
 LOTTERY_PROCESS = LOTTERY_PROCESS or "NTNTSp5xdaL3BiqgwAnWK7QZ4ces-xVEK6IOHQUkQIE" -- Staking and Received Token Process Tx Id
 LOTTERY_BALANCE = '-1'
 
-LOTTERY_RECEIVED = '-1'
 
 Balances = Balances or {}
 Name = Name or 'AoConnectLottery' 
@@ -151,8 +165,8 @@ Handlers.add(
       end
     end,
     function(msg)
-      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == LOTTERY_PROCESS then
-        LOTTERY_RECEIVED = json.encode({msg.Tags.Sender, msg.Tags.Quantity, msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_})
+      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == LOTTERY_PROCESS and msg.Tags.Ref_ then
+        depositBalance[msg.Tags.Ref_] = {msg.Tags.Sender, msg.Tags.Quantity, msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_}
       end 
     end
 )

@@ -14,11 +14,11 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-//import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 //import { AoLoadBlueprintLottery, AoLotteryCheckBalance, AoLotteryCredit, AoLotteryUpdateBalance } from 'src/functions/AoConnect/ChivesLottery'
 
-import { GetMyLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLotteryCheckBalance, AoLotteryDeposit } from 'src/functions/AoConnect/ChivesLottery'
+import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
+import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintLottery, AoLotteryCheckBalance, AoLotteryDeposit, AoLotteryUpdateBalance, AoLotteryCredit } from 'src/functions/AoConnect/ChivesLottery'
 
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -45,6 +45,7 @@ const ChivesLotteryModel = () => {
     setIsDisabledButton(true)
     setToolInfo(null)
 
+    /*
     const LotteryProcessTxId = "9ojE31o1cuBXEh1aTcPlIostfi_xCxcX94LJU4FqcAE"
     if(LotteryProcessTxId) {
         setToolInfo((prevState: any)=>({
@@ -52,21 +53,13 @@ const ChivesLotteryModel = () => {
             LotteryProcessTxId: LotteryProcessTxId
         }))
     }
+    */
 
-    /*
     const LotteryProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
     if(LotteryProcessTxId) {
       setToolInfo((prevState: any)=>({
         ...prevState,
         LotteryProcessTxId: LotteryProcessTxId
-      }))
-    }
-
-    const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
-    if(UserOne) {
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        UserOne: UserOne
       }))
     }
 
@@ -89,9 +82,7 @@ const ChivesLotteryModel = () => {
     }
     console.log("handleSimulatedChivesLottery LoadBlueprintLottery", LoadBlueprintLottery)
 
-    await sleep(1000)
-
-    
+    await sleep(3000)
 
     const LotteryUpdateBalanceData = await AoLotteryUpdateBalance(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId)
     console.log("LotteryUpdateBalanceData", LotteryUpdateBalanceData)
@@ -100,9 +91,8 @@ const ChivesLotteryModel = () => {
         LotteryUpdateBalanceData: "AoLotteryUpdateBalance"
     }))
     
-    */
-
     await sleep(3000)
+
     const LotteryBalanceData = await AoLotteryCheckBalance(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId)
     if(LotteryBalanceData) {
       console.log("AoLotteryCheckBalance LotteryBalanceData1", LotteryBalanceData)
@@ -134,9 +124,10 @@ const ChivesLotteryModel = () => {
     }
 
     await sleep(2000)
+
     const SendFrom = "tmRWlxyqbXzcOU7V66CwrhZTNMl6xSjjfcUrjZAIFus"
     const LOTTERY_PROCESS = "NTNTSp5xdaL3BiqgwAnWK7QZ4ces-xVEK6IOHQUkQIE"
-    const DepositLotteryData = await AoLotteryDeposit(currentWallet.jwk, LOTTERY_PROCESS, SendFrom, LotteryProcessTxId, 2.2222)
+    const DepositLotteryData = await AoLotteryDeposit(currentWallet.jwk, LOTTERY_PROCESS, SendFrom, LotteryProcessTxId, 2)
     if(DepositLotteryData) {
         console.log("DepositLotteryData", DepositLotteryData)
         if(DepositLotteryData?.msg?.error)  {
@@ -201,15 +192,32 @@ const ChivesLotteryModel = () => {
   
         }
 
+        const AoDryRunBalance = await AoTokenBalanceDryRun(LOTTERY_PROCESS, LotteryProcessTxId)
+          if(AoDryRunBalance) {
+            console.log("LotteryProcessTxIdBalance AoDryRunBalance", AoDryRunBalance)
+            setToolInfo((prevState: any)=>({
+                ...prevState,
+                LotteryProcessTxIdBalance: AoDryRunBalance
+          }))
+        }
+
         setToolInfo((prevState: any)=>({
             ...prevState,
             Divider: '--------------------------------------'
         }))
     }
     
-    /*
-    const SendTo = "CUbKNSpGPy58S5fFIbLvv0QfZx87JZTw-rZW_skI_A8"
-    const SendLotteryToUserOneData = await AoLotteryCredit(currentWallet.jwk, LotteryProcessTxId, SendFrom, SendTo, 0.1111)
+    const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserOne) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        ReceivedTokenUserOne: UserOne
+      }))
+    }
+
+    await sleep(2000)
+
+    const SendLotteryToUserOneData = await AoLotteryCredit(currentWallet.jwk, LotteryProcessTxId, SendFrom, UserOne, 0.1)
     if(SendLotteryToUserOneData) {
       console.log("SendLotteryToUserOneData", SendLotteryToUserOneData)
       if(SendLotteryToUserOneData?.msg?.error)  {
@@ -234,7 +242,7 @@ const ChivesLotteryModel = () => {
             if(formatText2) {
               setToolInfo((prevState: any)=>({
                 ...prevState,
-                LotteryProcessTxId1: formatText2
+                LotteryProcessTxIdBalance: formatText2
               }))
             }
           }
@@ -244,7 +252,7 @@ const ChivesLotteryModel = () => {
             if(formatText2) {
               setToolInfo((prevState: any)=>({
                 ...prevState,
-                LotteryProcessTxId2: formatText2
+                LotteryProcessTxIdBalance: formatText2
               }))
             }
           }
@@ -268,12 +276,39 @@ const ChivesLotteryModel = () => {
               }))
             }
           }
+          const UserOneInboxData5 = await GetMyLastMsg(currentWallet.jwk, UserOne)
+          if(UserOneInboxData5?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData5?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                UserOne1: formatText2
+              }))
+            }
+          }
+          const UserOneInboxData6 = await GetMyLastMsg(currentWallet.jwk, UserOne)
+          if(UserOneInboxData6?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData6?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                UserOne2: formatText2
+              }))
+            }
+          }
+          const AoDryRunBalance = await AoTokenBalanceDryRun(LOTTERY_PROCESS, UserOne)
+          if(AoDryRunBalance) {
+            console.log("AoTokenBalanceDryRun AoDryRunBalance", AoDryRunBalance)
+            setToolInfo((prevState: any)=>({
+                ...prevState,
+                UserOneBalance: AoDryRunBalance
+            }))
+          }
 
         }
 
       }
     }
-    */
 
 
     setToolInfo((prevState: any)=>({
