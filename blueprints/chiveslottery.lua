@@ -68,8 +68,6 @@ Name = Name or 'AoConnectLottery'
 Denomination = Denomination or 12
 Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 
-Variant = "0.0.1"
-
 local utils = {
   add = function (a,b) 
     return tostring(bint(a) + bint(b))
@@ -194,7 +192,7 @@ Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), functi
 
   ao.send({
     Target = msg.From,
-    Data = 'Lottery Balance2: ' .. utils.divide(LOTTERY_BALANCE, 1e12)
+    Data = 'Lottery Balance2: ' .. utils.divide(LOTTERY_BALANCE, 1e12) .. ' From ' .. msg.From
   })
   
 end)

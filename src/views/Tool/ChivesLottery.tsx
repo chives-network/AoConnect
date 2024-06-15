@@ -155,23 +155,43 @@ const ChivesLotteryModel = () => {
           }))
 
           //Read message from inbox
-          const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
-          if(UserOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          const UserOneInboxData1 = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+          if(UserOneInboxData1?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
               setToolInfo((prevState: any)=>({
                 ...prevState,
-                SendLotteryToUserOneData2: formatText2
+                LotteryProcessTxId1: formatText2
               }))
             }
           }
-          const UserOneInboxData3 = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+          const UserOneInboxData2 = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+          if(UserOneInboxData2?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData2?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                LotteryProcessTxId2: formatText2
+              }))
+            }
+          }
+          const UserOneInboxData4 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
+          if(UserOneInboxData4?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData4?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                SendFrom1: formatText2
+              }))
+            }
+          }
+          const UserOneInboxData3 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
           if(UserOneInboxData3?.msg?.Output?.data?.output)  {
             const formatText2 = UserOneInboxData3?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
               setToolInfo((prevState: any)=>({
                 ...prevState,
-                SendLotteryToUserOneData3: formatText2
+                SendFrom2: formatText2
               }))
             }
           }

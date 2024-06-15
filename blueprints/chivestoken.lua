@@ -79,14 +79,6 @@ function Welcome()
 end
 
 
---[[
-     Initialize State
-
-     ao.id is equal to the Process.Id
-   ]]
---
-Variant = "0.0.3"
-
 -- token should be idempotent and not change previous state updates
 Name = 'AoConnectToken' 
 Ticker = 'AOCN'
@@ -191,6 +183,14 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
   assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint.__lt(0, bint(msg.Quantity)), 'Quantity must be greater than 0')
+
+  if (msg.Tags.Recipient and Balances[msg.Tags.Recipient]) then
+    bal = Balances[msg.Tags.Recipient]
+  elseif msg.Tags.Target and Balances[msg.Tags.Target] then
+    bal = Balances[msg.Tags.Target]
+  elseif Balances[msg.From] then
+    bal = Balances[msg.From]
+  end
 
   if not Balances[msg.From] then Balances[msg.From] = "0" end
   if not Balances[msg.Recipient] then Balances[msg.Recipient] = "0" end
