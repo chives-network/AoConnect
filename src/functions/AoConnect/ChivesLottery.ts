@@ -1,0 +1,104 @@
+
+//Due need to use the node esm mode, so have change the package.json and move the repo to this location. Version: 0.0.53
+import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
+
+import axios from 'axios'
+
+import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord } from 'src/functions/AoConnect/AoConnect'
+
+
+
+export const AoLoadBlueprintLottery = async (currentWalletJwk: any, processTxId: string, LotteryInfo: any) => {
+    try {
+        if(processTxId && processTxId.length != 43) {
+
+            return
+        }
+        if(typeof processTxId != 'string') {
+
+            return 
+        }
+
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chiveslottery.lua', { headers: { }, params: { } }).then(res => res.data)
+        
+        //Filter Lottery Infor
+        if(LotteryInfo && LotteryInfo.Name) {
+            Data = Data.replace("AoConnectLottery", LotteryInfo.Name)
+        }
+        if(LotteryInfo && LotteryInfo.Logo) {
+            Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", LotteryInfo.Logo)
+        }
+
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetMyLastMsgResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: Data,
+        });
+        console.log("AoLoadBlueprintModule GetMyLastMsg", module, GetMyLastMsgResult)
+        
+        if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
+            console.log("AoLoadBlueprintModule MsgContent", module, MsgContent)
+
+            return { status: 'ok', id: GetMyLastMsgResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyLastMsgResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("AoLoadBlueprintLottery Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+}
+
+export const AoLotteryCheckBalance = async (currentWalletJwk: any, LotteryTxId: string, myProcessTxId: string) => {
+    try {
+        if(LotteryTxId && LotteryTxId.length != 43) {
+
+            return
+        }
+        if(myProcessTxId && myProcessTxId.length != 43) {
+
+            return
+        }
+        if(typeof LotteryTxId != 'string' || typeof myProcessTxId != 'string') {
+
+            return 
+        }
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendLotteryResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + LotteryTxId + '", Action = "CheckBalance", Tags = { Target = ao.id } })',
+        });
+        console.log("AoLotteryCheckBalance Balance", SendLotteryResult)
+        
+        if(SendLotteryResult && SendLotteryResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, SendLotteryResult)
+
+            return { status: 'ok', id: SendLotteryResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: SendLotteryResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("AoLotteryBalance Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}

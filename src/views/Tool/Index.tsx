@@ -8,12 +8,19 @@ import Chatroom from './Chatroom'
 import Token from './Token'
 import TokenOnlySendAndMint from './TokenOnlySendAndMint'
 import MyProcessTxIds from './MyProcessTxIds'
+import ChivesLottery from './ChivesLottery'
+
 
 const LearnCenter = () => {
   // ** Hook
 
   return (
     <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <Card sx={{ padding: '0 8px' }}>
+          <ChivesLottery />
+        </Card>
+      </Grid>
       <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
           <ChivesChat />
