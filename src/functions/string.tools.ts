@@ -17,11 +17,11 @@ export const hashStr = (str: string) => {
 /* simple text, remove chinese space and extra \n */
 export const simpleText = (text = '') => {
   text = text.trim();
-  text = text.replace(/([\u4e00-\u9fa5])[\s&&[^\n]]+([\u4e00-\u9fa5])/g, '$1$2');
-  text = text.replace(/\r\n|\r/g, '\n');
-  text = text.replace(/\n{3,}/g, '\n\n');
-  text = text.replace(/[\s&&[^\n]]{2,}/g, ' ');
-  text = text.replace(/[\x00-\x08]/g, ' ');
+  text = String(text).replace(/([\u4e00-\u9fa5])[\s&&[^\n]]+([\u4e00-\u9fa5])/g, '$1$2');
+  text = String(text).replace(/\r\n|\r/g, '\n');
+  text = String(text).replace(/\n{3,}/g, '\n\n');
+  text = String(text).replace(/[\s&&[^\n]]{2,}/g, ' ');
+  text = String(text).replace(/[\x00-\x08]/g, ' ');
 
   return text;
 };
@@ -34,7 +34,7 @@ export function replaceVariable(text: string, obj: Record<string, string | numbe
     const val = obj[key];
     if (!['string', 'number'].includes(typeof val)) continue;
 
-    text = text.replace(new RegExp(`{{(${key})}}`, 'g'), String(val));
+    text = String(text).replace(new RegExp(`{{(${key})}}`, 'g'), String(val));
   }
 
   return text || '';
@@ -44,10 +44,10 @@ export function replaceVariable(text: string, obj: Record<string, string | numbe
 export const replaceSensitiveText = (text: string) => {
 
   // 1. http link
-  text = text.replace(/(?<=https?:\/\/)[^\s]+/g, 'xxx');
+  text = String(text).replace(/(?<=https?:\/\/)[^\s]+/g, 'xxx');
   
   // 2. nx-xxx 全部替换成xxx
-  text = text.replace(/ns-[\w-]+/g, 'xxx');
+  text = String(text).replace(/ns-[\w-]+/g, 'xxx');
 
   return text;
 };

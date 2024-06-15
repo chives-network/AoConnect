@@ -61,7 +61,7 @@ rateLotteryAddress = rateLotteryAddress or "30ntYN_xlw3dijw9cp02APFP0oOtLFSFDORg
 periodicLotteryNumber = 100
 
 LOTTERY_PROCESS = LOTTERY_PROCESS or "NTNTSp5xdaL3BiqgwAnWK7QZ4ces-xVEK6IOHQUkQIE" -- Staking and Received Token Process Tx Id
-LOTTERY_BALANCE = nil
+LOTTERY_BALANCE = '-1'
 
 Balances = Balances or {}
 Name = Name or 'AoConnectLottery' 
@@ -79,6 +79,10 @@ local utils = {
   end,
   multiply = function (a, b)
     return tostring(bint(a) * bint(b))
+  end,
+  divide = function (a, b)
+    assert(bint(b) ~= bint(0), "Division by zero")
+    return tostring(bint(a) / bint(b))
   end,
   toBalanceValue = function (a)
     return tostring(bint(a))
@@ -132,17 +136,16 @@ local prizeRatios = {
     0.0012552, 0.0012305, 0.0012058, 0.0011811, 0.0011564, 0.0011317
 }
 
-local function isLotteryBalanceMessage(msg)
-  if msg.From == LOTTERY_PROCESS and msg.Tags.Balance then
-      return true
-  else
-      return false
-  end
-end
-
+-- Update lottery balance automation
 Handlers.add(
     "UpdateLotteryBalance",
-    isLotteryBalanceMessage,
+    function(msg)
+      if msg.From == LOTTERY_PROCESS and msg.Tags.Balance then
+          return true
+      else
+          return false
+      end
+    end,
     function(msg)
         if msg.Tags.Balance then
           LOTTERY_BALANCE = msg.Tags.Balance
@@ -150,16 +153,47 @@ Handlers.add(
     end
 )
 
-Handlers.add('CheckBalance', Handlers.utils.hasMatchingTag('Action', 'CheckBalance'), function(msg)
-  
+-- Update lottery balance trigger
+Handlers.add('UpdateBalance', Handlers.utils.hasMatchingTag('Action', 'UpdateBalance'), function(msg)
+  Send({ Target = LOTTERY_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
   ao.send({
     Target = msg.From,
-    ['Message-Id'] = msg.Id,
-    Data = 'LOTTERY_BALANCE'
+    Data = 'Update ' .. ao.id .. ' Balance in ' .. LOTTERY_PROCESS
   })
-
 end)
 
+-- Check lottery balance
+Handlers.add('CheckBalance', Handlers.utils.hasMatchingTag('Action', 'CheckBalance'), function(msg)
+  Send({ Target = LOTTERY_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
+  if LOTTERY_BALANCE == '-1' then
+    ao.send({
+      Target = msg.From,
+      Data = '-1'
+    })
+  else 
+    ao.send({
+      Target = msg.From,
+      Data = 'Lottery Balance: ' .. utils.divide(LOTTERY_BALANCE, 1e12)
+    })
+  end
+end)
+
+-- Transfer token one time
+Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), function(msg)
+  assert(type(msg.Recipient) == 'string', 'Recipient is required!')
+  assert(type(msg.Quantity) == 'string', 'Quantity is required!')
+  assert(bint.__lt(0, bint(msg.Quantity)), 'Quantity must be greater than 0')
+  assert(bint.__le(bint(msg.Quantity), LOTTERY_BALANCE), 'Balance must be greater than quantity')
+
+  Send({ Target = LOTTERY_PROCESS, Action = "Transfer", Recipient = msg.Recipient, Quantity = msg.Quantity })
+  Send({ Target = LOTTERY_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
+
+  ao.send({
+    Target = msg.From,
+    Data = 'Lottery Balance: ' .. utils.divide(LOTTERY_BALANCE, 1e12)
+  })
+  
+end)
 
 Handlers.add('ExecLotteryResult', Handlers.utils.hasMatchingTag('Action', 'ExecLotteryResult'), function(msg)
     

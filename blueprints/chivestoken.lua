@@ -50,6 +50,13 @@ local utils = {
   subtract = function (a,b)
     return tostring(bint(a) - bint(b))
   end,
+  multiply = function (a, b)
+    return tostring(bint(a) * bint(b))
+  end,
+  divide = function (a, b)
+    assert(bint(b) ~= bint(0), "Division by zero")
+    return tostring(bint(a) / bint(b))
+  end,
   toBalanceValue = function (a)
     return tostring(bint(a))
   end,
@@ -206,7 +213,7 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
         Quantity = msg.Quantity,
         Data = Colors.gray ..
             "You transferred " ..
-            Colors.blue .. msg.Quantity .. Colors.gray .. " to " .. Colors.green .. msg.Recipient .. Colors.reset
+            Colors.blue .. utils.divide(msg.Quantity, 10^Denomination) .. Colors.gray .. " to " .. Colors.green .. msg.Recipient .. Colors.reset
       }
       -- Credit-Notice message template, that is sent to the Recipient of the transfer
       local creditNotice = {
@@ -216,7 +223,7 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
         Quantity = msg.Quantity,
         Data = Colors.gray ..
             "You received " ..
-            Colors.blue .. msg.Quantity .. Colors.gray .. " from " .. Colors.green .. msg.From .. Colors.reset
+            Colors.blue .. utils.divide(msg.Quantity, 10^Denomination) .. Colors.gray .. " from " .. Colors.green .. msg.From .. Colors.reset
       }
 
       -- Add forwarded tags to the credit and debit notice messages
@@ -280,7 +287,7 @@ Handlers.add('Airdrop', Handlers.utils.hasMatchingTag('Action', 'Airdrop'), func
             Quantity = quantityId,
             Data = Colors.gray ..
                 "You transferred " ..
-                Colors.blue .. quantityId .. Colors.gray .. " to " .. Colors.green .. recipientId .. Colors.reset
+                Colors.blue .. utils.divide(quantityId, 10^Denomination) .. Colors.gray .. " to " .. Colors.green .. recipientId .. Colors.reset
           }
           -- Credit-Notice message template, that is sent to the Recipient of the transfer
           local creditNotice = {
@@ -290,7 +297,7 @@ Handlers.add('Airdrop', Handlers.utils.hasMatchingTag('Action', 'Airdrop'), func
             Quantity = quantityId,
             Data = Colors.gray ..
                 "You received " ..
-                Colors.blue .. quantityId .. Colors.gray .. " from " .. Colors.green .. msg.From .. Colors.reset
+                Colors.blue .. utils.divide(quantityId, 10^Denomination) .. Colors.gray .. " from " .. Colors.green .. msg.From .. Colors.reset
           }
 
           -- Add forwarded tags to the credit and debit notice messages
@@ -341,7 +348,7 @@ Handlers.add('Mint', Handlers.utils.hasMatchingTag('Action', 'Mint'), function(m
     Balances[msg.From] = utils.add(Balances[msg.From], msg.Quantity) 
     ao.send({
       Target = msg.From,
-      Data = Colors.gray .. "Successfully minted " .. Colors.blue .. msg.Quantity .. Colors.reset
+      Data = Colors.gray .. "Successfully minted " .. Colors.blue .. utils.divide(msg.Quantity, 10^Denomination) .. Colors.reset
     })
   else
     ao.send({

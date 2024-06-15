@@ -5,7 +5,7 @@ const AnsiText = ({ text }: any) => {
     
     // 正则表达式匹配 ANSI 转义码
     const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-    const formatText = text.replace(ansiRegex, '');
+    const formatText = String(text).replace(ansiRegex, '');
   
     return  <Box
                 sx={{

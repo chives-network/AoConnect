@@ -14,8 +14,12 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintLottery, AoLotteryCheckBalance } from 'src/functions/AoConnect/ChivesLottery'
+//import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
+//import { AoLoadBlueprintLottery, AoLotteryCheckBalance, AoLotteryTransfer, AoLotteryUpdateBalance } from 'src/functions/AoConnect/ChivesLottery'
+
+import { GetMyLastMsg, sleep } from 'src/functions/AoConnect/AoConnect'
+import { AoLotteryCheckBalance } from 'src/functions/AoConnect/ChivesLottery'
+
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -29,10 +33,10 @@ const ChivesLotteryModel = () => {
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>()
-  const [tokenInfo, setTokenInfo] = useState<any>()
+  const [totteryInfo, setLotteryInfo] = useState<any>()
 
   const handleSimulatedChivesLottery = async function () {
-    console.log("setTokenInfo", setTokenInfo)
+    console.log("setLotteryInfo", setLotteryInfo, totteryInfo)
     if(currentWallet == undefined || currentWallet == null) {
 
       return
@@ -41,55 +45,85 @@ const ChivesLotteryModel = () => {
     setIsDisabledButton(true)
     setToolInfo(null)
 
-    const TokenProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
-    if(TokenProcessTxId) {
+    const LotteryProcessTxId = "9ojE31o1cuBXEh1aTcPlIostfi_xCxcX94LJU4FqcAE"
+    if(LotteryProcessTxId) {
+        setToolInfo((prevState: any)=>({
+            ...prevState,
+            LotteryProcessTxId: LotteryProcessTxId
+        }))
+    }
+
+    /*
+    const LotteryProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+    if(LotteryProcessTxId) {
       setToolInfo((prevState: any)=>({
         ...prevState,
-        TokenProcessTxId: TokenProcessTxId
+        LotteryProcessTxId: LotteryProcessTxId
       }))
     }
 
-    await sleep(5000)
-
-    let LoadBlueprintToken: any = await AoLoadBlueprintLottery(currentWallet.jwk, TokenProcessTxId, tokenInfo);
-    while(LoadBlueprintToken && LoadBlueprintToken.status == 'ok' && LoadBlueprintToken.msg && LoadBlueprintToken.msg.error)  {
-      sleep(6000)
-      LoadBlueprintToken = await AoLoadBlueprintLottery(currentWallet.jwk, TokenProcessTxId, tokenInfo);
-      console.log("handleSimulatedChivesLottery LoadBlueprintToken:", LoadBlueprintToken);
+    const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
+    if(UserOne) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        UserOne: UserOne
+      }))
     }
-    if(LoadBlueprintToken) {
-      if(LoadBlueprintToken?.msg?.Output?.data?.output)  {
-        const formatText = LoadBlueprintToken?.msg?.Output?.data?.output.replace(ansiRegex, '');
+
+    await sleep(3000)
+
+    let LoadBlueprintLottery: any = await AoLoadBlueprintLottery(currentWallet.jwk, LotteryProcessTxId, totteryInfo);
+    while(LoadBlueprintLottery && LoadBlueprintLottery.status == 'ok' && LoadBlueprintLottery.msg && LoadBlueprintLottery.msg.error)  {
+      sleep(6000)
+      LoadBlueprintLottery = await AoLoadBlueprintLottery(currentWallet.jwk, LotteryProcessTxId, totteryInfo);
+      console.log("handleSimulatedChivesLottery LoadBlueprintLottery:", LoadBlueprintLottery);
+    }
+    if(LoadBlueprintLottery) {
+      if(LoadBlueprintLottery?.msg?.Output?.data?.output)  {
+        const formatText = LoadBlueprintLottery?.msg?.Output?.data?.output.replace(ansiRegex, '');
         setToolInfo((prevState: any)=>({
           ...prevState,
-          LoadBlueprintToken: formatText
+          LoadBlueprintLottery: formatText
         }))
       }
     }
-    console.log("handleSimulatedChivesLottery LoadBlueprintToken", LoadBlueprintToken)
+    console.log("handleSimulatedChivesLottery LoadBlueprintLottery", LoadBlueprintLottery)
 
-    await sleep(2000)
+    await sleep(1000)
 
-    const TokenBalanceData = await AoLotteryCheckBalance(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId)
-    if(TokenBalanceData) {
-      console.log("TokenBalanceData", TokenBalanceData)
-      if(TokenBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = TokenBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+    
+
+    const LotteryUpdateBalanceData = await AoLotteryUpdateBalance(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId)
+    console.log("LotteryUpdateBalanceData", LotteryUpdateBalanceData)
+    setToolInfo((prevState: any)=>({
+        ...prevState,
+        LotteryUpdateBalanceData: "AoLotteryUpdateBalance"
+    }))
+    
+    */
+
+    await sleep(3000)
+    const LotteryBalanceData = await AoLotteryCheckBalance(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId)
+    if(LotteryBalanceData) {
+      console.log("AoLotteryCheckBalance LotteryBalanceData1", LotteryBalanceData)
+      if(LotteryBalanceData?.msg?.Output?.data?.output)  {
+        const formatText = LotteryBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
 
           setToolInfo((prevState: any)=>({
             ...prevState,
-            TokenBalance: formatText
+            LotteryBalance1: formatText
           }))
 
           //Read message from inbox
-          const TokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-          if(TokenInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = TokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          const LotteryInboxData = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+          console.log("AoLotteryCheckBalance LotteryBalanceData2", LotteryInboxData)
+          if(LotteryInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = LotteryInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
               setToolInfo((prevState: any)=>({
                 ...prevState,
-                TokenBalance: formatText2
+                LotteryBalance2: formatText2
               }))
             }
           }
@@ -98,6 +132,55 @@ const ChivesLotteryModel = () => {
 
       }
     }
+
+    /*
+    await sleep(3000)
+    const UserOne = "30ntYN_xlw3dijw9cp02APFP0oOtLFSFDORgxs_ur1U"
+    const SendLotteryToUserOneData = await AoLotteryTransfer(currentWallet.jwk, LotteryProcessTxId, LotteryProcessTxId, UserOne, 0.088)
+    if(SendLotteryToUserOneData) {
+      console.log("SendLotteryToUserOneData", SendLotteryToUserOneData)
+      if(SendLotteryToUserOneData?.msg?.error)  {
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          SendLotteryToUserOneData: SendLotteryToUserOneData?.msg?.error
+        }))
+      }
+      if(SendLotteryToUserOneData?.msg?.Output?.data?.output)  {
+        const formatText = SendLotteryToUserOneData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            SendLotteryToUserOneData1: formatText
+          }))
+
+          //Read message from inbox
+          const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+          if(UserOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                SendLotteryToUserOneData2: formatText2
+              }))
+            }
+          }
+          const UserOneInboxData3 = await GetMyLastMsg(currentWallet.jwk, LotteryProcessTxId)
+          if(UserOneInboxData3?.msg?.Output?.data?.output)  {
+            const formatText2 = UserOneInboxData3?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                SendLotteryToUserOneData3: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+    */
 
 
     setToolInfo((prevState: any)=>({
@@ -125,11 +208,11 @@ const ChivesLotteryModel = () => {
                   <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
                       () => { handleSimulatedChivesLottery() }
                   }>
-                  {t("Simulated Token")}
+                  {t("Simulated Lottery")}
                   </Button>
                   <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/chiveslottery.lua`} target='_blank'>
                       <Typography variant='body2'>
-                        {t("Token Lua")}
+                        {t("Lottery Lua")}
                       </Typography>
                   </Link>
               </Grid>

@@ -328,7 +328,7 @@ export async function downloadUrlFile(url: string, fileName: string, mimeType: s
 
 export function removePunctuation(text: string) {
     if(text) {
-        return text.replace(/[^\w\s\u4e00-\u9fa5]/g, '');
+        return String(text).replace(/[^\w\s\u4e00-\u9fa5]/g, '');
     }
     else {
         return "";

@@ -4,7 +4,7 @@ import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
 import axios from 'axios'
 
-import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord } from 'src/functions/AoConnect/AoConnect'
+import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes } from 'src/functions/AoConnect/AoConnect'
 
 
 
@@ -85,6 +85,7 @@ export const AoLotteryCheckBalance = async (currentWalletJwk: any, LotteryTxId: 
         
         if(SendLotteryResult && SendLotteryResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, SendLotteryResult)
+            console.log("AoLotteryCheckBalance MsgContent", MsgContent)
 
             return { status: 'ok', id: SendLotteryResult, msg: MsgContent };
         }
@@ -95,6 +96,100 @@ export const AoLotteryCheckBalance = async (currentWalletJwk: any, LotteryTxId: 
     }
     catch(Error: any) {
         console.error("AoLotteryBalance Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const AoLotteryUpdateBalance = async (currentWalletJwk: any, LotteryTxId: string, myProcessTxId: string) => {
+    try {
+        if(LotteryTxId && LotteryTxId.length != 43) {
+
+            return
+        }
+        if(myProcessTxId && myProcessTxId.length != 43) {
+
+            return
+        }
+        if(typeof LotteryTxId != 'string' || typeof myProcessTxId != 'string') {
+
+            return 
+        }
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendLotteryResult = await message({
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + LotteryTxId + '", Action = "UpdateBalance", Tags = { Target = ao.id } })',
+        });
+        console.log("AoLotteryUpdateBalance Balance", SendLotteryResult)
+        
+        if(SendLotteryResult && SendLotteryResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, SendLotteryResult)
+            console.log("AoLotteryUpdateBalance MsgContent", MsgContent)
+
+            return { status: 'ok', id: SendLotteryResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: SendLotteryResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("AoLotteryBalance Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const AoLotteryTransfer = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
+    try {
+        if(LotteryTxId && LotteryTxId.length != 43) {
+
+            return
+        }
+        if(myLotteryProcessTxId && myLotteryProcessTxId.length != 43) {
+
+            return
+        }
+        if(sendOutProcessTxId && sendOutProcessTxId.length != 43) {
+
+            return
+        }
+        if(typeof LotteryTxId != 'string' || typeof myLotteryProcessTxId != 'string' || typeof sendOutProcessTxId != 'string') {
+
+            return 
+        }
+        
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const SendLotteryResult = await message({
+            process: myLotteryProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({ Target = "' + LotteryTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount) + '"})',
+        });
+        console.log("AoLotteryTransfer Transfer", SendLotteryResult)
+        
+        if(SendLotteryResult && SendLotteryResult.length == 43) {
+            const MsgContent = await AoGetRecord(myLotteryProcessTxId, SendLotteryResult)
+
+            return { status: 'ok', id: SendLotteryResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: SendLotteryResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("AoLotteryTransfer Error:", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };
