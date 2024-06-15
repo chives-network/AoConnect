@@ -152,11 +152,10 @@ Handlers.add(
 
 Handlers.add('CheckBalance', Handlers.utils.hasMatchingTag('Action', 'CheckBalance'), function(msg)
   
-  Send({ Target = LOTTERY_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
-
   ao.send({
     Target = msg.From,
-    Data = 'LOTTERY_BALANCE' .. LOTTERY_BALANCE
+    ['Message-Id'] = msg.Id,
+    Data = 'LOTTERY_BALANCE'
   })
 
 end)
