@@ -620,7 +620,7 @@ const Inbox = (prop: any) => {
                                     </Typography>
                                     <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
                                       {tokenGetInfor?.Ticker}
-                                      <Link href={`https://www.ao.link/#/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
+                                      <Link href={authConfig.AoConnectAoLink + `/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
                                         <Typography noWrap variant='body2' sx={{ml: 2, mr: 1, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
                                       </Link>
                                       {tokenGetInfor?.TokenProcessTxId && (

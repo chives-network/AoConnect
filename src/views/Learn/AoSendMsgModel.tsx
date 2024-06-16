@@ -16,6 +16,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import axios from 'axios'
+import authConfig from 'src/configs/auth'
 
 
 // ** Icon Imports
@@ -332,7 +333,7 @@ const AoSendMsgModel = () => {
                     </Grid>
 
                     <Grid container justifyContent="flex-start" alignItems="center">
-                        <Link href={`https://www.ao.link/#/message/${resultText}`} target='_blank'>
+                        <Link href={authConfig.AoConnectAoLink + `/message/${resultText}`} target='_blank'>
                             <Typography variant='body2' sx={{ml: 3, mt:2}}>
                                 {resultText}
                             </Typography>

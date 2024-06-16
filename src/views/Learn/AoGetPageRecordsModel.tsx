@@ -13,6 +13,7 @@ import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import CircularProgress from '@mui/material/CircularProgress'
 
+import authConfig from 'src/configs/auth'
 import Typography from '@mui/material/Typography'
 import Table from '@mui/material/Table'
 import TableRow from '@mui/material/TableRow'
@@ -121,10 +122,10 @@ const AoGetPageRecordsModel = () => {
                                 <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
                                     {'Process Concept'}
                                 </Link>
-                                <Link href={`https://www.ao.link/#/processes`} target='_blank' sx={{ml: 4}}>
+                                <Link href={authConfig.AoConnectAoLink + `/processes`} target='_blank' sx={{ml: 4}}>
                                     {'All Processes'}
                                 </Link>
-                                <Link href={`https://www.ao.link/#/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
+                                <Link href={authConfig.AoConnectAoLink + `/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
                                     {'Detail on AOLink'}
                                 </Link>
                             </Fragment>

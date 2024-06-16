@@ -15,6 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import authConfig from 'src/configs/auth'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
@@ -120,10 +121,10 @@ const AoGetMessageModel = () => {
                                 <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
                                     {'Process Concept'}
                                 </Link>
-                                <Link href={`https://www.ao.link/#/processes`} target='_blank' sx={{ml: 4}}>
+                                <Link href={authConfig.AoConnectAoLink + `/processes`} target='_blank' sx={{ml: 4}}>
                                     {'All Processes'}
                                 </Link>
-                                <Link href={`https://www.ao.link/#/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
+                                <Link href={authConfig.AoConnectAoLink + `/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
                                     {'Detail on AOLink'}
                                 </Link>
                             </Fragment>
@@ -150,7 +151,7 @@ const AoGetMessageModel = () => {
                                 <Link href={`https://cookbook_ao.g8way.io/concepts/messages.html`} target='_blank'>
                                     {'Messages Concept'}
                                 </Link>
-                                <Link href={`https://www.ao.link/#/message/${message}`} target='_blank' sx={{ml: 4}}>
+                                <Link href={authConfig.AoConnectAoLink + `/message/${message}`} target='_blank' sx={{ml: 4}}>
                                     {'Detail on AOLink'}
                                 </Link>
                             </Fragment>

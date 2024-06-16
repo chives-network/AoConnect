@@ -17,6 +17,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
+import authConfig from 'src/configs/auth'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -658,7 +659,7 @@ const TokenModel = () => {
 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                 TokenProcessTxId: 
-                <Link href={`https://www.ao.link/#/token/${toolInfo?.TokenProcessTxId}`} target='_blank'>
+                <Link href={authConfig.AoConnectAoLink + `/#/token/${toolInfo?.TokenProcessTxId}`} target='_blank'>
                   <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
                 </Link>
                 </Typography>
