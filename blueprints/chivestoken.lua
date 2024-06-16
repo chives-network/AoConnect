@@ -6,8 +6,10 @@
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/token.lua
 
 -- Function
--- 1. Support Airdrop.
+-- 1. Support Token Airdrop.
 -- 2. Support Balances Pagination.
+-- 3. Support Sent Txs Pagination.
+-- 4. Support Received Txs Pagination.
 
 local bint = require('.bint')(256)
 local ao = require('ao')
@@ -36,12 +38,6 @@ local ao = require('ao')
 ]]
 --
 local json = require('json')
-
---[[
-  utils helper functions to remove the bint complexity.
-]]
---
-
 
 local utils = {
   add = function (a,b) 
@@ -73,28 +69,23 @@ function Welcome()
   return(
       "Welcome to Chives Token V0.1!\n\n" ..
       "Main functoin:\n\n" ..
-      "1. Support Airdrop.\n" ..
+      "1. Support Token Airdrop.\n" ..
       "2. Support Balances Pagination.\n" ..
+      "3. Support Sent Txs Pagination.\n" ..
+      "4. Support Received Txs Pagination.\n" ..
       "Have fun, be respectful !")
 end
 
 
 -- token should be idempotent and not change previous state updates
-Name = 'AoConnectToken' 
-Ticker = 'AOCN'
-Denomination = 12
+Name = Denomination or 'AoConnectToken' 
+Ticker = Denomination or 'AOCN'
+Denomination = Denomination or 12
 Logo = 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 Balances = Balances or { [ao.id] = utils.toBalanceValue(9999 * 10^Denomination) }
+SentTransactions = SentTransactions or {}
+ReceivedTransactions = ReceivedTransactions or {}
 
---[[
-     Add handlers for each incoming Action defined by the ao Standard Token Specification
-   ]]
---
-
---[[
-     Info
-   ]]
---
 Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
   ao.send({
     Target = msg.From,
@@ -107,10 +98,6 @@ Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(m
   })
 end)
 
---[[
-     Balance
-   ]]
---
 Handlers.add('Balance', Handlers.utils.hasMatchingTag('Action', 'Balance'), function(msg)
   local bal = '0'
 
@@ -132,11 +119,6 @@ Handlers.add('Balance', Handlers.utils.hasMatchingTag('Action', 'Balance'), func
   })
 end)
 
---[[
-     Balances
-   ]]
---
-
 Handlers.add('Balances', 
   Handlers.utils.hasMatchingTag('Action', 'Balances'),
   function(msg) 
@@ -152,7 +134,7 @@ Handlers.add('BalancesPage',
     local sortedBalances = {}
     for id, balance in pairs(Balances) do
         table.insert(sortedBalances, {id, balance})
-        circulatingSupply = circulatingSupply + balance
+        circulatingSupply = utils.add(circulatingSupply, balance)
     end
 
     table.sort(sortedBalances, utils.compare)
@@ -175,10 +157,6 @@ Handlers.add('BalancesPage',
   end
 )
 
---[[
-     Transfer
-   ]]
---
 Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), function(msg)
   assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
@@ -333,10 +311,6 @@ Handlers.add('Airdrop', Handlers.utils.hasMatchingTag('Action', 'Airdrop'), func
 
 end)
 
---[[
-    Mint
-   ]]
---
 Handlers.add('Mint', Handlers.utils.hasMatchingTag('Action', 'Mint'), function(msg)
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint(0) < bint(msg.Quantity), 'Quantity must be greater than zero!')
@@ -360,10 +334,6 @@ Handlers.add('Mint', Handlers.utils.hasMatchingTag('Action', 'Mint'), function(m
   end
 end)
 
---[[
-     Total Supply
-   ]]
---
 Handlers.add('Total-Supply', Handlers.utils.hasMatchingTag('Action', 'Total-Supply'), function(msg)
   assert(msg.From ~= ao.id, 'Cannot call Total-Supply from the same process!')
 
