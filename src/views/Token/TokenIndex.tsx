@@ -47,7 +47,6 @@ const Inbox = (prop: any) => {
   const currentAddress = auth.currentAddress
   
   const { myProcessTxId,
-          setMyProcessTxId,
           tokenLeft,
           handleAddToken, 
           searchToken, 
@@ -64,6 +63,8 @@ const Inbox = (prop: any) => {
           setAddTokenButtonText,
           setAddTokenButtonDisabled
         } = prop
+  
+  const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myProcessTxId)
 
   //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
@@ -94,7 +95,7 @@ const Inbox = (prop: any) => {
     const isOwnerData = await isOwner(CurrentToken, currentAddress)
     if(isOwnerData) {
       setIsOwnerStatus(true)
-      setMyProcessTxId(CurrentToken)
+      setMyProcessTxIdInPage(CurrentToken)
       const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
       if(AoDryRunBalance) {
         setTokenGetInfor((prevState: any)=>({
@@ -117,6 +118,7 @@ const Inbox = (prop: any) => {
       ...prevState,
       TokenProcessTxId: CurrentToken,
       CurrentToken: CurrentToken,
+      Logo: null,
       TokenBalance: 0,
       TokenBalances: null,
       TokenHolders: null,
@@ -125,7 +127,7 @@ const Inbox = (prop: any) => {
       Release: null
     }))
 
-    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxId)
+    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxIdInPage)
     if(AoDryRunBalance) {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
@@ -134,12 +136,14 @@ const Inbox = (prop: any) => {
     }
 
     const TokenGetMap: any = await AoTokenInfoDryRun(CurrentToken)
-    console.log("TokenGetMap", TokenGetMap)
+    console.log("handleTokenSearch TokenGetMap", TokenGetMap)
     if(TokenGetMap)  {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
         Version: null,
         Release: null,
+        TokenHolders: TokenGetMap?.TokenHolders,
+        CirculatingSupply: TokenGetMap?.TotalSupply,
         ...TokenGetMap
       }))
       const isFavorite = tokenLeft.some((item: any) => item.Id == CurrentToken)
@@ -212,7 +216,7 @@ const Inbox = (prop: any) => {
             console.log("handleTokenCreate LoadBlueprintToken:", LoadBlueprintToken);
           }
   
-          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxId);
+          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxIdInPage);
           if (AoDryRunBalance) {
             setCounter(counter + 1)
             setTokenGetInfor((prevState: any) => ({
@@ -410,13 +414,13 @@ const Inbox = (prop: any) => {
     
     setIsDisabledButton(true)
 
-    const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, myProcessTxId, ReceivedAddress, Number(Amount))
+    const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, myProcessTxIdInPage, ReceivedAddress, Number(Amount))
     if(AoTokenTransferData) {
       console.log("AoTokenTransferData", AoTokenTransferData)
       if(AoTokenTransferData?.msg?.Output?.data?.output)  {
         const formatText = AoTokenTransferData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
-          const AoTokenTransferInboxData = await GetMyLastMsg(currentWallet.jwk, myProcessTxId)
+          const AoTokenTransferInboxData = await GetMyLastMsg(currentWallet.jwk, myProcessTxIdInPage)
           if(AoTokenTransferInboxData?.msg?.Output?.data?.output)  {
             const formatText2 = AoTokenTransferInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
@@ -427,7 +431,7 @@ const Inbox = (prop: any) => {
             
             await handleAoTokenBalancesDryRun(TokenProcessTxId, tokenGetInfor?.Release)
 
-            const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxId)
+            const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxIdInPage)
             if(AoDryRunBalance) {
               setTokenGetInfor((prevState: any)=>({
                 ...prevState,
@@ -449,7 +453,7 @@ const Inbox = (prop: any) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card sx={{ padding: '0 8px' }}>
-            {myProcessTxId ?
+            {myProcessTxIdInPage ?
             <Grid container>
               <Grid item xs={12}>
                 <Card>
@@ -457,10 +461,10 @@ const Inbox = (prop: any) => {
                         <Typography noWrap variant='body1' sx={{my: 2, ml: 2}}>
                         {t("Token Management")} 
                         ( MyAoAddress: 
-                        <Typography noWrap variant='body2' sx={{ml:2, display: 'inline', color: 'primary.main'}}>{myProcessTxId}</Typography> 
+                        <Typography noWrap variant='body2' sx={{ml:2, display: 'inline', color: 'primary.main'}}>{myProcessTxIdInPage}</Typography> 
                           {searchToken && (
                             <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                navigator.clipboard.writeText(myProcessTxId);
+                                navigator.clipboard.writeText(myProcessTxIdInPage);
                                 toast.success(t('Copied success') as string, { duration: 1000 })
                             }}>
                                 <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
@@ -516,7 +520,7 @@ const Inbox = (prop: any) => {
                       </Grid>
                     )}
 
-                    {(addTokenFavorite == false || isSearchTokenModelOpen) && tokenGetInfor && tokenGetInfor.CurrentToken && (
+                    { searchToken && (addTokenFavorite == false || isSearchTokenModelOpen) && tokenGetInfor && tokenGetInfor.CurrentToken && (
                       <Fragment>
                         <Grid item sx={{ display: 'flex', flexDirection: 'row', m: 2 }}>
                           <Typography sx={{ fontWeight: 500, fontSize: '0.875rem', pt: 0.8 }}>
@@ -531,55 +535,9 @@ const Inbox = (prop: any) => {
                             </IconButton>
                           )}
                         </Grid>
-
-                        <Grid item sx={{ display: 'column', m: 2 }}>
-                        
-                          <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} handleAddToken={handleAddToken} setCounter={setCounter}/>
-
-                          <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
-
-                          <TokenAirdrop tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenAirdrop={handleTokenAirdrop} handleTokenSearch={handleTokenSearch} />
-
-                          {isOwnerStatus && (
-                            <Fragment>
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenGetInfor((prevState: any)=>({
-                                      ...prevState,
-                                      openAirdropToken: true
-                                    }))
-                                  }
-                              }>
-                              {t("Airdrop")}
-                              </Button>
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenGetInfor((prevState: any)=>({
-                                      ...prevState,
-                                      openMintToken: true
-                                    }))
-                                  }
-                              }>
-                              {t("Mint")}
-                              </Button>
-                            </Fragment>
-                          )}
-                          
-
-                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                              () => { setTokenGetInfor((prevState: any)=>({
-                                  ...prevState,
-                                  openSendOutToken: true,
-                                  SendOutToken: "",
-                              })) }
-                          }>
-                          {t("Send")}
-                          </Button>
-
-                        </Grid>
                         
                         <Grid item sx={{ display: 'column', m: 2 }}>
-                          {tokenGetInfor && tokenGetInfor.Name && (
+                          {tokenGetInfor && (
                             <>
                             <Box
                               sx={{
@@ -623,8 +581,8 @@ const Inbox = (prop: any) => {
                                   </Badge>
                                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                                      {tokenGetInfor?.Name}
-                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance}</Typography>
+                                      {tokenGetInfor?.Name ?? 'Token'}
+                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance ?? '...'}</Typography>
                                       <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Version: {tokenGetInfor?.Version ?? ''}</Typography>
                                     </Typography>
                                     <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
@@ -662,20 +620,93 @@ const Inbox = (prop: any) => {
                                   </Typography>
                                 </Box>
                               </Box>
-
                             </Box>
-
-                            <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} />
-
-                            {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
-                              <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
-                            )}
-                            
-
                             </>
-
                           )}
 
+                        </Grid>
+
+                        <Grid item sx={{ display: 'column', m: 2 }}>
+
+                          <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} handleAddToken={handleAddToken} setCounter={setCounter}/>
+
+                          <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
+
+                          <TokenAirdrop tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenAirdrop={handleTokenAirdrop} handleTokenSearch={handleTokenSearch} />
+
+                          {isOwnerStatus && (
+                            <Fragment>
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenGetInfor((prevState: any)=>({
+                                      ...prevState,
+                                      openAirdropToken: true
+                                    }))
+                                  }
+                              }>
+                              {t("Airdrop")}
+                              </Button>
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenGetInfor((prevState: any)=>({
+                                      ...prevState,
+                                      openMintToken: true
+                                    }))
+                                  }
+                              }>
+                              {t("Mint")}
+                              </Button>
+                            </Fragment>
+                          )}
+                          
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                              () => { setTokenGetInfor((prevState: any)=>({
+                                  ...prevState,
+                                  openSendOutToken: true,
+                                  SendOutToken: "",
+                              })) }
+                          }>
+                          {t("Send")}
+                          </Button>
+                          
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                              () => { setTokenGetInfor((prevState: any)=>({
+                                  ...prevState,
+                                  openSendOutToken: true,
+                                  SendOutToken: "",
+                              })) }
+                          }>
+                          {t("Transactions")}
+                          </Button>
+                          
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                              () => { setTokenGetInfor((prevState: any)=>({
+                                  ...prevState,
+                                  openSendOutToken: true,
+                                  SendOutToken: "",
+                              })) }
+                          }>
+                          {t("Sent Txs")}
+                          </Button>
+                          
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                              () => { setTokenGetInfor((prevState: any)=>({
+                                  ...prevState,
+                                  openSendOutToken: true,
+                                  SendOutToken: "",
+                              })) }
+                          }>
+                          {t("Received Txs")}
+                          </Button>
+
+                        </Grid>
+
+                        
+                        <Grid item sx={{ display: 'column', m: 2 }}>
+                          <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} />
+                          {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
+                            <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
+                          )}
                         </Grid>
                       
                       </Fragment>

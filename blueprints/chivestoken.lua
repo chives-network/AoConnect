@@ -88,12 +88,21 @@ ReceivedTransactions = ReceivedTransactions or {}
 AllTransactions = AllTransactions or {}
 
 Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
+  local totalSupply = bint(0)
+  local tokenHolders = bint(0)
+  for _, balance in pairs(Balances) do
+    totalSupply =  utils.add(totalSupply, balance) 
+    tokenHolders = utils.add(tokenHolders, 1) 
+  end
   ao.send({
     Target = msg.From,
     Name = Name,
     Ticker = Ticker,
     Logo = Logo,
     Denomination = tostring(Denomination),
+    TotalSupply = utils.divide(totalSupply, 10^Denomination),
+    TokenHolders = tokenHolders,
+    Logo = Logo,
     Release = 'ChivesToken',
     Version = '20240620'
   })

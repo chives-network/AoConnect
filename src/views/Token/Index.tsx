@@ -66,24 +66,24 @@ const AppChat = () => {
     if(currentAddress && currentAddress.length == 43) {
 
       const MyProcessTxIdData: string = GetAoConnectReminderChatroomTxId(currentAddress)
-      if(MyProcessTxIdData) {
+      if(MyProcessTxIdData && MyProcessTxIdData.length == 43) {
         setMyProcessTxId(MyProcessTxIdData)
       }
     }
   }, [currentAddress])
 
   useEffect(() => {
-    if(myProcessTxId && myProcessTxId.length == 43) {      
+    if(myProcessTxId && myProcessTxId.length == 43 && currentAddress && currentAddress.length == 43 && myProcessTxId!= currentAddress ) {      
       handleGetTokenInfo()
     }
-  }, [myProcessTxId, counter])
+  }, [myProcessTxId, counter, currentAddress])
 
 
   const handleGetTokenInfo = async () => {
     setLoadingGetTokens(true)
     const MyProcessTxIdsGetTokensData = await MyProcessTxIdsGetTokens(authConfig.AoConnectMyProcessTxIds, myProcessTxId);
     if (MyProcessTxIdsGetTokensData) {
-        console.log("MyProcessTxIdsGetTokensData", MyProcessTxIdsGetTokensData);
+        console.log("MyProcessTxIdsGetTokensData", counter, myProcessTxId, MyProcessTxIdsGetTokensData);
         if (MyProcessTxIdsGetTokensData?.msg?.Output?.data?.output) {
             const formatText = MyProcessTxIdsGetTokensData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             toast.success(formatText, {
@@ -181,7 +181,6 @@ const AppChat = () => {
           />
           <TokenIndex 
             myProcessTxId={myProcessTxId}
-            setMyProcessTxId={setMyProcessTxId}
             tokenLeft={tokenLeft}
             handleAddToken={handleAddToken}
             searchToken={searchToken}
