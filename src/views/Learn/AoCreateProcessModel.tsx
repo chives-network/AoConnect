@@ -183,7 +183,7 @@ const AoCreateProcessModel = () => {
 
                 <Grid item xs={12} container justifyContent="flex-start">
                     {t('Result')}:
-                    <Link href={`https://www.ao.link/entity/${resultText}`} target='_blank'>
+                    <Link href={`https://www.ao.link/#/entity/${resultText}`} target='_blank'>
                         <Typography variant='body2'>
                             {resultText}
                         </Typography>

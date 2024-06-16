@@ -332,7 +332,7 @@ const AoSendMsgModel = () => {
                     </Grid>
 
                     <Grid container justifyContent="flex-start" alignItems="center">
-                        <Link href={`https://www.ao.link/message/${resultText}`} target='_blank'>
+                        <Link href={`https://www.ao.link/#/message/${resultText}`} target='_blank'>
                             <Typography variant='body2' sx={{ml: 3, mt:2}}>
                                 {resultText}
                             </Typography>

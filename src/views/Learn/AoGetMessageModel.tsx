@@ -120,10 +120,10 @@ const AoGetMessageModel = () => {
                                 <Link href={`https://cookbook_ao.g8way.io/concepts/processes.html`} target='_blank'>
                                     {'Process Concept'}
                                 </Link>
-                                <Link href={`https://www.ao.link/processes`} target='_blank' sx={{ml: 4}}>
+                                <Link href={`https://www.ao.link/#/processes`} target='_blank' sx={{ml: 4}}>
                                     {'All Processes'}
                                 </Link>
-                                <Link href={`https://www.ao.link/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
+                                <Link href={`https://www.ao.link/#/entity/${processTxId}`} target='_blank' sx={{ml: 4}}>
                                     {'Detail on AOLink'}
                                 </Link>
                             </Fragment>
@@ -150,7 +150,7 @@ const AoGetMessageModel = () => {
                                 <Link href={`https://cookbook_ao.g8way.io/concepts/messages.html`} target='_blank'>
                                     {'Messages Concept'}
                                 </Link>
-                                <Link href={`https://www.ao.link/message/${message}`} target='_blank' sx={{ml: 4}}>
+                                <Link href={`https://www.ao.link/#/message/${message}`} target='_blank' sx={{ml: 4}}>
                                     {'Detail on AOLink'}
                                 </Link>
                             </Fragment>
