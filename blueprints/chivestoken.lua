@@ -2,7 +2,7 @@
 -- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
--- Version: 20240615
+-- Version: 20240620
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/token.lua
 
 -- Function
@@ -67,12 +67,12 @@ local utils = {
 
 function Welcome()
   return(
-      "Welcome to Chives Token V0.1!\n\n" ..
+      "Welcome to Chives Token V0.2!\n\n" ..
       "Main functoin:\n\n" ..
       "1. Support Token Airdrop.\n" ..
-      "2. Support Balances Pagination.\n" ..
-      "3. Support Sent Txs Pagination.\n" ..
-      "4. Support Received Txs Pagination.\n" ..
+      "2. Support Balances.\n" ..
+      "3. Support Sent Txs.\n" ..
+      "4. Support Received Txs.\n" ..
       "Have fun, be respectful !")
 end
 
@@ -85,6 +85,7 @@ Balances = Balances or { [ao.id] = utils.toBalanceValue(9999 * 10^Denomination) 
 Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 SentTransactions = SentTransactions or {}
 ReceivedTransactions = ReceivedTransactions or {}
+AllTransactions = AllTransactions or {}
 
 Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
   ao.send({
@@ -94,7 +95,7 @@ Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(m
     Logo = Logo,
     Denomination = tostring(Denomination),
     Release = 'ChivesToken',
-    Version = '20240615'
+    Version = '20240620'
   })
 end)
 
@@ -141,8 +142,17 @@ Handlers.add('BalancesPage',
     local totalRecords = #sortedBalances
 
     local filterBalances = {}
-    local startIndex = tonumber(msg.Tags.startIndex)
-    local endIndex = tonumber(msg.Tags.endIndex)
+    local startIndex = tonumber(msg.Tags.startIndex) or 1
+    local endIndex = tonumber(msg.Tags.endIndex) or 1
+    if startIndex <= 0 then
+      startIndex = 1
+    end
+    if endIndex <= 0 then
+      endIndex = 1
+    end
+    if startIndex > endIndex then
+      startIndex = endIndex
+    end
     for i = startIndex, endIndex do
         local record = sortedBalances[i]
         if record then
@@ -162,20 +172,24 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint.__lt(0, bint(msg.Quantity)), 'Quantity must be greater than 0')
 
-  if (msg.Tags.Recipient and Balances[msg.Tags.Recipient]) then
-    bal = Balances[msg.Tags.Recipient]
-  elseif msg.Tags.Target and Balances[msg.Tags.Target] then
-    bal = Balances[msg.Tags.Target]
-  elseif Balances[msg.From] then
-    bal = Balances[msg.From]
-  end
-
   if not Balances[msg.From] then Balances[msg.From] = "0" end
   if not Balances[msg.Recipient] then Balances[msg.Recipient] = "0" end
 
   if bint(msg.Quantity) <= bint(Balances[msg.From]) then
     Balances[msg.From] = utils.subtract(Balances[msg.From], msg.Quantity)
     Balances[msg.Recipient] = utils.add(Balances[msg.Recipient], msg.Quantity)
+
+    table.insert(AllTransactions, { msg.From, msg.Recipient, msg.Quantity, msg.Tags.Ref_ })
+
+    if not SentTransactions[msg.From] then
+      SentTransactions[msg.From] = {}
+    end
+    table.insert(SentTransactions[msg.From], { msg.Recipient, msg.Quantity, msg.Tags.Ref_ })
+
+    if not ReceivedTransactions[msg.Recipient] then
+      ReceivedTransactions[msg.Recipient] = {}
+    end
+    table.insert(ReceivedTransactions[msg.Recipient], { msg.From, msg.Quantity, msg.Tags.Ref_ })
 
     --[[
          Only send the notifications to the Sender and Recipient
@@ -226,6 +240,108 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
     })
   end
 end)
+
+Handlers.add('AllTransactions', 
+  Handlers.utils.hasMatchingTag('Action', 'AllTransactions'), 
+  function(msg) 
+    local totalRecords = #AllTransactions
+
+    local filterAllTransactions = {}
+    local startIndex = tonumber(msg.Tags.startIndex) or 1
+    local endIndex = tonumber(msg.Tags.endIndex) or 1
+    if startIndex <= 0 then
+      startIndex = 1
+    end
+    if endIndex <= 0 then
+      endIndex = 1
+    end
+    if startIndex > endIndex then
+      startIndex = endIndex
+    end
+    for i = totalRecords - startIndex + 1, totalRecords - endIndex + 1 do
+        table.insert(filterAllTransactions, AllTransactions[i])
+    end
+
+    ao.send({ Target = msg.From, Data = json.encode({filterAllTransactions, totalRecords}) }) 
+    
+  end
+)
+
+Handlers.add('SentTransactions', 
+  Handlers.utils.hasMatchingTag('Action', 'SentTransactions'), 
+  function(msg) 
+    if msg.Tags.Sender and msg.Tags.startIndex and msg.Tags.endIndex then 
+      if not SentTransactions[msg.Tags.Sender] then
+        SentTransactions[msg.Tags.Sender] = {}
+      end
+      local totalRecords = #SentTransactions[msg.Tags.Sender]
+
+      local filterSentTransactions = {}
+      local startIndex = tonumber(msg.Tags.startIndex) or 1
+      local endIndex = tonumber(msg.Tags.endIndex) or 1
+      if startIndex <= 0 then
+        startIndex = 1
+      end
+      if endIndex <= 0 then
+        endIndex = 1
+      end
+      if startIndex > endIndex then
+        startIndex = endIndex
+      end
+      for i = totalRecords - startIndex + 1, totalRecords - endIndex + 1 do
+          table.insert(filterSentTransactions, SentTransactions[msg.Tags.Sender][i])
+      end
+
+      ao.send({ Target = msg.From, Data = json.encode({filterSentTransactions, totalRecords}) }) 
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'SentTransactions-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only set Sender or startIndex or endIndex'
+      })
+    end
+    
+  end
+)
+
+Handlers.add('ReceivedTransactions', 
+  Handlers.utils.hasMatchingTag('Action', 'ReceivedTransactions'), 
+  function(msg) 
+    if msg.Tags.Recipient and msg.Tags.startIndex and msg.Tags.endIndex then 
+      if not ReceivedTransactions[msg.Tags.Recipient] then
+        ReceivedTransactions[msg.Tags.Recipient] = {}
+      end
+      local totalRecords = #ReceivedTransactions[msg.Tags.Recipient]
+
+      local filterReceivedTransactions = {}
+      local startIndex = tonumber(msg.Tags.startIndex) or 1
+      local endIndex = tonumber(msg.Tags.endIndex) or 1
+      if startIndex <= 0 then
+        startIndex = 1
+      end
+      if endIndex <= 0 then
+        endIndex = 1
+      end
+      if startIndex > endIndex then
+        startIndex = endIndex
+      end
+      for i = totalRecords - startIndex + 1, totalRecords - endIndex + 1 do
+          table.insert(filterReceivedTransactions, ReceivedTransactions[msg.Tags.Recipient][i])
+      end
+
+      ao.send({ Target = msg.From, Data = json.encode({filterReceivedTransactions, totalRecords}) }) 
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'ReceivedTransactions-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only set Recipient or startIndex or endIndex'
+      })
+    end
+    
+  end
+)
 
 Handlers.add('Airdrop', Handlers.utils.hasMatchingTag('Action', 'Airdrop'), function(msg)
   if msg.From == ao.id then
