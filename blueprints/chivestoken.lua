@@ -258,7 +258,12 @@ Handlers.add('AllTransactions',
     if startIndex > endIndex then
       startIndex = endIndex
     end
-    for i = totalRecords - startIndex + 1, totalRecords - endIndex + 1 do
+    if endIndex > totalRecords then
+      endIndex = totalRecords
+    end
+    local endFilter = totalRecords - startIndex + 1
+    local startFilter = totalRecords - endIndex + 1
+    for i = startFilter, endFilter do
         table.insert(filterAllTransactions, AllTransactions[i])
     end
 
@@ -288,7 +293,12 @@ Handlers.add('SentTransactions',
       if startIndex > endIndex then
         startIndex = endIndex
       end
-      for i = totalRecords - startIndex + 1, totalRecords - endIndex + 1 do
+      if endIndex > totalRecords then
+        endIndex = totalRecords
+      end
+      local endFilter = totalRecords - startIndex + 1
+      local startFilter = totalRecords - endIndex + 1
+      for i = startFilter, endFilter do
           table.insert(filterSentTransactions, SentTransactions[msg.Tags.Sender][i])
       end
 
@@ -326,7 +336,12 @@ Handlers.add('ReceivedTransactions',
       if startIndex > endIndex then
         startIndex = endIndex
       end
-      for i = totalRecords - startIndex + 1, totalRecords - endIndex + 1 do
+      if endIndex > totalRecords then
+        endIndex = totalRecords
+      end
+      local endFilter = totalRecords - startIndex + 1
+      local startFilter = totalRecords - endIndex + 1
+      for i = startFilter, endFilter do
           table.insert(filterReceivedTransactions, ReceivedTransactions[msg.Tags.Recipient][i])
       end
 

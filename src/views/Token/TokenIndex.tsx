@@ -32,7 +32,7 @@ import TokenSendOut from './TokenSendOut'
 import TokenAirdrop from './TokenAirdrop'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions } from 'src/functions/AoConnect/Token'
 
 import { BigNumber } from 'bignumber.js'
 
@@ -237,7 +237,16 @@ const Inbox = (prop: any) => {
       return 
     }
     if(Release && Release == "ChivesToken")  {
-      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '1000')
+      const AoTokenAllTransactionsData = await AoTokenAllTransactions(CurrentToken, '1', '10')
+      console.log("AoTokenAllTransactionsData", AoTokenAllTransactionsData)
+
+      const AoTokenSentTransactionsData = await AoTokenSentTransactions(CurrentToken, CurrentToken, '1', '10')
+      console.log("AoTokenAllTransactionsData AoTokenSentTransactionsData", AoTokenSentTransactionsData)
+
+      const AoTokenReceivedTransactionsData = await AoTokenReceivedTransactions(CurrentToken, "97kgujUNuuwUHb0x41j-0eTI33we7Svxy6TfAJdgTAU", '1', '10')
+      console.log("AoTokenAllTransactionsData AoTokenReceivedTransactionsData", AoTokenReceivedTransactionsData)
+
+      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '10')
       if(AoDryRunBalances) {
         try{
           const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)

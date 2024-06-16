@@ -446,6 +446,162 @@ export const AoTokenBalancesPageDryRun = async (TargetTxId: string, startIndex: 
     }
 }
 
+export const AoTokenAllTransactions = async (TargetTxId: string, startIndex: string, endIndex: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
+        
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'AllTransactions' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'startIndex', value: startIndex },
+                { name: 'endIndex', value: endIndex },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+            type DataItem = [string, string, string, string];
+            type DataStructure = [DataItem[], number];
+            const jsonData = JSON.parse(result.Messages[0].Data) as DataStructure;
+
+            return jsonData
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenAllTransactions Error:", Error)
+        if(Error && Error.message) {
+            
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
+export const AoTokenSentTransactions = async (TargetTxId: string, Sender: string, startIndex: string, endIndex: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
+        
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: Sender,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'SentTransactions' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'Sender', value: Sender },
+                { name: 'startIndex', value: startIndex },
+                { name: 'endIndex', value: endIndex },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+            type DataItem = [string, string, string];
+            type DataStructure = [DataItem[], number];
+            const jsonData = JSON.parse(result.Messages[0].Data) as DataStructure;
+
+            return jsonData
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenSentTransactions Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
+export const AoTokenReceivedTransactions = async (TargetTxId: string, Recipient: string, startIndex: string, endIndex: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
+        
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: Recipient,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'ReceivedTransactions' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'Recipient', value: Recipient },
+                { name: 'startIndex', value: startIndex },
+                { name: 'endIndex', value: endIndex },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            type DataItem = [string, string, string];
+            type DataStructure = [DataItem[], number];
+            const jsonData = JSON.parse(result.Messages[0].Data) as DataStructure;
+
+            return jsonData
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenReceivedTransactions Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
 export const AoTokenInfoDryRun = async (TargetTxId: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {
