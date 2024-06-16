@@ -195,6 +195,7 @@ const TokenModel = () => {
 
     await sleep(5000)
 
+    console.log("handleSimulatedToken tokenInfo", tokenInfo)
     let LoadBlueprintToken: any = await AoLoadBlueprintToken(currentWallet.jwk, TokenProcessTxId, tokenInfo);
     while(LoadBlueprintToken && LoadBlueprintToken.status == 'ok' && LoadBlueprintToken.msg && LoadBlueprintToken.msg.error)  {
       sleep(6000)
