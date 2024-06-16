@@ -78,7 +78,7 @@ end
 
 
 -- token should be idempotent and not change previous state updates
-Name = Name or 'AoConnectToken' 
+Name = 'AoConnectToken' 
 Ticker = Ticker or 'AOCN'
 Denomination = Denomination or 12
 Balances = Balances or { [ao.id] = utils.toBalanceValue(9999 * 10^Denomination) }
