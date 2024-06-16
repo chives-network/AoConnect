@@ -32,7 +32,9 @@ import TokenSendOut from './TokenSendOut'
 import TokenAirdrop from './TokenAirdrop'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+
+// , AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions
 
 import { BigNumber } from 'bignumber.js'
 
@@ -72,6 +74,27 @@ const Inbox = (prop: any) => {
   const [isSearchTokenModelOpen, setIsSearchTokenModelOpen] = useState<boolean>(false)
   const [isOwnerStatus, setIsOwnerStatus] = useState<boolean>(false)
 
+  const [pageId, setPageId] = useState<number>(1)
+  const [pageCount, setPageCount] = useState<number>(0)
+  const [startIndex, setStartIndex] = useState<number>(1)
+  const [endIndex, setEndIndex] = useState<number>(10)
+  const [tokenInfo, setTokenInfo] = useState<any>(null)
+  const pageSize = 10
+
+  useEffect(()=>{
+    if(tokenInfo && pageId > 0 && Number(tokenInfo.TokenHolders)>0 ) {
+      setTokenGetInfor((prevState: any)=>({
+        ...prevState,
+        TokenBalances: [[],[],[],[],[],[],[],[],[],[]]
+      }))
+      setPageCount(Math.ceil(tokenInfo.TokenHolders/pageSize))
+      setStartIndex((pageId - 1) * pageSize + 1) //start with 1, not 0
+      setEndIndex((pageId) * pageSize)
+      handleTokenBalancesPagination()
+      console.log("handleTokenBalancesPagination", pageId, tokenInfo)
+    }
+  }, [pageId, tokenInfo])
+
   // ** State
   //const [isLoading, setIsLoading] = useState(false);
 
@@ -110,6 +133,8 @@ const Inbox = (prop: any) => {
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 
 
+    setPageId(1)
+    setPageCount(0)
     setIsDisabledButton(true)
     setIsSearchTokenModelOpen(true)
     setSearchToken(CurrentToken)
@@ -138,6 +163,10 @@ const Inbox = (prop: any) => {
     const TokenGetMap: any = await AoTokenInfoDryRun(CurrentToken)
     console.log("handleTokenSearch TokenGetMap", TokenGetMap)
     if(TokenGetMap)  {
+      if(TokenGetMap.TokenHolders) {
+        setPageCount(Math.ceil(TokenGetMap.TokenHolders/pageSize))
+      }
+      setTokenInfo(TokenGetMap)
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
         Version: null,
@@ -174,6 +203,10 @@ const Inbox = (prop: any) => {
 
     setIsDisabledButton(false)
 
+  }
+
+  const handleTokenBalancesPagination = async function () {
+    await handleAoTokenBalancesDryRun(tokenGetInfor.CurrentToken, tokenGetInfor.Release)
   }
 
   const handleTokenCreate = async function (tokenCreate: any) {
@@ -241,16 +274,16 @@ const Inbox = (prop: any) => {
       return 
     }
     if(Release && Release == "ChivesToken")  {
-      const AoTokenAllTransactionsData = await AoTokenAllTransactions(CurrentToken, '1', '10')
-      console.log("AoTokenAllTransactionsData", AoTokenAllTransactionsData)
+      //const AoTokenAllTransactionsData = await AoTokenAllTransactions(CurrentToken, '1', '10')
+      //console.log("AoTokenAllTransactionsData", AoTokenAllTransactionsData)
 
-      const AoTokenSentTransactionsData = await AoTokenSentTransactions(CurrentToken, CurrentToken, '1', '10')
-      console.log("AoTokenAllTransactionsData AoTokenSentTransactionsData", AoTokenSentTransactionsData)
+      //const AoTokenSentTransactionsData = await AoTokenSentTransactions(CurrentToken, CurrentToken, '1', '10')
+      //console.log("AoTokenAllTransactionsData AoTokenSentTransactionsData", AoTokenSentTransactionsData)
 
-      const AoTokenReceivedTransactionsData = await AoTokenReceivedTransactions(CurrentToken, "97kgujUNuuwUHb0x41j-0eTI33we7Svxy6TfAJdgTAU", '1', '10')
-      console.log("AoTokenAllTransactionsData AoTokenReceivedTransactionsData", AoTokenReceivedTransactionsData)
+      //const AoTokenReceivedTransactionsData = await AoTokenReceivedTransactions(CurrentToken, "97kgujUNuuwUHb0x41j-0eTI33we7Svxy6TfAJdgTAU", '1', '10')
+      //console.log("AoTokenAllTransactionsData AoTokenReceivedTransactionsData", AoTokenReceivedTransactionsData)
 
-      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, '1', '10')
+      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, String(startIndex), String(endIndex))
       if(AoDryRunBalances) {
         try{
           const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
@@ -703,7 +736,7 @@ const Inbox = (prop: any) => {
 
                         
                         <Grid item sx={{ display: 'column', m: 2 }}>
-                          <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} />
+                          <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
                           {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
                             <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
                           )}
