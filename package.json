@@ -113,7 +113,7 @@
     "typescript": "5.0.4"
   },
   "resolutions": {
-    "minipass": "5.0.0",
+    "minipass": "^7.1.1",
     "@mui/x-data-grid/@mui/system": "5.12.1",
     "react-credit-cards/prop-types": "15.7.2",
     "react-hot-toast/goober/csstype": "3.1.2",
