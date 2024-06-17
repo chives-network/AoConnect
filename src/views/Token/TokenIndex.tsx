@@ -25,16 +25,18 @@ import IconButton from '@mui/material/IconButton'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import TokenList from './TokenList'
 import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 import TokenAirdrop from './TokenAirdrop'
+import TokenList from './TokenList'
+import TokenAllTransactions from './TokenAllTransactions'
+import TokenReceivedTransactions from './TokenReceivedTransactions'
+import TokenSentTransaction from './TokenSentTransaction'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions } from 'src/functions/AoConnect/Token'
 
-// , AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions
 
 import { BigNumber } from 'bignumber.js'
 
@@ -74,6 +76,7 @@ const Inbox = (prop: any) => {
   const [isSearchTokenModelOpen, setIsSearchTokenModelOpen] = useState<boolean>(false)
   const [isOwnerStatus, setIsOwnerStatus] = useState<boolean>(false)
 
+  const [tokenListAction, setTokenListAction] = useState<string>("All Txs")
   const [pageId, setPageId] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(0)
   const [startIndex, setStartIndex] = useState<number>(1)
@@ -90,10 +93,26 @@ const Inbox = (prop: any) => {
       setPageCount(Math.ceil(tokenInfo.TokenHolders/pageSize))
       setStartIndex((pageId - 1) * pageSize + 1) //start with 1, not 0
       setEndIndex((pageId) * pageSize)
-      handleTokenBalancesPagination()
-      console.log("handleTokenBalancesPagination", pageId, tokenInfo)
+      switch(tokenListAction) {
+        case 'All Txs':
+          handleAoTokenAllTransactions(tokenGetInfor.CurrentToken)
+          console.log("handleAoTokenAllTransactions", pageId, tokenInfo)
+          break;
+        case 'Sent Txs':
+          handleAoTokenSentTransactions(tokenGetInfor.CurrentToken)
+          console.log("handleAoTokenSentTransactions", pageId, tokenInfo)
+          break;
+        case 'Received Txs':
+          handleAoTokenReceivedTransactions(tokenGetInfor.CurrentToken)
+          console.log("handleAoTokenReceivedTransactions", pageId, tokenInfo)
+          break;
+        case 'All Holders':
+          handleTokenBalancesPagination()
+          console.log("handleTokenBalancesPagination", pageId, tokenInfo)
+          break;
+      }
     }
-  }, [pageId, tokenInfo])
+  }, [pageId, tokenInfo, tokenListAction])
 
   // ** State
   //const [isLoading, setIsLoading] = useState(false);
@@ -267,6 +286,72 @@ const Inbox = (prop: any) => {
     
   }
 
+  const handleAoTokenAllTransactions = async function (CurrentToken: string) {
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      AoTokenAllTransactionsList: [[],[],[],[],[],[],[],[],[],[]],
+    }))
+    const AoDryRunData: any = await AoTokenAllTransactions(CurrentToken, String(startIndex), String(endIndex))
+    console.log("AoDryRunData", AoDryRunData)
+    try{
+      if(AoDryRunData) {
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          AoTokenAllTransactionsList: AoDryRunData[0],
+          AoTokenAllTransactionsCount: AoDryRunData[1],
+        }))
+        setPageCount(Math.ceil(AoDryRunData[1]/pageSize))
+      }
+    }
+    catch(Error: any) {
+      console.log("handleAoTokenBalancesDryRun AoTokenBalancesPageDryRun Error", Error)
+    }
+  }
+
+  const handleAoTokenSentTransactions = async function (CurrentToken: string) {
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      AoTokenSentTransactionsList: [[],[],[],[],[],[],[],[],[],[]],
+    }))
+    const AoDryRunData: any = await AoTokenSentTransactions(CurrentToken, myProcessTxIdInPage, String(startIndex), String(endIndex))
+    console.log("handleAoTokenSentTransactions AoDryRunData", AoDryRunData)
+    try{
+      if(AoDryRunData) {
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          AoTokenSentTransactionsList: AoDryRunData[0],
+          AoTokenSentTransactionsCount: AoDryRunData[1],
+        }))
+        setPageCount(Math.ceil(AoDryRunData[1]/pageSize))
+      }
+    }
+    catch(Error: any) {
+      console.log("handleAoTokenBalancesDryRun AoTokenBalancesPageDryRun Error", Error)
+    }
+  }
+
+  const handleAoTokenReceivedTransactions = async function (CurrentToken: string) {
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      AoTokenReceivedTransactionsList: [[],[],[],[],[],[],[],[],[],[]],
+    }))
+    const AoDryRunData: any = await AoTokenReceivedTransactions(CurrentToken, myProcessTxIdInPage, String(startIndex), String(endIndex))
+    console.log("handleAoTokenReceivedTransactions AoDryRunData", AoDryRunData)
+    try{
+      if(AoDryRunData) {
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          AoTokenReceivedTransactionsList: AoDryRunData[0],
+          AoTokenReceivedTransactionsCount: AoDryRunData[1],
+        }))
+        setPageCount(Math.ceil(AoDryRunData[1]/pageSize))
+      }
+    }
+    catch(Error: any) {
+      console.log("handleAoTokenBalancesDryRun AoTokenBalancesPageDryRun Error", Error)
+    }
+  }
+
   const handleAoTokenBalancesDryRun = async function (CurrentToken: string, Release: string | undefined) {
     if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
       console.log("handleAoTokenBalancesDryRun", "This token can not search txs records, due to txs are too large.")
@@ -274,15 +359,6 @@ const Inbox = (prop: any) => {
       return 
     }
     if(Release && Release == "ChivesToken")  {
-      //const AoTokenAllTransactionsData = await AoTokenAllTransactions(CurrentToken, '1', '10')
-      //console.log("AoTokenAllTransactionsData", AoTokenAllTransactionsData)
-
-      //const AoTokenSentTransactionsData = await AoTokenSentTransactions(CurrentToken, CurrentToken, '1', '10')
-      //console.log("AoTokenAllTransactionsData AoTokenSentTransactionsData", AoTokenSentTransactionsData)
-
-      //const AoTokenReceivedTransactionsData = await AoTokenReceivedTransactions(CurrentToken, "97kgujUNuuwUHb0x41j-0eTI33we7Svxy6TfAJdgTAU", '1', '10')
-      //console.log("AoTokenAllTransactionsData AoTokenReceivedTransactionsData", AoTokenReceivedTransactionsData)
-
       const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, String(startIndex), String(endIndex))
       if(AoDryRunBalances) {
         try{
@@ -673,16 +749,6 @@ const Inbox = (prop: any) => {
                                   () => { 
                                     setTokenGetInfor((prevState: any)=>({
                                       ...prevState,
-                                      openAirdropToken: true
-                                    }))
-                                  }
-                              }>
-                              {t("Airdrop")}
-                              </Button>
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenGetInfor((prevState: any)=>({
-                                      ...prevState,
                                       openMintToken: true
                                     }))
                                   }
@@ -702,45 +768,91 @@ const Inbox = (prop: any) => {
                           {t("Send")}
                           </Button>
                           
-                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                              () => { setTokenGetInfor((prevState: any)=>({
-                                  ...prevState,
-                                  openSendOutToken: true,
-                                  SendOutToken: "",
-                              })) }
-                          }>
-                          {t("Transactions")}
-                          </Button>
+                          {isOwnerStatus && Number(tokenGetInfor.Version) >= 20240620 && (
+                            <Fragment>
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenGetInfor((prevState: any)=>({
+                                      ...prevState,
+                                      openAirdropToken: true
+                                    }))
+                                  }
+                              }>
+                              {t("Airdrop")}
+                              </Button>
+                            </Fragment>
+                          )}
+
+                          {tokenGetInfor?.Version && Number(tokenGetInfor.Version) >= 20240620 && (
+                            <Fragment>
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenListAction("All Txs")
+                                    setPageId(1)
+                                  }
+                              }>
+                              {t("All Txs")}
+                              </Button>                              
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenListAction("Sent Txs")
+                                    setPageId(1)
+                                  }
+                              }>
+                              {t("Sent Txs")}
+                              </Button>                              
+                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                  () => { 
+                                    setTokenListAction("Received Txs")
+                                    setPageId(1)
+                                  }
+                              }>
+                              {t("Received Txs")}
+                              </Button>
+                            </Fragment>
+                          )}
+                          
                           
                           <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                              () => { setTokenGetInfor((prevState: any)=>({
-                                  ...prevState,
-                                  openSendOutToken: true,
-                                  SendOutToken: "",
-                              })) }
+                              () => { 
+                                setTokenListAction("All Holders")
+                                setPageId(1) 
+                              }
                           }>
-                          {t("Sent Txs")}
-                          </Button>
-                          
-                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                              () => { setTokenGetInfor((prevState: any)=>({
-                                  ...prevState,
-                                  openSendOutToken: true,
-                                  SendOutToken: "",
-                              })) }
-                          }>
-                          {t("Received Txs")}
+                          {t("All Holders")}
                           </Button>
 
                         </Grid>
+
+                        {tokenListAction == "All Txs" && (
+                          <Grid item sx={{ display: 'column', m: 2 }}>
+                            <TokenAllTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                          </Grid>
+                        )}
+
+                        {tokenListAction == "Sent Txs" && (
+                          <Grid item sx={{ display: 'column', m: 2 }}>
+                            <TokenSentTransaction tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                          </Grid>
+                        )}
+
+                        {tokenListAction == "Received Txs" && (
+                          <Grid item sx={{ display: 'column', m: 2 }}>
+                            <TokenReceivedTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                          </Grid>
+                        )}
+
+                        {tokenListAction == "All Holders" && (
+                          <Grid item sx={{ display: 'column', m: 2 }}>
+                            <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                          </Grid>
+                        )}
 
                         
-                        <Grid item sx={{ display: 'column', m: 2 }}>
-                          <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
-                          {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
-                            <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
-                          )}
-                        </Grid>
+                        {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
+                          <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
+                        )}
+                        
                       
                       </Fragment>
                     )}

@@ -478,7 +478,7 @@ export const AoTokenAllTransactions = async (TargetTxId: string, startIndex: str
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
             type DataItem = [string, string, string, string];
             type DataStructure = [DataItem[], number];
-            const jsonData = JSON.parse(result.Messages[0].Data) as DataStructure;
+            const jsonData: any[] = JSON.parse(result.Messages[0].Data) as DataStructure;
 
             return jsonData
         }
@@ -530,7 +530,7 @@ export const AoTokenSentTransactions = async (TargetTxId: string, Sender: string
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
             type DataItem = [string, string, string];
             type DataStructure = [DataItem[], number];
-            const jsonData = JSON.parse(result.Messages[0].Data) as DataStructure;
+            const jsonData: any[] = JSON.parse(result.Messages[0].Data) as DataStructure;
 
             return jsonData
         }
@@ -583,7 +583,7 @@ export const AoTokenReceivedTransactions = async (TargetTxId: string, Recipient:
 
             type DataItem = [string, string, string];
             type DataStructure = [DataItem[], number];
-            const jsonData = JSON.parse(result.Messages[0].Data) as DataStructure;
+            const jsonData: any[] = JSON.parse(result.Messages[0].Data) as DataStructure;
 
             return jsonData
         }

@@ -31,6 +31,24 @@ export function formatXWE(dividend: number, precision: number) {
   return result;
 }
 
+export function formatToken(dividend: number, precision: number) {
+  if(dividend == null || dividend == undefined) return 
+  if(dividend == 0) {
+
+    return '0';
+  }
+  let result = 0
+  if(Number(precision)<=0)  {
+    result = dividend;
+  }
+  else  {
+    const divisor = Math.pow(10, precision);
+    result = (dividend / divisor);
+  }
+
+  return result;
+}
+
 export function formatXWEAddress(dividend: number, precision: number) {
   const divisor = 10000;
   const result = (dividend / divisor).toFixed(precision);

@@ -4,7 +4,6 @@ import { Fragment, memo } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
@@ -15,14 +14,15 @@ import { useTranslation } from 'react-i18next'
 import IconButton from '@mui/material/IconButton'
 import Icon from 'src/@core/components/icon'
 import CircularProgress from '@mui/material/CircularProgress'
+import { formatHash, formatToken } from 'src/configs/functions';
 
 import Grid from '@mui/material/Grid'
 
 import Pagination from '@mui/material/Pagination'
 
-const TokenList = (prop: any) => {
+const TokenReceivedTransactions = (prop: any) => {
   
-  const { tokenGetInfor, setTokenGetInfor, setPageId, pageId, pageCount, startIndex } = prop
+  const { tokenGetInfor, setPageId, pageId, pageCount, startIndex } = prop
 
   const { t } = useTranslation()
 
@@ -32,7 +32,6 @@ const TokenList = (prop: any) => {
   }  
   console.log("handlePageChange 2", pageId, pageCount, tokenGetInfor)
   
-
   return (
     <Box
         sx={{
@@ -52,7 +51,7 @@ const TokenList = (prop: any) => {
                     Id
                 </TableCell>
                 <TableCell sx={{my: 0, py: 0}}>
-                    Holder
+                    From
                 </TableCell>
                 <TableCell sx={{my: 0, py: 0}}>
                     Amount
@@ -61,56 +60,32 @@ const TokenList = (prop: any) => {
                     Operation
                 </TableCell>
             </TableRow>
-            {tokenGetInfor && tokenGetInfor.TokenBalances && Object.keys(tokenGetInfor.TokenBalances).map((Item: string, Index: number)=>{
+            {tokenGetInfor && tokenGetInfor.AoTokenReceivedTransactionsList && tokenGetInfor.AoTokenReceivedTransactionsList.map((Item: string[], Index: number)=>{
 
                 return (
                     <Fragment key={Index}>
-                        {tokenGetInfor.TokenBalances[Item] == '' &&  (
+                        {Item[0] != '' &&  (
                             <TableRow key={Index} sx={{my: 0, py: 0}}>
                                 <TableCell sx={{my: 0, py: 0}}>
                                     <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Number(startIndex) + Index}</Typography>
                                 </TableCell>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 1, display: 'inline', my: 0, py: 0 }}>......</Typography>
-                                </TableCell>
-                                <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 1, display: 'inline', my: 0, py: 0 }}>......</Typography>
-                                </TableCell>
-                                <TableCell sx={{my: 0, py: 0}}>
-                                    <Button sx={{textTransform: 'none', my: 0}} size="small" disabled variant='outlined'>
-                                    {t("Send")}
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        )}
-                        {tokenGetInfor.TokenBalances[Item] != '' &&  (
-                            <TableRow key={Index} sx={{my: 0, py: 0}}>
-                                <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Number(startIndex) + Index}</Typography>
-                                </TableCell>
-                                <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 1, display: 'inline', my: 0, py: 0 }}>{Item}</Typography>
+                                    <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 1, display: 'inline', my: 0, py: 0 }}>{formatHash(Item[0], 6)}</Typography>
                                     {Item && (
                                         <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                            navigator.clipboard.writeText(Item);
+                                            navigator.clipboard.writeText(Item[0]);
                                         }}>
                                             <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
                                         </IconButton>
                                     )}
                                 </TableCell>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{tokenGetInfor.TokenBalances[Item]}</Typography>
+                                    {Item && Item[1] && (
+                                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{formatToken(Number(Item[1]), 12)}</Typography>
+                                    )}
                                 </TableCell>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Button sx={{textTransform: 'none', my: 0}} size="small" disabled={tokenGetInfor.disabledSendOutButton || tokenGetInfor.TokenProcessTxId == Item} variant='outlined' onClick={
-                                        () => { setTokenGetInfor((prevState: any)=>({
-                                            ...prevState,
-                                            openSendOutToken: true,
-                                            SendOutToken: Item,
-                                        })) }
-                                    }>
-                                    {t("Send")}
-                                    </Button>
+                                    <Icon icon='solar:dollar-bold' />
                                 </TableCell>
                             </TableRow>
                         )}
@@ -118,18 +93,30 @@ const TokenList = (prop: any) => {
                 )
                 
             })}
-
-            {tokenGetInfor && tokenGetInfor.TokenBalances == null && (
-                <TableRow sx={{my: 0, py: 0}}>
-                    <TableCell sx={{my: 0, py: 0}}>
-                        <CircularProgress />
-                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('Loading token txs...')}</Typography>
-                    </TableCell>
-                </TableRow>
-            )}
         
             </TableBody>
             </Table>
+
+            {tokenGetInfor && tokenGetInfor.AoTokenReceivedTransactionsList == null && (
+                <Box sx={{ pl: 5, py: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
+                        <CircularProgress />
+                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('Loading token received txs...')}</Typography>
+                    </Grid>
+                    </Box>
+                </Box>
+            )}
+
+            {tokenGetInfor && tokenGetInfor.AoTokenReceivedTransactionsList.length == 0 && (
+                <Box sx={{ pl: 5, py: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
+                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('No Data')}</Typography>
+                    </Grid>
+                    </Box>
+                </Box>
+            )}
 
             {pageCount > 0 && (
                 <Box sx={{ pl: 5, py: 3 }}>
@@ -149,4 +136,4 @@ const TokenList = (prop: any) => {
 }
 
 
-export default memo(TokenList)
+export default memo(TokenReceivedTransactions)
