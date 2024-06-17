@@ -31,7 +31,7 @@ npm run build
 
 [AOConnect Demo Video](https://www.youtube.com/watch?v=Qf-QkezSoVg)
 
-[AOConnect Demo Site](https://ao-connect.vercel.app/)
+[AOConnect Demo Site](https://aoconnect.vercel.app/)
 
 ## For Developers
   You need to provide information about the following projects.
