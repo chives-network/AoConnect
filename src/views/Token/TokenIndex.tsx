@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment, useEffect } from 'react'
+import { useState, Fragment, Ref, useEffect, ReactNode, useRef } from 'react'
 
 // ** MUI Imports
 import Button from '@mui/material/Button'
@@ -37,8 +37,15 @@ import TokenSentTransaction from './TokenSentTransaction'
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions } from 'src/functions/AoConnect/Token'
 
+// ** Third Party Components
+import { styled } from '@mui/material/styles'
+import PerfectScrollbarComponent, { ScrollBarProps } from 'react-perfect-scrollbar'
 
 import { BigNumber } from 'bignumber.js'
+
+const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { ref: Ref<unknown> }>(({ theme }) => ({
+  padding: theme.spacing(3, 5, 3, 3)
+}))
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -68,7 +75,12 @@ const Inbox = (prop: any) => {
           setAddTokenButtonDisabled
         } = prop
   
-  const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myProcessTxId)
+  const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myProcessTxId ?? '')
+  useEffect(()=>{
+    if(myProcessTxId && myProcessTxId.length == 43 && myProcessTxIdInPage.length != 43 && myProcessTxId != myProcessTxIdInPage) {
+      setMyProcessTxIdInPage(myProcessTxId)
+    }
+  }, [myProcessTxId])
 
   //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
@@ -214,8 +226,13 @@ const Inbox = (prop: any) => {
         Balance: null,
         Logo: null,
         Version: null,
-        Release: null
+        Release: null,
+        TokenHolders: null,
+        CirculatingSupply: null,
+        TokenBalance: 0,
+        TokenBalances: null,
       }))
+      setTokenListAction('')
     }
 
     await handleAoTokenBalancesDryRun(CurrentToken, TokenGetMap?.Release)
@@ -556,313 +573,343 @@ const Inbox = (prop: any) => {
     setIsDisabledButton(false)
   }
 
+  const hidden = true
+  const chatArea = useRef(null)
+  const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
+    if (hidden) {
+      return (
+        <Box ref={chatArea} sx={{ p: 5, height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+          {children}
+        </Box>
+      )
+    } else {
+      return (
+        <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false, suppressScrollX: true }}>
+          {children}
+        </PerfectScrollbar>
+      )
+    }
+  }
 
   return (
     <Fragment>
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card sx={{ padding: '0 8px' }}>
-            {myProcessTxIdInPage ?
-            <Grid container>
-              <Grid item xs={12}>
-                <Card>
-                    <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography noWrap variant='body1' sx={{my: 2, ml: 2}}>
-                        {t("Token Management")} 
-                        ( MyAoAddress: 
-                        <Typography noWrap variant='body2' sx={{ml:2, display: 'inline', color: 'primary.main'}}>{myProcessTxIdInPage}</Typography> 
-                          {searchToken && (
-                            <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                navigator.clipboard.writeText(myProcessTxIdInPage);
-                                toast.success(t('Copied success') as string, { duration: 1000 })
-                            }}>
-                                <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
-                            </IconButton>
-                          )}
-                          )
-                        </Typography>
-                    </Grid>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sx={{my: 2}}>
-                <Card>
-
-                    {addTokenFavorite == true && (
-                      <Grid item sx={{ display: 'column', m: 2 }}>
-                        <TextField
-                            sx={{ml: 2, my: 2}}
-                            size="small"
-                            label={`${t('CurrentToken')}`}
-                            placeholder={`${t('CurrentToken')}`}
-                            value={tokenGetInfor?.CurrentToken ?? ''}
-                            onChange={(e: any)=>{
-                              setTokenGetInfor((prevState: any)=>({
-                                ...prevState,
-                                CurrentToken: e.target.value
-                              }))
-                            }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position='start'>
-                                    <Icon icon='mdi:account-outline' />
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
-
-                        <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                            () => { handleTokenSearch(tokenGetInfor?.CurrentToken) }
-                        }>
-                        {t("Search Token")}
-                        </Button>
-
-                        <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={addTokenButtonDisabled} size="small" variant='outlined' onClick={
-                            () => { 
-                              if(tokenGetInfor.CurrentToken) {
-                                handleAddToken(tokenGetInfor.CurrentToken)
-                              }
-                            }
-                        }>
-                        {t(addTokenButtonText)}
-                        </Button>
-
-                      </Grid>
-                    )}
-
-                    { searchToken && (addTokenFavorite == false || isSearchTokenModelOpen) && tokenGetInfor && tokenGetInfor.CurrentToken && (
-                      <Fragment>
-                        <Grid item sx={{ display: 'flex', flexDirection: 'row', m: 2 }}>
-                          <Typography sx={{ fontWeight: 500, fontSize: '0.875rem', pt: 0.8 }}>
-                              Token: {searchToken}
+            <ScrollWrapper hidden={hidden}>
+              {myProcessTxIdInPage ?
+              <Grid container>
+                <Grid item xs={12}>
+                  <Card>
+                      <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography noWrap variant='body1' sx={{my: 2, ml: 2}}>
+                          {t("Token Management")} 
+                          ( MyAoAddress: 
+                          <Typography noWrap variant='body2' sx={{ml:2, display: 'inline', color: 'primary.main'}}>{myProcessTxIdInPage}</Typography> 
+                            {searchToken && (
+                              <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                  navigator.clipboard.writeText(myProcessTxIdInPage);
+                                  toast.success(t('Copied success') as string, { duration: 1000 })
+                              }}>
+                                  <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                              </IconButton>
+                            )}
+                            )
                           </Typography>
-                          {searchToken && (
-                            <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                navigator.clipboard.writeText(searchToken);
-                                toast.success(t('Copied success') as string, { duration: 1000 })
-                            }}>
-                                <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
-                            </IconButton>
-                          )}
-                        </Grid>
-                        
+                      </Grid>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sx={{my: 2}}>
+                  <Card>
+
+                      {addTokenFavorite == true && (
                         <Grid item sx={{ display: 'column', m: 2 }}>
-                          {tokenGetInfor && (
-                            <>
-                            <Box
-                              sx={{
-                                py: 3,
-                                px: 5,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                borderBottom: theme => `1px solid ${theme.palette.divider}`,
-                                borderTop: theme => `1px solid ${theme.palette.divider}`
+                          <TextField
+                              sx={{ml: 2, my: 2}}
+                              size="small"
+                              label={`${t('CurrentToken')}`}
+                              placeholder={`${t('CurrentToken')}`}
+                              value={tokenGetInfor?.CurrentToken ?? ''}
+                              onChange={(e: any)=>{
+                                setTokenGetInfor((prevState: any)=>({
+                                  ...prevState,
+                                  CurrentToken: e.target.value
+                                }))
                               }}
-                              >            
-                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center'}} >
-                                  <Badge
-                                    overlap='circular'
-                                    anchorOrigin={{
-                                      vertical: 'bottom',
-                                      horizontal: 'right'
-                                    }}
-                                    sx={{ mr: 3 }}
-                                    badgeContent={
-                                      <Box
-                                        component='span'
-                                        sx={{
-                                          width: 8,
-                                          height: 8,
-                                          borderRadius: '50%',
-                                          color: `primary.main`,
-                                          boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
-                                          backgroundColor: `primary.main`
-                                        }}
+                              InputProps={{
+                                  startAdornment: (
+                                      <InputAdornment position='start'>
+                                      <Icon icon='mdi:account-outline' />
+                                      </InputAdornment>
+                                  )
+                              }}
+                          />
+
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                              () => { handleTokenSearch(tokenGetInfor?.CurrentToken) }
+                          }>
+                          {t("Search Token")}
+                          </Button>
+
+                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={addTokenButtonDisabled} size="small" variant='outlined' onClick={
+                              () => { 
+                                if(tokenGetInfor.CurrentToken) {
+                                  handleAddToken(tokenGetInfor.CurrentToken)
+                                }
+                              }
+                          }>
+                          {t(addTokenButtonText)}
+                          </Button>
+
+                        </Grid>
+                      )}
+
+                      { searchToken && (addTokenFavorite == false || isSearchTokenModelOpen) && tokenGetInfor && tokenGetInfor.CurrentToken && (
+                        <Fragment>
+                          {tokenGetInfor && tokenGetInfor.Name && (
+                            <Grid item sx={{ display: 'flex', flexDirection: 'row', m: 2 }}>
+                              <Typography sx={{ fontWeight: 500, fontSize: '0.875rem', pt: 0.8 }}>
+                                  Token: {searchToken}
+                              </Typography>
+                              {searchToken && (
+                                <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                    navigator.clipboard.writeText(searchToken);
+                                    toast.success(t('Copied success') as string, { duration: 1000 })
+                                }}>
+                                    <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                                </IconButton>
+                              )}
+                            </Grid>
+                          )}
+                          {tokenGetInfor && tokenGetInfor.Name == null && (
+                            <Grid item sx={{ display: 'flex', flexDirection: 'row', m: 2 }}>
+                              <Typography sx={{ fontWeight: 500, fontSize: '0.875rem', pt: 0.8, ml: 2, color: `error.main` }}>
+                                  {searchToken} is not a token.
+                              </Typography>
+                            </Grid>
+                          )}
+                          
+                          <Grid item sx={{ display: 'column', m: 2 }}>
+                            {tokenGetInfor && tokenGetInfor?.Name && (
+                              <>
+                              <Box
+                                sx={{
+                                  py: 3,
+                                  px: 5,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between',
+                                  borderBottom: theme => `1px solid ${theme.palette.divider}`,
+                                  borderTop: theme => `1px solid ${theme.palette.divider}`
+                                }}
+                                >            
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  <Box sx={{ display: 'flex', alignItems: 'center'}} >
+                                    <Badge
+                                      overlap='circular'
+                                      anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right'
+                                      }}
+                                      sx={{ mr: 3 }}
+                                      badgeContent={
+                                        <Box
+                                          component='span'
+                                          sx={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: '50%',
+                                            color: `primary.main`,
+                                            boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
+                                            backgroundColor: `primary.main`
+                                          }}
+                                        />
+                                      }
+                                    >
+                                      <MuiAvatar
+                                        src={authConfig.backEndApi + '/' + tokenGetInfor?.Logo}
+                                        alt={tokenGetInfor?.Name}
+                                        sx={{ width: '2.5rem', height: '2.5rem' }}
                                       />
-                                    }
-                                  >
-                                    <MuiAvatar
-                                      src={authConfig.backEndApi + '/' + tokenGetInfor?.Logo}
-                                      alt={tokenGetInfor?.Name}
-                                      sx={{ width: '2.5rem', height: '2.5rem' }}
-                                    />
-                                  </Badge>
-                                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                    </Badge>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                                        {tokenGetInfor?.Name ?? 'Token'}
+                                        <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance ?? '...'}</Typography>
+                                        <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Version: {tokenGetInfor?.Version ?? ''}</Typography>
+                                      </Typography>
+                                      <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
+                                        {tokenGetInfor?.Ticker}
+                                        <Link href={authConfig.AoConnectAoLink + `/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
+                                          <Typography noWrap variant='body2' sx={{ml: 2, mr: 1, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
+                                        </Link>
+                                        {tokenGetInfor?.TokenProcessTxId && (
+                                            <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                                navigator.clipboard.writeText(tokenGetInfor?.TokenProcessTxId);
+                                            }}>
+                                                <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                                            </IconButton>
+                                        )}
+                                      </Typography>
+                                    </Box>
+
+                                  </Box>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
                                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                                      {tokenGetInfor?.Name ?? 'Token'}
-                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance ?? '...'}</Typography>
-                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Version: {tokenGetInfor?.Version ?? ''}</Typography>
+                                      {t('Token holders')}
                                     </Typography>
                                     <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
-                                      {tokenGetInfor?.Ticker}
-                                      <Link href={authConfig.AoConnectAoLink + `/token/${tokenGetInfor?.TokenProcessTxId}`} target='_blank'>
-                                        <Typography noWrap variant='body2' sx={{ml: 2, mr: 1, display: 'inline', color: 'primary.main'}}>{tokenGetInfor?.TokenProcessTxId}</Typography>
-                                      </Link>
-                                      {tokenGetInfor?.TokenProcessTxId && (
-                                          <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                              navigator.clipboard.writeText(tokenGetInfor?.TokenProcessTxId);
-                                          }}>
-                                              <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
-                                          </IconButton>
-                                      )}
+                                      {t('Circulating supply')}
                                     </Typography>
                                   </Box>
-
+                                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
+                                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                                      {tokenGetInfor?.TokenHolders}
+                                    </Typography>
+                                    <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
+                                      {tokenGetInfor?.CirculatingSupply}
+                                    </Typography>
+                                  </Box>
                                 </Box>
                               </Box>
-                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
-                                  <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                                    {t('Token holders')}
-                                  </Typography>
-                                  <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
-                                    {t('Circulating supply')}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mr: 3 }}>
-                                  <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                                    {tokenGetInfor?.TokenHolders}
-                                  </Typography>
-                                  <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
-                                    {tokenGetInfor?.CirculatingSupply}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </Box>
-                            </>
+                              </>
+                            )}
+
+                          </Grid>
+
+                          <Grid item sx={{ display: 'column', m: 2 }}>
+
+                            <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} handleAddToken={handleAddToken} setCounter={setCounter}/>
+
+                            <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
+
+                            <TokenAirdrop tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenAirdrop={handleTokenAirdrop} handleTokenSearch={handleTokenSearch} />
+
+                            {isOwnerStatus && tokenGetInfor && tokenGetInfor.Name && (
+                              <Fragment>
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      setTokenGetInfor((prevState: any)=>({
+                                        ...prevState,
+                                        openMintToken: true
+                                      }))
+                                    }
+                                }>
+                                {t("Mint")}
+                                </Button>
+                              </Fragment>
+                            )}
+                            
+                            {isOwnerStatus && Number(tokenGetInfor.Version) >= 20240620 && tokenGetInfor && tokenGetInfor.Name && (
+                              <Fragment>
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      setTokenGetInfor((prevState: any)=>({
+                                        ...prevState,
+                                        openAirdropToken: true
+                                      }))
+                                    }
+                                }>
+                                {t("Airdrop")}
+                                </Button>
+                              </Fragment>
+                            )}
+
+                            {tokenGetInfor?.Version && Number(tokenGetInfor.Version) >= 20240620 && tokenGetInfor && tokenGetInfor.Name && (
+                              <Fragment>
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      setTokenListAction("All Txs")
+                                      setPageId(1)
+                                    }
+                                }>
+                                {t("All Txs")}
+                                </Button>                              
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      setTokenListAction("Sent Txs")
+                                      setPageId(1)
+                                    }
+                                }>
+                                {t("Sent Txs")}
+                                </Button>                              
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      setTokenListAction("Received Txs")
+                                      setPageId(1)
+                                    }
+                                }>
+                                {t("Received Txs")}
+                                </Button>
+                              </Fragment>
+                            )}
+                            
+                            {tokenGetInfor && tokenGetInfor.Name && (
+                              <Fragment>
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      setTokenListAction("All Holders")
+                                      setPageId(1) 
+                                    }
+                                }>
+                                {t("All Holders")}
+                                </Button>
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { setTokenGetInfor((prevState: any)=>({
+                                        ...prevState,
+                                        openSendOutToken: true,
+                                        SendOutToken: "",
+                                    })) }
+                                }>
+                                {t("Send")}
+                                </Button>
+                              </Fragment>
+                            )}
+
+                          </Grid>
+
+                          {tokenListAction == "All Txs" && (
+                            <Grid item sx={{ display: 'column', m: 2 }}>
+                              <TokenAllTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                            </Grid>
                           )}
 
-                        </Grid>
-
-                        <Grid item sx={{ display: 'column', m: 2 }}>
-
-                          <TokenCreate tokenCreate={tokenCreate} setTokenCreate={setTokenCreate} handleTokenCreate={handleTokenCreate} handleTokenSearch={handleTokenSearch} handleAddToken={handleAddToken} setCounter={setCounter}/>
-
-                          <TokenMint tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenMint={handleTokenMint} handleTokenSearch={handleTokenSearch} />
-
-                          <TokenAirdrop tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenAirdrop={handleTokenAirdrop} handleTokenSearch={handleTokenSearch} />
-
-                          {isOwnerStatus && (
-                            <Fragment>
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenGetInfor((prevState: any)=>({
-                                      ...prevState,
-                                      openMintToken: true
-                                    }))
-                                  }
-                              }>
-                              {t("Mint")}
-                              </Button>
-                            </Fragment>
-                          )}
-                          
-                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                              () => { setTokenGetInfor((prevState: any)=>({
-                                  ...prevState,
-                                  openSendOutToken: true,
-                                  SendOutToken: "",
-                              })) }
-                          }>
-                          {t("Send")}
-                          </Button>
-                          
-                          {isOwnerStatus && Number(tokenGetInfor.Version) >= 20240620 && (
-                            <Fragment>
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenGetInfor((prevState: any)=>({
-                                      ...prevState,
-                                      openAirdropToken: true
-                                    }))
-                                  }
-                              }>
-                              {t("Airdrop")}
-                              </Button>
-                            </Fragment>
+                          {tokenListAction == "Sent Txs" && (
+                            <Grid item sx={{ display: 'column', m: 2 }}>
+                              <TokenSentTransaction tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                            </Grid>
                           )}
 
-                          {tokenGetInfor?.Version && Number(tokenGetInfor.Version) >= 20240620 && (
-                            <Fragment>
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenListAction("All Txs")
-                                    setPageId(1)
-                                  }
-                              }>
-                              {t("All Txs")}
-                              </Button>                              
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenListAction("Sent Txs")
-                                    setPageId(1)
-                                  }
-                              }>
-                              {t("Sent Txs")}
-                              </Button>                              
-                              <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                                  () => { 
-                                    setTokenListAction("Received Txs")
-                                    setPageId(1)
-                                  }
-                              }>
-                              {t("Received Txs")}
-                              </Button>
-                            </Fragment>
+                          {tokenListAction == "Received Txs" && (
+                            <Grid item sx={{ display: 'column', m: 2 }}>
+                              <TokenReceivedTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                            </Grid>
+                          )}
+
+                          {tokenListAction == "All Holders" && (
+                            <Grid item sx={{ display: 'column', m: 2 }}>
+                              <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                            </Grid>
+                          )}
+
+                          
+                          {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
+                            <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
                           )}
                           
-                          
-                          <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
-                              () => { 
-                                setTokenListAction("All Holders")
-                                setPageId(1) 
-                              }
-                          }>
-                          {t("All Holders")}
-                          </Button>
-
-                        </Grid>
-
-                        {tokenListAction == "All Txs" && (
-                          <Grid item sx={{ display: 'column', m: 2 }}>
-                            <TokenAllTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
-                          </Grid>
-                        )}
-
-                        {tokenListAction == "Sent Txs" && (
-                          <Grid item sx={{ display: 'column', m: 2 }}>
-                            <TokenSentTransaction tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
-                          </Grid>
-                        )}
-
-                        {tokenListAction == "Received Txs" && (
-                          <Grid item sx={{ display: 'column', m: 2 }}>
-                            <TokenReceivedTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
-                          </Grid>
-                        )}
-
-                        {tokenListAction == "All Holders" && (
-                          <Grid item sx={{ display: 'column', m: 2 }}>
-                            <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
-                          </Grid>
-                        )}
-
                         
-                        {tokenGetInfor && tokenGetInfor.openSendOutToken && ( 
-                          <TokenSendOut tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} handleTokenSendOut={handleTokenSendOut} /> 
-                        )}
-                        
+                        </Fragment>
+                      )}
                       
-                      </Fragment>
-                    )}
-                    
-                </Card>
+                  </Card>
+                </Grid>
               </Grid>
-            </Grid>
-            :
-            null
-            }
+              :
+              null
+              }
+            </ScrollWrapper>
           </Card>
         </Grid>
       </Grid>

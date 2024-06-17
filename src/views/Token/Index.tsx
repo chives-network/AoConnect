@@ -27,7 +27,7 @@ import { GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgRem
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
-const AppChat = () => {
+const TokenModel = () => {
   // ** Hook
 
   // ** States
@@ -56,8 +56,39 @@ const AppChat = () => {
   const [addTokenButtonText, setAddTokenButtonText] = useState<string>('Add Favorite')
   const [addTokenButtonDisabled, setAddTokenButtonDisabled] = useState<boolean>(false)
   const [addTokenFavorite, setAddTokenFavorite] = useState<boolean>(false)
-  const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
-  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
+  const [tokenCreate, setTokenCreate] = useState<any>({ 
+            Name: '',
+            Ticker: '',
+            Balance: '',
+            NameError: '',
+            LogoError: '',
+            TickerError: '',
+            BalanceError: '',
+            isDisabledButton: false,
+            ManualProcessTxId: '',
+            FormSubmit: 'Submit',
+            openCreateToken: false, 
+   })
+  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ 
+            openSendOutToken: false, 
+            disabledSendOutButton:false, 
+            FormSubmit: 'Submit', 
+            isDisabledButton: false,
+            SendOutTokenError: '',
+            SendOutAmount: '',
+            SendOutAmountError: '',
+            SendOutData: '',
+            SendOutDataError: '',
+            Name: '',
+            Ticker: '',
+            Balance: '',
+            NameError: '',
+            LogoError: '',
+            TickerError: '',
+            BalanceError: '',
+            openMintToken: false,
+            ManualProcessTxId: '',
+   })
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
@@ -205,4 +236,4 @@ const AppChat = () => {
   )
 }
 
-export default AppChat
+export default TokenModel
