@@ -76,7 +76,7 @@ const Inbox = (prop: any) => {
   const [isSearchTokenModelOpen, setIsSearchTokenModelOpen] = useState<boolean>(false)
   const [isOwnerStatus, setIsOwnerStatus] = useState<boolean>(false)
 
-  const [tokenListAction, setTokenListAction] = useState<string>("All Txs")
+  const [tokenListAction, setTokenListAction] = useState<string>("All Holders")
   const [pageId, setPageId] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(0)
   const [startIndex, setStartIndex] = useState<number>(1)

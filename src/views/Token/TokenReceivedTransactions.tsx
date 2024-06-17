@@ -108,7 +108,7 @@ const TokenReceivedTransactions = (prop: any) => {
                 </Box>
             )}
 
-            {tokenGetInfor && tokenGetInfor.AoTokenReceivedTransactionsList.length == 0 && (
+            {tokenGetInfor && tokenGetInfor.AoTokenReceivedTransactionsList && tokenGetInfor.AoTokenReceivedTransactionsList.length == 0 && (
                 <Box sx={{ pl: 5, py: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                     <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
