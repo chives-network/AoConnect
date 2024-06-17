@@ -56,39 +56,8 @@ const TokenModel = () => {
   const [addTokenButtonText, setAddTokenButtonText] = useState<string>('Add Favorite')
   const [addTokenButtonDisabled, setAddTokenButtonDisabled] = useState<boolean>(false)
   const [addTokenFavorite, setAddTokenFavorite] = useState<boolean>(false)
-  const [tokenCreate, setTokenCreate] = useState<any>({ 
-            Name: '',
-            Ticker: '',
-            Balance: '',
-            NameError: '',
-            LogoError: '',
-            TickerError: '',
-            BalanceError: '',
-            isDisabledButton: false,
-            ManualProcessTxId: '',
-            FormSubmit: 'Submit',
-            openCreateToken: false, 
-   })
-  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ 
-            openSendOutToken: false, 
-            disabledSendOutButton:false, 
-            FormSubmit: 'Submit', 
-            isDisabledButton: false,
-            SendOutTokenError: '',
-            SendOutAmount: '',
-            SendOutAmountError: '',
-            SendOutData: '',
-            SendOutDataError: '',
-            Name: '',
-            Ticker: '',
-            Balance: '',
-            NameError: '',
-            LogoError: '',
-            TickerError: '',
-            BalanceError: '',
-            openMintToken: false,
-            ManualProcessTxId: '',
-   })
+  const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
+  const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
@@ -210,25 +179,27 @@ const TokenModel = () => {
             handleLeftSidebarToggle={handleLeftSidebarToggle}
             setTokenGetInfor={setTokenGetInfor}
           />
-          <TokenIndex 
-            myProcessTxId={myProcessTxId}
-            tokenLeft={tokenLeft}
-            handleAddToken={handleAddToken}
-            searchToken={searchToken}
-            setSearchToken={setSearchToken}
-            addTokenButtonText={addTokenButtonText}
-            addTokenButtonDisabled={addTokenButtonDisabled}
-            addTokenFavorite={addTokenFavorite}
-            setAddTokenFavorite={setAddTokenFavorite}
-            tokenCreate={tokenCreate}
-            setTokenCreate={setTokenCreate}
-            counter={counter}
-            setCounter={setCounter}
-            tokenGetInfor={tokenGetInfor}
-            setTokenGetInfor={setTokenGetInfor}
-            setAddTokenButtonText={setAddTokenButtonText}
-            setAddTokenButtonDisabled={setAddTokenButtonDisabled}
-          />
+          {myProcessTxId && myProcessTxId.length == 43 && (
+            <TokenIndex 
+              myProcessTxId={myProcessTxId}
+              tokenLeft={tokenLeft}
+              handleAddToken={handleAddToken}
+              searchToken={searchToken}
+              setSearchToken={setSearchToken}
+              addTokenButtonText={addTokenButtonText}
+              addTokenButtonDisabled={addTokenButtonDisabled}
+              addTokenFavorite={addTokenFavorite}
+              setAddTokenFavorite={setAddTokenFavorite}
+              tokenCreate={tokenCreate}
+              setTokenCreate={setTokenCreate}
+              counter={counter}
+              setCounter={setCounter}
+              tokenGetInfor={tokenGetInfor}
+              setTokenGetInfor={setTokenGetInfor}
+              setAddTokenButtonText={setAddTokenButtonText}
+              setAddTokenButtonDisabled={setAddTokenButtonDisabled}
+            />
+          )}
         </Fragment>
 
       </Box>

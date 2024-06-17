@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment, Ref, useEffect, ReactNode, useRef } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 
 // ** MUI Imports
 import Button from '@mui/material/Button'
@@ -38,18 +38,11 @@ import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions } from 'src/functions/AoConnect/Token'
 
 // ** Third Party Components
-import { styled } from '@mui/material/styles'
-import PerfectScrollbarComponent, { ScrollBarProps } from 'react-perfect-scrollbar'
-
 import { BigNumber } from 'bignumber.js'
-
-const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { ref: Ref<unknown> }>(({ theme }) => ({
-  padding: theme.spacing(3, 5, 3, 3)
-}))
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
-const Inbox = (prop: any) => {
+const TokenIndexModel = (prop: any) => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -75,12 +68,13 @@ const Inbox = (prop: any) => {
           setAddTokenButtonDisabled
         } = prop
   
-  const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myProcessTxId ?? '')
+  const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myProcessTxId)
   useEffect(()=>{
     if(myProcessTxId && myProcessTxId.length == 43 && myProcessTxIdInPage.length != 43 && myProcessTxId != myProcessTxIdInPage) {
-      setMyProcessTxIdInPage(myProcessTxId)
+      //setMyProcessTxIdInPage(myProcessTxId)
     }
   }, [myProcessTxId])
+  console.log("myProcessTxIdmyProcessTxId", myProcessTxId, "myProcessTxIdInPage", myProcessTxIdInPage)
 
   //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
@@ -573,30 +567,11 @@ const Inbox = (prop: any) => {
     setIsDisabledButton(false)
   }
 
-  const hidden = true
-  const chatArea = useRef(null)
-  const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
-    if (hidden) {
-      return (
-        <Box ref={chatArea} sx={{ p: 5, height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
-          {children}
-        </Box>
-      )
-    } else {
-      return (
-        <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false, suppressScrollX: true }}>
-          {children}
-        </PerfectScrollbar>
-      )
-    }
-  }
-
   return (
     <Fragment>
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card sx={{ padding: '0 8px' }}>
-            <ScrollWrapper hidden={hidden}>
               {myProcessTxIdInPage ?
               <Grid container>
                 <Grid item xs={12}>
@@ -909,7 +884,6 @@ const Inbox = (prop: any) => {
               :
               null
               }
-            </ScrollWrapper>
           </Card>
         </Grid>
       </Grid>
@@ -917,5 +891,5 @@ const Inbox = (prop: any) => {
   )
 }
 
-export default Inbox
+export default TokenIndexModel
 
