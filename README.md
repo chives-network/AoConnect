@@ -31,7 +31,7 @@ npm run build
 
 [AOConnect Demo Video](https://www.youtube.com/watch?v=Qf-QkezSoVg)
 
-[AOConnect Demo Site](https://aoconnect.vercel.app/)
+[AOConnect Demo Site](https://ao-connect.vercel.app/)
 
 ## For Developers
   You need to provide information about the following projects.
@@ -57,7 +57,7 @@ npm run build
 
   2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
 
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Learn.png" width="600" />
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/Learn.png" width="600" />
 
   3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
   please go to [AOConnect Application Simulation] section.
@@ -67,7 +67,7 @@ npm run build
 
   5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
 
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/TokenList.png" width="600" />
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/TokenList.png" width="600" />
 
 ## AOConnect Application Simulation
 #### Chatroom
@@ -78,7 +78,7 @@ npm run build
 
   Simulate Chatroom lua module (This is not a specific function, but a simulator that simulates all relevant functions):
 
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChatroom.png" width="600" />
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/SimulatedChatroom.png" width="600" />
 
 #### Token
 - **Function**
@@ -89,7 +89,7 @@ npm run build
   
   Simulate Token lua module (This is not a specific function, but a simulator that simulates all relevant functions):
 
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedToken.png" width="600" />
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/SimulatedToken.png" width="600" />
 
 #### ChivesChat
 - **Function**
@@ -102,7 +102,7 @@ npm run build
   7. Only members can get information on all members.
   8. This version of the message is public, not encrypted.
   Simulate ChivesChat lua module (This is not a specific function, but a simulator that simulates all relevant functions):
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/SimulatedChivesChat.png" width="600" />
+  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/SimulatedChivesChat.png" width="600" />
 
 ## Future Planning
 Currently in the development phase, the final stage will consider developing a decentralized instant messaging tool based on the AO network, supporting encrypted messages, groups, TOKEN distribution, exchange, staking, rewards, and more. The reference target will be DISCORD, while incorporating some features of the AO network to create an instant encrypted communication tool based on the AO and AR networks.
