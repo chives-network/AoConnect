@@ -498,6 +498,66 @@ export const AoTokenAllTransactions = async (TargetTxId: string, startIndex: str
     }
 }
 
+export const AoTokenMyAllTransactions = async (TargetTxId: string, Sender: string, startIndex: string, endIndex: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        if(Sender && Sender.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
+        if(typeof Sender != 'string') {
+
+            return 
+        }
+        
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'MyAllTransactions' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'Sender', value: Sender },
+                { name: 'startIndex', value: startIndex },
+                { name: 'endIndex', value: endIndex },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+            type DataItem = [string, string, string, string];
+            type DataStructure = [DataItem[], number];
+            const jsonData: any[] = JSON.parse(result.Messages[0].Data) as DataStructure;
+
+            return jsonData
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoTokenAllTransactions Error:", Error)
+        if(Error && Error.message) {
+            
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
 export const AoTokenSentTransactions = async (TargetTxId: string, Sender: string, startIndex: string, endIndex: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {

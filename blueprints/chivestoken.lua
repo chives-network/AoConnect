@@ -86,6 +86,7 @@ Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 SentTransactions = SentTransactions or {}
 ReceivedTransactions = ReceivedTransactions or {}
 AllTransactions = AllTransactions or {}
+MyAllTransactions = MyAllTransactions or {}
 
 Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
   local totalSupply = bint(0)
@@ -200,6 +201,16 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
     end
     table.insert(ReceivedTransactions[msg.Recipient], { msg.From, msg.Quantity, msg.Tags.Ref_ })
 
+    if not MyAllTransactions[msg.From] then
+      MyAllTransactions[msg.From] = {}
+    end
+    table.insert(MyAllTransactions[msg.From], { msg.Recipient, msg.Quantity, 'Sent', msg.Tags.Ref_ })
+
+    if not MyAllTransactions[msg.Recipient] then
+      MyAllTransactions[msg.Recipient] = {}
+    end
+    table.insert(MyAllTransactions[msg.Recipient], { msg.From, msg.Quantity, 'Received', msg.Tags.Ref_ })
+    
     --[[
          Only send the notifications to the Sender and Recipient
          if the Cast tag is not set on the Transfer message
@@ -249,6 +260,48 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
     })
   end
 end)
+
+Handlers.add('MyAllTransactions', 
+  Handlers.utils.hasMatchingTag('Action', 'MyAllTransactions'), 
+  function(msg) 
+    if msg.Tags.Sender and msg.Tags.startIndex and msg.Tags.endIndex then 
+      if not MyAllTransactions[msg.Tags.Sender] then
+        MyAllTransactions[msg.Tags.Sender] = {}
+      end
+      local totalRecords = #MyAllTransactions[msg.Tags.Sender]
+
+      local filterMyAllTransactions = {}
+      local startIndex = tonumber(msg.Tags.startIndex) or 1
+      local endIndex = tonumber(msg.Tags.endIndex) or 1
+      if startIndex <= 0 then
+        startIndex = 1
+      end
+      if endIndex <= 0 then
+        endIndex = 1
+      end
+      if startIndex > endIndex then
+        startIndex = endIndex
+      end
+      if endIndex > totalRecords then
+        endIndex = totalRecords
+      end
+      local endFilter = totalRecords - startIndex + 1
+      local startFilter = totalRecords - endIndex + 1
+      for i = startFilter, endFilter do
+          table.insert(filterMyAllTransactions, MyAllTransactions[msg.Tags.Sender][i])
+      end
+
+      ao.send({ Target = msg.From, Data = json.encode({filterMyAllTransactions, totalRecords}) }) 
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'MyAllTransactions-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Must set Sender, startIndex, endIndex'
+      })
+    end
+  end
+)
 
 Handlers.add('AllTransactions', 
   Handlers.utils.hasMatchingTag('Action', 'AllTransactions'), 
@@ -317,7 +370,7 @@ Handlers.add('SentTransactions',
         Target = msg.From,
         Action = 'SentTransactions-Error',
         ['Message-Id'] = msg.Id,
-        Error = 'Only set Sender or startIndex or endIndex'
+        Error = 'Must set Sender, startIndex, endIndex'
       })
     end
     

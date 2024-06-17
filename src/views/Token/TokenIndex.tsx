@@ -31,11 +31,12 @@ import TokenSendOut from './TokenSendOut'
 import TokenAirdrop from './TokenAirdrop'
 import TokenList from './TokenList'
 import TokenAllTransactions from './TokenAllTransactions'
+import TokenMyAllTransactions from './TokenMyAllTransactions'
 import TokenReceivedTransactions from './TokenReceivedTransactions'
 import TokenSentTransaction from './TokenSentTransaction'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions, AoTokenMyAllTransactions } from 'src/functions/AoConnect/Token'
 
 // ** Third Party Components
 import { BigNumber } from 'bignumber.js'
@@ -103,6 +104,10 @@ const TokenIndexModel = (prop: any) => {
         case 'All Txs':
           handleAoTokenAllTransactions(tokenGetInfor.CurrentToken)
           console.log("handleAoTokenAllTransactions", pageId, tokenInfo)
+          break;
+        case 'My Txs':
+          handleAoTokenMyAllTransactions(tokenGetInfor.CurrentToken)
+          console.log("handleAoTokenMyAllTransactions", pageId, tokenInfo)
           break;
         case 'Sent Txs':
           handleAoTokenSentTransactions(tokenGetInfor.CurrentToken)
@@ -310,6 +315,28 @@ const TokenIndexModel = (prop: any) => {
           ...prevState,
           AoTokenAllTransactionsList: AoDryRunData[0],
           AoTokenAllTransactionsCount: AoDryRunData[1],
+        }))
+        setPageCount(Math.ceil(AoDryRunData[1]/pageSize))
+      }
+    }
+    catch(Error: any) {
+      console.log("handleAoTokenBalancesDryRun AoTokenBalancesPageDryRun Error", Error)
+    }
+  }
+
+  const handleAoTokenMyAllTransactions = async function (CurrentToken: string) {
+    setTokenGetInfor((prevState: any)=>({
+      ...prevState,
+      AoTokenMyAllTransactionsList: [[],[],[],[],[],[],[],[],[],[]],
+    }))
+    const AoDryRunData: any = await AoTokenMyAllTransactions(CurrentToken, myProcessTxIdInPage, String(startIndex), String(endIndex))
+    console.log("AoDryRunData", AoDryRunData)
+    try{
+      if(AoDryRunData) {
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          AoTokenMyAllTransactionsList: AoDryRunData[0],
+          AoTokenMyAllTransactionsCount: AoDryRunData[1],
         }))
         setPageCount(Math.ceil(AoDryRunData[1]/pageSize))
       }
@@ -801,7 +828,15 @@ const TokenIndexModel = (prop: any) => {
                                     }
                                 }>
                                 {t("All Txs")}
-                                </Button>                              
+                                </Button>     
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      setTokenListAction("My Txs")
+                                      setPageId(1)
+                                    }
+                                }>
+                                {t("My Txs")}
+                                </Button>                          
                                 <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
                                     () => { 
                                       setTokenListAction("Sent Txs")
@@ -848,6 +883,12 @@ const TokenIndexModel = (prop: any) => {
                           {tokenListAction == "All Txs" && (
                             <Grid item sx={{ display: 'column', m: 2 }}>
                               <TokenAllTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                            </Grid>
+                          )}
+
+                          {tokenListAction == "My Txs" && (
+                            <Grid item sx={{ display: 'column', m: 2 }}>
+                              <TokenMyAllTransactions tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
                             </Grid>
                           )}
 

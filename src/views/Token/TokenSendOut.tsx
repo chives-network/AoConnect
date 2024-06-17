@@ -69,7 +69,7 @@ const TokenSendOut = (props: any) => {
             return
         }
 
-        if(tokenGetInfor && tokenGetInfor.TokenProcessTxId == tokenGetInfor.SendOutToken )  {
+        if(tokenGetInfor && tokenGetInfor.TokenProcessTxId == tokenGetInfor.SendOutToken && false)  {
             setTokenGetInfor( (prevState: any) => ({ 
                 ...prevState, 
                 SendOutTokenError: t('Cannot send amount to yourself')
