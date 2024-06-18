@@ -60,7 +60,7 @@ local utils = {
     return tonumber(a)
   end,
   compare = function (a, b)
-    return a[2] > b[2]
+    return bint(a[2]) > bint(b[2])
   end
 }
 
