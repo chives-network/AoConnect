@@ -150,7 +150,7 @@ export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) 
   
 }
 
-export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, myTokenProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number, Denomination: number = 12) => {
+export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, myTokenProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number, Denomination = 12) => {
     try {
         if(tokenTxId && tokenTxId.length != 43) {
 
@@ -199,7 +199,7 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
   
 }
 
-export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mintAmount: number, Denomination: number = 12) => {
+export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mintAmount: number, Denomination = 12) => {
     try {
         if(tokenTxId && tokenTxId.length != 43) {
 
@@ -240,7 +240,7 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
   
 }
 
-export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, AddressList: string, AmountList: string, Denomination: number = 12) => {
+export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, AddressList: string, AmountList: string, Denomination = 12) => {
     try {
         if(tokenTxId && tokenTxId.length != 43) {
 

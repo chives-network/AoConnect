@@ -149,7 +149,7 @@ export const AoLotteryUpdateBalance = async (currentWalletJwk: any, LotteryTxId:
   
 }
 
-export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number, Denomination: number = 12) => {
+export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number, Denomination = 12) => {
     try {
         if(LotteryTxId && LotteryTxId.length != 43) {
 

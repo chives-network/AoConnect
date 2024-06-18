@@ -29,7 +29,8 @@ import TokenMint from './TokenMint'
 import TokenCreate from './TokenCreate'
 import TokenSendOut from './TokenSendOut'
 import TokenAirdrop from './TokenAirdrop'
-import TokenList from './TokenList'
+import TokenListChivesToken from './TokenListChivesToken'
+import TokenListOfficial from './TokenListOfficial'
 import TokenAllTransactions from './TokenAllTransactions'
 import TokenMyAllTransactions from './TokenMyAllTransactions'
 import TokenReceivedTransactions from './TokenReceivedTransactions'
@@ -37,6 +38,8 @@ import TokenSentTransaction from './TokenSentTransaction'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions, AoTokenMyAllTransactions } from 'src/functions/AoConnect/Token'
+
+import { downloadCsv } from 'src/functions/ChatBook'
 
 // ** Third Party Components
 import { BigNumber } from 'bignumber.js'
@@ -153,7 +156,7 @@ const TokenIndexModel = (prop: any) => {
       if(AoDryRunBalance) {
         setTokenGetInfor((prevState: any)=>({
           ...prevState,
-          TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination) ?? 12)
+          TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination))
         }))
       }
     }
@@ -174,21 +177,15 @@ const TokenIndexModel = (prop: any) => {
       TokenProcessTxId: CurrentToken,
       CurrentToken: CurrentToken,
       Logo: null,
+      Denomination: null,
       TokenBalance: 0,
+      TokenBalancesAllRecords: null,
       TokenBalances: null,
       TokenHolders: null,
       CirculatingSupply: null,
       Version: null,
       Release: null
     }))
-
-    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxIdInPage)
-    if(AoDryRunBalance && tokenInfo) {
-      setTokenGetInfor((prevState: any)=>({
-        ...prevState,
-        TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination) ?? 12)
-      }))
-    }
 
     const TokenGetMap: any = await AoTokenInfoDryRun(CurrentToken)
     console.log("handleTokenSearch TokenGetMap", TokenGetMap)
@@ -199,8 +196,9 @@ const TokenIndexModel = (prop: any) => {
       setTokenInfo(TokenGetMap)
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
-        Version: null,
-        Release: null,
+        Version: TokenGetMap?.Version,
+        Release: TokenGetMap?.Release,
+        Denomination: TokenGetMap.Denomination,
         TokenHolders: TokenGetMap?.TokenHolders,
         CirculatingSupply: TokenGetMap?.TotalSupply,
         ...TokenGetMap
@@ -228,20 +226,40 @@ const TokenIndexModel = (prop: any) => {
         Release: null,
         TokenHolders: null,
         CirculatingSupply: null,
+        Denomination: null,
         TokenBalance: 0,
+        TokenBalancesAllRecords: null,
         TokenBalances: null,
       }))
       setTokenListAction('')
     }
 
-    await handleAoTokenBalancesDryRun(CurrentToken, TokenGetMap?.Release)
+    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxIdInPage)
+    if(AoDryRunBalance && tokenInfo) {
+      setTokenGetInfor((prevState: any)=>({
+        ...prevState,
+        TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination))
+      }))
+    }
+
+    if(tokenGetInfor && tokenGetInfor.Release == "ChivesToken") {
+      await handleAoTokenBalancesDryRunChivesToken(CurrentToken)
+    }
+    else {
+      await handleAoTokenBalancesDryRunOfficialToken(CurrentToken)
+    }
 
     setIsDisabledButton(false)
 
   }
 
   const handleTokenBalancesPagination = async function () {
-    await handleAoTokenBalancesDryRun(tokenGetInfor.CurrentToken, tokenGetInfor.Release)
+    if(tokenGetInfor && tokenGetInfor.Release == "ChivesToken") {
+      await handleAoTokenBalancesDryRunChivesToken(tokenGetInfor.CurrentToken)
+    }
+    else {
+      await handleAoTokenBalancesDryRunOfficialToken(tokenGetInfor.CurrentToken)
+    }
   }
 
   const handleTokenCreate = async function (tokenCreate: any) {
@@ -390,71 +408,76 @@ const TokenIndexModel = (prop: any) => {
     }
   }
 
-  const handleAoTokenBalancesDryRun = async function (CurrentToken: string, Release: string | undefined) {
+  const handleAoTokenBalancesDryRunOfficialToken = async function (CurrentToken: string) {
     if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
-      console.log("handleAoTokenBalancesDryRun", "This token can not search txs records, due to txs are too large.")
+      console.log("handleAoTokenBalancesDryRunOfficialToken", "This token can not search txs records, due to txs are too large.")
 
       return 
     }
-    if(Release && Release == "ChivesToken")  {
-      const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, String(startIndex), String(endIndex))
-      if(AoDryRunBalances && tokenInfo) {
+    console.log("handleAoTokenBalancesDryRunOfficialToken Log", tokenGetInfor, tokenGetInfor.TokenBalancesAllRecords)
+    if(tokenGetInfor || tokenGetInfor.TokenBalancesAllRecords == null)   {
+      const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
+      if(AoDryRunBalances && tokenInfo && tokenInfo.Denomination) {
         try{
-          const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
-          console.log("AoDryRunBalancesData", AoDryRunBalancesData)
-          const AoDryRunBalancesJson = AoDryRunBalancesData[0]
-          const TokenHolders = AoDryRunBalancesData[1]
-          const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2], Number(tokenInfo.Denomination) ?? 12)
-          const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
-                            .sort((a: any, b: any) => b[1] - a[1])
-                            .reduce((acc: any, [key, value]) => {
-                                acc[key] = FormatBalance(Number(value), Number(tokenInfo.Denomination) ?? 12);
-                                
-                                return acc;
-                            }, {} as { [key: string]: number });
+          const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
+          const AoDryRunBalancesJsonMap = new Map(Object.entries(AoDryRunBalancesJson));
+          const AoDryRunBalancesJsonSorted = Array.from(AoDryRunBalancesJsonMap.entries()).filter(([, value] : any) => Number(value) > 0);
+          AoDryRunBalancesJsonSorted.sort((a: any, b: any) => b[1] - a[1]);
+          const TokenHolders = AoDryRunBalancesJsonSorted.length
+          let CirculatingSupply = BigNumber(0)
+          const AoDryRunBalancesJsonSortedResult = AoDryRunBalancesJsonSorted.map((Item: any)=>{
+            const HolderBalance = FormatBalance(Number(Item[1]), Number(tokenInfo.Denomination))
+            CirculatingSupply = CirculatingSupply.plus(HolderBalance)
+
+            return [Item[0], HolderBalance]
+          })
+          setPageCount(Math.ceil(AoDryRunBalancesJsonSorted.length/pageSize))
           setTokenGetInfor((prevState: any)=>({
             ...prevState,
-            TokenBalances: AoDryRunBalancesJsonSorted,
+            TokenBalancesAllRecords: AoDryRunBalancesJsonSortedResult,
             TokenHolders: TokenHolders,
             CirculatingSupply: CirculatingSupply.toString()
           }))
-          console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+          console.log("handleAoTokenBalancesDryRunOfficialToken", AoDryRunBalancesJsonSortedResult, "TokenHolders", TokenHolders, tokenInfo, tokenGetInfor)
         }
         catch(Error: any) {
-          console.log("handleAoTokenBalancesDryRun AoTokenBalancesPageDryRun Error", Error)
+          console.log("handleAoTokenBalancesDryRunOfficialToken Error", Error)
         }
       }
     }
-    else {
-      const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
-      if(AoDryRunBalances && tokenInfo) {
-        try{
-          console.log("AoDryRunBalances", AoDryRunBalances)
-          const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
-          const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
-                            .sort((a: any, b: any) => b[1] - a[1])
-                            .reduce((acc: any, [key, value]) => {
-                                acc[key] = FormatBalance(Number(value), Number(tokenInfo.Denomination) ?? 12);
-                                
-                                return acc;
-                            }, {} as { [key: string]: number });
-          const TokenMap = Object.values(AoDryRunBalancesJsonSorted)
-          const TokenHolders = TokenMap.length
-          let CirculatingSupply = BigNumber(0)
-          TokenMap.map((Item: any)=>{
-            CirculatingSupply = CirculatingSupply.plus(Item)
-          })
-          setTokenGetInfor((prevState: any)=>({
-            ...prevState,
-            TokenBalances: AoDryRunBalancesJsonSorted,
-            TokenHolders: TokenHolders,
-            CirculatingSupply: CirculatingSupply.toString()
-          }))
-          console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
-        }
-        catch(Error: any) {
-          console.log("handleAoTokenBalancesDryRun Error", Error)
-        }
+  }
+
+  const handleAoTokenBalancesDryRunChivesToken = async function (CurrentToken: string) {
+    if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
+      console.log("handleAoTokenBalancesDryRunChivesToken", "This token can not search txs records, due to txs are too large.")
+
+      return 
+    }
+    const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, String(startIndex), String(endIndex))
+    if(AoDryRunBalances && tokenInfo) {
+      try{
+        const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
+        console.log("AoDryRunBalancesData", AoDryRunBalancesData)
+        const AoDryRunBalancesJson = AoDryRunBalancesData[0]
+        const TokenHolders = AoDryRunBalancesData[1]
+        const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2], Number(tokenInfo.Denomination))
+        const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
+                          .sort((a: any, b: any) => b[1] - a[1])
+                          .reduce((acc: any, [key, value]) => {
+                              acc[key] = FormatBalance(Number(value), Number(tokenInfo.Denomination));
+                              
+                              return acc;
+                          }, {} as { [key: string]: number });
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          TokenBalances: AoDryRunBalancesJsonSorted,
+          TokenHolders: TokenHolders,
+          CirculatingSupply: CirculatingSupply.toString()
+        }))
+        console.log("AoDryRunBalances", AoDryRunBalancesJsonSorted, "TokenHolders", TokenHolders)
+      }
+      catch(Error: any) {
+        console.log("handleAoTokenBalancesDryRunChivesToken AoTokenBalancesPageDryRun Error", Error)
       }
     }
   }
@@ -576,13 +599,18 @@ const TokenIndexModel = (prop: any) => {
               })
             }
             
-            await handleAoTokenBalancesDryRun(TokenProcessTxId, tokenGetInfor?.Release)
+            if(tokenGetInfor && tokenGetInfor.Release == "ChivesToken") {
+              await handleAoTokenBalancesDryRunChivesToken(TokenProcessTxId)
+            }
+            else {
+              await handleAoTokenBalancesDryRunOfficialToken(TokenProcessTxId)
+            }
 
             const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxIdInPage)
             if(AoDryRunBalance) {
               setTokenGetInfor((prevState: any)=>({
                 ...prevState,
-                TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination) ?? 12)
+                TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination))
               }))
             }
 
@@ -592,6 +620,19 @@ const TokenIndexModel = (prop: any) => {
     }
 
     setIsDisabledButton(false)
+  }
+
+  const handleExportHolders = () => {
+    if(tokenGetInfor && tokenGetInfor.TokenBalancesAllRecords) {
+      const CsvList = tokenGetInfor.TokenBalancesAllRecords.map((item: any)=>{
+
+        return item[0] + "," + item[1]
+      })
+      downloadCsv(CsvList.join('\n'), "TokenAllHolders[" + tokenGetInfor.CurrentToken + "]")
+      toast.success(t('Download all holders data success'), {
+        duration: 4000
+      })
+    }
   }
 
   return (
@@ -738,6 +779,7 @@ const TokenIndexModel = (prop: any) => {
                                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                                         {tokenGetInfor?.Name ?? 'Token'}
                                         <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Balance: {tokenGetInfor.TokenBalance ?? '...'}</Typography>
+                                        <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Denomination: {tokenGetInfor?.Denomination ?? ''}</Typography>
                                         <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Version: {tokenGetInfor?.Version ?? ''}</Typography>
                                       </Typography>
                                       <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
@@ -878,6 +920,18 @@ const TokenIndexModel = (prop: any) => {
                               </Fragment>
                             )}
 
+                            {tokenGetInfor && tokenGetInfor.Name && tokenGetInfor.TokenBalancesAllRecords && tokenInfo && tokenInfo.release != "ChivesToken" && (
+                              <Fragment>
+                                <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
+                                    () => { 
+                                      handleExportHolders()
+                                    }
+                                }>
+                                {t("Export Holders")}
+                                </Button>
+                              </Fragment>
+                            )}
+
                           </Grid>
 
                           {tokenListAction == "All Txs" && (
@@ -904,9 +958,15 @@ const TokenIndexModel = (prop: any) => {
                             </Grid>
                           )}
 
-                          {tokenListAction == "All Holders" && (
+                          {tokenListAction == "All Holders" && tokenInfo && tokenInfo.release == "ChivesToken" && (
                             <Grid item sx={{ display: 'column', m: 2 }}>
-                              <TokenList tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                              <TokenListChivesToken tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
+                            </Grid>
+                          )}
+
+                          {tokenListAction == "All Holders" && tokenInfo && tokenInfo.release != "ChivesToken" && (
+                            <Grid item sx={{ display: 'column', m: 2 }}>
+                              <TokenListOfficial tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} pageSize={pageSize} />
                             </Grid>
                           )}
 

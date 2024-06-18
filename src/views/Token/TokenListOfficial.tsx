@@ -20,18 +20,19 @@ import Grid from '@mui/material/Grid'
 
 import Pagination from '@mui/material/Pagination'
 
-const TokenList = (prop: any) => {
+const TokenListOfficial = (prop: any) => {
   
-  const { tokenGetInfor, setTokenGetInfor, setPageId, pageId, pageCount, startIndex } = prop
+  const { tokenGetInfor, setTokenGetInfor, setPageId, pageId, pageCount, startIndex, pageSize } = prop
 
   const { t } = useTranslation()
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
     setPageId(page)
-    console.log("handlePageChange 1", event)
+    console.log("TokenListOfficial handlePageChange 1", event)
   }  
-  console.log("handlePageChange 2", pageId, pageCount, tokenGetInfor)
+  console.log("TokenListOfficial handlePageChange 2", pageId, pageCount, tokenGetInfor)
   
+  const TokenBalances: any[] = tokenGetInfor && tokenGetInfor.TokenBalancesAllRecords && tokenGetInfor.TokenBalancesAllRecords.length>0 ? tokenGetInfor.TokenBalancesAllRecords.slice(pageId * pageSize - pageSize, (pageId) * pageSize) : null
 
   return (
     <Box
@@ -61,11 +62,11 @@ const TokenList = (prop: any) => {
                     Operation
                 </TableCell>
             </TableRow>
-            {tokenGetInfor && tokenGetInfor.TokenBalances && Object.keys(tokenGetInfor.TokenBalances).map((Item: string, Index: number)=>{
+            {TokenBalances && TokenBalances.map((Item: any, Index: number)=>{
 
                 return (
                     <Fragment key={Index}>
-                        {tokenGetInfor.TokenBalances[Item] == '' &&  (
+                        {Item.length == 0 &&  (
                             <TableRow key={Index} sx={{my: 0, py: 0}}>
                                 <TableCell sx={{my: 0, py: 0}}>
                                     <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Number(startIndex) + Index}</Typography>
@@ -83,26 +84,26 @@ const TokenList = (prop: any) => {
                                 </TableCell>
                             </TableRow>
                         )}
-                        {tokenGetInfor.TokenBalances[Item] != '' &&  (
+                        {Item.length > 0 &&  (
                             <TableRow key={Index} sx={{my: 0, py: 0}}>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Number(startIndex) + Index}</Typography>
+                                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Number(pageId * pageSize - pageSize) + Index + 1}</Typography>
                                 </TableCell>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 1, display: 'inline', my: 0, py: 0 }}>{Item}</Typography>
-                                    {Item && (
+                                    <Typography noWrap variant='body2' sx={{ color: 'info.main', pr: 1, display: 'inline', my: 0, py: 0 }}>{Item[0]}</Typography>
+                                    {Item[0] && (
                                         <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                            navigator.clipboard.writeText(Item);
+                                            navigator.clipboard.writeText(Item[0]);
                                         }}>
                                             <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
                                         </IconButton>
                                     )}
                                 </TableCell>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{tokenGetInfor.TokenBalances[Item]}</Typography>
+                                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Item[1]}</Typography>
                                 </TableCell>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Button sx={{textTransform: 'none', my: 0}} size="small" disabled={tokenGetInfor.disabledSendOutButton || tokenGetInfor.TokenProcessTxId == Item} variant='outlined' onClick={
+                                    <Button sx={{textTransform: 'none', my: 0}} size="small" disabled={tokenGetInfor.disabledSendOutButton || tokenGetInfor.TokenProcessTxId == Item[0]} variant='outlined' onClick={
                                         () => { setTokenGetInfor((prevState: any)=>({
                                             ...prevState,
                                             openSendOutToken: true,
@@ -118,18 +119,20 @@ const TokenList = (prop: any) => {
                 )
                 
             })}
-
-            {tokenGetInfor && tokenGetInfor.TokenBalances == null && (
-                <TableRow sx={{my: 0, py: 0}}>
-                    <TableCell sx={{my: 0, py: 0}}>
-                        <CircularProgress />
-                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('Loading token txs...')}</Typography>
-                    </TableCell>
-                </TableRow>
-            )}
         
             </TableBody>
             </Table>
+
+            {tokenGetInfor && TokenBalances == null && (
+                <Box sx={{ pl: 5, py: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
+                        <CircularProgress />
+                        <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('Loading token holders...')}</Typography>
+                    </Grid>
+                    </Box>
+                </Box>
+            )}
 
             {pageCount > 0 && (
                 <Box sx={{ pl: 5, py: 3 }}>
@@ -149,4 +152,4 @@ const TokenList = (prop: any) => {
 }
 
 
-export default memo(TokenList)
+export default memo(TokenListOfficial)
