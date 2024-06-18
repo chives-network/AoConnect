@@ -196,8 +196,6 @@ const TokenIndexModel = (prop: any) => {
       setTokenInfo(TokenGetMap)
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
-        Version: TokenGetMap?.Version,
-        Release: TokenGetMap?.Release,
         Denomination: TokenGetMap.Denomination,
         TokenHolders: TokenGetMap?.TokenHolders,
         CirculatingSupply: TokenGetMap?.TotalSupply,
@@ -222,8 +220,6 @@ const TokenIndexModel = (prop: any) => {
         Ticker: null,
         Balance: null,
         Logo: null,
-        Version: null,
-        Release: null,
         TokenHolders: null,
         CirculatingSupply: null,
         Denomination: null,
@@ -242,7 +238,7 @@ const TokenIndexModel = (prop: any) => {
       }))
     }
 
-    if(tokenGetInfor && tokenGetInfor.Release == "ChivesToken") {
+    if(tokenInfo && tokenInfo.Release == "ChivesToken") {
       await handleAoTokenBalancesDryRunChivesToken(CurrentToken)
     }
     else {
@@ -254,7 +250,7 @@ const TokenIndexModel = (prop: any) => {
   }
 
   const handleTokenBalancesPagination = async function () {
-    if(tokenGetInfor && tokenGetInfor.Release == "ChivesToken") {
+    if(tokenInfo && tokenInfo.Release == "ChivesToken") {
       await handleAoTokenBalancesDryRunChivesToken(tokenGetInfor.CurrentToken)
     }
     else {
@@ -414,8 +410,8 @@ const TokenIndexModel = (prop: any) => {
 
       return 
     }
-    console.log("handleAoTokenBalancesDryRunOfficialToken Log", tokenGetInfor, tokenGetInfor.TokenBalancesAllRecords)
-    if(tokenGetInfor || tokenGetInfor.TokenBalancesAllRecords == null)   {
+    console.log("handleAoTokenBalancesDryRunOfficialToken Log", tokenGetInfor, tokenInfo)
+    if(tokenGetInfor || tokenGetInfor.TokenBalancesAllRecords == undefined)   {
       const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
       if(AoDryRunBalances && tokenInfo && tokenInfo.Denomination) {
         try{
@@ -599,7 +595,7 @@ const TokenIndexModel = (prop: any) => {
               })
             }
             
-            if(tokenGetInfor && tokenGetInfor.Release == "ChivesToken") {
+            if(tokenInfo && tokenInfo.Release == "ChivesToken") {
               await handleAoTokenBalancesDryRunChivesToken(TokenProcessTxId)
             }
             else {
