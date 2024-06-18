@@ -37,7 +37,7 @@ import TokenReceivedTransactions from './TokenReceivedTransactions'
 import TokenSentTransaction from './TokenSentTransaction'
 
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions, AoTokenMyAllTransactions } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions, AoTokenMyAllTransactions, GetTokenAvatar } from 'src/functions/AoConnect/Token'
 
 import { downloadCsv } from 'src/functions/ChatBook'
 
@@ -87,6 +87,7 @@ const TokenIndexModel = (prop: any) => {
   const [isOwnerStatus, setIsOwnerStatus] = useState<boolean>(false)
 
   const [tokenListAction, setTokenListAction] = useState<string>("All Holders")
+  const [tokenListModel, setTokenListModel] = useState<string>("ChivesToken")
   const [pageId, setPageId] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(0)
   const [startIndex, setStartIndex] = useState<number>(1)
@@ -139,30 +140,6 @@ const TokenIndexModel = (prop: any) => {
     }
   }, [searchToken])
 
-  useEffect(()=>{
-    if(searchToken && searchToken.length == 43 && currentAddress && currentAddress.length == 43) {
-      handleCheckIsOwner(searchToken, currentAddress)
-    }
-  }, [searchToken, currentAddress])
-
-  const handleCheckIsOwner = async function (CurrentToken: string, currentAddress: string) {
-    if(!CurrentToken) return 
-    if(!currentAddress) return 
-    const isOwnerData = await isOwner(CurrentToken, currentAddress)
-    if(isOwnerData && tokenInfo) {
-      setIsOwnerStatus(true)
-      setMyProcessTxIdInPage(CurrentToken)
-      const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
-      if(AoDryRunBalance) {
-        setTokenGetInfor((prevState: any)=>({
-          ...prevState,
-          TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination))
-        }))
-      }
-    }
-    console.log("isOwnerData", isOwnerData)
-  }
-
   const handleTokenSearch = async function (CurrentToken: string) {
     if(!CurrentToken) return 
 
@@ -172,6 +149,10 @@ const TokenIndexModel = (prop: any) => {
     setIsSearchTokenModelOpen(true)
     setSearchToken(CurrentToken)
 
+    const isOwnerData = await isOwner(CurrentToken, currentAddress)
+    setIsOwnerStatus(isOwnerData)
+    console.log("isOwnerData", isOwnerData)
+    
     setTokenGetInfor((prevState: any)=>({
       ...prevState,
       TokenProcessTxId: CurrentToken,
@@ -189,10 +170,13 @@ const TokenIndexModel = (prop: any) => {
 
     const TokenGetMap: any = await AoTokenInfoDryRun(CurrentToken)
     console.log("handleTokenSearch TokenGetMap", TokenGetMap)
+    const TokenModelType = TokenGetMap && TokenGetMap.Release == "ChivesToken" ? TokenGetMap.Release : "Official"
+    const Denomination = TokenGetMap.Denomination
     if(TokenGetMap)  {
       if(TokenGetMap.TokenHolders) {
         setPageCount(Math.ceil(TokenGetMap.TokenHolders/pageSize))
       }
+      setTokenListModel(TokenGetMap.Release == "ChivesToken" ? TokenGetMap.Release : "Official")
       setTokenInfo(TokenGetMap)
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
@@ -229,20 +213,36 @@ const TokenIndexModel = (prop: any) => {
       }))
       setTokenListAction('')
     }
-
-    const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxIdInPage)
-    if(AoDryRunBalance && tokenInfo) {
-      setTokenGetInfor((prevState: any)=>({
-        ...prevState,
-        TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination))
-      }))
-    }
-
-    if(tokenInfo && tokenInfo.Release == "ChivesToken") {
-      await handleAoTokenBalancesDryRunChivesToken(CurrentToken)
+    
+    console.log("handleTokenSearch tokenGetInfor", tokenGetInfor)
+    if(isOwnerData == false) {
+      const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxIdInPage)
+      if(AoDryRunBalance && tokenInfo && Denomination) {
+        setTokenGetInfor((prevState: any)=>({
+          ...prevState,
+          TokenBalance: FormatBalance(AoDryRunBalance, Number(Denomination))
+        }))
+      }
     }
     else {
-      await handleAoTokenBalancesDryRunOfficialToken(CurrentToken)
+      if(tokenInfo && Denomination) {
+        setMyProcessTxIdInPage(CurrentToken)
+        const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
+        if(AoDryRunBalance) {
+          setTokenGetInfor((prevState: any)=>({
+            ...prevState,
+            TokenBalance: FormatBalance(AoDryRunBalance, Number(Denomination))
+          }))
+        }
+      }
+    }
+
+    console.log("tokenInfo.ReleasetokenInfo.ReleasetokenInfo.ReleasetokenInfo.Release", tokenInfo?.Release)
+    if(TokenModelType == "ChivesToken") {
+      await handleAoTokenBalancesDryRunChivesToken(CurrentToken, Denomination)
+    }
+    else {
+      await handleAoTokenBalancesDryRunOfficialToken(CurrentToken, Denomination)
     }
 
     setIsDisabledButton(false)
@@ -251,10 +251,10 @@ const TokenIndexModel = (prop: any) => {
 
   const handleTokenBalancesPagination = async function () {
     if(tokenInfo && tokenInfo.Release == "ChivesToken") {
-      await handleAoTokenBalancesDryRunChivesToken(tokenGetInfor.CurrentToken)
+      await handleAoTokenBalancesDryRunChivesToken(tokenGetInfor.CurrentToken, tokenInfo.Denomination)
     }
     else {
-      await handleAoTokenBalancesDryRunOfficialToken(tokenGetInfor.CurrentToken)
+      await handleAoTokenBalancesDryRunOfficialToken(tokenGetInfor.CurrentToken, tokenInfo.Denomination)
     }
   }
 
@@ -404,7 +404,7 @@ const TokenIndexModel = (prop: any) => {
     }
   }
 
-  const handleAoTokenBalancesDryRunOfficialToken = async function (CurrentToken: string) {
+  const handleAoTokenBalancesDryRunOfficialToken = async function (CurrentToken: string, Denomination: number) {
     if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
       console.log("handleAoTokenBalancesDryRunOfficialToken", "This token can not search txs records, due to txs are too large.")
 
@@ -413,7 +413,7 @@ const TokenIndexModel = (prop: any) => {
     console.log("handleAoTokenBalancesDryRunOfficialToken Log", tokenGetInfor, tokenInfo)
     if(tokenGetInfor || tokenGetInfor.TokenBalancesAllRecords == undefined)   {
       const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
-      if(AoDryRunBalances && tokenInfo && tokenInfo.Denomination) {
+      if(AoDryRunBalances && tokenInfo && Denomination) {
         try{
           const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
           const AoDryRunBalancesJsonMap = new Map(Object.entries(AoDryRunBalancesJson));
@@ -422,7 +422,7 @@ const TokenIndexModel = (prop: any) => {
           const TokenHolders = AoDryRunBalancesJsonSorted.length
           let CirculatingSupply = BigNumber(0)
           const AoDryRunBalancesJsonSortedResult = AoDryRunBalancesJsonSorted.map((Item: any)=>{
-            const HolderBalance = FormatBalance(Number(Item[1]), Number(tokenInfo.Denomination))
+            const HolderBalance = FormatBalance(Number(Item[1]), Number(Denomination))
             CirculatingSupply = CirculatingSupply.plus(HolderBalance)
 
             return [Item[0], HolderBalance]
@@ -443,30 +443,31 @@ const TokenIndexModel = (prop: any) => {
     }
   }
 
-  const handleAoTokenBalancesDryRunChivesToken = async function (CurrentToken: string) {
+  const handleAoTokenBalancesDryRunChivesToken = async function (CurrentToken: string, Denomination: number) {
     if(authConfig.AoConnectBlockTxIds.includes(CurrentToken)) {
       console.log("handleAoTokenBalancesDryRunChivesToken", "This token can not search txs records, due to txs are too large.")
 
       return 
     }
     const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, String(startIndex), String(endIndex))
-    if(AoDryRunBalances && tokenInfo) {
+    if(AoDryRunBalances && tokenInfo && Denomination) {
       try{
         const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
         console.log("AoDryRunBalancesData", AoDryRunBalancesData)
         const AoDryRunBalancesJson = AoDryRunBalancesData[0]
         const TokenHolders = AoDryRunBalancesData[1]
-        const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2], Number(tokenInfo.Denomination))
+        const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2], Number(Denomination))
         const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
                           .sort((a: any, b: any) => b[1] - a[1])
                           .reduce((acc: any, [key, value]) => {
-                              acc[key] = FormatBalance(Number(value), Number(tokenInfo.Denomination));
+                              acc[key] = FormatBalance(Number(value), Number(Denomination));
                               
                               return acc;
                           }, {} as { [key: string]: number });
         setTokenGetInfor((prevState: any)=>({
           ...prevState,
           TokenBalances: AoDryRunBalancesJsonSorted,
+          TokenBalancesAllRecords: null,
           TokenHolders: TokenHolders,
           CirculatingSupply: CirculatingSupply.toString()
         }))
@@ -581,7 +582,7 @@ const TokenIndexModel = (prop: any) => {
     setIsDisabledButton(true)
 
     const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, myProcessTxIdInPage, ReceivedAddress, Number(Amount))
-    if(AoTokenTransferData && tokenInfo) {
+    if(AoTokenTransferData && tokenInfo && tokenInfo.Denomination) {
       console.log("AoTokenTransferData", AoTokenTransferData)
       if(AoTokenTransferData?.msg?.Output?.data?.output)  {
         const formatText = AoTokenTransferData?.msg?.Output?.data?.output.replace(ansiRegex, '');
@@ -596,10 +597,10 @@ const TokenIndexModel = (prop: any) => {
             }
             
             if(tokenInfo && tokenInfo.Release == "ChivesToken") {
-              await handleAoTokenBalancesDryRunChivesToken(TokenProcessTxId)
+              await handleAoTokenBalancesDryRunChivesToken(TokenProcessTxId, tokenInfo.Denomination)
             }
             else {
-              await handleAoTokenBalancesDryRunOfficialToken(TokenProcessTxId)
+              await handleAoTokenBalancesDryRunOfficialToken(TokenProcessTxId, tokenInfo.Denomination)
             }
 
             const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxIdInPage)
@@ -766,7 +767,7 @@ const TokenIndexModel = (prop: any) => {
                                       }
                                     >
                                       <MuiAvatar
-                                        src={authConfig.backEndApi + '/' + tokenGetInfor?.Logo}
+                                        src={GetTokenAvatar(tokenGetInfor?.Logo)}
                                         alt={tokenGetInfor?.Name}
                                         sx={{ width: '2.5rem', height: '2.5rem' }}
                                       />
@@ -916,7 +917,7 @@ const TokenIndexModel = (prop: any) => {
                               </Fragment>
                             )}
 
-                            {tokenGetInfor && tokenGetInfor.Name && tokenGetInfor.TokenBalancesAllRecords && tokenInfo && tokenInfo.release != "ChivesToken" && (
+                            {tokenGetInfor && tokenGetInfor.Name && tokenGetInfor.TokenBalancesAllRecords && tokenInfo && tokenInfo.Release == undefined && (
                               <Fragment>
                                 <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={tokenGetInfor?.Name !='' ? false : true } size="small" variant='outlined' onClick={
                                     () => { 
@@ -954,13 +955,13 @@ const TokenIndexModel = (prop: any) => {
                             </Grid>
                           )}
 
-                          {tokenListAction == "All Holders" && tokenInfo && tokenInfo.release == "ChivesToken" && (
+                          {tokenListAction == "All Holders" && tokenListModel == "ChivesToken" && (
                             <Grid item sx={{ display: 'column', m: 2 }}>
                               <TokenListChivesToken tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} />
                             </Grid>
                           )}
 
-                          {tokenListAction == "All Holders" && tokenInfo && tokenInfo.release != "ChivesToken" && (
+                          {tokenListAction == "All Holders" && tokenListModel == "Official" && (
                             <Grid item sx={{ display: 'column', m: 2 }}>
                               <TokenListOfficial tokenGetInfor={tokenGetInfor} setTokenGetInfor={setTokenGetInfor} setPageId={setPageId} pageId={pageId} pageCount={pageCount} startIndex={startIndex} pageSize={pageSize} />
                             </Grid>

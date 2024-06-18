@@ -30,7 +30,7 @@ const TokenListOfficial = (prop: any) => {
     setPageId(page)
     console.log("TokenListOfficial handlePageChange 1", event)
   }  
-  console.log("TokenListOfficial handlePageChange 2", pageId, pageCount, tokenGetInfor)
+  console.log("TokenListOfficial -------------------- handlePageChange 2", pageId, pageCount, tokenGetInfor)
   
   const TokenBalances: any[] = tokenGetInfor && tokenGetInfor.TokenBalancesAllRecords && tokenGetInfor.TokenBalancesAllRecords.length>0 ? tokenGetInfor.TokenBalancesAllRecords.slice(pageId * pageSize - pageSize, (pageId) * pageSize) : null
 

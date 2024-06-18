@@ -1,6 +1,7 @@
 
 //Due need to use the node esm mode, so have change the package.json and move the repo to this location. Version: 0.0.53
 import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
+import authConfig from 'src/configs/auth'
 
 import axios from 'axios'
 
@@ -760,5 +761,14 @@ export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
         }
 
         return 
+    }
+}
+
+export const GetTokenAvatar = (Logo: string) => {
+    if(Logo && Logo.length == 43)  {
+        return authConfig.backEndApi + "/" + Logo
+    }
+    else {
+        return ''
     }
 }

@@ -391,7 +391,6 @@ export const isOwner = async (myProcessTxId: string, CurrentAddress: string) => 
 
     try {
         const res = await axios.post(endpoint, { query, operationName: null, variables: {} }).then(res=>res.data);
-        console.log("isOwner", res)
         if(res && res.data && res.data.transactions && res.data.transactions.edges) {
             const edges: any[] = res.data.transactions.edges
             if(edges && edges[0] && edges[0].node && edges[0].node.owner && edges[0].node.owner.address) {

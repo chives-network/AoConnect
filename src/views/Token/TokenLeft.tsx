@@ -213,6 +213,7 @@ const TokenLeft = (props: any) => {
                   TokenProcessTxId: '',
                   CurrentToken: '',
                   TokenBalance: 0,
+                  TokenBalancesAllRecords: null,
                   TokenBalances: null,
                   TokenHolders: null,
                   CirculatingSupply: null

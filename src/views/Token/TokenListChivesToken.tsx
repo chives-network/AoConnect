@@ -30,7 +30,7 @@ const TokenListChivesToken = (prop: any) => {
     setPageId(page)
     console.log("TokenListChivesToken handlePageChange 1", event)
   }  
-  console.log("TokenListChivesToken handlePageChange 2", pageId, pageCount, tokenGetInfor)
+  console.log("TokenListChivesToken ++++++++++++++++++++++ handlePageChange 2", pageId, pageCount, tokenGetInfor)
   
 
   return (
