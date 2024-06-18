@@ -150,7 +150,7 @@ export const AoTokenBalances = async (currentWalletJwk: any, tokenTxId: string) 
   
 }
 
-export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, myTokenProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
+export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, myTokenProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number, Denomination: number = 12) => {
     try {
         if(tokenTxId && tokenTxId.length != 43) {
 
@@ -175,7 +175,7 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
             process: myTokenProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + tokenTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount) + '"})',
+            data: 'Send({ Target = "' + tokenTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount, Denomination) + '"})',
         });
         console.log("AoTokenTransfer Transfer", SendTokenResult)
         
@@ -199,7 +199,7 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
   
 }
 
-export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mintAmount: number) => {
+export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mintAmount: number, Denomination: number = 12) => {
     try {
         if(tokenTxId && tokenTxId.length != 43) {
 
@@ -216,7 +216,7 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
             process: tokenTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + BalanceTimes(mintAmount) + '" }})',
+            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + BalanceTimes(mintAmount, Denomination) + '" }})',
         });
         console.log("AoTokenTransfer Transfer", SendTokenResult)
         
@@ -240,7 +240,7 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
   
 }
 
-export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, AddressList: string, AmountList: string) => {
+export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, AddressList: string, AmountList: string, Denomination: number = 12) => {
     try {
         if(tokenTxId && tokenTxId.length != 43) {
 
@@ -268,7 +268,7 @@ export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, A
             }
         })
         const AmountListArray = AmountList.split('****')
-        const AmountListFilter = AmountListArray.map(item => String(BalanceTimes(Number(item))))
+        const AmountListFilter = AmountListArray.map(item => String(BalanceTimes(Number(item), Denomination)))
         const AmountListString = AmountListFilter.join('****')
         
         

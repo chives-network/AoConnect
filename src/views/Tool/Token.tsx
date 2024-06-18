@@ -515,7 +515,7 @@ const TokenModel = () => {
       const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
                         .sort((a: any, b: any) => b[1] - a[1])
                         .reduce((acc: any, [key, value]) => {
-                            acc[key] = FormatBalance(Number(value));
+                            acc[key] = FormatBalance(Number(value), 12);
                             
                             return acc;
                         }, {} as { [key: string]: number });

@@ -146,14 +146,14 @@ const TokenIndexModel = (prop: any) => {
     if(!CurrentToken) return 
     if(!currentAddress) return 
     const isOwnerData = await isOwner(CurrentToken, currentAddress)
-    if(isOwnerData) {
+    if(isOwnerData && tokenInfo) {
       setIsOwnerStatus(true)
       setMyProcessTxIdInPage(CurrentToken)
       const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
       if(AoDryRunBalance) {
         setTokenGetInfor((prevState: any)=>({
           ...prevState,
-          TokenBalance: FormatBalance(AoDryRunBalance)
+          TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination) ?? 12)
         }))
       }
     }
@@ -183,10 +183,10 @@ const TokenIndexModel = (prop: any) => {
     }))
 
     const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxIdInPage)
-    if(AoDryRunBalance) {
+    if(AoDryRunBalance && tokenInfo) {
       setTokenGetInfor((prevState: any)=>({
         ...prevState,
-        TokenBalance: FormatBalance(AoDryRunBalance)
+        TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination) ?? 12)
       }))
     }
 
@@ -289,9 +289,9 @@ const TokenIndexModel = (prop: any) => {
             setCounter(counter + 1)
             setTokenGetInfor((prevState: any) => ({
               ...prevState,
-              TokenBalance: FormatBalance(AoDryRunBalance)
+              TokenBalance: FormatBalance(AoDryRunBalance, 12)
             }));
-            resolve({ Token: TokenProcessTxId, Balance: FormatBalance(AoDryRunBalance) });
+            resolve({ Token: TokenProcessTxId, Balance: FormatBalance(AoDryRunBalance, 12) });
           }
         } catch (error) {
           console.log("handleTokenCreate Error:", error);
@@ -398,17 +398,17 @@ const TokenIndexModel = (prop: any) => {
     }
     if(Release && Release == "ChivesToken")  {
       const AoDryRunBalances = await AoTokenBalancesPageDryRun(CurrentToken, String(startIndex), String(endIndex))
-      if(AoDryRunBalances) {
+      if(AoDryRunBalances && tokenInfo) {
         try{
           const AoDryRunBalancesData = JSON.parse(AoDryRunBalances)
           console.log("AoDryRunBalancesData", AoDryRunBalancesData)
           const AoDryRunBalancesJson = AoDryRunBalancesData[0]
           const TokenHolders = AoDryRunBalancesData[1]
-          const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2])
+          const CirculatingSupply = FormatBalance(AoDryRunBalancesData[2], Number(tokenInfo.Denomination) ?? 12)
           const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
                             .sort((a: any, b: any) => b[1] - a[1])
                             .reduce((acc: any, [key, value]) => {
-                                acc[key] = FormatBalance(Number(value));
+                                acc[key] = FormatBalance(Number(value), Number(tokenInfo.Denomination) ?? 12);
                                 
                                 return acc;
                             }, {} as { [key: string]: number });
@@ -427,14 +427,14 @@ const TokenIndexModel = (prop: any) => {
     }
     else {
       const AoDryRunBalances = await AoTokenBalancesDryRun(CurrentToken)
-      if(AoDryRunBalances) {
+      if(AoDryRunBalances && tokenInfo) {
         try{
           console.log("AoDryRunBalances", AoDryRunBalances)
           const AoDryRunBalancesJson = JSON.parse(AoDryRunBalances)
           const AoDryRunBalancesJsonSorted = Object.entries(AoDryRunBalancesJson)
                             .sort((a: any, b: any) => b[1] - a[1])
                             .reduce((acc: any, [key, value]) => {
-                                acc[key] = FormatBalance(Number(value));
+                                acc[key] = FormatBalance(Number(value), Number(tokenInfo.Denomination) ?? 12);
                                 
                                 return acc;
                             }, {} as { [key: string]: number });
@@ -562,7 +562,7 @@ const TokenIndexModel = (prop: any) => {
     setIsDisabledButton(true)
 
     const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, myProcessTxIdInPage, ReceivedAddress, Number(Amount))
-    if(AoTokenTransferData) {
+    if(AoTokenTransferData && tokenInfo) {
       console.log("AoTokenTransferData", AoTokenTransferData)
       if(AoTokenTransferData?.msg?.Output?.data?.output)  {
         const formatText = AoTokenTransferData?.msg?.Output?.data?.output.replace(ansiRegex, '');
@@ -582,7 +582,7 @@ const TokenIndexModel = (prop: any) => {
             if(AoDryRunBalance) {
               setTokenGetInfor((prevState: any)=>({
                 ...prevState,
-                TokenBalance: FormatBalance(AoDryRunBalance)
+                TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination) ?? 12)
               }))
             }
 

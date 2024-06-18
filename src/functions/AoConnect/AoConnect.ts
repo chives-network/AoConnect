@@ -344,14 +344,18 @@ export const generateRandomNumber = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const FormatBalance = (Balance: number) => {
+export const FormatBalance = (Balance: number, Denomination: number) => {
+    const DenominationNew = Denomination > 0 ? Denomination : 12
+    const DivValue = Math.pow(10, DenominationNew)
 
-    return (new BigNumber(Number(Balance))).div('1e12').toFixed()
+    return (new BigNumber(Number(Balance))).div(DivValue).toFixed()
 }
 
-export const BalanceTimes = (Balance: number) => {
+export const BalanceTimes = (Balance: number, Denomination: number) => {
+    const DenominationNew = Denomination > 0 ? Denomination : 12
+    const DivValue = Math.pow(10, DenominationNew)
 
-    return (new BigNumber(Number(Balance))).times('1e12').toString()
+    return (new BigNumber(Number(Balance))).times(DivValue).toString()
 }
 
 export const BalanceCompare = (Balance1: number, Balance2: number) => {

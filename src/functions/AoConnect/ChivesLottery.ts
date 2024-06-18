@@ -149,7 +149,7 @@ export const AoLotteryUpdateBalance = async (currentWalletJwk: any, LotteryTxId:
   
 }
 
-export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
+export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number, Denomination: number = 12) => {
     try {
         if(LotteryTxId && LotteryTxId.length != 43) {
 
@@ -174,7 +174,7 @@ export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string
             process: myLotteryProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + LotteryTxId + '", Action = "Credit", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount) + '"})',
+            data: 'Send({ Target = "' + LotteryTxId + '", Action = "Credit", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount, Denomination) + '"})',
         });
         console.log("AoLotteryCredit Credit", SendLotteryResult)
         
