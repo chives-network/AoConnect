@@ -45,11 +45,11 @@ export const MyProcessTxIdsGetTokens = async (TargetTxId: string, processTxId: s
     }
 }
 
-export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, TokenId: string, TokenSort: string) => {
+export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, TokenId: string, TokenSort: string, TokenGroup: string) => {
     try {
         console.log("MyProcessTxIdsAddToken TokenId", TokenId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '" })'
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '", TokenGroup = "' + TokenGroup + '" })'
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
@@ -153,7 +153,7 @@ export const MyProcessTxIdsGetChatrooms = async (TargetTxId: string, processTxId
     }
 }
 
-export const MyProcessTxIdsAddChatroom = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ChatroomId: string, ChatroomSort: string) => {
+export const MyProcessTxIdsAddChatroom = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ChatroomId: string, ChatroomSort: string, ChatroomGroup: string) => {
     try {
         console.log("MyProcessTxIdsAddChatroom ChatroomId", ChatroomId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -161,7 +161,7 @@ export const MyProcessTxIdsAddChatroom = async (currentWalletJwk: any, MyProcess
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddChatroom", ChatroomId = "' + ChatroomId + '", ChatroomSort = "' + ChatroomSort + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddChatroom", ChatroomId = "' + ChatroomId + '", ChatroomSort = "' + ChatroomSort + '", ChatroomGroup = "' + ChatroomGroup + '" })',
         }
         console.log("MyProcessTxIdsAddChatroom Data", Data)
         const GetMyProcessTxIdsAddChatroomResult = await message(Data);
@@ -260,7 +260,7 @@ export const MyProcessTxIdsGetGuesses = async (TargetTxId: string, processTxId: 
     }
 }
 
-export const MyProcessTxIdsAddGuess = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, GuessId: string, Guessesort: string) => {
+export const MyProcessTxIdsAddGuess = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, GuessId: string, GuessSort: string, GuessGroup: string) => {
     try {
         console.log("MyProcessTxIdsAddGuess GuessId", GuessId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -268,7 +268,7 @@ export const MyProcessTxIdsAddGuess = async (currentWalletJwk: any, MyProcessTxI
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddGuess", GuessId = "' + GuessId + '", Guessesort = "' + Guessesort + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddGuess", GuessId = "' + GuessId + '", GuessSort = "' + GuessSort + '", GuessGroup = "' + GuessGroup + '" })',
         }
         console.log("MyProcessTxIdsAddGuess Data", Data)
         const GetMyProcessTxIdsAddGuessResult = await message(Data);
@@ -367,7 +367,7 @@ export const MyProcessTxIdsGetLotteries = async (TargetTxId: string, processTxId
     }
 }
 
-export const MyProcessTxIdsAddLottery = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, LotteryId: string, Lotteriesort: string) => {
+export const MyProcessTxIdsAddLottery = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, LotteryId: string, LotterySort: string, LotteryGroup: string) => {
     try {
         console.log("MyProcessTxIdsAddLottery LotteryId", LotteryId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -375,7 +375,7 @@ export const MyProcessTxIdsAddLottery = async (currentWalletJwk: any, MyProcessT
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddLottery", LotteryId = "' + LotteryId + '", Lotteriesort = "' + Lotteriesort + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddLottery", LotteryId = "' + LotteryId + '", LotterySort = "' + LotterySort + '", LotteryGroup = "' + LotteryGroup + '" })',
         }
         console.log("MyProcessTxIdsAddLottery Data", Data)
         const GetMyProcessTxIdsAddLotteryResult = await message(Data);
@@ -436,3 +436,328 @@ export const MyProcessTxIdsDelLottery = async (currentWalletJwk: any, MyProcessT
 }
 
 
+
+export const MyProcessTxIdsGetBlogs = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetBlogs' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsGetBlogs Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const MyProcessTxIdsAddBlog = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, BlogId: string, BlogSort: string, BlogGroup: string) => {
+    try {
+        console.log("MyProcessTxIdsAddBlog BlogId", BlogId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddBlog", BlogId = "' + BlogId + '", BlogSort = "' + BlogSort + '", BlogGroup = "' + BlogGroup + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("MyProcessTxIdsAddBlog SendData", SendData)
+        console.log("MyProcessTxIdsAddBlog Data", Data)
+        const GetMyProcessTxIdsAddBlogResult = await message(Data);
+        console.log("MyProcessTxIdsAddBlog GetMyProcessTxIdsAddBlogResult", GetMyProcessTxIdsAddBlogResult)
+        
+        if(GetMyProcessTxIdsAddBlogResult && GetMyProcessTxIdsAddBlogResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsAddBlogResult)
+
+            return { status: 'ok', id: GetMyProcessTxIdsAddBlogResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyProcessTxIdsAddBlogResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsAddBlog Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const MyProcessTxIdsDelBlog = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, BlogId: string) => {
+    try {
+        console.log("MyProcessTxIdsDelBlog BlogId", BlogId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelBlog", BlogId = "' + BlogId + ' })',
+        }
+        console.log("MyProcessTxIdsDelBlog Data", Data)
+        const GetMyProcessTxIdsDelBlogResult = await message(Data);
+        console.log("MyProcessTxIdsDelBlog GetMyProcessTxIdsDelBlogResult", GetMyProcessTxIdsDelBlogResult)
+        
+        if(GetMyProcessTxIdsDelBlogResult && GetMyProcessTxIdsDelBlogResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsDelBlogResult)
+
+            return { status: 'ok', id: GetMyProcessTxIdsDelBlogResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyProcessTxIdsDelBlogResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsDelBlog Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+
+export const MyProcessTxIdsGetSwaps = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetSwaps' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsGetSwaps Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const MyProcessTxIdsAddSwap = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, SwapId: string, SwapSort: string, SwapGroup: string) => {
+    try {
+        console.log("MyProcessTxIdsAddSwap SwapId", SwapId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddSwap", SwapId = "' + SwapId + '", SwapSort = "' + SwapSort + '", SwapGroup = "' + SwapGroup + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("MyProcessTxIdsAddSwap SendData", SendData)
+        console.log("MyProcessTxIdsAddSwap Data", Data)
+        const GetMyProcessTxIdsAddSwapResult = await message(Data);
+        console.log("MyProcessTxIdsAddSwap GetMyProcessTxIdsAddSwapResult", GetMyProcessTxIdsAddSwapResult)
+        
+        if(GetMyProcessTxIdsAddSwapResult && GetMyProcessTxIdsAddSwapResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsAddSwapResult)
+
+            return { status: 'ok', id: GetMyProcessTxIdsAddSwapResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyProcessTxIdsAddSwapResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsAddSwap Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const MyProcessTxIdsDelSwap = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, SwapId: string) => {
+    try {
+        console.log("MyProcessTxIdsDelSwap SwapId", SwapId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelSwap", SwapId = "' + SwapId + ' })',
+        }
+        console.log("MyProcessTxIdsDelSwap Data", Data)
+        const GetMyProcessTxIdsDelSwapResult = await message(Data);
+        console.log("MyProcessTxIdsDelSwap GetMyProcessTxIdsDelSwapResult", GetMyProcessTxIdsDelSwapResult)
+        
+        if(GetMyProcessTxIdsDelSwapResult && GetMyProcessTxIdsDelSwapResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsDelSwapResult)
+
+            return { status: 'ok', id: GetMyProcessTxIdsDelSwapResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyProcessTxIdsDelSwapResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsDelSwap Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+
+export const MyProcessTxIdsGetProjects = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetProjects' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsGetProjects Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const MyProcessTxIdsAddProject = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ProjectId: string, ProjectSort: string, ProjectGroup: string) => {
+    try {
+        console.log("MyProcessTxIdsAddProject ProjectId", ProjectId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddProject", ProjectId = "' + ProjectId + '", ProjectSort = "' + ProjectSort + '", ProjectGroup = "' + ProjectGroup + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("MyProcessTxIdsAddProject SendData", SendData)
+        console.log("MyProcessTxIdsAddProject Data", Data)
+        const GetMyProcessTxIdsAddProjectResult = await message(Data);
+        console.log("MyProcessTxIdsAddProject GetMyProcessTxIdsAddProjectResult", GetMyProcessTxIdsAddProjectResult)
+        
+        if(GetMyProcessTxIdsAddProjectResult && GetMyProcessTxIdsAddProjectResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsAddProjectResult)
+
+            return { status: 'ok', id: GetMyProcessTxIdsAddProjectResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyProcessTxIdsAddProjectResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsAddProject Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const MyProcessTxIdsDelProject = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ProjectId: string) => {
+    try {
+        console.log("MyProcessTxIdsDelProject ProjectId", ProjectId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelProject", ProjectId = "' + ProjectId + ' })',
+        }
+        console.log("MyProcessTxIdsDelProject Data", Data)
+        const GetMyProcessTxIdsDelProjectResult = await message(Data);
+        console.log("MyProcessTxIdsDelProject GetMyProcessTxIdsDelProjectResult", GetMyProcessTxIdsDelProjectResult)
+        
+        if(GetMyProcessTxIdsDelProjectResult && GetMyProcessTxIdsDelProjectResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetMyProcessTxIdsDelProjectResult)
+
+            return { status: 'ok', id: GetMyProcessTxIdsDelProjectResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyProcessTxIdsDelProjectResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("MyProcessTxIdsDelProject Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
