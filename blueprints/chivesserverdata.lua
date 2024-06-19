@@ -143,23 +143,22 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "DelToken"),
   function (msg)
     if msg.From == ao.id and msg.TokenId and Tokens[msg.TokenId] then
-        Tokens[msg.TokenId] = nil
-        Handlers.utils.reply("Has delete Token")(msg)
+        Tokens[msg.TokenId] = nil;
+        Handlers.utils.reply("Has delete Token")(msg);
         ao.send({
           Target = msg.From,
           Data = "Successfully delete a Token"
-        })
+        });
     else 
         ao.send({
             Target = msg.From,
             Action = 'DelToken-Error',
             ['Message-Id'] = msg.Id,
             Error = 'Only owner can DelToken'
-        })
+        });
     end
   end
 )
-
 
 Handlers.add(
   "GetLotteries",
