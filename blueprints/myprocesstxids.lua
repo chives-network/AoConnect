@@ -12,11 +12,17 @@
 -- 2. Save user token process tx ids.
 -- 3. Save user lottery process tx ids.
 -- 4. Save user guess big or small tx ids.
+-- 5. Save user blog process tx ids.
+-- 6. Save user swap process tx ids.
+-- 7. Save user project process tx ids.
 
 Chatrooms = Chatrooms or {}
 Tokens = Tokens or {}
 Lotteries = Lotteries or {}
 Guesses = Guesses or {}
+Blogs = Blogs or {}
+Swaps = Swaps or {}
+Projects = Projects or {}
 
 function Welcome()
   return(
@@ -26,6 +32,9 @@ function Welcome()
       "2. Save user token process tx ids.\n" ..
       "3. Save user lottery process tx ids.\n" ..
       "4. Save user guess big or small tx ids.\n" ..
+      "5. Save user blog tx ids.\n" ..
+      "6. Save user swap tx ids.\n" ..
+      "7. Save user project tx ids.\n" ..
       "Have fun, be respectful !")
 end
 
@@ -215,5 +224,147 @@ Handlers.add(
     })
   end
 )
+
+
+Handlers.add(
+  "GetBlogs",
+  Handlers.utils.hasMatchingTag("Action", "GetBlogs"),
+  function (msg)
+    ao.send({
+      Target = msg.From,
+      Data = require('json').encode(Blogs[msg.From])
+    })
+  end
+)
+
+Handlers.add(
+  "AddBlog",
+  Handlers.utils.hasMatchingTag("Action", "AddBlog"),
+  function (msg)
+    if not Blogs[msg.From] then
+      Blogs[msg.From] = {}
+    end
+    Blogs[msg.From][msg.BlogId] = {
+      BlogId = msg.BlogId,
+      BlogSort = msg.BlogSort
+    }
+    Handlers.utils.reply("Has add Blog")(msg)
+    ao.send({
+      Target = msg.From,
+      Data = "Successfully add a Blog"
+    })
+  end
+)
+
+Handlers.add(
+  "DelBlog",
+  Handlers.utils.hasMatchingTag("Action", "DelBlog"),
+  function (msg)
+    if not Blogs[msg.From] then
+      Blogs[msg.From] = {}
+    end
+    Blogs[msg.From][msg.BlogId] = nil
+    Handlers.utils.reply("Has delete Blog")(msg)
+    ao.send({
+      Target = msg.From,
+      Data = "Successfully delete a Blog"
+    })
+  end
+)
+
+
+Handlers.add(
+  "GetSwaps",
+  Handlers.utils.hasMatchingTag("Action", "GetSwaps"),
+  function (msg)
+    ao.send({
+      Target = msg.From,
+      Data = require('json').encode(Swaps[msg.From])
+    })
+  end
+)
+
+Handlers.add(
+  "AddSwap",
+  Handlers.utils.hasMatchingTag("Action", "AddSwap"),
+  function (msg)
+    if not Swaps[msg.From] then
+      Swaps[msg.From] = {}
+    end
+    Swaps[msg.From][msg.SwapId] = {
+      SwapId = msg.SwapId,
+      SwapSort = msg.SwapSort
+    }
+    Handlers.utils.reply("Has add Swap")(msg)
+    ao.send({
+      Target = msg.From,
+      Data = "Successfully add a Swap"
+    })
+  end
+)
+
+Handlers.add(
+  "DelSwap",
+  Handlers.utils.hasMatchingTag("Action", "DelSwap"),
+  function (msg)
+    if not Swaps[msg.From] then
+      Swaps[msg.From] = {}
+    end
+    Swaps[msg.From][msg.SwapId] = nil
+    Handlers.utils.reply("Has delete Swap")(msg)
+    ao.send({
+      Target = msg.From,
+      Data = "Successfully delete a Swap"
+    })
+  end
+)
+
+
+Handlers.add(
+  "GetProjects",
+  Handlers.utils.hasMatchingTag("Action", "GetProjects"),
+  function (msg)
+    ao.send({
+      Target = msg.From,
+      Data = require('json').encode(Projects[msg.From])
+    })
+  end
+)
+
+Handlers.add(
+  "AddProject",
+  Handlers.utils.hasMatchingTag("Action", "AddProject"),
+  function (msg)
+    if not Projects[msg.From] then
+      Projects[msg.From] = {}
+    end
+    Projects[msg.From][msg.ProjectId] = {
+      ProjectId = msg.ProjectId,
+      ProjectSort = msg.ProjectSort
+    }
+    Handlers.utils.reply("Has add Project")(msg)
+    ao.send({
+      Target = msg.From,
+      Data = "Successfully add a Project"
+    })
+  end
+)
+
+Handlers.add(
+  "DelProject",
+  Handlers.utils.hasMatchingTag("Action", "DelProject"),
+  function (msg)
+    if not Projects[msg.From] then
+      Projects[msg.From] = {}
+    end
+    Projects[msg.From][msg.ProjectId] = nil
+    Handlers.utils.reply("Has delete Project")(msg)
+    ao.send({
+      Target = msg.From,
+      Data = "Successfully delete a Project"
+    })
+  end
+)
+
 
 return Welcome()
