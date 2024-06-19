@@ -116,7 +116,7 @@ const TokenModel = () => {
   const handleAddToken = async (WantToSaveTokenProcessTxId: string) => {
     setAddTokenButtonDisabled(true)
     setAddTokenButtonText('waiting')
-    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId, '666')
+    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId, '666', 'Data')
     if(WantToSaveTokenProcessTxIdData) {
       console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
       if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {
