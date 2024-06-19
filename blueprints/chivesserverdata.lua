@@ -142,7 +142,7 @@ Handlers.add(
   "DelToken",
   Handlers.utils.hasMatchingTag("Action", "DelToken"),
   function (msg)
-    if msg.From == ao.id and msg.TokenId and Tokens[msg.TokenId] then
+    if msg.From == ao.id then
         Tokens[msg.TokenId] = nil;
         Handlers.utils.reply("Has delete Token")(msg);
         ao.send({
