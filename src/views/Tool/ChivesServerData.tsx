@@ -53,14 +53,14 @@ const ChivesServerData = () => {
 
     setToolInfo((prevState: any)=>({
         ...prevState,
-        'Wait seconds': '10s'
+        'Wait seconds': '5s'
     }))
     setToolInfo((prevState: any)=>({
         ...prevState,
         'Loading LoadBlueprint ChivesServerData': '....................................................'
     }))
 
-    await sleep(10000)
+    await sleep(5000)
 
     let LoadBlueprintChivesServerData: any = await AoLoadBlueprintChivesServerData(currentWallet.jwk, ChivesServerData);
     while(LoadBlueprintChivesServerData && LoadBlueprintChivesServerData.status == 'ok' && LoadBlueprintChivesServerData.msg && LoadBlueprintChivesServerData.msg.error)  {
@@ -125,7 +125,7 @@ const ChivesServerData = () => {
       }
     }
 
-    const ChivesServerDataAddToken2 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId1, '666', 'Data')
+    const ChivesServerDataAddToken2 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId2, '777', 'Data')
     if(ChivesServerDataAddToken2) {
       console.log("ChivesServerDataAddToken2", ChivesServerDataAddToken2)
       if(ChivesServerDataAddToken2?.msg?.Output?.data?.output)  {
@@ -138,7 +138,7 @@ const ChivesServerData = () => {
           }))
 
           //Read message from inbox
-          const ChivesServerDataAddTokenData1 = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId1)
+          const ChivesServerDataAddTokenData1 = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId2)
           if(ChivesServerDataAddTokenData1?.msg?.Output?.data?.output)  {
             const formatText2 = ChivesServerDataAddTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
@@ -157,13 +157,10 @@ const ChivesServerData = () => {
     const ChivesServerDataGetTokensData1 = await ChivesServerDataGetTokens(ChivesServerData, ChivesServerData)
     if(ChivesServerDataGetTokensData1) {
       console.log("ChivesServerDataGetTokensData1", ChivesServerDataGetTokensData1)
-      if(ChivesServerDataGetTokensData1?.msg?.Output?.data?.output)  {
-        const formatText = ChivesServerDataGetTokensData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        setToolInfo((prevState: any)=>({
-          ...prevState,
-          'ChivesServerDataGetTokensData1': formatText
-        }))
-      }
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        'ChivesServerDataGetTokensData1': JSON.stringify(ChivesServerDataGetTokensData1)
+      }))
     }
 
     const ChivesServerDataDelToken2 = await ChivesServerDataDelToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId2)
@@ -175,11 +172,11 @@ const ChivesServerData = () => {
 
           setToolInfo((prevState: any)=>({
             ...prevState,
-            ChivesServerDataDelToken2: formatText
+            ChivesServerDataDelToken1: formatText
           }))
 
           //Read message from inbox
-          const ChivesServerDataDelTokenData1 = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId1)
+          const ChivesServerDataDelTokenData1 = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId2)
           if(ChivesServerDataDelTokenData1?.msg?.Output?.data?.output)  {
             const formatText2 = ChivesServerDataDelTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
@@ -198,13 +195,10 @@ const ChivesServerData = () => {
     const ChivesServerDataGetTokensData2 = await ChivesServerDataGetTokens(ChivesServerData, ChivesServerData)
     if(ChivesServerDataGetTokensData2) {
       console.log("ChivesServerDataGetTokensData2", ChivesServerDataGetTokensData2)
-      if(ChivesServerDataGetTokensData2?.msg?.Output?.data?.output)  {
-        const formatText = ChivesServerDataGetTokensData2?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        setToolInfo((prevState: any)=>({
-          ...prevState,
-          'ChivesServerDataGetTokensData2': formatText
-        }))
-      }
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        'ChivesServerDataGetTokensData2': JSON.stringify(ChivesServerDataGetTokensData2)
+      }))
     }
 
 
@@ -237,7 +231,7 @@ const ChivesServerData = () => {
                     {t("Simulated ChivesServerData")}
                     </Button>
                   </Box>
-                  <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/ChivesServerData.lua`} target='_blank'>
+                  <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/chivesserverdata.lua`} target='_blank'>
                       <Typography variant='body2'>
                         {t("ChivesServerData Lua")}
                       </Typography>

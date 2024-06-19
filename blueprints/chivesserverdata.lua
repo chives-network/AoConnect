@@ -142,7 +142,7 @@ Handlers.add(
   "DelToken",
   Handlers.utils.hasMatchingTag("Action", "DelToken"),
   function (msg)
-    if msg.From == ao.id and msg.TokenId then
+    if msg.From == ao.id and msg.TokenId and Tokens[msg.TokenId] then
         Tokens[msg.TokenId] = nil
         Handlers.utils.reply("Has delete Token")(msg)
         ao.send({
@@ -456,7 +456,7 @@ Handlers.add(
             Target = msg.From,
             Action = 'DelProject-Error',
             ['Message-Id'] = msg.Id,
-            Error = 'Only owner can DelProject'
+            Error = 'Only owner can DelToken'
         })
     end
   end
