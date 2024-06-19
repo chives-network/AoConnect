@@ -58,7 +58,8 @@ Handlers.add(
     end
     Chatrooms[msg.From][msg.ChatroomId] = {
       ChatroomId = msg.ChatroomId,
-      ChatroomSort = msg.ChatroomSort
+      ChatroomSort = msg.ChatroomSort,
+      ChatroomGroup = msg.ChatroomGroup
     }
     Handlers.utils.reply("Has add chatroom")(msg)
     ao.send({
@@ -105,7 +106,8 @@ Handlers.add(
     end
     Tokens[msg.From][msg.TokenId] = {
       TokenId = msg.TokenId,
-      TokenSort = msg.TokenSort
+      TokenSort = msg.TokenSort,
+      TokenGroup = msg.TokenGroup
     }
     Handlers.utils.reply("Has add Token")(msg)
     ao.send({
@@ -152,7 +154,8 @@ Handlers.add(
     end
     Lotteries[msg.From][msg.LotteryId] = {
       LotteryId = msg.LotteryId,
-      Lotteriesort = msg.Lotteriesort
+      LotterySort = msg.LotterySort,
+      LotteryGroup = msg.LotteryGroup
     }
     Handlers.utils.reply("Has add Lottery")(msg)
     ao.send({
@@ -199,7 +202,8 @@ Handlers.add(
     end
     Guesses[msg.From][msg.GuessId] = {
       GuessId = msg.GuessId,
-      Guessesort = msg.Guessesort
+      GuessSort = msg.GuessSort,
+      GuessGroup = msg.GuessGroup
     }
     Handlers.utils.reply("Has add Guess")(msg)
     ao.send({
@@ -246,7 +250,8 @@ Handlers.add(
     end
     Blogs[msg.From][msg.BlogId] = {
       BlogId = msg.BlogId,
-      BlogSort = msg.BlogSort
+      BlogSort = msg.BlogSort,
+      BlogGroup = msg.BlogGroup
     }
     Handlers.utils.reply("Has add Blog")(msg)
     ao.send({
@@ -293,7 +298,8 @@ Handlers.add(
     end
     Swaps[msg.From][msg.SwapId] = {
       SwapId = msg.SwapId,
-      SwapSort = msg.SwapSort
+      SwapSort = msg.SwapSort,
+      SwapGroup = msg.SwapGroup
     }
     Handlers.utils.reply("Has add Swap")(msg)
     ao.send({
@@ -340,7 +346,8 @@ Handlers.add(
     end
     Projects[msg.From][msg.ProjectId] = {
       ProjectId = msg.ProjectId,
-      ProjectSort = msg.ProjectSort
+      ProjectSort = msg.ProjectSort,
+      ProjectGroup = msg.ProjectGroup
     }
     Handlers.utils.reply("Has add Project")(msg)
     ao.send({

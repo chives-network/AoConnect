@@ -1,0 +1,763 @@
+
+//Due need to use the node esm mode, so have change the package.json and move the repo to this location. Version: 0.0.53
+import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
+
+import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, AoLoadBlueprintModule } from 'src/functions/AoConnect/AoConnect'
+
+export const AoLoadBlueprintChivesServerData = async (currentWalletJwk: any, processTxId: string) => {
+    return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chivesserverdata')
+}
+
+export const ChivesServerDataGetTokens = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetTokens' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetTokens Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddToken = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, TokenId: string, TokenSort: string, TokenGroup: string) => {
+    try {
+        console.log("ChivesServerDataAddToken TokenId", TokenId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '", TokenGroup = "' + TokenGroup + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("ChivesServerDataAddToken SendData", SendData)
+        console.log("ChivesServerDataAddToken Data", Data)
+        const GetChivesServerDataAddTokenResult = await message(Data);
+        console.log("ChivesServerDataAddToken GetChivesServerDataAddTokenResult", GetChivesServerDataAddTokenResult)
+        
+        if(GetChivesServerDataAddTokenResult && GetChivesServerDataAddTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddTokenResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddTokenResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddTokenResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddToken Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelToken = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, TokenId: string) => {
+    try {
+        console.log("ChivesServerDataDelToken TokenId", TokenId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelToken", TokenId = "' + TokenId + ' })',
+        }
+        console.log("ChivesServerDataDelToken Data", Data)
+        const GetChivesServerDataDelTokenResult = await message(Data);
+        console.log("ChivesServerDataDelToken GetChivesServerDataDelTokenResult", GetChivesServerDataDelTokenResult)
+        
+        if(GetChivesServerDataDelTokenResult && GetChivesServerDataDelTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelTokenResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelTokenResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelTokenResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelToken Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+export const ChivesServerDataGetChatrooms = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetChatrooms' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetChatrooms Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddChatroom = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ChatroomId: string, ChatroomSort: string, ChatroomGroup: string) => {
+    try {
+        console.log("ChivesServerDataAddChatroom ChatroomId", ChatroomId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddChatroom", ChatroomId = "' + ChatroomId + '", ChatroomSort = "' + ChatroomSort + '", ChatroomGroup = "' + ChatroomGroup + '" })',
+        }
+        console.log("ChivesServerDataAddChatroom Data", Data)
+        const GetChivesServerDataAddChatroomResult = await message(Data);
+        console.log("ChivesServerDataAddChatroom GetChivesServerDataAddChatroomResult", GetChivesServerDataAddChatroomResult)
+        
+        if(GetChivesServerDataAddChatroomResult && GetChivesServerDataAddChatroomResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddChatroomResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddChatroomResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddChatroomResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddChatroom Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelChatroom = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ChatroomId: string) => {
+    try {
+        console.log("ChivesServerDataDelChatroom ChatroomId", ChatroomId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelChatroom", ChatroomId = "' + ChatroomId + ' })',
+        }
+        console.log("ChivesServerDataDelChatroom Data", Data)
+        const GetChivesServerDataDelChatroomResult = await message(Data);
+        console.log("ChivesServerDataDelChatroom GetChivesServerDataDelChatroomResult", GetChivesServerDataDelChatroomResult)
+        
+        if(GetChivesServerDataDelChatroomResult && GetChivesServerDataDelChatroomResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelChatroomResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelChatroomResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelChatroomResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelChatroom Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+
+export const ChivesServerDataGetGuesses = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetGuesses' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetGuesses Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddGuess = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, GuessId: string, GuessSort: string, GuessGroup: string) => {
+    try {
+        console.log("ChivesServerDataAddGuess GuessId", GuessId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddGuess", GuessId = "' + GuessId + '", GuessSort = "' + GuessSort + '", GuessGroup = "' + GuessGroup + '" })',
+        }
+        console.log("ChivesServerDataAddGuess Data", Data)
+        const GetChivesServerDataAddGuessResult = await message(Data);
+        console.log("ChivesServerDataAddGuess GetChivesServerDataAddGuessResult", GetChivesServerDataAddGuessResult)
+        
+        if(GetChivesServerDataAddGuessResult && GetChivesServerDataAddGuessResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddGuessResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddGuessResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddGuessResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddGuess Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelGuess = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, GuessId: string) => {
+    try {
+        console.log("ChivesServerDataDelGuess GuessId", GuessId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelGuess", GuessId = "' + GuessId + ' })',
+        }
+        console.log("ChivesServerDataDelGuess Data", Data)
+        const GetChivesServerDataDelGuessResult = await message(Data);
+        console.log("ChivesServerDataDelGuess GetChivesServerDataDelGuessResult", GetChivesServerDataDelGuessResult)
+        
+        if(GetChivesServerDataDelGuessResult && GetChivesServerDataDelGuessResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelGuessResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelGuessResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelGuessResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelGuess Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+
+export const ChivesServerDataGetLotteries = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetLotteries' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetLotteries Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddLottery = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, LotteryId: string, LotterySort: string, LotteryGroup: string) => {
+    try {
+        console.log("ChivesServerDataAddLottery LotteryId", LotteryId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddLottery", LotteryId = "' + LotteryId + '", LotterySort = "' + LotterySort + '", LotteryGroup = "' + LotteryGroup + '" })',
+        }
+        console.log("ChivesServerDataAddLottery Data", Data)
+        const GetChivesServerDataAddLotteryResult = await message(Data);
+        console.log("ChivesServerDataAddLottery GetChivesServerDataAddLotteryResult", GetChivesServerDataAddLotteryResult)
+        
+        if(GetChivesServerDataAddLotteryResult && GetChivesServerDataAddLotteryResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddLotteryResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddLotteryResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddLotteryResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddLottery Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelLottery = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, LotteryId: string) => {
+    try {
+        console.log("ChivesServerDataDelLottery LotteryId", LotteryId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelLottery", LotteryId = "' + LotteryId + ' })',
+        }
+        console.log("ChivesServerDataDelLottery Data", Data)
+        const GetChivesServerDataDelLotteryResult = await message(Data);
+        console.log("ChivesServerDataDelLottery GetChivesServerDataDelLotteryResult", GetChivesServerDataDelLotteryResult)
+        
+        if(GetChivesServerDataDelLotteryResult && GetChivesServerDataDelLotteryResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelLotteryResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelLotteryResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelLotteryResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelLottery Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+
+export const ChivesServerDataGetBlogs = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetBlogs' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetBlogs Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddBlog = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, BlogId: string, BlogSort: string, BlogGroup: string) => {
+    try {
+        console.log("ChivesServerDataAddBlog BlogId", BlogId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddBlog", BlogId = "' + BlogId + '", BlogSort = "' + BlogSort + '", BlogGroup = "' + BlogGroup + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("ChivesServerDataAddBlog SendData", SendData)
+        console.log("ChivesServerDataAddBlog Data", Data)
+        const GetChivesServerDataAddBlogResult = await message(Data);
+        console.log("ChivesServerDataAddBlog GetChivesServerDataAddBlogResult", GetChivesServerDataAddBlogResult)
+        
+        if(GetChivesServerDataAddBlogResult && GetChivesServerDataAddBlogResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddBlogResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddBlogResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddBlogResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddBlog Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelBlog = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, BlogId: string) => {
+    try {
+        console.log("ChivesServerDataDelBlog BlogId", BlogId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelBlog", BlogId = "' + BlogId + ' })',
+        }
+        console.log("ChivesServerDataDelBlog Data", Data)
+        const GetChivesServerDataDelBlogResult = await message(Data);
+        console.log("ChivesServerDataDelBlog GetChivesServerDataDelBlogResult", GetChivesServerDataDelBlogResult)
+        
+        if(GetChivesServerDataDelBlogResult && GetChivesServerDataDelBlogResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelBlogResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelBlogResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelBlogResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelBlog Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+
+export const ChivesServerDataGetSwaps = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetSwaps' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetSwaps Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddSwap = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, SwapId: string, SwapSort: string, SwapGroup: string) => {
+    try {
+        console.log("ChivesServerDataAddSwap SwapId", SwapId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddSwap", SwapId = "' + SwapId + '", SwapSort = "' + SwapSort + '", SwapGroup = "' + SwapGroup + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("ChivesServerDataAddSwap SendData", SendData)
+        console.log("ChivesServerDataAddSwap Data", Data)
+        const GetChivesServerDataAddSwapResult = await message(Data);
+        console.log("ChivesServerDataAddSwap GetChivesServerDataAddSwapResult", GetChivesServerDataAddSwapResult)
+        
+        if(GetChivesServerDataAddSwapResult && GetChivesServerDataAddSwapResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddSwapResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddSwapResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddSwapResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddSwap Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelSwap = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, SwapId: string) => {
+    try {
+        console.log("ChivesServerDataDelSwap SwapId", SwapId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelSwap", SwapId = "' + SwapId + ' })',
+        }
+        console.log("ChivesServerDataDelSwap Data", Data)
+        const GetChivesServerDataDelSwapResult = await message(Data);
+        console.log("ChivesServerDataDelSwap GetChivesServerDataDelSwapResult", GetChivesServerDataDelSwapResult)
+        
+        if(GetChivesServerDataDelSwapResult && GetChivesServerDataDelSwapResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelSwapResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelSwapResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelSwapResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelSwap Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+
+
+export const ChivesServerDataGetProjects = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetProjects' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetProjects Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddProject = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ProjectId: string, ProjectSort: string, ProjectGroup: string) => {
+    try {
+        console.log("ChivesServerDataAddProject ProjectId", ProjectId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddProject", ProjectId = "' + ProjectId + '", ProjectSort = "' + ProjectSort + '", ProjectGroup = "' + ProjectGroup + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("ChivesServerDataAddProject SendData", SendData)
+        console.log("ChivesServerDataAddProject Data", Data)
+        const GetChivesServerDataAddProjectResult = await message(Data);
+        console.log("ChivesServerDataAddProject GetChivesServerDataAddProjectResult", GetChivesServerDataAddProjectResult)
+        
+        if(GetChivesServerDataAddProjectResult && GetChivesServerDataAddProjectResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddProjectResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddProjectResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddProjectResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddProject Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelProject = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ProjectId: string) => {
+    try {
+        console.log("ChivesServerDataDelProject ProjectId", ProjectId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelProject", ProjectId = "' + ProjectId + ' })',
+        }
+        console.log("ChivesServerDataDelProject Data", Data)
+        const GetChivesServerDataDelProjectResult = await message(Data);
+        console.log("ChivesServerDataDelProject GetChivesServerDataDelProjectResult", GetChivesServerDataDelProjectResult)
+        
+        if(GetChivesServerDataDelProjectResult && GetChivesServerDataDelProjectResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelProjectResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelProjectResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelProjectResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelProject Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
