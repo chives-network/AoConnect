@@ -43,7 +43,7 @@ const ARISNavMenus = [
   {
     title: 'Debug',
     icon: 'codicon:debug-all',
-    path: '/learn'
+    path: '/debug'
   },
   {
     title: 'Simulation',
