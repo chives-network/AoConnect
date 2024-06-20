@@ -89,7 +89,7 @@ export const MyProcessTxIdsDelToken = async (currentWalletJwk: any, MyProcessTxI
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelToken", TokenId = "' + TokenId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelToken", TokenId = "' + TokenId + '" })',
         }
         console.log("MyProcessTxIdsDelToken Data", Data)
         const GetMyProcessTxIdsDelTokenResult = await message(Data);
@@ -195,7 +195,7 @@ export const MyProcessTxIdsDelChatroom = async (currentWalletJwk: any, MyProcess
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelChatroom", ChatroomId = "' + ChatroomId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelChatroom", ChatroomId = "' + ChatroomId + '" })',
         }
         console.log("MyProcessTxIdsDelChatroom Data", Data)
         const GetMyProcessTxIdsDelChatroomResult = await message(Data);
@@ -302,7 +302,7 @@ export const MyProcessTxIdsDelGuess = async (currentWalletJwk: any, MyProcessTxI
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelGuess", GuessId = "' + GuessId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelGuess", GuessId = "' + GuessId + '" })',
         }
         console.log("MyProcessTxIdsDelGuess Data", Data)
         const GetMyProcessTxIdsDelGuessResult = await message(Data);
@@ -409,7 +409,7 @@ export const MyProcessTxIdsDelLottery = async (currentWalletJwk: any, MyProcessT
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelLottery", LotteryId = "' + LotteryId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelLottery", LotteryId = "' + LotteryId + '" })',
         }
         console.log("MyProcessTxIdsDelLottery Data", Data)
         const GetMyProcessTxIdsDelLotteryResult = await message(Data);
@@ -518,7 +518,7 @@ export const MyProcessTxIdsDelBlog = async (currentWalletJwk: any, MyProcessTxId
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelBlog", BlogId = "' + BlogId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelBlog", BlogId = "' + BlogId + '" })',
         }
         console.log("MyProcessTxIdsDelBlog Data", Data)
         const GetMyProcessTxIdsDelBlogResult = await message(Data);
@@ -627,7 +627,7 @@ export const MyProcessTxIdsDelSwap = async (currentWalletJwk: any, MyProcessTxId
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelSwap", SwapId = "' + SwapId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelSwap", SwapId = "' + SwapId + '" })',
         }
         console.log("MyProcessTxIdsDelSwap Data", Data)
         const GetMyProcessTxIdsDelSwapResult = await message(Data);
@@ -736,7 +736,7 @@ export const MyProcessTxIdsDelProject = async (currentWalletJwk: any, MyProcessT
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelProject", ProjectId = "' + ProjectId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelProject", ProjectId = "' + ProjectId + '" })',
         }
         console.log("MyProcessTxIdsDelProject Data", Data)
         const GetMyProcessTxIdsDelProjectResult = await message(Data);

@@ -144,19 +144,19 @@ Handlers.add(
   function (msg)
     if msg.From == ao.id then
       if Tokens[msg.TokenId] then
-        Tokens[msg.TokenId] = nil
-        Handlers.utils.reply("Token deleted")(msg)
+        Tokens[msg.TokenId] = nil;
+        Handlers.utils.reply("Token deleted")(msg);
         ao.send({
             Target = msg.From,
             Data = "Successfully deleted the Token"
-        })
+        });
       else
         ao.send({
           Target = msg.From,
           Action = 'DeleteToken-Error',
           ['Message-Id'] = msg.Id,
           Error = 'Token not found'
-        })
+        });
       end
     else 
         ao.send({
@@ -168,6 +168,7 @@ Handlers.add(
     end
   end
 )
+
 
 Handlers.add(
   "GetLotteries",

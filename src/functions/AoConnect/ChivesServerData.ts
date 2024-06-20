@@ -89,7 +89,7 @@ export const ChivesServerDataDelToken = async (currentWalletJwk: any, MyProcessT
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelToken", TokenId = "' + TokenId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelToken", TokenId = "' + TokenId + '" })',
         }
         console.log("ChivesServerDataDelToken Data", Data)
         const GetChivesServerDataDelTokenResult = await message(Data);
@@ -195,7 +195,7 @@ export const ChivesServerDataDelChatroom = async (currentWalletJwk: any, MyProce
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelChatroom", ChatroomId = "' + ChatroomId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelChatroom", ChatroomId = "' + ChatroomId + '" })',
         }
         console.log("ChivesServerDataDelChatroom Data", Data)
         const GetChivesServerDataDelChatroomResult = await message(Data);
@@ -302,7 +302,7 @@ export const ChivesServerDataDelGuess = async (currentWalletJwk: any, MyProcessT
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelGuess", GuessId = "' + GuessId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelGuess", GuessId = "' + GuessId + '" })',
         }
         console.log("ChivesServerDataDelGuess Data", Data)
         const GetChivesServerDataDelGuessResult = await message(Data);
@@ -409,7 +409,7 @@ export const ChivesServerDataDelLottery = async (currentWalletJwk: any, MyProces
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelLottery", LotteryId = "' + LotteryId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelLottery", LotteryId = "' + LotteryId + '" })',
         }
         console.log("ChivesServerDataDelLottery Data", Data)
         const GetChivesServerDataDelLotteryResult = await message(Data);
@@ -518,7 +518,7 @@ export const ChivesServerDataDelBlog = async (currentWalletJwk: any, MyProcessTx
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelBlog", BlogId = "' + BlogId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelBlog", BlogId = "' + BlogId + '" })',
         }
         console.log("ChivesServerDataDelBlog Data", Data)
         const GetChivesServerDataDelBlogResult = await message(Data);
@@ -627,7 +627,7 @@ export const ChivesServerDataDelSwap = async (currentWalletJwk: any, MyProcessTx
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelSwap", SwapId = "' + SwapId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelSwap", SwapId = "' + SwapId + '" })',
         }
         console.log("ChivesServerDataDelSwap Data", Data)
         const GetChivesServerDataDelSwapResult = await message(Data);
@@ -736,7 +736,7 @@ export const ChivesServerDataDelProject = async (currentWalletJwk: any, MyProces
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelProject", ProjectId = "' + ProjectId + ' })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelProject", ProjectId = "' + ProjectId + '" })',
         }
         console.log("ChivesServerDataDelProject Data", Data)
         const GetChivesServerDataDelProjectResult = await message(Data);
