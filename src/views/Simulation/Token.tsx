@@ -17,7 +17,6 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
-import authConfig from 'src/configs/auth'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
