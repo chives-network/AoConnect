@@ -1,4 +1,4 @@
-import LearnCenterModel from 'src/views/Learn/LearnCenter';
+import LearnCenterModel from 'src/views/Debug/LearnCenter';
 
 const LearnCenter = () => {
 

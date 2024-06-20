@@ -7,7 +7,7 @@ const EmailModel = () => {
   return (
     <Box>
       <Typography> My Email On Ao. Dev not begin. </Typography>
-      <CardMedia image={`/screen/Email/Demo-Email.png`} sx={{ height: '900px', objectFit: 'contain', borderRadius: 1, mt: 2 }}/>
+      <CardMedia image={`/screen/Email/Demo-Email.png`} sx={{ height: '40rem', borderRadius: 1 }}/>
     </Box>
   )
 

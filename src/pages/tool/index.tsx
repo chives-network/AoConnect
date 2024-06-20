@@ -1,4 +1,4 @@
-import ToolModel from 'src/views/Tool/Index';
+import ToolModel from 'src/views/Simulation/Index';
 
 const Tool = () => {
 
