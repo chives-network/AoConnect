@@ -572,9 +572,10 @@ const TokenModel = () => {
         <Grid item xs={12} sx={{my: 2}}>
           <Card>
               <Grid item sx={{ display: 'column', m: 2 }}>
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                CurrentAddress: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
-                </Typography>
+                <Grid sx={{my: 2}}>
+                  <Typography noWrap variant='body2' sx={{display: 'inline', mr: 1}}>CurrentAddress:</Typography>
+                  <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
+                </Grid>
 
                 <TextField
                     sx={{ml: 2, my: 2, width: '200px'}}
@@ -658,70 +659,22 @@ const TokenModel = () => {
                     }}
                 />
 
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                TokenProcessTxId: 
-                <Link href={authConfig.AoConnectAoLink + `/token/${toolInfo?.TokenProcessTxId}`} target='_blank'>
-                  <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenProcessTxId}</Typography>
-                </Link>
-                </Typography>
+                {toolInfo && Object.keys(toolInfo).map((Item: any, Index: number)=>{
 
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserOne Message From: Top-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOne}</Typography>
-                </Typography>
+                  return (
+                    <Fragment key={Index}>
+                      {Item && Item!="TokenBalances" && (
+                        <Tooltip title={toolInfo[Item]}>
+                          <Grid sx={{my: 2}}>
+                            <Typography noWrap variant='body2' sx={{display: 'inline', mr: 1}}>{Item}:</Typography>
+                            <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo[Item]}</Typography>
+                          </Grid>
+                        </Tooltip>
+                      )}
+                    </Fragment>
+                  )
 
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserTwo Message From: Bottom-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwo}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserThree Message From: Bottom-Right ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThree}</Typography>
-                </Typography>
-                
-                <Tooltip title={toolInfo?.LoadBlueprintToken}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  .load-blueprint token: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintToken}</Typography>
-                  </Typography>
-                </Tooltip>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                Token Balance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.TokenBalance}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                SendUserOne1001: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.SendUserOne1001}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserOneBalance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneBalance}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                SendUserTwo1002: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.SendUserTwo1002}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserTwoBalance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoBalance}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                SendUserThree1003: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.SendUserThree1003}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserThreeBalance: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeBalance}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                Mint2000: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.Mint2000}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                Make other 3 process tx id, and send them a randrom amount
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                Wait Seconds: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.WaitSeconds}</Typography>
-                </Typography>
+                })}
                 
                 <Typography noWrap variant='body2' sx={{my: 2}}>
                   Token Balances: 
@@ -739,11 +692,6 @@ const TokenModel = () => {
                   )
 
                 })}
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                Execute Status: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ExecuteStatus}</Typography>
-                </Typography>
-                
 
 
               </Grid>

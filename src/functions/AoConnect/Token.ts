@@ -35,7 +35,6 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
         if(tokenInfo && tokenInfo.Logo) {
             Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", tokenInfo.Logo)
         }
-        console.error("AoLoadBlueprintChatroom Data:", Data)
 
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 

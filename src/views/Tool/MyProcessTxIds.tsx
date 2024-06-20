@@ -932,20 +932,22 @@ const MyProcessTxIds = () => {
         <Grid item xs={12} sx={{my: 2}}>
           <Card>
               <Grid item sx={{ display: 'column', m: 2 }}>
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                CurrentAddress: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
-                </Typography>
+                <Grid sx={{my: 2}}>
+                  <Typography noWrap variant='body2' sx={{display: 'inline', mr: 1}}>CurrentAddress:</Typography>
+                  <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
+                </Grid>
                 
 
                 {toolInfo && Object.keys(toolInfo).map((Item: any, Index: number)=>{
 
                   return (
                     <Fragment key={Index}>
-                    <Tooltip title={toolInfo[Item]}>
-                      <Typography  variant='body2' sx={{my: 2}}>
-                      {Item}: <Typography variant='body2' sx={{display: 'inline', color: 'primary.main', whiteSpace: 'pre-line'}}>{toolInfo[Item]}</Typography>
-                      </Typography>
-                    </Tooltip>
+                      <Tooltip title={toolInfo[Item]}>
+                        <Grid sx={{my: 2}}>
+                          <Typography noWrap variant='body2' sx={{display: 'inline', mr: 1}}>{Item}:</Typography>
+                          <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo[Item]}</Typography>
+                        </Grid>
+                      </Tooltip>
                     </Fragment>
                   )
 

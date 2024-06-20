@@ -309,6 +309,7 @@ export const AoLoadBlueprintModule = async (currentWalletJwk: any, processTxId: 
             signer: createDataItemSigner(currentWalletJwk),
             data: Data,
         });
+        
         console.log("AoLoadBlueprintModule GetMyLastMsg", module, GetMyLastMsgResult)
         
         if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {

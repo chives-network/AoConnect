@@ -427,81 +427,25 @@ const Chatroom = () => {
         <Grid item xs={12} sx={{my: 2}}>
           <Card>
               <Grid item sx={{ display: 'column', m: 2 }}>
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                CurrentAddress: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
-                </Typography>
+                <Grid sx={{my: 2}}>
+                  <Typography noWrap variant='body2' sx={{display: 'inline', mr: 1}}>CurrentAddress:</Typography>
+                  <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{currentAddress}</Typography>
+                </Grid>
 
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                ChatroomProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomProcessTxId}</Typography>
-                </Typography>
+                {toolInfo && Object.keys(toolInfo).map((Item: any, Index: number)=>{
 
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserOne Message From: Top-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOne}</Typography>
-                </Typography>
+                  return (
+                    <Fragment key={Index}>
+                      <Tooltip title={toolInfo[Item]}>
+                        <Grid sx={{my: 2}}>
+                          <Typography noWrap variant='body2' sx={{display: 'inline', mr: 1}}>{Item}:</Typography>
+                          <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo[Item]}</Typography>
+                        </Grid>
+                      </Tooltip>
+                    </Fragment>
+                  )
 
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserTwo Message From: Bottom-Left ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwo}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserThree Message From: Bottom-Right ProcessTxId: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThree}</Typography>
-                </Typography>
-                
-                <Tooltip title={toolInfo?.LoadBlueprintChatroom}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  .load-blueprint chatroom: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.LoadBlueprintChatroom}</Typography>
-                  </Typography>
-                </Tooltip>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(Empty): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers1st}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserOne Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneRegister}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                Members(1 user): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers2nd}</Typography>
-                </Typography>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserTwo Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoRegister}</Typography>
-                </Typography>
-
-                <Tooltip title={toolInfo?.ChatroomMembers3rd}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  Members(2 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers3rd}</Typography>
-                  </Typography>
-                </Tooltip>
-
-                <Typography noWrap variant='body2' sx={{my: 2}}>
-                UserThree Register: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeRegister}</Typography>
-                </Typography>
-
-                <Tooltip title={toolInfo?.ChatroomMembers4th}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                      Members(3 users): <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.ChatroomMembers4th}</Typography>
-                  </Typography>
-                </Tooltip>
-                
-                <Tooltip title={toolInfo?.UserOneSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserOne Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserOneSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
-                
-                <Tooltip title={toolInfo?.UserTwoSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserTwo Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserTwoSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
-                
-                <Tooltip title={toolInfo?.UserThreeSendMessage}>
-                  <Typography noWrap variant='body2' sx={{my: 2}}>
-                  UserThree Send Message: <Typography noWrap variant='body2' sx={{display: 'inline', color: 'primary.main'}}>{toolInfo?.UserThreeSendMessage}</Typography>
-                  </Typography>
-                </Tooltip>
+                })}
 
 
               </Grid>
