@@ -49,6 +49,7 @@ Members = Members or {}
 Invites = Invites or {}
 Applicants = Applicants or {}
 Channels = Channels or {}
+Info = Info or {}
 
 function Welcome()
   return(
@@ -64,6 +65,59 @@ function Welcome()
       "8. This version of the message is public, not encrypted.\n\n" ..
       "Have fun, be respectful !")
 end
+
+Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
+
+  Info['Statics'] = {}
+  Info['Statics']['Owners'] = #Owners
+  Info['Statics']['Admins'] = #Admins
+  Info['Statics']['Members'] = #Members
+  Info['Statics']['Invites'] = #Invites
+  Info['Statics']['Applicants'] = #Applicants
+  Info['Statics']['Channels'] = #Channels
+  ao.send({
+    Target = msg.From,
+    Data = require('json').encode(Info)
+  })
+
+end)
+
+
+Handlers.add('SetInfo', Handlers.utils.hasMatchingTag('Action', 'SetInfo'), function(msg)
+
+  local isAdmin = false
+  if msg.From == ao.id then
+    isAdmin = true
+  end
+  for _, Admin in ipairs(Admins) do
+      if Admin == msg.From then
+          isAdmin = true
+          break
+      end
+  end
+  
+  if isAdmin and msg.Name and msg.Logo and #msg.Logo == 43 then
+    Info['Id'] = ao.id
+    Info['Name'] = msg.Name
+    Info['Logo'] = msg.Logo
+    Info['Release'] = 'ChivesChatroom'
+    Info['Version'] = '20240620'
+    Info['Summary'] = msg.Summary
+    Info['Group'] = msg.Group
+    ao.send({
+      Target = msg.From,
+      Data = "Successfully set chatroom info"
+    })
+  else 
+    ao.send({
+      Target = msg.From,
+      Action = 'SetInfo-Error',
+      ['Message-Id'] = msg.Id,
+      Error = 'Only the admin can set chatroom info'
+    })
+  end
+  
+end)
 
 Handlers.add(
   "GetInboxs",
@@ -203,7 +257,7 @@ Handlers.add(
   "AddChannel",
   Handlers.utils.hasMatchingTag("Action", "AddChannel"),
   function (msg)
-    if msg.From == ao.id then
+    if msg.From == ao.id and msg.ChannelId and #msg.ChannelId == 43 then
         Channels[msg.ChannelId] = {
           ChannelId = msg.ChannelId,
           ChannelName = msg.ChannelName,
@@ -232,7 +286,7 @@ Handlers.add(
   "EditChannel",
   Handlers.utils.hasMatchingTag("Action", "EditChannel"),
   function (msg)
-    if msg.From == ao.id then
+    if msg.From == ao.id and msg.ChannelId and #msg.ChannelId == 43 then
         Channels[msg.ChannelId] = {
           ChannelId = msg.ChannelId,
           ChannelName = msg.ChannelName,
@@ -261,7 +315,7 @@ Handlers.add(
   "DelChannel",
   Handlers.utils.hasMatchingTag("Action", "DelChannel"),
   function (msg)
-    if msg.From == ao.id then
+    if msg.From == ao.id and msg.ChannelId and #msg.ChannelId == 43 then
         if Channels[msg.ChannelId] then
           Channels[msg.ChannelId] = nil
           Handlers.utils.reply("Channel deleted")(msg)
@@ -292,7 +346,7 @@ Handlers.add(
   "AddAdmin",
   Handlers.utils.hasMatchingTag("Action", "AddAdmin"),
   function (msg)
-    if msg.From == ao.id then
+    if msg.From == ao.id and msg.AdminId and #msg.AdminId == 43 then
         local found = false
         for _, Admin in ipairs(Admins) do
             if Admin == msg.AdminId then
@@ -332,7 +386,7 @@ Handlers.add(
   "DelAdmin",
   Handlers.utils.hasMatchingTag("Action", "DelAdmin"),
   function (msg)
-    if msg.From == ao.id then
+    if msg.From == ao.id and msg.AdminId and #msg.AdminId == 43 then
         local found = false
         for i, v in ipairs(Admins) do
             if v == msg.AdminId then
@@ -386,7 +440,7 @@ Handlers.add(
     end
     
     if isAdmin then
-      if not Invites[msg.MemberId] then
+      if not Invites[msg.MemberId] and msg.MemberId and #msg.MemberId == 43 then
         Invites[msg.MemberId] = {
           MemberId = msg.MemberId,
           MemberName = msg.MemberName,
@@ -537,7 +591,7 @@ Handlers.add(
     end
 
     if isAdmin then
-      if not Members[msg.MemberId] then
+      if not Members[msg.MemberId] and msg.MemberId and #msg.MemberId == 43 then
         Members[msg.MemberId] = {
           MemberId = msg.MemberId,
           MemberName = msg.MemberName,
@@ -585,7 +639,7 @@ Handlers.add(
         end
     end
     
-    if isAdmin then
+    if isAdmin and msg.MemberId and #msg.MemberId == 43 then
       if Members[msg.MemberId] then
         Members[msg.MemberId] = nil
         ao.send({

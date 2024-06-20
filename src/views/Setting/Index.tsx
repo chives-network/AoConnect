@@ -22,11 +22,13 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import Grid from '@mui/material/Grid'
 
-import Pagination from '@mui/material/Pagination'
 import toast from 'react-hot-toast'
 
-import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintChivesServerData, 
+import TokenSummary from 'src/views/Token/TokenSummary'
+
+import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
+
+import { 
     ChivesServerDataGetTokens, ChivesServerDataAddToken, ChivesServerDataDelToken, 
     ChivesServerDataGetChatrooms, ChivesServerDataAddChatroom, ChivesServerDataDelChatroom, 
     ChivesServerDataGetLotteries, ChivesServerDataAddLottery, ChivesServerDataDelLottery, 
@@ -35,6 +37,10 @@ import { AoLoadBlueprintChivesServerData,
     ChivesServerDataGetSwaps, ChivesServerDataAddSwap, ChivesServerDataDelSwap, 
     ChivesServerDataGetProjects, ChivesServerDataAddProject, ChivesServerDataDelProject
    } from 'src/functions/AoConnect/ChivesServerData'
+
+import { AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
+import { AoChatroomInfoDryRun } from 'src/functions/AoConnect/ChivesChat'
+
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
@@ -45,14 +51,18 @@ const SettingModel = () => {
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
-  const currentAddress = auth.currentAddress
 
   const [serverModel, setServerModel] = useState<string>("Token")
   const [serverTxId, setServerTxId] = useState<string>("91uljP8YzSKu01C73xDJNlAs6jcZIboWbsgkPnB-Ks4")
   const [serverData, setServerData] = useState<any>({})
 
+  const [isAllowAddServerData, setIsAllowAddServerData] = useState<boolean>(false)
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [chivesServerDataTxIdError, setChivesServerDataTxIdError] = useState<string>('')
+  
+  const [processTxId, setProcessTxId] = useState<string>("")
+  const [processInfo, setProcessInfo] = useState<any>({})
+  const [AddProcessTxIdError, setAddProcessTxIdError] = useState<string>('')
 
   const handleGetServerData = async (Model: string) => {
     setServerModel(Model)
@@ -287,6 +297,212 @@ const SettingModel = () => {
     setIsDisabledButton(false)
   }  
 
+  const handleSearchProcessData = async (Model: string) => {
+    setIsDisabledButton(true)
+    switch(Model) {
+        case 'Token':
+            const TokenGetMap: any = await AoTokenInfoDryRun(processTxId)
+            if(TokenGetMap && Number(TokenGetMap.Denomination) >= 0 && TokenGetMap.Name != "" && TokenGetMap.Ticker != "") {
+                console.log("handleSearchProcessData handleTokenSearch TokenGetMap", TokenGetMap)
+                setProcessInfo(TokenGetMap)
+                setIsAllowAddServerData(true)
+            }
+            else {
+                toast.success(t('This is not a token') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Chatroom':
+            const ChatroomGetMap: any = await AoChatroomInfoDryRun(processTxId)
+            console.log("handleTokenSearch ChatroomGetMap", ChatroomGetMap)
+            break;
+    }
+    setIsDisabledButton(false)
+  }
+
+  const handleAddToServerData = async (Model: string) => {
+    setIsDisabledButton(true)
+    const ChivesServerData = serverTxId
+    switch(Model) {
+        case 'Token':
+            const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'TokenGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddToken1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddToken1", ChivesServerDataAddToken1)
+                if(ChivesServerDataAddToken1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddToken1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddTokenData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddTokenData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddToken Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Chatroom':
+            const ChivesServerDataAddChatroom1 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'ChatroomGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddChatroom1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddChatroom1", ChivesServerDataAddChatroom1)
+                if(ChivesServerDataAddChatroom1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddChatroom1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddChatroomData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddChatroomData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddChatroomData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddChatroom Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Guess':
+            const ChivesServerDataAddGuess1 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'GuessGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddGuess1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddGuess1", ChivesServerDataAddGuess1)
+                if(ChivesServerDataAddGuess1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddGuess1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddGuessData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddGuessData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddGuessData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddGuess Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Lottery':
+            const ChivesServerDataAddLottery1 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'LotteryGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddLottery1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddLottery1", ChivesServerDataAddLottery1)
+                if(ChivesServerDataAddLottery1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddLottery1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddLotteryData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddLotteryData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddLotteryData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddLottery Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Blog':
+            const ChivesServerDataAddBlog1 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'BlogGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddBlog1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddBlog1", ChivesServerDataAddBlog1)
+                if(ChivesServerDataAddBlog1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddBlog1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddBlogData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddBlogData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddBlogData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddBlog Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Swap':
+            const ChivesServerDataAddSwap1 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'SwapGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddSwap1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddSwap1", ChivesServerDataAddSwap1)
+                if(ChivesServerDataAddSwap1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddSwap1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddSwapData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddSwapData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddSwapData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddSwap Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Project':
+            const ChivesServerDataAddProject1 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'ProjectGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddProject1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddProject1", ChivesServerDataAddProject1)
+                if(ChivesServerDataAddProject1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddProject1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddProjectData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddProjectData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddProjectData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddProject Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+    }
+    setIsDisabledButton(false)
+  }
+
+
   return (
     <Box
         sx={{
@@ -300,7 +516,7 @@ const SettingModel = () => {
         <Grid container>
             <Grid item xs={12}>
                 <Card>
-                    <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Grid item sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>
                         <Box>
                             <TextField
                                 sx={{ml: 2, my: 2}}
@@ -365,9 +581,56 @@ const SettingModel = () => {
                             </Button>
                         </Box>
                     </Grid>
+                    <Grid item sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>
+                        <Box>
+                            <TextField
+                                sx={{ml: 2, my: 2}}
+                                size="small"
+                                label={`${t('AddProcessTxId')}`}
+                                placeholder={`${t('AddProcessTxId')}`}
+                                value={processTxId}
+                                onChange={(e: any)=>{
+                                    if(e.target.value && e.target.value.length == 43) {
+                                        setAddProcessTxIdError('')
+                                        setProcessTxId(e.target.value)
+                                    }
+                                    else {
+                                        setAddProcessTxIdError('Please set AddProcessTxId first!')
+                                        setIsDisabledButton(false)
+                                    }
+                                }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                            <Icon icon='mdi:account-outline' />
+                                        </InputAdornment>
+                                    )
+                                }}
+                                error={!!AddProcessTxIdError}
+                                helperText={AddProcessTxIdError}
+                            />
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                                () => { handleSearchProcessData(serverModel) }
+                            }>
+                            {t("Search")}
+                            </Button>
+                            <Typography noWrap variant='body2' sx={{ color: 'default.main', pr: 3, display: 'inline', my: 0, py: 0 }}>
+                                Model: {serverModel}
+                            </Typography>
+                            {isAllowAddServerData && (
+                                <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                                    () => { handleAddToServerData(serverModel) }
+                                }>
+                                {t("Add to server")}
+                                </Button>
+                            )}
+                        </Box>
+                    </Grid>
                 </Card>
             </Grid>
         </Grid>
+
+        <TokenSummary tokenGetInfor={processInfo} />
 
         <TableContainer>
             <Table>

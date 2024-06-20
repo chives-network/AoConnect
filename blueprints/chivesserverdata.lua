@@ -54,7 +54,7 @@ Handlers.add(
   "AddChatroom",
   Handlers.utils.hasMatchingTag("Action", "AddChatroom"),
   function (msg)
-        if msg.From == ao.id and msg.ChatroomId then
+        if msg.From == ao.id and msg.ChatroomId and #msg.ChatroomId == 43 then
           Chatrooms[msg.ChatroomId] = {
             ChatroomId = msg.ChatroomId,
             ChatroomSort = msg.ChatroomSort,
@@ -115,7 +115,7 @@ Handlers.add(
   "AddToken",
   Handlers.utils.hasMatchingTag("Action", "AddToken"),
   function (msg)
-    if msg.From == ao.id and msg.TokenId then
+    if msg.From == ao.id and msg.TokenId and #msg.TokenId == 43 then
         Tokens[msg.TokenId] = {
             TokenId = msg.TokenId,
             TokenSort = msg.TokenSort,
@@ -185,7 +185,7 @@ Handlers.add(
   "AddLottery",
   Handlers.utils.hasMatchingTag("Action", "AddLottery"),
   function (msg)
-    if msg.From == ao.id and msg.LotteryId then
+    if msg.From == ao.id and msg.LotteryId and #msg.LotteryId == 43 then
         Lotteries[msg.LotteryId] = {
           LotteryId = msg.LotteryId,
           LotterySort = msg.LotterySort,
@@ -246,7 +246,7 @@ Handlers.add(
   "AddGuess",
   Handlers.utils.hasMatchingTag("Action", "AddGuess"),
   function (msg)
-    if msg.From == ao.id and msg.GuessId then
+    if msg.From == ao.id and msg.GuessId and #msg.GuessId == 43 then
         Guesses[msg.GuessId] = {
           GuessId = msg.GuessId,
           GuessSort = msg.GuessSort,
@@ -306,7 +306,7 @@ Handlers.add(
   "AddBlog",
   Handlers.utils.hasMatchingTag("Action", "AddBlog"),
   function (msg)
-    if msg.From == ao.id and msg.BlogId then
+    if msg.From == ao.id and msg.BlogId and #msg.BlogId == 43 then
         Blogs[msg.BlogId] = {
             BlogId = msg.BlogId,
             BlogSort = msg.BlogSort,
@@ -366,7 +366,7 @@ Handlers.add(
   "AddSwap",
   Handlers.utils.hasMatchingTag("Action", "AddSwap"),
   function (msg)
-    if msg.From == ao.id and msg.SwapId then
+    if msg.From == ao.id and msg.SwapId and #msg.SwapId == 43 then
         Swaps[msg.SwapId] = {
             SwapId = msg.SwapId,
             SwapSort = msg.SwapSort,
@@ -426,7 +426,7 @@ Handlers.add(
   "AddProject",
   Handlers.utils.hasMatchingTag("Action", "AddProject"),
   function (msg)
-    if msg.From == ao.id and msg.ProjectId then
+    if msg.From == ao.id and msg.ProjectId and #msg.ProjectId == 43 then
         Projects[msg.ProjectId] = {
             ProjectId = msg.ProjectId,
             ProjectSort = msg.ProjectSort,

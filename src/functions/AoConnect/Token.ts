@@ -691,7 +691,7 @@ export const AoTokenInfoDryRun = async (TargetTxId: string) => {
         });
 
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Tags) {
-            const RS: any[] = []
+            const RS: any = {}
             result.Messages[0].Tags.map((Item: any)=>{
                 RS[Item.name] = Item.value
             })
@@ -741,7 +741,7 @@ export const AoTokenInBoxDryRun = async (TargetTxId: string) => {
         });
 
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Tags) {
-            const RS: any[] = []
+            const RS: any = {}
             result.Messages[0].Tags.map((Item: any)=>{
                 RS[Item.name] = Item.value
             })

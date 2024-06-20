@@ -626,7 +626,7 @@ export const ChivesChatGetChannels = async (TargetTxId: string, processTxId: str
         }
     }
     catch(Error: any) {
-        console.error("AoTokenBalanceDryRun Error:", Error)
+        console.error("AoChatroomBalanceDryRun Error:", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };
@@ -747,7 +747,7 @@ export const ChivesChatGetApplicants = async (TargetTxId: string, processTxId: s
         }
     }
     catch(Error: any) {
-        console.error("AoTokenBalanceDryRun Error:", Error)
+        console.error("AoChatroomBalanceDryRun Error:", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };
@@ -841,4 +841,53 @@ export const GetChatroomAvatar = (Logo: string) => {
 }
 
 
+export const AoChatroomInfoDryRun = async (TargetTxId: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
+
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'Info' },
+                { name: 'Target', value: TargetTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Tags) {
+            const RS: any[] = []
+            result.Messages[0].Tags.map((Item: any)=>{
+                RS[Item.name] = Item.value
+            })
+            
+            return RS
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoChatroomInfoDryRun Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
 

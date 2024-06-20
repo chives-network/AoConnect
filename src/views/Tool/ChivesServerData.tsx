@@ -110,7 +110,7 @@ const ChivesServerData = () => {
       'Testing Token': '==================================================='
     }))
 
-    const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId1, 'Token666', 'TokenData')
+    const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId1, 'Token666', 'TokenGroup', 'TokenData')
     if(ChivesServerDataAddToken1) {
       console.log("ChivesServerDataAddToken1", ChivesServerDataAddToken1)
       if(ChivesServerDataAddToken1?.msg?.Output?.data?.output)  {
@@ -139,7 +139,7 @@ const ChivesServerData = () => {
       }
     }
 
-    const ChivesServerDataAddToken2 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId2, 'Token777', 'TokenData')
+    const ChivesServerDataAddToken2 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId2, 'Token777', 'TokenGroup', 'TokenData')
     if(ChivesServerDataAddToken2) {
       console.log("ChivesServerDataAddToken2", ChivesServerDataAddToken2)
       if(ChivesServerDataAddToken2?.msg?.Output?.data?.output)  {
@@ -223,7 +223,7 @@ const ChivesServerData = () => {
     const ChatroomProcessTxId1 = TokenProcessTxId1
     const ChatroomProcessTxId2 = TokenProcessTxId2
 
-    const ChivesServerDataAddChatroom1 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, ChatroomProcessTxId1, 'Chatroom666', 'ChatroomData')
+    const ChivesServerDataAddChatroom1 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, ChatroomProcessTxId1, 'Chatroom666', 'ChatroomGroup', 'ChatroomData')
     if(ChivesServerDataAddChatroom1) {
       console.log("ChivesServerDataAddChatroom1", ChivesServerDataAddChatroom1)
       if(ChivesServerDataAddChatroom1?.msg?.Output?.data?.output)  {
@@ -252,7 +252,7 @@ const ChivesServerData = () => {
       }
     }
 
-    const ChivesServerDataAddChatroom2 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, ChatroomProcessTxId2, 'Chatroom777', 'ChatroomData')
+    const ChivesServerDataAddChatroom2 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, ChatroomProcessTxId2, 'Chatroom777', 'ChatroomGroup', 'ChatroomData')
     if(ChivesServerDataAddChatroom2) {
       console.log("ChivesServerDataAddChatroom2", ChivesServerDataAddChatroom2)
       if(ChivesServerDataAddChatroom2?.msg?.Output?.data?.output)  {
@@ -337,7 +337,7 @@ const ChivesServerData = () => {
     const LotteryProcessTxId1 = TokenProcessTxId1
     const LotteryProcessTxId2 = TokenProcessTxId2
     
-    const ChivesServerDataAddLottery1 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, LotteryProcessTxId1, 'Lottery666', 'LotteryData')
+    const ChivesServerDataAddLottery1 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, LotteryProcessTxId1, 'Lottery666', 'LotteryGroup', 'LotteryData')
     if(ChivesServerDataAddLottery1) {
       console.log("ChivesServerDataAddLottery1", ChivesServerDataAddLottery1)
       if(ChivesServerDataAddLottery1?.msg?.Output?.data?.output)  {
@@ -366,7 +366,7 @@ const ChivesServerData = () => {
       }
     }
     
-    const ChivesServerDataAddLottery2 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, LotteryProcessTxId2, 'Lottery777', 'LotteryData')
+    const ChivesServerDataAddLottery2 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, LotteryProcessTxId2, 'Lottery777', 'LotteryGroup', 'LotteryData')
     if(ChivesServerDataAddLottery2) {
       console.log("ChivesServerDataAddLottery2", ChivesServerDataAddLottery2)
       if(ChivesServerDataAddLottery2?.msg?.Output?.data?.output)  {
@@ -451,7 +451,7 @@ const ChivesServerData = () => {
     const GuessProcessTxId1 = TokenProcessTxId1
     const GuessProcessTxId2 = TokenProcessTxId2
     
-    const ChivesServerDataAddGuess1 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, GuessProcessTxId1, 'Guess666', 'GuessData')
+    const ChivesServerDataAddGuess1 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, GuessProcessTxId1, 'Guess666', 'GuessGroup', 'GuessData')
     if(ChivesServerDataAddGuess1) {
       console.log("ChivesServerDataAddGuess1", ChivesServerDataAddGuess1)
       if(ChivesServerDataAddGuess1?.msg?.Output?.data?.output)  {
@@ -480,7 +480,7 @@ const ChivesServerData = () => {
       }
     }
     
-    const ChivesServerDataAddGuess2 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, GuessProcessTxId2, 'Guess777', 'GuessData')
+    const ChivesServerDataAddGuess2 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, GuessProcessTxId2, 'Guess777', 'GuessGroup', 'GuessData')
     if(ChivesServerDataAddGuess2) {
       console.log("ChivesServerDataAddGuess2", ChivesServerDataAddGuess2)
       if(ChivesServerDataAddGuess2?.msg?.Output?.data?.output)  {
@@ -565,7 +565,7 @@ const ChivesServerData = () => {
     const BlogProcessTxId1 = TokenProcessTxId1
     const BlogProcessTxId2 = TokenProcessTxId2
     
-    const ChivesServerDataAddBlog1 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, BlogProcessTxId1, 'Blog666', 'BlogData')
+    const ChivesServerDataAddBlog1 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, BlogProcessTxId1, 'Blog666', 'BlogGroup', 'BlogData')
     if(ChivesServerDataAddBlog1) {
       console.log("ChivesServerDataAddBlog1", ChivesServerDataAddBlog1)
       if(ChivesServerDataAddBlog1?.msg?.Output?.data?.output)  {
@@ -594,7 +594,7 @@ const ChivesServerData = () => {
       }
     }
     
-    const ChivesServerDataAddBlog2 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, BlogProcessTxId2, 'Blog777', 'BlogData')
+    const ChivesServerDataAddBlog2 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, BlogProcessTxId2, 'Blog777', 'BlogGroup', 'BlogData')
     if(ChivesServerDataAddBlog2) {
       console.log("ChivesServerDataAddBlog2", ChivesServerDataAddBlog2)
       if(ChivesServerDataAddBlog2?.msg?.Output?.data?.output)  {
@@ -679,7 +679,7 @@ const ChivesServerData = () => {
     const SwapProcessTxId1 = TokenProcessTxId1
     const SwapProcessTxId2 = TokenProcessTxId2
     
-    const ChivesServerDataAddSwap1 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, SwapProcessTxId1, 'Swap666', 'SwapData')
+    const ChivesServerDataAddSwap1 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, SwapProcessTxId1, 'Swap666', 'SwapGroup', 'SwapData')
     if(ChivesServerDataAddSwap1) {
       console.log("ChivesServerDataAddSwap1", ChivesServerDataAddSwap1)
       if(ChivesServerDataAddSwap1?.msg?.Output?.data?.output)  {
@@ -708,7 +708,7 @@ const ChivesServerData = () => {
       }
     }
     
-    const ChivesServerDataAddSwap2 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, SwapProcessTxId2, 'Swap777', 'SwapData')
+    const ChivesServerDataAddSwap2 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, SwapProcessTxId2, 'Swap777', 'SwapGroup', 'SwapData')
     if(ChivesServerDataAddSwap2) {
       console.log("ChivesServerDataAddSwap2", ChivesServerDataAddSwap2)
       if(ChivesServerDataAddSwap2?.msg?.Output?.data?.output)  {
@@ -793,7 +793,7 @@ const ChivesServerData = () => {
     const ProjectProcessTxId1 = TokenProcessTxId1
     const ProjectProcessTxId2 = TokenProcessTxId2
     
-    const ChivesServerDataAddProject1 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, ProjectProcessTxId1, 'Project666', 'ProjectData')
+    const ChivesServerDataAddProject1 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, ProjectProcessTxId1, 'Project666', 'ProjectGroup', 'ProjectData')
     if(ChivesServerDataAddProject1) {
       console.log("ChivesServerDataAddProject1", ChivesServerDataAddProject1)
       if(ChivesServerDataAddProject1?.msg?.Output?.data?.output)  {
@@ -822,7 +822,7 @@ const ChivesServerData = () => {
       }
     }
     
-    const ChivesServerDataAddProject2 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, ProjectProcessTxId2, 'Project777', 'ProjectData')
+    const ChivesServerDataAddProject2 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, ProjectProcessTxId2, 'Project777', 'ProjectGroup', 'ProjectData')
     if(ChivesServerDataAddProject2) {
       console.log("ChivesServerDataAddProject2", ChivesServerDataAddProject2)
       if(ChivesServerDataAddProject2?.msg?.Output?.data?.output)  {

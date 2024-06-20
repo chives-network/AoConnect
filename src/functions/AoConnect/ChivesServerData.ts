@@ -45,11 +45,11 @@ export const ChivesServerDataGetTokens = async (TargetTxId: string, processTxId:
     }
 }
 
-export const ChivesServerDataAddToken = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, TokenId: string, TokenSort: string, TokenGroup: string) => {
+export const ChivesServerDataAddToken = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, TokenId: string, TokenSort: string, TokenGroup: string, TokenData: string) => {
     try {
         console.log("ChivesServerDataAddToken TokenId", TokenId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '", TokenGroup = "' + TokenGroup + '" })'
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '", TokenGroup = "' + TokenGroup + '", TokenData = "' + TokenData + '" })'
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
@@ -153,7 +153,7 @@ export const ChivesServerDataGetChatrooms = async (TargetTxId: string, processTx
     }
 }
 
-export const ChivesServerDataAddChatroom = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ChatroomId: string, ChatroomSort: string, ChatroomGroup: string) => {
+export const ChivesServerDataAddChatroom = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ChatroomId: string, ChatroomSort: string, ChatroomGroup: string, ChatroomData: string) => {
     try {
         console.log("ChivesServerDataAddChatroom ChatroomId", ChatroomId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -161,7 +161,7 @@ export const ChivesServerDataAddChatroom = async (currentWalletJwk: any, MyProce
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddChatroom", ChatroomId = "' + ChatroomId + '", ChatroomSort = "' + ChatroomSort + '", ChatroomGroup = "' + ChatroomGroup + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddChatroom", ChatroomId = "' + ChatroomId + '", ChatroomSort = "' + ChatroomSort + '", ChatroomGroup = "' + ChatroomGroup + '", ChatroomData = "' + ChatroomData + '" })',
         }
         console.log("ChivesServerDataAddChatroom Data", Data)
         const GetChivesServerDataAddChatroomResult = await message(Data);
@@ -260,7 +260,7 @@ export const ChivesServerDataGetGuesses = async (TargetTxId: string, processTxId
     }
 }
 
-export const ChivesServerDataAddGuess = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, GuessId: string, GuessSort: string, GuessGroup: string) => {
+export const ChivesServerDataAddGuess = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, GuessId: string, GuessSort: string, GuessGroup: string, GuessData: string) => {
     try {
         console.log("ChivesServerDataAddGuess GuessId", GuessId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -268,7 +268,7 @@ export const ChivesServerDataAddGuess = async (currentWalletJwk: any, MyProcessT
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddGuess", GuessId = "' + GuessId + '", GuessSort = "' + GuessSort + '", GuessGroup = "' + GuessGroup + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddGuess", GuessId = "' + GuessId + '", GuessSort = "' + GuessSort + '", GuessGroup = "' + GuessGroup + '", GuessData = "' + GuessData + '" })',
         }
         console.log("ChivesServerDataAddGuess Data", Data)
         const GetChivesServerDataAddGuessResult = await message(Data);
@@ -367,7 +367,7 @@ export const ChivesServerDataGetLotteries = async (TargetTxId: string, processTx
     }
 }
 
-export const ChivesServerDataAddLottery = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, LotteryId: string, LotterySort: string, LotteryGroup: string) => {
+export const ChivesServerDataAddLottery = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, LotteryId: string, LotterySort: string, LotteryGroup: string, LotteryData: string) => {
     try {
         console.log("ChivesServerDataAddLottery LotteryId", LotteryId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -375,7 +375,7 @@ export const ChivesServerDataAddLottery = async (currentWalletJwk: any, MyProces
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddLottery", LotteryId = "' + LotteryId + '", LotterySort = "' + LotterySort + '", LotteryGroup = "' + LotteryGroup + '" })',
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "AddLottery", LotteryId = "' + LotteryId + '", LotterySort = "' + LotterySort + '", LotteryGroup = "' + LotteryGroup + '", LotteryData = "' + LotteryData + '" })',
         }
         console.log("ChivesServerDataAddLottery Data", Data)
         const GetChivesServerDataAddLotteryResult = await message(Data);
@@ -474,11 +474,11 @@ export const ChivesServerDataGetBlogs = async (TargetTxId: string, processTxId: 
     }
 }
 
-export const ChivesServerDataAddBlog = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, BlogId: string, BlogSort: string, BlogGroup: string) => {
+export const ChivesServerDataAddBlog = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, BlogId: string, BlogSort: string, BlogGroup: string, BlogData: string) => {
     try {
         console.log("ChivesServerDataAddBlog BlogId", BlogId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddBlog", BlogId = "' + BlogId + '", BlogSort = "' + BlogSort + '", BlogGroup = "' + BlogGroup + '" })'
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddBlog", BlogId = "' + BlogId + '", BlogSort = "' + BlogSort + '", BlogGroup = "' + BlogGroup + '", BlogData = "' + BlogData + '" })'
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
@@ -583,11 +583,11 @@ export const ChivesServerDataGetSwaps = async (TargetTxId: string, processTxId: 
     }
 }
 
-export const ChivesServerDataAddSwap = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, SwapId: string, SwapSort: string, SwapGroup: string) => {
+export const ChivesServerDataAddSwap = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, SwapId: string, SwapSort: string, SwapGroup: string, SwapData: string) => {
     try {
         console.log("ChivesServerDataAddSwap SwapId", SwapId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddSwap", SwapId = "' + SwapId + '", SwapSort = "' + SwapSort + '", SwapGroup = "' + SwapGroup + '" })'
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddSwap", SwapId = "' + SwapId + '", SwapSort = "' + SwapSort + '", SwapGroup = "' + SwapGroup + '", SwapData = "' + SwapData + '" })'
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
@@ -692,11 +692,11 @@ export const ChivesServerDataGetProjects = async (TargetTxId: string, processTxI
     }
 }
 
-export const ChivesServerDataAddProject = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ProjectId: string, ProjectSort: string, ProjectGroup: string) => {
+export const ChivesServerDataAddProject = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, ProjectId: string, ProjectSort: string, ProjectGroup: string, ProjectData: string) => {
     try {
         console.log("ChivesServerDataAddProject ProjectId", ProjectId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddProject", ProjectId = "' + ProjectId + '", ProjectSort = "' + ProjectSort + '", ProjectGroup = "' + ProjectGroup + '" })'
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddProject", ProjectId = "' + ProjectId + '", ProjectSort = "' + ProjectSort + '", ProjectGroup = "' + ProjectGroup + '", ProjectData = "' + ProjectData + '" })'
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
