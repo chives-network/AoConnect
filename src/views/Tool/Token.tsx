@@ -484,6 +484,10 @@ const TokenModel = () => {
     //add random amount transfer
     const UserAdd1 = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserAdd1) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        UserAdd1: UserAdd1
+      }))
       await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd1, generateRandomNumber(1111, 9999) )
     }
 
@@ -491,6 +495,10 @@ const TokenModel = () => {
 
     const UserAdd2 = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserAdd2) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        UserAdd2: UserAdd2
+      }))
       await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd2, generateRandomNumber(1111, 9999) )
     }
 
@@ -498,6 +506,10 @@ const TokenModel = () => {
 
     const UserAdd3 = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserAdd3) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        UserAdd3: UserAdd3
+      }))
       await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd3, generateRandomNumber(1111, 9999) )
     }
 
