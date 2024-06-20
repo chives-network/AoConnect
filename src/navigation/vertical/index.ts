@@ -6,24 +6,14 @@ const ARISNavMenus = [
     sectionTitle: 'My Portal'
   },
   {
-    title: 'Create Wallet',
-    icon: 'material-symbols:captive-portal-rounded',
+    title: 'My Wallet',
+    icon: 'material-symbols:account-balance-wallet-outline',
     path: '/mywallets'
   },
   {
-    title: 'AR Wallet',
-    icon: 'clarity:wallet-solid',
-    path: '/wallet/sendout'
-  },
-  {
-    title: 'Learn',
-    icon: 'hugeicons:online-learning-01',
-    path: '/learn'
-  },
-  {
-    title: 'Tool',
-    icon: 'carbon:tool-kit',
-    path: '/tool'
+    title: 'Email',
+    icon: 'mdi:email-outline',
+    path: '/email'
   },
   {
     title: 'Chat',
@@ -31,9 +21,39 @@ const ARISNavMenus = [
     path: '/chat/room'
   },
   {
+    title: 'Blog',
+    icon: 'mdi:blog-outline',
+    path: '/blog'
+  },
+  {
     title: 'Token',
     icon: 'material-symbols:token',
     path: '/token'
+  },
+  {
+    title: 'Lottery',
+    icon: 'fluent:lottery-24-regular',
+    path: '/lottery'
+  },
+  {
+    title: 'Guess',
+    icon: 'fluent-mdl2:compare-uneven',
+    path: '/guess'
+  },
+  {
+    title: 'Debug',
+    icon: 'codicon:debug-all',
+    path: '/learn'
+  },
+  {
+    title: 'Simulation',
+    icon: 'carbon:tool-kit',
+    path: '/tool'
+  },
+  {
+    title: 'Setting',
+    icon: 'material-symbols:settings-outline',
+    path: '/setting'
   }
 ]
 
