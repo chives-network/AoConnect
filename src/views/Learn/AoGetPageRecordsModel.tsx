@@ -193,9 +193,7 @@ const AoGetPageRecordsModel = () => {
                                                 {index}
                                             </TableCell>
                                             <TableCell>
-                                                <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-                                                    <AnsiText text={JsonData.output} />
-                                                </Typography>
+                                                <AnsiText text={JsonData.output} />
                                             </TableCell>
                                         </TableRow>
                                     )

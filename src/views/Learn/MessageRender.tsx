@@ -1,5 +1,6 @@
 import React from 'react'
 import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 import AnsiText from './AnsiText'
 
 //import dynamic from "next/dynamic"
@@ -8,7 +9,7 @@ import AnsiText from './AnsiText'
 const MessageRender = ({ resultText }: any) => {
 
     return  (
-                    <Typography variant='body2' sx={{ mt: 3 }}>
+                    <Box>
                         {resultText && resultText.Output && resultText.Output.data && resultText.Output.data.output && 
                         (
                             <AnsiText text={resultText.Output.data.output} />
@@ -24,7 +25,7 @@ const MessageRender = ({ resultText }: any) => {
                             <AnsiText text={resultText.Error} />
                         )
                         }
-                    </Typography>
+                    </Box>
     )
 };
 
