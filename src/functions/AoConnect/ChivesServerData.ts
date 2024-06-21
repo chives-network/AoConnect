@@ -761,3 +761,111 @@ export const ChivesServerDataDelProject = async (currentWalletJwk: any, MyProces
     }
   
 }
+
+
+export const ChivesServerDataGetFaucets = async (TargetTxId: string, processTxId: string) => {
+    try {
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: processTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'GetFaucets' },
+                { name: 'Target', value: processTxId },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return {}
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataGetFaucets Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return {}
+    }
+}
+
+export const ChivesServerDataAddFaucet = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, FaucetId: string, FaucetSort: string, FaucetGroup: string, FaucetData: string) => {
+    try {
+        console.log("ChivesServerDataAddFaucet FaucetId", FaucetId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddFaucet", FaucetId = "' + FaucetId + '", FaucetSort = "' + FaucetSort + '", FaucetGroup = "' + FaucetGroup + '", FaucetData = "' + FaucetData + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("ChivesServerDataAddFaucet SendData", SendData)
+        console.log("ChivesServerDataAddFaucet Data", Data)
+        const GetChivesServerDataAddFaucetResult = await message(Data);
+        console.log("ChivesServerDataAddFaucet GetChivesServerDataAddFaucetResult", GetChivesServerDataAddFaucetResult)
+        
+        if(GetChivesServerDataAddFaucetResult && GetChivesServerDataAddFaucetResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataAddFaucetResult)
+
+            return { status: 'ok', id: GetChivesServerDataAddFaucetResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataAddFaucetResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataAddFaucet Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
+export const ChivesServerDataDelFaucet = async (currentWalletJwk: any, MyProcessTxId: string, myProcessTxId: string, FaucetId: string) => {
+    try {
+        console.log("ChivesServerDataDelFaucet FaucetId", FaucetId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelFaucet", FaucetId = "' + FaucetId + '" })',
+        }
+        console.log("ChivesServerDataDelFaucet Data", Data)
+        const GetChivesServerDataDelFaucetResult = await message(Data);
+        console.log("ChivesServerDataDelFaucet GetChivesServerDataDelFaucetResult", GetChivesServerDataDelFaucetResult)
+        
+        if(GetChivesServerDataDelFaucetResult && GetChivesServerDataDelFaucetResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesServerDataDelFaucetResult)
+
+            return { status: 'ok', id: GetChivesServerDataDelFaucetResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesServerDataDelFaucetResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesServerDataDelFaucet Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}

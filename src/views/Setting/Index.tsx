@@ -19,10 +19,12 @@ import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useAuth } from 'src/hooks/useAuth'
+import { GetTokenAvatar } from 'src/functions/AoConnect/Token'
 
 import Grid from '@mui/material/Grid'
 
 import toast from 'react-hot-toast'
+import MuiAvatar from '@mui/material/Avatar'
 
 import TokenSummary from 'src/views/Token/TokenSummary'
 
@@ -35,7 +37,8 @@ import {
     ChivesServerDataGetGuesses, ChivesServerDataAddGuess, ChivesServerDataDelGuess, 
     ChivesServerDataGetBlogs, ChivesServerDataAddBlog, ChivesServerDataDelBlog, 
     ChivesServerDataGetSwaps, ChivesServerDataAddSwap, ChivesServerDataDelSwap, 
-    ChivesServerDataGetProjects, ChivesServerDataAddProject, ChivesServerDataDelProject
+    ChivesServerDataGetProjects, ChivesServerDataAddProject, ChivesServerDataDelProject, 
+    ChivesServerDataGetFaucets, ChivesServerDataAddFaucet, ChivesServerDataDelFaucet
    } from 'src/functions/AoConnect/ChivesServerData'
 
 import { AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
@@ -63,6 +66,10 @@ const SettingModel = () => {
   const [processTxId, setProcessTxId] = useState<string>("")
   const [processInfo, setProcessInfo] = useState<any>({})
   const [AddProcessTxIdError, setAddProcessTxIdError] = useState<string>('')
+  const [groupValue, setGroupValue] = useState<string>("")
+  const [sortValue, setSortValue] = useState<string>("")
+  const [groupError, setGroupError] = useState<string>('')
+  const [sortError, setSortError] = useState<string>('')
 
   const handleGetServerData = async (Model: string) => {
     setServerModel(Model)
@@ -76,10 +83,17 @@ const SettingModel = () => {
         case 'Token':
             const ChivesServerDataGetTokensData1 = await ChivesServerDataGetTokens(ChivesServerData, ChivesServerData)
             if(ChivesServerDataGetTokensData1) {
-                console.log("ChivesServerDataGetTokensData1", ChivesServerDataGetTokensData1)
+                const dataArray = Object.values(ChivesServerDataGetTokensData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.TokenGroup == b.TokenGroup) {
+                        return Number(a.TokenSort) - Number(b.TokenSort);
+                    } else {
+                        return a.TokenGroup.localeCompare(b.TokenGroup);
+                    }
+                });
                 setServerData((prevState: any)=>({
                     ...prevState,
-                    [Model]: ChivesServerDataGetTokensData1
+                    [Model]: dataArray
                 }))
                 console.log("ChivesServerDataGetTokensData1 serverData", serverData)
             }
@@ -87,10 +101,17 @@ const SettingModel = () => {
         case 'Chatroom':
             const ChivesServerDataGetChatroomsData1 = await ChivesServerDataGetChatrooms(ChivesServerData, ChivesServerData)
             if(ChivesServerDataGetChatroomsData1) {
-                console.log("ChivesServerDataGetChatroomsData1", ChivesServerDataGetChatroomsData1)
+                const dataArray = Object.values(ChivesServerDataGetChatroomsData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.ChatroomGroup == b.ChatroomGroup) {
+                        return Number(a.ChatroomSort) - Number(b.ChatroomSort);
+                    } else {
+                        return a.ChatroomGroup.localeCompare(b.ChatroomGroup);
+                    }
+                });
                 setServerData((prevState: any)=>({
                     ...prevState,
-                    [Model]: ChivesServerDataGetChatroomsData1
+                    [Model]: dataArray
                 }))
                 console.log("ChivesServerDataGetChatroomsData1 serverData", serverData)
             }
@@ -98,10 +119,17 @@ const SettingModel = () => {
         case 'Lottery':
             const ChivesServerDataGetLotteriesData1 = await ChivesServerDataGetLotteries(ChivesServerData, ChivesServerData)
             if(ChivesServerDataGetLotteriesData1) {
-                console.log("ChivesServerDataGetLotteriesData1", ChivesServerDataGetLotteriesData1)
+                const dataArray = Object.values(ChivesServerDataGetLotteriesData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.LotteryGroup == b.LotteryGroup) {
+                        return Number(a.Lotteriesort) - Number(b.Lotteriesort);
+                    } else {
+                        return a.LotteryGroup.localeCompare(b.LotteryGroup);
+                    }
+                });
                 setServerData((prevState: any)=>({
                     ...prevState,
-                    [Model]: ChivesServerDataGetLotteriesData1
+                    [Model]: dataArray
                 }))
                 console.log("ChivesServerDataGetLotteriesData1 serverData", serverData)
             }
@@ -109,10 +137,17 @@ const SettingModel = () => {
         case 'Guess':
             const ChivesServerDataGetGuessesData1 = await ChivesServerDataGetGuesses(ChivesServerData, ChivesServerData)
             if(ChivesServerDataGetGuessesData1) {
-                console.log("ChivesServerDataGetGuessesData1", ChivesServerDataGetGuessesData1)
+                const dataArray = Object.values(ChivesServerDataGetGuessesData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.GuessGroup == b.GuessGroup) {
+                        return Number(a.Guessesort) - Number(b.Guessesort);
+                    } else {
+                        return a.GuessGroup.localeCompare(b.GuessGroup);
+                    }
+                });
                 setServerData((prevState: any)=>({
                     ...prevState,
-                    [Model]: ChivesServerDataGetGuessesData1
+                    [Model]: dataArray
                 }))
                 console.log("ChivesServerDataGetGuessesData1 serverData", serverData)
             }
@@ -120,10 +155,17 @@ const SettingModel = () => {
         case 'Blog':
             const ChivesServerDataGetBlogsData1 = await ChivesServerDataGetBlogs(ChivesServerData, ChivesServerData)
             if(ChivesServerDataGetBlogsData1) {
-                console.log("ChivesServerDataGetBlogsData1", ChivesServerDataGetBlogsData1)
+                const dataArray = Object.values(ChivesServerDataGetBlogsData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.BlogGroup == b.BlogGroup) {
+                        return Number(a.BlogSort) - Number(b.BlogSort);
+                    } else {
+                        return a.BlogGroup.localeCompare(b.BlogGroup);
+                    }
+                });
                 setServerData((prevState: any)=>({
                     ...prevState,
-                    [Model]: ChivesServerDataGetBlogsData1
+                    [Model]: dataArray
                 }))
                 console.log("ChivesServerDataGetBlogsData1 serverData", serverData)
             }
@@ -131,10 +173,17 @@ const SettingModel = () => {
         case 'Swap':
             const ChivesServerDataGetSwapsData1 = await ChivesServerDataGetSwaps(ChivesServerData, ChivesServerData)
             if(ChivesServerDataGetSwapsData1) {
-                console.log("ChivesServerDataGetSwapsData1", ChivesServerDataGetSwapsData1)
+                const dataArray = Object.values(ChivesServerDataGetSwapsData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.SwapGroup == b.SwapGroup) {
+                        return Number(a.SwapSort) - Number(b.SwapSort);
+                    } else {
+                        return a.SwapGroup.localeCompare(b.SwapGroup);
+                    }
+                });
                 setServerData((prevState: any)=>({
                     ...prevState,
-                    [Model]: ChivesServerDataGetSwapsData1
+                    [Model]: dataArray
                 }))
                 console.log("ChivesServerDataGetSwapsData1 serverData", serverData)
             }
@@ -142,12 +191,37 @@ const SettingModel = () => {
         case 'Project':
             const ChivesServerDataGetProjectsData1 = await ChivesServerDataGetProjects(ChivesServerData, ChivesServerData)
             if(ChivesServerDataGetProjectsData1) {
-                console.log("ChivesServerDataGetProjectsData1", ChivesServerDataGetProjectsData1)
+                const dataArray = Object.values(ChivesServerDataGetProjectsData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.ProjectGroup == b.ProjectGroup) {
+                        return Number(a.ProjectSort) - Number(b.ProjectSort);
+                    } else {
+                        return a.ProjectGroup.localeCompare(b.ProjectGroup);
+                    }
+                });
                 setServerData((prevState: any)=>({
                     ...prevState,
-                    [Model]: ChivesServerDataGetProjectsData1
+                    [Model]: dataArray
                 }))
                 console.log("ChivesServerDataGetProjectsData1 serverData", serverData)
+            }
+            break;
+        case 'Faucet':
+            const ChivesServerDataGetFaucetsData1 = await ChivesServerDataGetFaucets(ChivesServerData, ChivesServerData)
+            if(ChivesServerDataGetFaucetsData1) {
+                const dataArray = Object.values(ChivesServerDataGetFaucetsData1);
+                dataArray.sort((a: any, b: any) => {
+                    if (a.FaucetGroup == b.FaucetGroup) {
+                        return Number(a.FaucetSort) - Number(b.FaucetSort);
+                    } else {
+                        return a.FaucetGroup.localeCompare(b.FaucetGroup);
+                    }
+                });
+                setServerData((prevState: any)=>({
+                    ...prevState,
+                    [Model]: dataArray
+                }))
+                console.log("ChivesServerDataGetFaucetsData1 serverData", serverData)
             }
             break;
     }
@@ -293,6 +367,25 @@ const SettingModel = () => {
             }
             handleGetServerData(Model)
             break;
+        case 'Faucet':
+            const ChivesServerDataDelFaucetData1 = await ChivesServerDataDelFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            if(ChivesServerDataDelFaucetData1) {
+                console.log("ChivesServerDataDelFaucetData1", ChivesServerDataDelFaucetData1)
+                if(ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output)  {
+                  const formatText = ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                  if(formatText) {
+                    const ChivesServerDataDelFaucetData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                    if(ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output)  {
+                      const formatText2 = ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                      if(formatText2) {
+                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                      }
+                    }
+                  }
+                }
+            }
+            handleGetServerData(Model)
+            break;
     }
     setIsDisabledButton(false)
   }  
@@ -320,11 +413,21 @@ const SettingModel = () => {
   }
 
   const handleAddToServerData = async (Model: string) => {
+    if(groupValue == "") {
+        toast.error(t('Group must have a value') as string, { duration: 2500, position: 'top-center' })
+
+        return 
+    }
+    if(sortValue == "") {
+        toast.error(t('Sort must have a value') as string, { duration: 2500, position: 'top-center' })
+
+        return
+    }
     setIsDisabledButton(true)
     const ChivesServerData = serverTxId
     switch(Model) {
         case 'Token':
-            const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'TokenGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddToken1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -349,7 +452,7 @@ const SettingModel = () => {
             }
             break;
         case 'Chatroom':
-            const ChivesServerDataAddChatroom1 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'ChatroomGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddChatroom1 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddChatroom1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -374,7 +477,7 @@ const SettingModel = () => {
             }
             break;
         case 'Guess':
-            const ChivesServerDataAddGuess1 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'GuessGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddGuess1 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddGuess1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -399,7 +502,7 @@ const SettingModel = () => {
             }
             break;
         case 'Lottery':
-            const ChivesServerDataAddLottery1 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'LotteryGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddLottery1 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddLottery1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -424,7 +527,7 @@ const SettingModel = () => {
             }
             break;
         case 'Blog':
-            const ChivesServerDataAddBlog1 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'BlogGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddBlog1 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddBlog1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -449,7 +552,7 @@ const SettingModel = () => {
             }
             break;
         case 'Swap':
-            const ChivesServerDataAddSwap1 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'SwapGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddSwap1 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddSwap1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -474,7 +577,7 @@ const SettingModel = () => {
             }
             break;
         case 'Project':
-            const ChivesServerDataAddProject1 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, '667', 'ProjectGroup', JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddProject1 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddProject1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -496,6 +599,31 @@ const SettingModel = () => {
             }
             else {
                 toast.success(t('Exec ChivesServerDataAddProject Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Faucet':
+            const ChivesServerDataAddFaucet1 = await ChivesServerDataAddFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddFaucet1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddFaucet1", ChivesServerDataAddFaucet1)
+                if(ChivesServerDataAddFaucet1?.msg?.Output?.data?.output)  {
+                    const formatText = ChivesServerDataAddFaucet1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                    if(formatText) {
+                        const ChivesServerDataAddFaucetData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
+                        if(ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output)  {
+                            const formatText2 = ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                            if(formatText2) {
+                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddFaucet Failed') as string, { duration: 2500, position: 'top-center' })
             }
             break;
     }
@@ -554,30 +682,35 @@ const SettingModel = () => {
                             }>
                             {t("Chatroom Data")}
                             </Button>
-                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
                                 () => { handleGetServerData('Lottery') }
                             }>
                             {t("Lottery Data")}
                             </Button>
-                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
                                 () => { handleGetServerData('Guess') }
                             }>
                             {t("Guess Data")}
                             </Button>
-                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
                                 () => { handleGetServerData('Blog') }
                             }>
                             {t("Blog Data")}
                             </Button>
-                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
                                 () => { handleGetServerData('Swap') }
                             }>
                             {t("Swap Data")}
                             </Button>
-                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
                                 () => { handleGetServerData('Project') }
                             }>
                             {t("Project Data")}
+                            </Button>
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                                () => { handleGetServerData('Faucet') }
+                            }>
+                            {t("Faucet Data")}
                             </Button>
                         </Box>
                     </Grid>
@@ -618,11 +751,65 @@ const SettingModel = () => {
                                 Model: {serverModel}
                             </Typography>
                             {isAllowAddServerData && (
-                                <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                                    () => { handleAddToServerData(serverModel) }
-                                }>
-                                {t("Add to server")}
-                                </Button>
+                                <Fragment>
+                                    <TextField
+                                        sx={{ml: 2, my: 2, width: '200px'}}
+                                        size="small"
+                                        label={`${t('Group')}`}
+                                        placeholder={`${t('Group')}`}
+                                        value={groupValue}
+                                        onChange={(e: any)=>{
+                                            if(e.target.value) {
+                                                setGroupError('')
+                                                setGroupValue(e.target.value)
+                                            }
+                                            else {
+                                                setGroupError('Please set Group first!')
+                                                setIsDisabledButton(false)
+                                            }
+                                        }}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position='start'>
+                                                    <Icon icon='mdi:account-outline' />
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        error={!!groupError}
+                                        helperText={groupError}
+                                    />
+                                    <TextField
+                                        sx={{ml: 2, my: 2, width: '200px'}}
+                                        size="small"
+                                        label={`${t('Sort')}`}
+                                        placeholder={`${t('Sort')}`}
+                                        value={sortValue}
+                                        onChange={(e: any)=>{
+                                            if(e.target.value) {
+                                                setSortError('')
+                                                setSortValue(e.target.value)
+                                            }
+                                            else {
+                                                setSortError('Please set Sort first!')
+                                                setIsDisabledButton(false)
+                                            }
+                                        }}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position='start'>
+                                                    <Icon icon='mdi:account-outline' />
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        error={!!sortError}
+                                        helperText={sortError}
+                                    />
+                                    <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                                        () => { handleAddToServerData(serverModel) }
+                                    }>
+                                    {t("Add to server")}
+                                    </Button>
+                                </Fragment>
                             )}
                         </Box>
                     </Grid>
@@ -636,7 +823,7 @@ const SettingModel = () => {
             <Table>
             <TableBody>
             <TableRow sx={{my: 0, py: 0}}>
-                <TableCell sx={{my: 0, py: 0}} colSpan={6}>
+                <TableCell sx={{my: 0, py: 0}} colSpan={7}>
                     Model: {serverModel}
                 </TableCell>
             </TableRow>
@@ -657,12 +844,26 @@ const SettingModel = () => {
                     Operation
                 </TableCell>
                 <TableCell sx={{my: 0, py: 0}}>
+                    Avatar
+                </TableCell>
+                <TableCell sx={{my: 0, py: 0}}>
                     Data
                 </TableCell>
             </TableRow>
-            {serverData && serverData[serverModel] && Object.keys(serverData[serverModel]).map((Item: string, Index: number)=>{
+            {serverData && serverData[serverModel] && serverData[serverModel].map((Item: any, Index: number)=>{
 
-                const Row = serverData[serverModel][Item]
+                const Row = Item
+
+                let AvatarLogo = ""
+                try{ 
+                    const ServerModelData = Row[serverModel + 'Data'] && JSON.parse(Row[serverModel + 'Data'])
+                    if(ServerModelData && ServerModelData.Logo) {
+                        AvatarLogo = ServerModelData.Logo
+                    }
+                }
+                catch(Error: any) {
+                    console.log("AvatarLogo Error", Error)
+                }
 
                 return (
                     <Fragment key={Index}>
@@ -695,7 +896,13 @@ const SettingModel = () => {
                                     </Button>
                                 </TableCell>
                                 <TableCell sx={{my: 0, py: 0}}>
-                                    <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Row[serverModel + 'Data']}</Typography>
+                                    <MuiAvatar
+                                        src={GetTokenAvatar(AvatarLogo)}
+                                        sx={{ width: '2.5rem', height: '2.5rem' }}
+                                    />
+                                </TableCell>
+                                <TableCell sx={{my: 0, py: 0}}>
+                                    <Typography variant='body2' sx={{ color: 'primary.main', pr: 3, my: 0, py: 0 }}>{Row[serverModel + 'Data']}</Typography>
                                 </TableCell>
                             </TableRow>
                         )}

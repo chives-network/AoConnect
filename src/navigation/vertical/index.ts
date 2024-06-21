@@ -21,11 +21,6 @@ const ARISNavMenus = [
     path: '/chat/room'
   },
   {
-    title: 'Blog',
-    icon: 'mdi:blog-outline',
-    path: '/blog'
-  },
-  {
     title: 'Token',
     icon: 'material-symbols:token',
     path: '/token'
@@ -34,11 +29,6 @@ const ARISNavMenus = [
     title: 'Lottery',
     icon: 'fluent:lottery-24-regular',
     path: '/lottery'
-  },
-  {
-    title: 'Guess',
-    icon: 'fluent-mdl2:compare-uneven',
-    path: '/guess'
   },
   {
     title: 'Debug',
@@ -56,6 +46,22 @@ const ARISNavMenus = [
     path: '/setting'
   }
 ]
+
+/*
+
+  {
+    title: 'Blog',
+    icon: 'mdi:blog-outline',
+    path: '/blog'
+  },
+  {
+    title: 'Guess',
+    icon: 'fluent-mdl2:compare-uneven',
+    path: '/guess'
+  },
+
+
+*/
 
 const navigation = (): VerticalNavItemsType => {
 

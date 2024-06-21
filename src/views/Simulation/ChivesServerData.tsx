@@ -26,7 +26,8 @@ import { AoLoadBlueprintChivesServerData,
   ChivesServerDataGetGuesses, ChivesServerDataAddGuess, ChivesServerDataDelGuess, 
   ChivesServerDataGetBlogs, ChivesServerDataAddBlog, ChivesServerDataDelBlog, 
   ChivesServerDataGetSwaps, ChivesServerDataAddSwap, ChivesServerDataDelSwap, 
-  ChivesServerDataGetProjects, ChivesServerDataAddProject, ChivesServerDataDelProject
+  ChivesServerDataGetProjects, ChivesServerDataAddProject, ChivesServerDataDelProject, 
+  ChivesServerDataGetFaucets, ChivesServerDataAddFaucet, ChivesServerDataDelFaucet
  } from 'src/functions/AoConnect/ChivesServerData'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -895,6 +896,120 @@ const ChivesServerData = () => {
       setToolInfo((prevState: any)=>({
         ...prevState,
         'ChivesServerDataGetProjectsData2': JSON.stringify(ChivesServerDataGetProjectsData2)
+      }))
+    }
+
+
+    setToolInfo((prevState: any)=>({
+      ...prevState,
+      'Testing Faucet': '==================================================='
+    }))
+    
+    const FaucetProcessTxId1 = TokenProcessTxId1
+    const FaucetProcessTxId2 = TokenProcessTxId2
+    
+    const ChivesServerDataAddFaucet1 = await ChivesServerDataAddFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, FaucetProcessTxId1, 'Faucet666', 'FaucetGroup', 'FaucetData')
+    if(ChivesServerDataAddFaucet1) {
+      console.log("ChivesServerDataAddFaucet1", ChivesServerDataAddFaucet1)
+      if(ChivesServerDataAddFaucet1?.msg?.Output?.data?.output)  {
+        const formatText = ChivesServerDataAddFaucet1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+    
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesServerDataAddFaucet1: formatText
+          }))
+    
+          //Read message from inbox
+          const ChivesServerDataAddFaucetData1 = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId1)
+          if(ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output)  {
+            const formatText2 = ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesServerDataAddFaucet1: formatText2
+              }))
+            }
+          }
+    
+        }
+    
+      }
+    }
+    
+    const ChivesServerDataAddFaucet2 = await ChivesServerDataAddFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, FaucetProcessTxId2, 'Faucet777', 'FaucetGroup', 'FaucetData')
+    if(ChivesServerDataAddFaucet2) {
+      console.log("ChivesServerDataAddFaucet2", ChivesServerDataAddFaucet2)
+      if(ChivesServerDataAddFaucet2?.msg?.Output?.data?.output)  {
+        const formatText = ChivesServerDataAddFaucet2?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+    
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesServerDataAddFaucet2: formatText
+          }))
+    
+          //Read message from inbox
+          const ChivesServerDataAddFaucetData1 = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId2)
+          if(ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output)  {
+            const formatText2 = ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesServerDataAddFaucet2: formatText2
+              }))
+            }
+          }
+    
+        }
+    
+      }
+    }
+    
+    const ChivesServerDataGetFaucetsData1 = await ChivesServerDataGetFaucets(ChivesServerData, ChivesServerData)
+    if(ChivesServerDataGetFaucetsData1) {
+      console.log("ChivesServerDataGetFaucetsData1", ChivesServerDataGetFaucetsData1)
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        'ChivesServerDataGetFaucetsData1': JSON.stringify(ChivesServerDataGetFaucetsData1)
+      }))
+    }
+    
+    const ChivesServerDataDelFaucet2 = await ChivesServerDataDelFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, FaucetProcessTxId2)
+    if(ChivesServerDataDelFaucet2) {
+      console.log("ChivesServerDataDelFaucet2", ChivesServerDataDelFaucet2)
+      if(ChivesServerDataDelFaucet2?.msg?.Output?.data?.output)  {
+        const formatText = ChivesServerDataDelFaucet2?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+    
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesServerDataDelFaucet1: formatText
+          }))
+    
+          //Read message from inbox
+          const ChivesServerDataDelFaucetData1 = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId2)
+          if(ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output)  {
+            const formatText2 = ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesServerDataDelFaucet2: formatText2
+              }))
+            }
+          }
+    
+        }
+    
+      }
+    }
+    
+    const ChivesServerDataGetFaucetsData2 = await ChivesServerDataGetFaucets(ChivesServerData, ChivesServerData)
+    if(ChivesServerDataGetFaucetsData2) {
+      console.log("ChivesServerDataGetFaucetsData2", ChivesServerDataGetFaucetsData2)
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        'ChivesServerDataGetFaucetsData2': JSON.stringify(ChivesServerDataGetFaucetsData2)
       }))
     }
 

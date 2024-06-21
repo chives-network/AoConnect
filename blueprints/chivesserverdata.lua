@@ -15,6 +15,7 @@
 -- 5. Save blog process tx ids.
 -- 6. Save swap process tx ids.
 -- 7. Save project process tx ids.
+-- 8. Save Faucet process tx ids.
 
 Chatrooms = Chatrooms or {}
 Tokens = Tokens or {}
@@ -23,6 +24,7 @@ Guesses = Guesses or {}
 Blogs = Blogs or {}
 Swaps = Swaps or {}
 Projects = Projects or {}
+Faucets = Faucets or {}
 
 function Welcome()
   return(
@@ -35,6 +37,7 @@ function Welcome()
       "5. Save blog big or small tx ids.\n" ..
       "6. Save swap big or small tx ids.\n" ..
       "7. Save project big or small tx ids.\n" ..
+      "8. Save faucet big or small tx ids.\n" ..
       "Save server's data, used for explorer.\n" ..
       "Have fun, be respectful !")
 end
@@ -464,6 +467,66 @@ Handlers.add(
         ao.send({
             Target = msg.From,
             Action = 'DelProject-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'Only owner can DelToken'
+        })
+    end
+  end
+)
+
+Handlers.add(
+  "GetFaucets",
+  Handlers.utils.hasMatchingTag("Action", "GetFaucets"),
+  function (msg)
+    ao.send({
+      Target = msg.From,
+      Data = require('json').encode(Faucets)
+    })
+  end
+)
+
+Handlers.add(
+  "AddFaucet",
+  Handlers.utils.hasMatchingTag("Action", "AddFaucet"),
+  function (msg)
+    if msg.From == ao.id and msg.FaucetId and #msg.FaucetId == 43 then
+        Faucets[msg.FaucetId] = {
+            FaucetId = msg.FaucetId,
+            FaucetSort = msg.FaucetSort,
+            FaucetGroup = msg.FaucetGroup,
+            FaucetData = msg.FaucetData
+          }
+          Handlers.utils.reply("Has add Faucet")(msg)
+          ao.send({
+            Target = msg.From,
+            Data = "Successfully add a Faucet"
+          })
+    else 
+        ao.send({
+            Target = msg.From,
+            Action = 'AddFaucet-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'Only owner can AddFaucet'
+        })
+    end
+  end
+)
+
+Handlers.add(
+  "DelFaucet",
+  Handlers.utils.hasMatchingTag("Action", "DelFaucet"),
+  function (msg)
+    if msg.From == ao.id and msg.FaucetId then
+        Faucets[msg.FaucetId] = nil
+        Handlers.utils.reply("Has delete Faucet")(msg)
+        ao.send({
+          Target = msg.From,
+          Data = "Successfully delete a Faucet"
+        })
+    else 
+        ao.send({
+            Target = msg.From,
+            Action = 'DelFaucet-Error',
             ['Message-Id'] = msg.Id,
             Error = 'Only owner can DelToken'
         })
