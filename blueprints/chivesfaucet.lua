@@ -22,7 +22,7 @@ depositBalances = depositBalances or {}
 creditBalances = creditBalances or {}
 receivedBalances = receivedBalances or {}
 
-FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  0.1
+FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  0.123
 FAUCET_SEND_RULE = FAUCET_SEND_RULE or  'EveryDay' -- OneTime or EveryDay
 FAUCET_PROCESS = FAUCET_PROCESS or "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0" -- Staking and Received Token Process Tx Id
 FAUCET_BALANCE = FAUCET_BALANCE or '-1'

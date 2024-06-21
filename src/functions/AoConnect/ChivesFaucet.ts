@@ -4,7 +4,7 @@ import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
 import axios from 'axios'
 
-import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes } from 'src/functions/AoConnect/AoConnect'
+import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord } from 'src/functions/AoConnect/AoConnect'
 import { AoTokenTransfer } from 'src/functions/AoConnect/Token'
 
 
@@ -105,7 +105,7 @@ export const AoFaucetCheckBalance = async (currentWalletJwk: any, FaucetTxId: st
   
 }
 
-export const AoFaucetCredit = async (currentWalletJwk: any, FaucetTxId: string, myFaucetProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number, Denomination = 12) => {
+export const AoFaucetCredit = async (currentWalletJwk: any, FaucetTxId: string, myFaucetProcessTxId: string, sendOutProcessTxId: string) => {
     try {
         if(FaucetTxId && FaucetTxId.length != 43) {
 
@@ -125,14 +125,14 @@ export const AoFaucetCredit = async (currentWalletJwk: any, FaucetTxId: string, 
         }
         
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-
+        const Data = 'Send({ Target = "' + FaucetTxId + '", Action = "Credit", Recipient = "' + sendOutProcessTxId + '" })'
         const SendFaucetResult = await message({
             process: myFaucetProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + FaucetTxId + '", Action = "Credit", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount, Denomination) + '"})',
+            data: Data,
         });
-        console.log("AoFaucetCredit Credit", SendFaucetResult)
+        console.log("AoFaucetCredit Credit", SendFaucetResult, Data)
         
         if(SendFaucetResult && SendFaucetResult.length == 43) {
             const MsgContent = await AoGetRecord(myFaucetProcessTxId, SendFaucetResult)

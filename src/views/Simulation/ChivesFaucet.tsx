@@ -45,7 +45,7 @@ const ChivesFaucetModel = () => {
     setToolInfo(null)
 
     /*
-    const FaucetProcessTxId = "9ojE31o1cuBXEh1aTcPlIostfi_xCxcX94LJU4FqcAE"
+    const FaucetProcessTxId = "MELwrHkq3w74Dc-s5PYgKA-KW-j3Wxk4yZX5j8yXSu4"
     if(FaucetProcessTxId) {
         setToolInfo((prevState: any)=>({
             ...prevState,
@@ -53,7 +53,7 @@ const ChivesFaucetModel = () => {
         }))
     }
     */
-
+    
     const FaucetProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
     if(FaucetProcessTxId) {
       setToolInfo((prevState: any)=>({
@@ -83,40 +83,11 @@ const ChivesFaucetModel = () => {
 
     await sleep(3000)
 
-    const FaucetBalanceData = await AoFaucetCheckBalance(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId)
-    if(FaucetBalanceData) {
-      console.log("AoFaucetCheckBalance FaucetBalanceData1", FaucetBalanceData)
-      if(FaucetBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = FaucetBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            FaucetBalance1: formatText
-          }))
-
-          //Read message from inbox
-          const FaucetInboxData = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
-          console.log("AoFaucetCheckBalance FaucetBalanceData2", FaucetInboxData)
-          if(FaucetInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = FaucetInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                FaucetBalance2: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
     await sleep(2000)
 
-    const SendFrom = "tmRWlxyqbXzcOU7V66CwrhZTNMl6xSjjfcUrjZAIFus"
-    const Faucet_PROCESS = "NTNTSp5xdaL3BiqgwAnWK7QZ4ces-xVEK6IOHQUkQIE"
+    const SendFrom = "Et_0JIWXDauOv9lew9NVJ_5P5vOj-jL9u9QpFCjj0GQ"
+    const Faucet_PROCESS = "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0"
+
     const DepositFaucetData = await AoFaucetDeposit(currentWallet.jwk, Faucet_PROCESS, SendFrom, FaucetProcessTxId, 2)
     if(DepositFaucetData) {
         console.log("DepositFaucetData", DepositFaucetData)
@@ -163,7 +134,7 @@ const ChivesFaucetModel = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  SendFrom1: formatText2
+                  SendFrom: formatText2
                 }))
               }
             }
@@ -173,7 +144,7 @@ const ChivesFaucetModel = () => {
               if(formatText2) {
                 setToolInfo((prevState: any)=>({
                   ...prevState,
-                  SendFrom2: formatText2
+                  SendFrom: formatText2
                 }))
               }
             }
@@ -196,6 +167,36 @@ const ChivesFaucetModel = () => {
             Divider: '--------------------------------------'
         }))
     }
+
+    const FaucetBalanceData = await AoFaucetCheckBalance(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId)
+    if(FaucetBalanceData) {
+      console.log("AoFaucetCheckBalance FaucetBalanceData1", FaucetBalanceData)
+      if(FaucetBalanceData?.msg?.Output?.data?.output)  {
+        const formatText = FaucetBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            FaucetBalance1: formatText
+          }))
+
+          //Read message from inbox
+          const FaucetInboxData = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
+          console.log("AoFaucetCheckBalance FaucetBalanceData2", FaucetInboxData)
+          if(FaucetInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = FaucetInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                FaucetBalance2: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
     
     const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
     if(UserOne) {
@@ -207,7 +208,10 @@ const ChivesFaucetModel = () => {
 
     await sleep(2000)
 
-    const SendFaucetToUserOneData = await AoFaucetCredit(currentWallet.jwk, FaucetProcessTxId, SendFrom, UserOne, 0.1)
+    //const SendFrom = "Et_0JIWXDauOv9lew9NVJ_5P5vOj-jL9u9QpFCjj0GQ"
+    //const Faucet_PROCESS = "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0"
+
+    const SendFaucetToUserOneData = await AoFaucetCredit(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId, UserOne)
     if(SendFaucetToUserOneData) {
       console.log("SendFaucetToUserOneData", SendFaucetToUserOneData)
       if(SendFaucetToUserOneData?.msg?.error)  {
@@ -222,7 +226,7 @@ const ChivesFaucetModel = () => {
 
           setToolInfo((prevState: any)=>({
             ...prevState,
-            SendFaucetToUserOneData1: formatText
+            SendFaucetToUserOneData: formatText
           }))
 
           //Read message from inbox
@@ -232,37 +236,7 @@ const ChivesFaucetModel = () => {
             if(formatText2) {
               setToolInfo((prevState: any)=>({
                 ...prevState,
-                FaucetProcessTxIdBalance: formatText2
-              }))
-            }
-          }
-          const UserOneInboxData2 = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
-          if(UserOneInboxData2?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData2?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                FaucetProcessTxIdBalance: formatText2
-              }))
-            }
-          }
-          const UserOneInboxData4 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
-          if(UserOneInboxData4?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData4?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                SendFrom1: formatText2
-              }))
-            }
-          }
-          const UserOneInboxData3 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
-          if(UserOneInboxData3?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData3?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                SendFrom2: formatText2
+                SendFaucetToUserOneData: formatText2
               }))
             }
           }
@@ -272,17 +246,7 @@ const ChivesFaucetModel = () => {
             if(formatText2) {
               setToolInfo((prevState: any)=>({
                 ...prevState,
-                UserOne1: formatText2
-              }))
-            }
-          }
-          const UserOneInboxData6 = await GetMyLastMsg(currentWallet.jwk, UserOne)
-          if(UserOneInboxData6?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData6?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                UserOne2: formatText2
+                UserOne: formatText2
               }))
             }
           }
