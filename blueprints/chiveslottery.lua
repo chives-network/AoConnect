@@ -92,7 +92,7 @@ local utils = {
     return tostring(bint(a) - bint(b))
   end,
   multiply = function (a, b)
-    return tostring(bint(a) * bint(b))
+    return tostring(bint(tonumber(a) * tonumber(b)))
   end,
   divide = function (a, b)
     assert(bint(b) ~= bint(0), "Division by zero")

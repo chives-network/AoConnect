@@ -25,7 +25,7 @@ receivedBalances = receivedBalances or {}
 FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  0.1
 FAUCET_SEND_RULE = FAUCET_SEND_RULE or  'EveryDay' -- OneTime or EveryDay
 FAUCET_PROCESS = FAUCET_PROCESS or "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0" -- Staking and Received Token Process Tx Id
-FAUCET_BALANCE = '-1'
+FAUCET_BALANCE = FAUCET_BALANCE or '-1'
 
 Name = Name or 'AoConnectFaucet' 
 Denomination = Denomination or 12
@@ -39,7 +39,7 @@ local utils = {
     return tostring(bint(a) - bint(b))
   end,
   multiply = function (a, b)
-    return tostring(bint(a) * bint(b))
+    return tostring(bint(tonumber(a) * tonumber(b)))
   end,
   divide = function (a, b)
     assert(bint(b) ~= bint(0), "Division by zero")
@@ -137,25 +137,21 @@ end)
 
 -- Credit token one time
 Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), function(msg)
+  Send({ Target = FAUCET_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
+  local SendAmount = utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)
   assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   ao.send({
     Target = msg.From,
     Data = 'Faucet Balance 1: ' .. FAUCET_BALANCE
   })
-  assert(bint.__le(bint(utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount')
+  assert(bint.__le(bint(SendAmount), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount')
 
-  Send({ Target = FAUCET_PROCESS, Action = "Transfer", Recipient = msg.Recipient, Quantity = utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination), Tags = { Target = ao.id } })
+  Send({ Target = FAUCET_PROCESS, Action = "Transfer", Recipient = msg.Recipient, Quantity = SendAmount, Tags = { Target = ao.id } })
   Send({ Target = FAUCET_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
-
-  local currentDate = os.date("%Y-%m-%d")
-  if not receivedBalances[msg.From] then
-    receivedBalances[msg.From] = {}
-  end
-  receivedBalances[msg.From][currentDate] = FAUCET_SEND_AMOUNT
 
   ao.send({
     Target = msg.From,
-    Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From
+    Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From .. ' SendAmount: ' .. SendAmount
   })
   
 end)
