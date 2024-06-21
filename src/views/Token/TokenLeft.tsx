@@ -53,7 +53,8 @@ const TokenLeft = (props: any) => {
     setTokenCreate,
     leftSidebarOpen,
     handleLeftSidebarToggle,
-    setTokenGetInfor
+    setTokenGetInfor,
+    setCancelTokenFavorite
   } = props
 
   // ** States
@@ -69,6 +70,7 @@ const TokenLeft = (props: any) => {
     setAddTokenButtonDisabled(true)
     setAddTokenButtonText('Have favorite')
     setAddTokenFavorite(false)
+    setCancelTokenFavorite(false)
   }
 
   useEffect(()=>{
@@ -209,6 +211,7 @@ const TokenLeft = (props: any) => {
               <Fab color='primary' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
                 setAddTokenFavorite(true)
                 setSearchToken('')
+                setAddTokenButtonDisabled(true)
                 setAddTokenButtonText('Add favorite')
                 setTokenGetInfor((prevState: any)=>({
                   ...prevState,

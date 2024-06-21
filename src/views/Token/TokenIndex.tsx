@@ -65,6 +65,7 @@ const TokenIndexModel = (prop: any) => {
   const { myProcessTxId,
           tokenLeft,
           handleAddToken, 
+          handleCancelFavoriteToken,
           searchToken, 
           setSearchToken,
           addTokenButtonText, 
@@ -78,7 +79,12 @@ const TokenIndexModel = (prop: any) => {
           tokenGetInfor,
           setTokenGetInfor,
           setAddTokenButtonText,
-          setAddTokenButtonDisabled
+          setAddTokenButtonDisabled,
+          cancelTokenFavorite,
+          cancelTokenButtonText, 
+          cancelTokenButtonDisabled,
+          setCancelTokenFavorite,
+          setCancelTokenButtonDisabled
         } = prop
   
   const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myProcessTxId)
@@ -157,6 +163,7 @@ const TokenIndexModel = (prop: any) => {
     setIsDisabledButton(true)
     setIsSearchTokenModelOpen(true)
     setSearchToken(CurrentToken)
+    setCancelTokenFavorite(false)
 
     const isOwnerData = await isOwner(CurrentToken, currentAddress)
     setIsOwnerStatus(isOwnerData)
@@ -198,10 +205,13 @@ const TokenIndexModel = (prop: any) => {
       if(isFavorite) {
         setAddTokenButtonText('Have favorite')
         setAddTokenButtonDisabled(true)
+        setCancelTokenFavorite(true)
+        setCancelTokenButtonDisabled(false)
       }
       else {
         setAddTokenButtonText('Add favorite')
         setAddTokenButtonDisabled(false)
+        setCancelTokenFavorite(false)
       }
     }
     else {
@@ -734,6 +744,18 @@ const TokenIndexModel = (prop: any) => {
                           }>
                           {t(addTokenButtonText)}
                           </Button>
+
+                          {cancelTokenFavorite && (
+                            <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={cancelTokenButtonDisabled} size="small" variant='outlined' onClick={
+                                () => { 
+                                  if(tokenGetInfor.CurrentToken) {
+                                    handleCancelFavoriteToken(tokenGetInfor.CurrentToken)
+                                  }
+                                }
+                            }>
+                            {t(cancelTokenButtonText)}
+                            </Button>
+                          )}
 
                         </Grid>
                       )}

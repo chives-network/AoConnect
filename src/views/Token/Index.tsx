@@ -17,7 +17,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import authConfig from 'src/configs/auth'
 
 import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { MyProcessTxIdsGetTokens, MyProcessTxIdsAddToken } from 'src/functions/AoConnect/MyProcessTxIds'
+import { MyProcessTxIdsGetTokens, MyProcessTxIdsAddToken, MyProcessTxIdsDelToken } from 'src/functions/AoConnect/MyProcessTxIds'
 import { AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 import TokenLeft from 'src/views/Token/TokenLeft'
@@ -58,6 +58,10 @@ const TokenModel = () => {
   const [addTokenFavorite, setAddTokenFavorite] = useState<boolean>(false)
   const [tokenCreate, setTokenCreate] = useState<any>({ openCreateToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [tokenGetInfor, setTokenGetInfor] = useState<any>({ openSendOutToken: false, disabledSendOutButton:false, FormSubmit: 'Submit', isDisabledButton: false })
+  
+  const [cancelTokenButtonText, setCancelTokenButtonText] = useState<string>('Cancel Favorite')
+  const [cancelTokenButtonDisabled, setCancelTokenButtonDisabled] = useState<boolean>(false)
+  const [cancelTokenFavorite, setCancelTokenFavorite] = useState<boolean>(false)
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
@@ -132,7 +136,7 @@ const TokenModel = () => {
               toast.success(formatText2, {
                 duration: 2000
               })
-              setAddTokenButtonText('have add')
+              setAddTokenButtonText('Have add')
             }
           }
 
@@ -141,6 +145,37 @@ const TokenModel = () => {
       }
     }
   }
+
+  const handleCancelFavoriteToken = async (WantToSaveTokenProcessTxId: string) => {
+    setCancelTokenButtonDisabled(true)
+    setCancelTokenButtonText('waiting')
+    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsDelToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId)
+    if(WantToSaveTokenProcessTxIdData) {
+      console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
+      if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {
+        setCounter(counter + 1)
+        const formatText = WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          //Read message from inbox
+          const MyProcessTxIdsDelTokenData1 = await GetMyLastMsg(currentWallet.jwk, WantToSaveTokenProcessTxId)
+          if(MyProcessTxIdsDelTokenData1?.msg?.Output?.data?.output)  {
+            const formatText2 = MyProcessTxIdsDelTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(formatText2, {
+                duration: 2000
+              })
+              setCancelTokenButtonText('Have cancel')
+            }
+          }
+
+        }
+
+      }
+    }
+  }
+  
+
   
   return (
     <Fragment>
@@ -178,26 +213,34 @@ const TokenModel = () => {
             leftSidebarOpen={leftSidebarOpen}
             handleLeftSidebarToggle={handleLeftSidebarToggle}
             setTokenGetInfor={setTokenGetInfor}
+            setCancelTokenFavorite={setCancelTokenFavorite}
           />
           {myProcessTxId && myProcessTxId.length == 43 && (
             <TokenIndex 
               myProcessTxId={myProcessTxId}
               tokenLeft={tokenLeft}
               handleAddToken={handleAddToken}
+              handleCancelFavoriteToken={handleCancelFavoriteToken}
               searchToken={searchToken}
               setSearchToken={setSearchToken}
               addTokenButtonText={addTokenButtonText}
               addTokenButtonDisabled={addTokenButtonDisabled}
               addTokenFavorite={addTokenFavorite}
-              setAddTokenFavorite={setAddTokenFavorite}
               tokenCreate={tokenCreate}
               setTokenCreate={setTokenCreate}
               counter={counter}
               setCounter={setCounter}
               tokenGetInfor={tokenGetInfor}
               setTokenGetInfor={setTokenGetInfor}
+              setAddTokenFavorite={setAddTokenFavorite}
               setAddTokenButtonText={setAddTokenButtonText}
               setAddTokenButtonDisabled={setAddTokenButtonDisabled}
+              cancelTokenButtonText={cancelTokenButtonText}
+              cancelTokenButtonDisabled={cancelTokenButtonDisabled}
+              cancelTokenFavorite={cancelTokenFavorite}
+              setCancelTokenFavorite={setCancelTokenFavorite}
+              setCancelTokenButtonText={setCancelTokenButtonText}
+              setCancelTokenButtonDisabled={setCancelTokenButtonDisabled}
             />
           )}
         </Fragment>
