@@ -640,7 +640,6 @@ export const AoTokenReceivedTransactions = async (TargetTxId: string, Recipient:
         });
 
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
-
             type DataItem = [string, string, string];
             type DataStructure = [DataItem[], number];
             const jsonData: any[] = JSON.parse(result.Messages[0].Data) as DataStructure;

@@ -208,7 +208,7 @@ Handlers.add('CheckBalance', Handlers.utils.hasMatchingTag('Action', 'CheckBalan
   else 
     ao.send({
       Target = msg.From,
-      Data = 'Lottery Balance: ' .. utils.divide(LOTTERY_BALANCE, 1e12)
+      Data = 'Lottery Balance: ' .. utils.divide(LOTTERY_BALANCE, 10^Denomination)
     })
   end
 end)
@@ -220,7 +220,7 @@ Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), functi
   assert(bint.__lt(0, bint(msg.Quantity)), 'Quantity must be greater than 0')
   ao.send({
     Target = msg.From,
-    Data = 'Lottery Balance1 ' .. utils.divide(LOTTERY_BALANCE, 1e12)
+    Data = 'Lottery Balance1 ' .. utils.divide(LOTTERY_BALANCE, 10^Denomination)
   })
   assert(bint.__le(bint(msg.Quantity), LOTTERY_BALANCE), 'Balance must be greater than quantity')
 
@@ -229,7 +229,7 @@ Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), functi
 
   ao.send({
     Target = msg.From,
-    Data = 'Lottery Balance2: ' .. utils.divide(LOTTERY_BALANCE, 1e12) .. ' From ' .. msg.From
+    Data = 'Lottery Balance2: ' .. utils.divide(LOTTERY_BALANCE, 10^Denomination) .. ' From ' .. msg.From
   })
   
 end)
