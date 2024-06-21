@@ -9,6 +9,7 @@ import Token from './Token'
 import TokenOnlySendAndMint from './TokenOnlySendAndMint'
 import MyProcessTxIds from './MyProcessTxIds'
 import ChivesLottery from './ChivesLottery'
+import ChivesFaucet from './ChivesFaucet'
 import ChivesServerData from './ChivesServerData'
 
 
@@ -20,6 +21,11 @@ const LearnCenter = () => {
       <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
           <ChivesServerData />
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card sx={{ padding: '0 8px' }}>
+          <ChivesFaucet />
         </Card>
       </Grid>
       <Grid item xs={12}>
