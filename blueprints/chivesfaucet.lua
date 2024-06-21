@@ -140,9 +140,9 @@ Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), functi
   assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   ao.send({
     Target = msg.From,
-    Data = 'Faucet Balance1 ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
+    Data = 'Faucet Balance 1: ' .. FAUCET_BALANCE
   })
-  assert(bint.__le(bint(utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)), FAUCET_BALANCE), 'Balance must be greater than faucet amount')
+  assert(bint.__le(bint(utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount')
 
   Send({ Target = FAUCET_PROCESS, Action = "Transfer", Recipient = msg.Recipient, Quantity = utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination), Tags = { Target = ao.id } })
   Send({ Target = FAUCET_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
@@ -155,7 +155,7 @@ Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), functi
 
   ao.send({
     Target = msg.From,
-    Data = 'Faucet Balance2: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination) .. ' From ' .. msg.From
+    Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From
   })
   
 end)
