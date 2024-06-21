@@ -59,7 +59,8 @@ Handlers.add(
     Chatrooms[msg.From][msg.ChatroomId] = {
       ChatroomId = msg.ChatroomId,
       ChatroomSort = msg.ChatroomSort,
-      ChatroomGroup = msg.ChatroomGroup
+      ChatroomGroup = msg.ChatroomGroup,
+      ChatroomData = msg.ChatroomData
     }
     Handlers.utils.reply("Has add chatroom")(msg)
     ao.send({
@@ -107,7 +108,8 @@ Handlers.add(
     Tokens[msg.From][msg.TokenId] = {
       TokenId = msg.TokenId,
       TokenSort = msg.TokenSort,
-      TokenGroup = msg.TokenGroup
+      TokenGroup = msg.TokenGroup,
+      TokenData = msg.TokenData
     }
     Handlers.utils.reply("Has add Token")(msg)
     ao.send({
@@ -155,7 +157,8 @@ Handlers.add(
     Lotteries[msg.From][msg.LotteryId] = {
       LotteryId = msg.LotteryId,
       LotterySort = msg.LotterySort,
-      LotteryGroup = msg.LotteryGroup
+      LotteryGroup = msg.LotteryGroup,
+      LotteryData = msg.LotteryData
     }
     Handlers.utils.reply("Has add Lottery")(msg)
     ao.send({
@@ -203,7 +206,8 @@ Handlers.add(
     Guesses[msg.From][msg.GuessId] = {
       GuessId = msg.GuessId,
       GuessSort = msg.GuessSort,
-      GuessGroup = msg.GuessGroup
+      GuessGroup = msg.GuessGroup,
+      GuessData = msg.GuessData
     }
     Handlers.utils.reply("Has add Guess")(msg)
     ao.send({
@@ -251,7 +255,8 @@ Handlers.add(
     Blogs[msg.From][msg.BlogId] = {
       BlogId = msg.BlogId,
       BlogSort = msg.BlogSort,
-      BlogGroup = msg.BlogGroup
+      BlogGroup = msg.BlogGroup,
+      BlogData = msg.BlogData
     }
     Handlers.utils.reply("Has add Blog")(msg)
     ao.send({
@@ -299,7 +304,8 @@ Handlers.add(
     Swaps[msg.From][msg.SwapId] = {
       SwapId = msg.SwapId,
       SwapSort = msg.SwapSort,
-      SwapGroup = msg.SwapGroup
+      SwapGroup = msg.SwapGroup,
+      SwapData = msg.SwapData
     }
     Handlers.utils.reply("Has add Swap")(msg)
     ao.send({
@@ -347,7 +353,8 @@ Handlers.add(
     Projects[msg.From][msg.ProjectId] = {
       ProjectId = msg.ProjectId,
       ProjectSort = msg.ProjectSort,
-      ProjectGroup = msg.ProjectGroup
+      ProjectGroup = msg.ProjectGroup,
+      ProjectData = msg.ProjectData
     }
     Handlers.utils.reply("Has add Project")(msg)
     ao.send({

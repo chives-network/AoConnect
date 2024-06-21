@@ -64,6 +64,8 @@ const TokenIndexModel = (prop: any) => {
   
   const { myProcessTxId,
           tokenLeft,
+          tokenInfo,
+          setTokenInfo,
           handleAddToken, 
           handleCancelFavoriteToken,
           searchToken, 
@@ -107,7 +109,6 @@ const TokenIndexModel = (prop: any) => {
   const [pageCount, setPageCount] = useState<number>(0)
   const [startIndex, setStartIndex] = useState<number>(1)
   const [endIndex, setEndIndex] = useState<number>(10)
-  const [tokenInfo, setTokenInfo] = useState<any>(null)
   const pageSize = 10
 
   useEffect(()=>{
@@ -734,7 +735,29 @@ const TokenIndexModel = (prop: any) => {
                           }>
                           {t("Search Token")}
                           </Button>
-
+                          
+                          {!addTokenButtonDisabled && (
+                            <TextField
+                                sx={{ml: 2, my: 2, width: '120px'}}
+                                size="small"
+                                label={`${t('Sort')}`}
+                                placeholder={`${t('Sort')}`}
+                                value={tokenGetInfor?.Sort ?? ''}
+                                onChange={(e: any)=>{
+                                  setTokenGetInfor((prevState: any)=>({
+                                    ...prevState,
+                                    Sort: e.target.value
+                                  }))
+                                }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                        <Icon icon='mdi:account-outline' />
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                          )}
                           <Button sx={{textTransform: 'none',  m: 2, mt: 3 }} disabled={addTokenButtonDisabled} size="small" variant='outlined' onClick={
                               () => { 
                                 if(tokenGetInfor.CurrentToken) {

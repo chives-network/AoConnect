@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode, useEffect } from 'react'
+import { useState, ReactNode } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -62,7 +62,7 @@ const TokenLeft = (props: any) => {
 
   const { t } = useTranslation()
 
-  console.log("TokenLeft myProcessTxId", myProcessTxId)
+  console.log("TokenLeft myProcessTxId", myProcessTxId, tokenLeft)
 
   const handleTokenClick = (id: string) => {
     setActive(id)
@@ -72,13 +72,6 @@ const TokenLeft = (props: any) => {
     setAddTokenFavorite(false)
     setCancelTokenFavorite(false)
   }
-
-  useEffect(()=>{
-    if(tokenLeft && tokenLeft[0]) {
-
-      //handleTokenClick(tokenLeft[0].Id)
-    }
-  }, [tokenLeft])
 
   const renderTokens = (tokenLeft: any[]) => {
     if (tokenLeft && tokenLeft.length == 0 && loadingGetTokens == true) {
@@ -104,7 +97,7 @@ const TokenLeft = (props: any) => {
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1.5 } }}>
                 <ListItemButton
                   disableRipple
-                  onClick={() => handleTokenClick(Token.Id)}
+                  onClick={() => handleTokenClick(Token.TokenId)}
                   sx={{
                     px: 3,
                     py: 1.5,
@@ -117,10 +110,10 @@ const TokenLeft = (props: any) => {
                   }}
                 >
                   <ListItemAvatar sx={{ m: 0 }}>
-                    {Token.Logo && Token.Logo.length == 43 ? (
+                    {Token.TokenData.Logo && Token.TokenData.Logo.length == 43 ? (
                       <MuiAvatar
-                        alt={Token.Name}
-                        src={GetAppAvatar(Token.Logo)}
+                        alt={Token.TokenData.Name}
+                        src={GetAppAvatar(Token.TokenData.Logo)}
                         sx={{
                           width: 38,
                           height: 38,
@@ -138,7 +131,7 @@ const TokenLeft = (props: any) => {
                           ...(activeCondition && { border: theme => `2px solid ${theme.palette.common.white}` })
                         }}
                       >
-                        {getInitials(Token.Name ?? '')}
+                        {getInitials(Token.TokenData.Name ?? '')}
                       </CustomAvatar>
                     )}
                   </ListItemAvatar>
@@ -149,11 +142,11 @@ const TokenLeft = (props: any) => {
                       ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
                     primary={
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Token.Name}</Typography>
+                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{Token.TokenData.Name}</Typography>
                     }
                     secondary={
                       <Typography noWrap variant='body2' sx={{ ...(!activeCondition && { color: 'text.disabled' }) }}>
-                          {Token.Ticker}  {formatHash(Token.Id, 4)}
+                          {Token.TokenData.Ticker}  {formatHash(Token.TokenId, 4)}
                       </Typography>
                     }
                   />
@@ -245,7 +238,7 @@ const TokenLeft = (props: any) => {
                 height: '57px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between', // 将内容显示在左右两端
+                justifyContent: 'space-between',
                 borderTop: theme => `1px solid ${theme.palette.divider}`
             }}
             >

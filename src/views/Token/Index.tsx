@@ -18,7 +18,6 @@ import authConfig from 'src/configs/auth'
 
 import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
 import { MyProcessTxIdsGetTokens, MyProcessTxIdsAddToken, MyProcessTxIdsDelToken } from 'src/functions/AoConnect/MyProcessTxIds'
-import { AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 import TokenLeft from 'src/views/Token/TokenLeft'
 import TokenIndex from 'src/views/Token/TokenIndex'
@@ -62,6 +61,7 @@ const TokenModel = () => {
   const [cancelTokenButtonText, setCancelTokenButtonText] = useState<string>('Cancel Favorite')
   const [cancelTokenButtonDisabled, setCancelTokenButtonDisabled] = useState<boolean>(false)
   const [cancelTokenFavorite, setCancelTokenFavorite] = useState<boolean>(false)
+  const [tokenInfo, setTokenInfo] = useState<any>(null)
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
@@ -87,29 +87,28 @@ const TokenModel = () => {
     setLoadingGetTokens(true)
     const MyProcessTxIdsGetTokensData = await MyProcessTxIdsGetTokens(authConfig.AoConnectMyProcessTxIds, myProcessTxId);
     if (MyProcessTxIdsGetTokensData) {
-        console.log("MyProcessTxIdsGetTokensData", counter, myProcessTxId, MyProcessTxIdsGetTokensData);
-        if (MyProcessTxIdsGetTokensData?.msg?.Output?.data?.output) {
-            const formatText = MyProcessTxIdsGetTokensData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            toast.success(formatText, {
-                duration: 2000
-            });
-        }
+        console.log("MyProcessTxIdsGetTokensData", MyProcessTxIdsGetTokensData);
         const TokenList = Object.values(MyProcessTxIdsGetTokensData);
         if (TokenList) {
-            const AllTokens = await Promise.all(TokenList.map(async (item: any) => {
-                if(item.TokenId && item.TokenId.length == 43)   {
-                  const TokenGetMap: any = await AoTokenInfoDryRun(item.TokenId);
-                  console.log("MyProcessTxIdsGetTokensData", TokenGetMap);
-                  if (TokenGetMap && TokenGetMap.Ticker && TokenGetMap.Name) {
+            const filteredTokens = TokenList.filter((token: any) => token && token?.TokenData && token?.TokenId && token?.TokenId?.length == 43);
+            const filteredTokensData = filteredTokens.map((token: any) => {
+              try {
+                  const parsedTokenData = JSON.parse(token.TokenData);
 
-                      return {...TokenGetMap, Id: item.TokenId};
-                  }
-                }
-            }));
-            const filteredTokens = AllTokens.filter(token => token);
-            if (filteredTokens.length > 0) {
-                setTokenLeft(filteredTokens);
-                console.log("tokenLeft AllTokens", AllTokens);
+                  return { ...token, TokenData: parsedTokenData };
+              } 
+              catch (error) {
+
+                  return { ...token, TokenData: null };
+              }
+            });
+            const filteredTokensDataNew = filteredTokensData.filter((token: any) => token.TokenData);
+            filteredTokensDataNew.sort((a: any, b: any) => {
+              return Number(a.TokenSort) - Number(b.TokenSort);
+            });
+            if (filteredTokensDataNew.length > 0) {
+              setTokenLeft(filteredTokensDataNew);
+              console.log("tokenLeft filteredTokensDataNew", filteredTokensDataNew);
             }
         }
     }
@@ -118,30 +117,30 @@ const TokenModel = () => {
 
 
   const handleAddToken = async (WantToSaveTokenProcessTxId: string) => {
-    setAddTokenButtonDisabled(true)
-    setAddTokenButtonText('waiting')
-    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId, '666', 'Data')
-    if(WantToSaveTokenProcessTxIdData) {
-      console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
-      if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {
-        setCounter(counter + 1)
-        const formatText = WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          //Read message from inbox
-          const MyProcessTxIdsAddTokenData1 = await GetMyLastMsg(currentWallet.jwk, WantToSaveTokenProcessTxId)
-          if(MyProcessTxIdsAddTokenData1?.msg?.Output?.data?.output)  {
-            const formatText2 = MyProcessTxIdsAddTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(formatText2, {
-                duration: 2000
-              })
-              setAddTokenButtonText('Have add')
+    if(tokenInfo)  {
+      setAddTokenButtonDisabled(true)
+      setAddTokenButtonText('waiting')
+      const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId, tokenGetInfor?.Sort ?? '10', 'My Tokens', JSON.stringify(tokenInfo).replace(/"/g, '\\"') )
+      if(WantToSaveTokenProcessTxIdData) {
+        setAddTokenButtonText('Have add')
+        console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
+        if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {
+          setCounter(counter + 1)
+          const formatText = WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+          if(formatText) {
+            const MyProcessTxIdsAddTokenData1 = await GetMyLastMsg(currentWallet.jwk, WantToSaveTokenProcessTxId)
+            if(MyProcessTxIdsAddTokenData1?.msg?.Output?.data?.output)  {
+              const formatText2 = MyProcessTxIdsAddTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+              if(formatText2) {
+                toast.success(formatText2, {
+                  duration: 2000
+                })
+              }
             }
+
           }
 
         }
-
       }
     }
   }
@@ -154,6 +153,7 @@ const TokenModel = () => {
       console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
       if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {
         setCounter(counter + 1)
+        setCancelTokenButtonText('Have cancel')
         const formatText = WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
 
@@ -165,7 +165,6 @@ const TokenModel = () => {
               toast.success(formatText2, {
                 duration: 2000
               })
-              setCancelTokenButtonText('Have cancel')
             }
           }
 
@@ -219,6 +218,8 @@ const TokenModel = () => {
             <TokenIndex 
               myProcessTxId={myProcessTxId}
               tokenLeft={tokenLeft}
+              tokenInfo={tokenInfo}
+              setTokenInfo={setTokenInfo}
               handleAddToken={handleAddToken}
               handleCancelFavoriteToken={handleCancelFavoriteToken}
               searchToken={searchToken}
