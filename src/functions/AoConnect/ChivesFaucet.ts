@@ -19,7 +19,7 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
             return 
         }
 
-        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivesFaucet.lua', { headers: { }, params: { } }).then(res => res.data)
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivesfaucet.lua', { headers: { }, params: { } }).then(res => res.data)
         
         //Filter Faucet Infor
         if(FaucetInfo && FaucetInfo.Name) {
