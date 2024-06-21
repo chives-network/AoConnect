@@ -39,33 +39,11 @@ const TokenSummary = (prop: any) => {
             >            
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center'}} >
-                <Badge
-                    overlap='circular'
-                    anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                    }}
-                    sx={{ mr: 3 }}
-                    badgeContent={
-                    <Box
-                        component='span'
-                        sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        color: `primary.main`,
-                        boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
-                        backgroundColor: `primary.main`
-                        }}
-                    />
-                    }
-                >
-                    <MuiAvatar
+                <MuiAvatar
                     src={GetTokenAvatar(tokenGetInfor?.Logo)}
                     alt={tokenGetInfor?.Name}
                     sx={{ width: '2.5rem', height: '2.5rem' }}
                     />
-                </Badge>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                     {tokenGetInfor?.Name ?? 'Token'}
@@ -87,7 +65,6 @@ const TokenSummary = (prop: any) => {
                     )}
                     </Typography>
                 </Box>
-
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>

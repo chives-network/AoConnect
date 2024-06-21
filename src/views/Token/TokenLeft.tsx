@@ -73,7 +73,8 @@ const TokenLeft = (props: any) => {
 
   useEffect(()=>{
     if(tokenLeft && tokenLeft[0]) {
-      handleTokenClick(tokenLeft[0].Id)
+
+      //handleTokenClick(tokenLeft[0].Id)
     }
   }, [tokenLeft])
 
@@ -208,6 +209,7 @@ const TokenLeft = (props: any) => {
               <Fab color='primary' size='small' sx={{ml: 2, width: '38px', height: '38px'}} onClick={()=>{
                 setAddTokenFavorite(true)
                 setSearchToken('')
+                setAddTokenButtonText('Add favorite')
                 setTokenGetInfor((prevState: any)=>({
                   ...prevState,
                   TokenProcessTxId: '',

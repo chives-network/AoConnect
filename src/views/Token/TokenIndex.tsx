@@ -11,6 +11,12 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
+import TableContainer from '@mui/material/TableContainer'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableRow from '@mui/material/TableRow'
+import TableCell from '@mui/material/TableCell'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
@@ -39,6 +45,8 @@ import TokenSentTransaction from './TokenSentTransaction'
 import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions, AoTokenMyAllTransactions, GetTokenAvatar } from 'src/functions/AoConnect/Token'
 
+import { ChivesServerDataGetTokens } from 'src/functions/AoConnect/ChivesServerData'
+
 import { downloadCsv } from 'src/functions/ChatBook'
 
 // ** Third Party Components
@@ -62,6 +70,7 @@ const TokenIndexModel = (prop: any) => {
           addTokenButtonText, 
           addTokenButtonDisabled, 
           addTokenFavorite, 
+          setAddTokenFavorite,
           tokenCreate,
           setTokenCreate,
           counter,
@@ -632,6 +641,31 @@ const TokenIndexModel = (prop: any) => {
     }
   }
 
+  const [serverData, setServerData] = useState<any[]>([])
+
+  useEffect(()=>{
+    handleGetServerData()
+  }, [])
+
+  const handleGetServerData = async () => {
+    
+    const ChivesServerDataGetTokensData1 = await ChivesServerDataGetTokens(authConfig.AoConnectChivesServerData, authConfig.AoConnectChivesServerData)
+    
+    if(ChivesServerDataGetTokensData1) {
+        const dataArray = Object.values(ChivesServerDataGetTokensData1);
+        dataArray.sort((a: any, b: any) => {
+            if (a.TokenGroup == b.TokenGroup) {
+                return Number(a.TokenSort) - Number(b.TokenSort);
+            } else {
+                return a.TokenGroup.localeCompare(b.TokenGroup);
+            }
+        });
+        setServerData(dataArray)
+        console.log("ChivesServerDataGetTokensData1 dataArray", dataArray)
+    }
+
+  }
+
   return (
     <Fragment>
       <Grid container spacing={6}>
@@ -643,7 +677,7 @@ const TokenIndexModel = (prop: any) => {
                   <Card>
                       <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
                           <Typography noWrap variant='body1' sx={{my: 2, ml: 2}}>
-                          {t("Token Management")} 
+                          {t("Token Explorer")} 
                           ( MyAoAddress: 
                           <Typography noWrap variant='body2' sx={{ml:2, display: 'inline', color: 'primary.main'}}>{myProcessTxIdInPage}</Typography> 
                             {searchToken && (
@@ -752,19 +786,6 @@ const TokenIndexModel = (prop: any) => {
                                         horizontal: 'right'
                                       }}
                                       sx={{ mr: 3 }}
-                                      badgeContent={
-                                        <Box
-                                          component='span'
-                                          sx={{
-                                            width: 8,
-                                            height: 8,
-                                            borderRadius: '50%',
-                                            color: `primary.main`,
-                                            boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
-                                            backgroundColor: `primary.main`
-                                          }}
-                                        />
-                                      }
                                     >
                                       <MuiAvatar
                                         src={GetTokenAvatar(tokenGetInfor?.Logo)}
@@ -793,7 +814,6 @@ const TokenIndexModel = (prop: any) => {
                                         )}
                                       </Typography>
                                     </Box>
-
                                   </Box>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -974,6 +994,145 @@ const TokenIndexModel = (prop: any) => {
                           
                         
                         </Fragment>
+                      )}
+
+                      { serverData && searchToken == '' && (
+                        <TableContainer>
+                          <Table>
+                          <TableBody>
+                          <TableRow sx={{my: 0, py: 0}}>
+                              <TableCell sx={{my: 0, py: 0}}>
+                                  Id
+                              </TableCell>
+                              <TableCell sx={{my: 0, py: 0}}>
+                                  Token
+                              </TableCell>
+                              <TableCell sx={{my: 0, py: 0}}>
+                                  Group
+                              </TableCell>
+                              <TableCell sx={{my: 0, py: 0}}>
+                                  Sort
+                              </TableCell>
+                              <TableCell sx={{my: 0, py: 0}}>
+                                  Operation
+                              </TableCell>
+                          </TableRow>
+                          {serverData && serverData.map((Item: any, Index: number)=>{
+              
+                              const Row = Item
+                              const serverModel = "Token"
+
+                              let ServerModelData = null
+                              let AvatarLogo = ""
+                              try{ 
+                                  ServerModelData = Row[serverModel + 'Data'] && JSON.parse(Row[serverModel + 'Data'])
+                                  if(ServerModelData && ServerModelData.Logo) {
+                                      AvatarLogo = ServerModelData.Logo
+                                  }
+                              }
+                              catch(Error: any) {
+                                  console.log("AvatarLogo Error", Error)
+                              }
+              
+                              return (
+                                  <Fragment key={Index}>
+                                      {Row &&  (
+                                          <TableRow key={Index} sx={{my: 0, py: 0}}>
+                                              <TableCell sx={{my: 0, py: 0}}>
+                                                  <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Index+1}</Typography>
+                                              </TableCell>
+                                              <TableCell sx={{my: 0, py: 0}}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center'}} >
+                                                  <Badge
+                                                    overlap='circular'
+                                                    anchorOrigin={{
+                                                      vertical: 'bottom',
+                                                      horizontal: 'right'
+                                                    }}
+                                                    sx={{ mr: 3 }}
+                                                  >
+                                                    <MuiAvatar
+                                                      src={GetTokenAvatar(AvatarLogo)}
+                                                      alt={Row[serverModel + 'Id']}
+                                                      sx={{ width: '2.5rem', height: '2.5rem' }}
+                                                    />
+                                                  </Badge>
+                                                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                                                      {ServerModelData?.Name ?? 'Token'}
+                                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Denomination: {ServerModelData?.Denomination ?? ''}</Typography>
+                                                      <Typography noWrap variant='body2' sx={{ml: 2, display: 'inline', color: 'primary.secondary'}}>Version: {ServerModelData?.Version ?? ''}</Typography>
+                                                    </Typography>
+                                                    <Typography variant='caption' sx={{ color: 'primary.secondary', pt: 0.4 }}>
+                                                      {ServerModelData?.Ticker}
+                                                      <Link href={authConfig.AoConnectAoLink + `/token/${Row[serverModel + 'Id']}`} target='_blank'>
+                                                        <Typography noWrap variant='body2' sx={{ml: 2, mr: 1, display: 'inline', color: 'primary.main'}}>{Row[serverModel + 'Id']}</Typography>
+                                                      </Link>
+                                                      <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                                                          navigator.clipboard.writeText(Row[serverModel + 'Id']);
+                                                        }}>
+                                                          <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                                                      </IconButton>
+                                                    </Typography>
+                                                  </Box>
+                                                </Box>
+                                              </TableCell>
+                                              <TableCell sx={{my: 0, py: 0}}>
+                                                  <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Row[serverModel + 'Group']}</Typography>
+                                              </TableCell>
+                                              <TableCell sx={{my: 0, py: 0}}>
+                                                  <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', my: 0, py: 0 }}>{Row[serverModel + 'Sort']}</Typography>
+                                              </TableCell>
+                                              <TableCell sx={{my: 0, py: 0}}>
+                                                  <Button sx={{textTransform: 'none', my: 0}} size="small" disabled={isDisabledButton} variant='outlined'  onClick={
+                                                      () => { 
+                                                        setAddTokenFavorite(true)
+                                                        handleTokenSearch(Row[serverModel + 'Id'])
+                                                        setTokenGetInfor((prevState: any)=>({
+                                                          ...prevState,
+                                                          CurrentToken: Row[serverModel + 'Id']
+                                                        }))
+                                                       }
+                                                  }>
+                                                  {t("View")}
+                                                  </Button>
+                                              </TableCell>
+                                          </TableRow>
+                                      )}
+                                  </Fragment>
+                              )
+                              
+                          })}
+                      
+                          </TableBody>
+                          </Table>
+              
+                          {serverData && serverData == null && isDisabledButton == true && (
+                              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                  <Box sx={{ pl: 5, py: 3 }}>
+                                      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                                          <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
+                                              <CircularProgress />
+                                              <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('Loading Data ...')}</Typography>
+                                          </Grid>
+                                      </Box>
+                                  </Box>
+                              </Box>
+                          )}
+              
+                          {serverData && serverData.length == 0 && isDisabledButton == false && (
+                              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                  <Box sx={{ pl: 5, py: 3 }}>
+                                      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                                      <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
+                                          <Typography noWrap variant='body2' sx={{ color: 'primary.main', pr: 3, display: 'inline', ml: 5, pt: 0 }}>{t('No Data')}</Typography>
+                                      </Grid>
+                                      </Box>
+                                  </Box>
+                              </Box>
+                          )}
+              
+                        </TableContainer>
                       )}
                       
                   </Card>
