@@ -114,7 +114,7 @@ npm run build
 ## 联系方式
 电子邮件：chivescoin@gmail.com
 
-AO官方Discord：https://discord.gg/YQXphqQnwK
+Discord：https://discord.gg/aAkMH9Q3AY
 
 <!-- 链接组 -->
 [vercel-deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fchives-network/%2FAoConnect&project-name=AoConnect&repository-name=AoConnect
