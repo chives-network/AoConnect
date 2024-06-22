@@ -112,7 +112,6 @@ npm run build
 目前项目所涉及的功能比较繁杂一些，在启动即时通讯工具开发的时候，将会额外启动一个即时通讯项目，目前项目将会得到保留，以便于供开发人员学习AO网络使用。
 
 ## 联系方式
-电子邮件：chivescoin@gmail.com
 
 Discord：https://discord.gg/aAkMH9Q3AY
 

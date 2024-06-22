@@ -108,9 +108,8 @@ npm run build
 Currently in the development phase, the final stage will consider developing a decentralized instant messaging tool based on the AO network, supporting encrypted messages, groups, TOKEN distribution, exchange, staking, rewards, and more. The reference target will be DISCORD, while incorporating some features of the AO network to create an instant encrypted communication tool based on the AO and AR networks.
 
 ## Contact
-Email: chivescoin@gmail.com
 
-AO Official Discord: https://discord.gg/YQXphqQnwK
+Discord：https://discord.gg/aAkMH9Q3AY
 
 <!-- LINK GROUP -->
 [vercel-deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fchives-network/%2FAoConnect&project-name=AoConnect&repository-name=AoConnect
