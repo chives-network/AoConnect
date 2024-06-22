@@ -2,13 +2,13 @@
 
 ## Introduction:
 
-AOConnect-Chat is a management tool for Chat built on AO, with the following main functions:
+AOConnect-Chat is a tool for Chat built on AO, with the following main functions:
 
 1. Create a Chat Server
-2. Manage Channels
-3. Manage Users
+2. Manage Channels, including add channel, edit channel, delete channel.
+3. Manage Users, including invite, approval.
 4. Engage in Chatting
-5. Set Administrators
+5. Set Administrators, including add admin, del admin.
 
 Future Added Features:
 
