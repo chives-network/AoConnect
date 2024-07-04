@@ -161,6 +161,50 @@ Handlers.add(
 )
 
 Handlers.add(
+  "ReadEmailContent",
+  Handlers.utils.hasMatchingTag("Action", "ReadEmailContent"),
+  function (msg)
+
+    local EmailContent = {}
+    if msg.From and msg.Tags.EmailId and EmailDatas[msg.Tags.EmailId] then
+      EmailContent = EmailDatas[msg.Tags.EmailId]
+      if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Inbox'] then
+        local found = false
+        for i, v in ipairs(EmailRecordsUnRead[msg.From]['Inbox']) do
+            if v == msg.Tags.EmailId then
+                table.remove(EmailRecordsUnRead[msg.From]['Inbox'], i)
+                found = true
+                break
+            end
+        end
+
+        if found then
+            ao.send({
+                Target = msg.From,
+                Data = require('json').encode({Data = EmailContent, Status = 'OK'})
+            })
+        else
+            ao.send({
+                Target = msg.From,
+                Data = require('json').encode({Data = 'Not Found Email', Status = 'ERROR'})
+            })
+        end
+      else
+        ao.send({
+            Target = msg.From,
+            Data = require('json').encode({Data = 'Not Found Email', Status = 'ERROR'})
+        })
+      end
+    else
+      ao.send({
+          Target = msg.From,
+          Data = require('json').encode({Data = 'Not Found Email', Status = 'ERROR'})
+      })
+    end
+  end
+)
+
+Handlers.add(
   "SendEmail",
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
