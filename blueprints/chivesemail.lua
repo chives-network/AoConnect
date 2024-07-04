@@ -79,7 +79,7 @@ Handlers.add(
     for i = startIndex, endIndex do
         local emailId = emailIdList[i]
         if emailId and EmailDatas[emailId] then
-            table.insert(filterEmails, EmailDatas[emailId])
+            table.insert(filterEmails, 1, EmailDatas[emailId])
         end
     end
 
@@ -216,7 +216,7 @@ Handlers.add(
           if EmailRecords[msg.From]['Sent'] == nil then
               EmailRecords[msg.From]['Sent'] = {}
           end
-          table.insert(EmailRecords[msg.From]['Sent'], msg.Id)
+          table.insert(EmailRecords[msg.From]['Sent'], 1, msg.Id)
 
           if EmailRecords[msg.To] == nil then
               EmailRecords[msg.To] = {}
@@ -224,7 +224,7 @@ Handlers.add(
           if EmailRecords[msg.To]['Inbox'] == nil then
             EmailRecords[msg.To]['Inbox'] = {}
           end
-          table.insert(EmailRecords[msg.To]['Inbox'], msg.Id)
+          table.insert(EmailRecords[msg.To]['Inbox'], 1, msg.Id)
 
           
           if EmailRecordsUnRead[msg.To] == nil then
@@ -233,7 +233,7 @@ Handlers.add(
           if EmailRecordsUnRead[msg.To]['Inbox'] == nil then
             EmailRecordsUnRead[msg.To]['Inbox'] = {}
           end
-          table.insert(EmailRecordsUnRead[msg.To]['Inbox'], msg.Id)
+          table.insert(EmailRecordsUnRead[msg.To]['Inbox'], 1, msg.Id)
 
           EmailDatas[msg.Id] = {
               Id = msg.Id,
