@@ -44,6 +44,7 @@ Handlers.add(
   "GetMyEmailRecords",
   Handlers.utils.hasMatchingTag("Action", "GetMyEmailRecords"),
   function (msg)
+
     local emailResult = {}
     if EmailRecords[msg.From] == nil then
         EmailRecords[msg.From] = {}
@@ -56,8 +57,8 @@ Handlers.add(
         EmailRecords[msg.From][emailFolder] = {}
     end
     local emailIdList = {}
-    for emailId in pairs(EmailRecords[msg.From][emailFolder]) do
-        table.insert(emailIdList, emailId)
+    if EmailRecords[msg.From][emailFolder] then 
+      emailIdList = EmailRecords[msg.From][emailFolder]
     end
 
     local totalRecords = #emailIdList
@@ -80,11 +81,13 @@ Handlers.add(
             table.insert(filterEmails, EmailDatas[emailId])
         end
     end
+    
     -- out email results
     ao.send({
         Target = msg.From,
-        Data = require('json').encode(filterEmails)
+        Data = require('json').encode({totalRecords, filterEmails, emailIdList})
     })
+
   end
 )
 
@@ -164,11 +167,13 @@ Handlers.add(
               Encrypted = msg.Encrypted,
               Attach = {}
           }
+
           Handlers.utils.reply("Has Send Email")(msg)
           ao.send({
               Target = msg.From,
               Data = "Successfully sent a Email"
           })
+          
         else 
             ao.send({
                 Target = msg.From,
