@@ -138,6 +138,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
         if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
+          
           if EmailRecords[msg.From] == nil then
               EmailRecords[msg.From] = {}
           end
@@ -145,10 +146,15 @@ Handlers.add(
               EmailRecords[msg.From]['Sent'] = {}
           end
           table.insert(EmailRecords[msg.From]['Sent'], msg.Id)
+
+          if EmailRecords[msg.To] == nil then
+              EmailRecords[msg.To] = {}
+          end
           if EmailRecords[msg.To]['Inbox'] == nil then
-              EmailRecords[msg.To]['Inbox'] = {}
+            EmailRecords[msg.To]['Inbox'] = {}
           end
           table.insert(EmailRecords[msg.To]['Inbox'], msg.Id)
+
           EmailDatas[msg.Id] = {
               From = msg.From,
               To = msg.To,
@@ -156,7 +162,6 @@ Handlers.add(
               Content = msg.Content,
               Summary = msg.Summary,
               Encrypted = msg.Encrypted,
-              MsgId = msg.Id,
               Attach = {}
           }
           Handlers.utils.reply("Has Send Email")(msg)
