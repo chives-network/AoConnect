@@ -138,6 +138,10 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
         local EmailId = generateEmailId()
+        ao.send({
+            Target = msg.From,
+            Data = EmailId
+        })
         if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
             if EmailRecords[msg.From] == nil then
                 EmailRecords[msg.From] = {}
