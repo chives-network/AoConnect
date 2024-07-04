@@ -936,7 +936,7 @@ export function GetFileCacheStatus(Drive: any) {
     
     //Step 2 : Local Storage Cache
     if(typeof window !== 'undefined')  {
-        const TxId: string = Drive.id
+        const TxId: string = Drive?.id
         const ChivesDriveActions = authConfig.chivesDriveActions
         const ChivesDriveActionsList = window.localStorage.getItem(ChivesDriveActions)      
         const ChivesDriveActionsMap: any = ChivesDriveActionsList ? JSON.parse(ChivesDriveActionsList) : {}
