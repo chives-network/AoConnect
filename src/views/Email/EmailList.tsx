@@ -145,9 +145,9 @@ const DriveList = (props: DriveListType) => {
 
   function updateFileCounter() {
     let fileCounterItem =0
-    store && store.data && store.data.forEach((drive: TxRecordType) => {
+    store && store.data && store.data.forEach((email: any) => {
       const TagsMap: any = {}
-      drive && drive.tags && drive.tags.length > 0 && drive.tags.map( (Tag: any) => {
+      email && email.tags && email.tags.length > 0 && email.tags.map( (Tag: any) => {
         TagsMap[Tag.name] = Tag.value;
       })
       const EntityType = TagsMap['Entity-Type']
@@ -731,14 +731,14 @@ const DriveList = (props: DriveListType) => {
           <ScrollWrapper hidden={hidden}>
             {store && store.data && store.data.length ? (
               <List sx={{ p: 0 }}>
-                {store.data.map((drive: TxRecordType) => {
+                {store.data.map((email: any) => {
                   const TagsMap: any = {}
-                  drive && drive.tags && drive.tags.length > 0 && drive.tags.map( (Tag: any) => {
+                  email && email.tags && email.tags.length > 0 && email.tags.map( (Tag: any) => {
                     TagsMap[Tag.name] = Tag.value;
                   })
                   const EntityType = TagsMap['Entity-Type']
                   const EntityTarget = TagsMap['Entity-Target']
-                  const FullStatusRS: any = GetFileCacheStatus(drive)
+                  const FullStatusRS: any = GetFileCacheStatus(email)
                   const FileCacheStatus: any = FullStatusRS['CacheStatus']
                   const FileFullStatus: any = FullStatusRS['FullStatus']
                   let IsFileDisabled = false
@@ -748,16 +748,16 @@ const DriveList = (props: DriveListType) => {
 
                   return (
                     <FileItem
-                      key={drive.id}
+                      key={email.id}
                       sx={{ backgroundColor: true ? 'action.hover' : 'background.paper' }}
                       onClick={() => {
                         if(EntityType == "Folder") {
                           if(IsFileDisabled) {
                           }
                           else {
-                            console.log("drive",drive)
-                            handleFolderChange(drive.id)
-                            handleFolderHeaderList({'name':EntityTarget, 'value':drive.id})
+                            console.log("email",email)
+                            handleFolderChange(email.id)
+                            handleFolderHeaderList({'name':EntityTarget, 'value':email.id})
                           }
                         }
                         else {
@@ -765,7 +765,7 @@ const DriveList = (props: DriveListType) => {
                           }
                           else {
                             setFileDetailOpen(true)
-                            dispatch(setCurrentFile(drive))
+                            dispatch(setCurrentFile(email))
                             setTimeout(() => {
                               dispatch(handleSelectAllFile(false))
                             }, 600)
@@ -779,13 +779,13 @@ const DriveList = (props: DriveListType) => {
                           
                           <Checkbox
                             onClick={e => e.stopPropagation()}
-                            onChange={() => dispatch(handleSelectFile(drive.id))}
-                            checked={store.selectedFiles.includes(drive.id) || false}
+                            onChange={() => dispatch(handleSelectFile(email.id))}
+                            checked={store.selectedFiles.includes(email.id) || false}
                             disabled={( IsFileDisabled || EntityType == "Folder" )}
                           />
                           <IconButton
                             size='small'
-                            onClick={e => handleStarDrive(e, drive.id, !FileFullStatus['Star'])}
+                            onClick={e => handleStarDrive(e, email.id, !FileFullStatus['Star'])}
                             disabled={IsFileDisabled}
                             sx={{
                               mr: { xs: 0, sm: 3 },
@@ -818,7 +818,7 @@ const DriveList = (props: DriveListType) => {
                           :
                             <Avatar
                               alt={TagsMap['File-Name']}
-                              src={`${authConfig.backEndApi}/${drive.id}/thumbnail`}
+                              src={`${authConfig.backEndApi}/${email.id}/thumbnail`}
                               sx={{ mr: 3, width: '2rem', height: '2rem' }}
                             />
                           }
@@ -841,7 +841,7 @@ const DriveList = (props: DriveListType) => {
                                 color: IsFileDisabled ? 'text.disabled' : ''
                               }}
                             >
-                              {TagsMap['File-Name']}
+                              {email.Subject}
                             </Typography>
                           </Box>
                         </Box>
@@ -854,7 +854,7 @@ const DriveList = (props: DriveListType) => {
                           variant='caption'
                           sx={{ minWidth: '50px', textAlign: 'right', whiteSpace: 'nowrap', color: 'text.disabled' }}
                         >
-                          {formatTimestamp(drive.block.timestamp)}
+                          {email.Timestamp}
                         </Typography>
                       </Box>
                     </FileItem>
@@ -865,7 +865,7 @@ const DriveList = (props: DriveListType) => {
             ) : (
               <Box sx={{ mt: 6, display: 'flex', justifyContent: 'center', alignItems: 'center', '& svg': { mr: 2 } }}>
                 <Icon icon='mdi:alert-circle-outline' fontSize={20} />
-                <Typography>{`${t(`No Files Found`)}`}</Typography>
+                <Typography>{`${t(`No Email`)}`}</Typography>
               </Box>
             )}
           </ScrollWrapper>

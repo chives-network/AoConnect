@@ -60,7 +60,7 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
   // ** States
   const [query, setQuery] = useState<string>('')
   const [uploadFilesOpen, setUploadFilesOpen] = useState<boolean>(false)
-  const [uploadFilesTitle, setUploadFilesTitle] = useState<string>(`${t(`Upload Files`)}`)
+  const [uploadFilesTitle, setUploadFilesTitle] = useState<string>(`${t(`Write Email`)}`)
   const [driveFileOpen, setFileDetailOpen] = useState<boolean>(false)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [folder, setFolder] = useState<string>(initFolder)
@@ -80,13 +80,13 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
   const leftSidebarWidth = 260
   const { skin, direction } = settings
   const routeParams = {
-    label: label || 'Personal',
-    type: type || 'image',
-    initFolder: folder || 'Root'
+    label: label || 'Social',
+    type: type || 'Text',
+    initFolder: folder || 'Inbox'
   }
 
   const auth = useAuth()
-  const id = auth.currentAddress
+  const id = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
   const currentAddress = auth.currentAddress
 
   // ** State
@@ -130,34 +130,12 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
           address: String(id),
           pageId: paginationModel.page - 1,
           pageSize: paginationModel.pageSize,
-          type: type,
-          folder: folder,
-          label: label
-        })
-      )
-      dispatch(
-        fetchTotalNumber({
-          address: String(id),
-          pageId: paginationModel.page - 1,
-          pageSize: paginationModel.pageSize,
-          type: type,
-          folder: folder,
-          label: label
-        })
-      )
-      dispatch(
-        fetchAllFolder({
-          address: String(id),
-          pageId: paginationModel.page - 1,
-          pageSize: paginationModel.pageSize,
-          type: type,
-          folder: folder,
-          label: label
+          folder: folder
         })
       )
       dispatch(handleSelectAllFile(false))
       setUploadFilesOpen(false)
-      setUploadFilesTitle(`${t(`Upload Files`)}`)
+      setUploadFilesTitle(`${t(`Write Email`)}`)
     }
   }, [dispatch, paginationModel, type, folder, label, id])
 
@@ -172,7 +150,7 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
     }
     setUploadFilesOpen(!uploadFilesOpen)
     if(uploadFilesOpen) {
-      setUploadFilesTitle(`${t(`Upload Files`)}`)
+      setUploadFilesTitle(`${t(`Write Email`)}`)
     }
     else {
       setUploadFilesTitle(`${t(`Back To List`)}`)

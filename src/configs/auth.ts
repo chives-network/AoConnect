@@ -12,7 +12,7 @@ export default {
   AoConnectChatRoom: 'AoConnectChatRoom',
   AoConnectMyProcessTxIds: 'w6HQkGKz9VKszy1pT9JcqWUlElv5smxDI_Inv1OOeqc', // lua file MyProcessTxIds wallet: t5SrAnDXhQnpzNMBSZB7tU8k3BX7YkGnJFS2O9UgEc4 Demo: h16RkEweAlPfSdQuUprM4vmIkUmU8AzwwqMVmh5KF5M
   AoConnectChivesServerData: '91uljP8YzSKu01C73xDJNlAs6jcZIboWbsgkPnB-Ks4',
-  AoConnectChivesEmailServerData: 'qUaXCuEedfQARiafhhkX6Jrhsqudagvc3pVbv_pRlWs',
+  AoConnectChivesEmailServerData: 'rWvQbaoLLQTNk7YnSR3VSfEfeRQ-1VJ9U5HXRR_bl0E',
   
   chivesWallets: 'ChivesWallets',
   chivesCurrentWallet: 'ChivesCurrentWallet',

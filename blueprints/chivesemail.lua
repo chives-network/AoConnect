@@ -243,7 +243,7 @@ Handlers.add(
               Content = msg.Content,
               Summary = msg.Summary,
               Encrypted = msg.Encrypted,
-              Timestamp = tostring(os.time()),
+              Timestamp = os.time(),
               Attach = {}
           }
 

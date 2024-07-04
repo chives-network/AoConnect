@@ -162,7 +162,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
           <List component='div'>
             <ListItemStyled
               component={Link}
-              href='/drive/myfiles'
+              href='/email/myfiles'
               onClick={()=>handleListItemClick("Root")}
               sx={{ borderLeftColor: activemyfilesCondition ? 'primary.main' : 'transparent' }}
             >
@@ -170,7 +170,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 <Icon icon='mdi:email-outline' />
               </ListItemIcon>
               <ListItemText
-                primary={`${t(`My Files`)}`}
+                primary={`${t(`Inbox`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
                   sx: { fontWeight: 500, ...(activemyfilesCondition && { color: 'primary.main' }) }
@@ -181,7 +181,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
             {/* 
             <ListItemStyled
               component={Link}
-              href='/drive/sharedfiles'
+              href='/email/sharedfiles'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('folder', 'sharedfiles') ? 'primary.main' : 'transparent'
@@ -205,7 +205,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/drive/uploaded'
+              href='/email/uploaded'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('folder', 'uploaded') ? 'primary.main' : 'transparent'
@@ -230,7 +230,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
             */}
             <ListItemStyled
               component={Link}
-              href='/drive/starred'
+              href='/email/starred'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('folder', 'starred') ? 'primary.main' : 'transparent'
@@ -254,7 +254,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/drive/spam'
+              href='/email/spam'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('folder', 'spam') ? 'primary.main' : 'transparent'
@@ -278,7 +278,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/drive/trash'
+              href='/email/trash'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('folder', 'trash') ? 'primary.main' : 'transparent'
@@ -311,7 +311,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
           <List component='div'>
             <ListItemStyled
               component={Link}
-              href='/drive/personal'
+              href='/email/social'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('type', 'image') ? 'primary.main' : 'transparent'
@@ -321,17 +321,17 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
-                primary={`${t(`Personal`)}`}
+                primary={`${t(`Social`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
                   sx: { fontWeight: 500, ...(handleActiveItem('type', 'image') && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('personal', 'success')}
+              {RenderBadge('Social', 'success')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/drive/company'
+              href='/email/updates'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('type', 'word') ? 'primary.main' : 'transparent'
@@ -341,17 +341,17 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
-                primary={`${t(`Company`)}`}
+                primary={`${t(`Updates`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
                   sx: { fontWeight: 500, ...(handleActiveItem('type', 'word') && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('company', 'primary')}
+              {RenderBadge('Updates', 'primary')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/drive/important'
+              href='/email/forums'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('type', 'excel') ? 'warning.main' : 'transparent'
@@ -361,17 +361,17 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
-                primary={`${t(`Important`)}`}
+                primary={`${t(`Forums`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
                   sx: { fontWeight: 500, ...(handleActiveItem('type', 'excel') && { color: 'warning.main' }) }
                 }}
               />
-              {RenderBadge('important', 'warning')}
+              {RenderBadge('Forums', 'warning')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/drive/private'
+              href='/email/promotions'
               onClick={()=>handleListItemClick(null)}
               sx={{
                 borderLeftColor: handleActiveItem('type', 'pptx') ? 'primary.main' : 'transparent'
@@ -381,176 +381,13 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
-                primary={`${t(`Private`)}`}
+                primary={`${t(`Promotions`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
                   sx: { fontWeight: 500, ...(handleActiveItem('type', 'pptx') && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('private', 'error')}
-            </ListItemStyled>
-          </List>
-
-          
-          <Typography
-            component='h6'
-            variant='caption'
-            sx={{ mx: 6, mt: 4, mb: 0, color: 'text.disabled', letterSpacing: '0.21px', textTransform: 'uppercase' }}
-          >
-          File Types
-          </Typography>
-          <List component='div'>
-            <ListItemStyled
-              component={Link}
-              href='/drive/image'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'image') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'success.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Image`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'image') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/drive/word'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'word') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'primary.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Word`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'word') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/drive/excel'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'excel') ? 'warning.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'warning.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Excel`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'excel') && { color: 'warning.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/drive/pptx'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'pptx') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'error.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Pptx`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'pptx') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/drive/video'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'video') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'warning.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Video`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'video') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/drive/pdf'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'pdf') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'error.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Pdf`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'pdf') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/drive/audio'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'audio') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'warning.main' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Audio`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'audio') && { color: 'primary.main' }) }
-                }}
-              />
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/drive/stl'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('type', 'stl') ? 'info.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'info.info' } }}>
-                <Icon icon='mdi:circle' fontSize='0.75rem' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Stl`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'stl') && { color: 'info.main' }) }
-                }}
-              />
+              {RenderBadge('Promotions', 'error')}
             </ListItemStyled>
           </List>
 
