@@ -81,11 +81,11 @@ Handlers.add(
             table.insert(filterEmails, EmailDatas[emailId])
         end
     end
-    
+
     -- out email results
     ao.send({
         Target = msg.From,
-        Data = require('json').encode({totalRecords, filterEmails, emailIdList})
+        Data = require('json').encode({filterEmails, totalRecords, emailFolder, startIndex, endIndex})
     })
 
   end
