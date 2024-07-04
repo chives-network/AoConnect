@@ -83,72 +83,6 @@ Handlers.add(
     end
 
     local EmailRecordsCount = {}
-    if EmailRecords[msg.From]['Inbox'] then
-      EmailRecordsCount['Inbox'] = #EmailRecords[msg.From]['Inbox']
-    else
-      EmailRecordsCount['Inbox'] = 0
-    end
-    if EmailRecords[msg.From]['Started'] then
-      EmailRecordsCount['Started'] = #EmailRecords[msg.From]['Started']
-    else
-      EmailRecordsCount['Started'] = 0
-    end
-    if EmailRecords[msg.From]['Snoozed'] then
-      EmailRecordsCount['Snoozed'] = #EmailRecords[msg.From]['Snoozed']
-    else
-      EmailRecordsCount['Snoozed'] = 0
-    end
-    if EmailRecords[msg.From]['Sent'] then
-      EmailRecordsCount['Sent'] = #EmailRecords[msg.From]['Sent']
-    else
-      EmailRecordsCount['Sent'] = 0
-    end
-    if EmailRecords[msg.From]['Drafts'] then
-      EmailRecordsCount['Drafts'] = #EmailRecords[msg.From]['Drafts']
-    else
-      EmailRecordsCount['Drafts'] = 0
-    end
-    if EmailRecords[msg.From]['Important'] then
-      EmailRecordsCount['Important'] = #EmailRecords[msg.From]['Important']
-    else
-      EmailRecordsCount['Important'] = 0
-    end
-    if EmailRecords[msg.From]['All Mail'] then
-      EmailRecordsCount['All Mail'] = #EmailRecords[msg.From]['All Mail']
-    else
-      EmailRecordsCount['All Mail'] = 0
-    end
-    if EmailRecords[msg.From]['Spam'] then
-      EmailRecordsCount['Spam'] = #EmailRecords[msg.From]['Spam']
-    else
-      EmailRecordsCount['Spam'] = 0
-    end
-    if EmailRecords[msg.From]['Trash'] then
-      EmailRecordsCount['Trash'] = #EmailRecords[msg.From]['Trash']
-    else
-      EmailRecordsCount['Trash'] = 0
-    end
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Social'] then
-      EmailRecordsCount['Categories']['Social'] = #EmailRecords[msg.From]['Categories']['Social']
-    else
-      EmailRecordsCount['Categories']['Social'] = 0
-    end
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Updates'] then
-      EmailRecordsCount['Categories']['Updates'] = #EmailRecords[msg.From]['Categories']['Updates']
-    else
-      EmailRecordsCount['Categories']['Updates'] = 0
-    end
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Forums'] then
-      EmailRecordsCount['Categories']['Forums'] = #EmailRecords[msg.From]['Categories']['Forums']
-    else
-      EmailRecordsCount['Categories']['Forums'] = 0
-    end
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Promotions'] then
-      EmailRecordsCount['Categories']['Promotions'] = #EmailRecords[msg.From]['Categories']['Promotions']
-    else
-      EmailRecordsCount['Categories']['Promotions'] = 0
-    end
-
     -- out email results
     ao.send({
         Target = msg.From,
@@ -278,7 +212,7 @@ Handlers.add(
           EmailRecords[msg.From]['Sent'] = {}
           EmailRecords[msg.From]['Drafts'] = {}
           EmailRecords[msg.From]['Important'] = {}
-          EmailRecords[msg.From]['All Mail'] = {}
+          EmailRecords[msg.From]['AllMail'] = {}
           EmailRecords[msg.From]['Spam'] = {}
           EmailRecords[msg.From]['Trash'] = {}
           EmailRecords[msg.From]['Categories'] = {}
@@ -295,7 +229,7 @@ Handlers.add(
           EmailRecords[msg.Tags.Target]['Sent'] = {}
           EmailRecords[msg.Tags.Target]['Drafts'] = {}
           EmailRecords[msg.Tags.Target]['Important'] = {}
-          EmailRecords[msg.Tags.Target]['All Mail'] = {}
+          EmailRecords[msg.Tags.Target]['AllMail'] = {}
           EmailRecords[msg.Tags.Target]['Spam'] = {}
           EmailRecords[msg.Tags.Target]['Trash'] = {}
           EmailRecords[msg.Tags.Target]['Categories'] = {}
