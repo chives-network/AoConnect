@@ -185,7 +185,7 @@ Handlers.add(
   "GetPublicKeys",
   Handlers.utils.hasMatchingTag("Action", "GetPublicKeys"),
   function (msg)
-    if msg.From and msg.Tags.To then
+    if msg.From then
         ao.send({
           Target = msg.From,
           Data = require('json').encode(PublicKeys)
