@@ -137,22 +137,18 @@ Handlers.add(
   "SendEmail",
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
-        EmailRecords['Step'] = "1"
         if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
           if EmailRecords[msg.From] == nil then
               EmailRecords[msg.From] = {}
           end
-          EmailRecords['Step'] = "2"
           if EmailRecords[msg.From]['Sent'] == nil then
               EmailRecords[msg.From]['Sent'] = {}
           end
           table.insert(EmailRecords[msg.From]['Sent'], msg.Id)
-          EmailRecords['Step'] = "3"
           if EmailRecords[msg.To]['Inbox'] == nil then
               EmailRecords[msg.To]['Inbox'] = {}
           end
           table.insert(EmailRecords[msg.To]['Inbox'], msg.Id)
-          EmailRecords['Step'] = "4"
           EmailDatas[msg.Id] = {
               From = msg.From,
               To = msg.To,
@@ -163,13 +159,11 @@ Handlers.add(
               MsgId = msg.Id,
               Attach = {}
           }
-          EmailRecords['Step'] = "5"
           Handlers.utils.reply("Has Send Email")(msg)
           ao.send({
               Target = msg.From,
               Data = "Successfully sent a Email"
           })
-          EmailRecords['Step'] = "6"
         else 
             ao.send({
                 Target = msg.From,
@@ -177,7 +171,6 @@ Handlers.add(
                 ['Message-Id'] = msg.Id,
                 Error = 'Email send data is not full filled'
             })
-            EmailRecords['Step'] = "7"
         end
   end
 )
