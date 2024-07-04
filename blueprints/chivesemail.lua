@@ -185,10 +185,10 @@ Handlers.add(
   "GetPublicKeys",
   Handlers.utils.hasMatchingTag("Action", "GetPublicKeys"),
   function (msg)
-    if msg.From and msg.Tags.To and #msg.Tags.To == 43 and PublicKeys[msg.Tags.To] then
+    if msg.From and msg.Tags.To then
         ao.send({
           Target = msg.From,
-          Data = PublicKeys[msg.Tags.To]
+          Data = require('json').encode(PublicKeys)
         })
     end
   end
