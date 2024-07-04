@@ -202,11 +202,50 @@ Handlers.add(
   "GetPublicKeys",
   Handlers.utils.hasMatchingTag("Action", "GetPublicKeys"),
   function (msg)
-    if msg.From then
-        ao.send({
-          Target = msg.From,
-          Data = require('json').encode(PublicKeys)
-        })
+    if msg.From and msg.Tags.Target and #msg.Tags.Target == 43 then
+        if EmailRecords[msg.From] == nil then
+          EmailRecords[msg.From] = {}
+          EmailRecords[msg.From]['Inbox'] = {}
+          EmailRecords[msg.From]['Started'] = {}
+          EmailRecords[msg.From]['Snoozed'] = {}
+          EmailRecords[msg.From]['Sent'] = {}
+          EmailRecords[msg.From]['Drafts'] = {}
+          EmailRecords[msg.From]['Important'] = {}
+          EmailRecords[msg.From]['All Mail'] = {}
+          EmailRecords[msg.From]['Spam'] = {}
+          EmailRecords[msg.From]['Trash'] = {}
+          EmailRecords[msg.From]['Categories']['Social'] = {}
+          EmailRecords[msg.From]['Categories']['Updates'] = {}
+          EmailRecords[msg.From]['Categories']['Forums'] = {}
+          EmailRecords[msg.From]['Categories']['Promotions'] = {}
+        end
+        if EmailRecords[msg.Tags.Target] == nil then
+          EmailRecords[msg.Tags.Target] = {}
+          EmailRecords[msg.Tags.Target]['Inbox'] = {}
+          EmailRecords[msg.Tags.Target]['Started'] = {}
+          EmailRecords[msg.Tags.Target]['Snoozed'] = {}
+          EmailRecords[msg.Tags.Target]['Sent'] = {}
+          EmailRecords[msg.Tags.Target]['Drafts'] = {}
+          EmailRecords[msg.Tags.Target]['Important'] = {}
+          EmailRecords[msg.Tags.Target]['All Mail'] = {}
+          EmailRecords[msg.Tags.Target]['Spam'] = {}
+          EmailRecords[msg.Tags.Target]['Trash'] = {}
+          EmailRecords[msg.Tags.Target]['Categories']['Social'] = {}
+          EmailRecords[msg.Tags.Target]['Categories']['Updates'] = {}
+          EmailRecords[msg.Tags.Target]['Categories']['Forums'] = {}
+          EmailRecords[msg.Tags.Target]['Categories']['Promotions'] = {}
+        end
+        if PublicKeys[msg.Tags.Target] == nil then
+          ao.send({
+            Target = msg.From,
+            Data = ''
+          })
+        else 
+          ao.send({
+            Target = msg.From,
+            Data = PublicKeys[msg.Tags.Target]
+          })
+        end
     end
   end
 )
