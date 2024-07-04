@@ -15,6 +15,7 @@ math.randomseed(os.time())
 PublicKeys = PublicKeys or {}
 EmailRecords = EmailRecords or {}
 EmailDatas = EmailDatas or {}
+EmailRecordsUnRead = EmailRecordsUnRead or {}
 
 function Welcome()
   return(
@@ -83,69 +84,69 @@ Handlers.add(
     end
 
     local EmailRecordsCount = {}
-    if EmailRecords[msg.From]['Inbox'] then
-      EmailRecordsCount['Inbox'] = #EmailRecords[msg.From]['Inbox']
+    if EmailRecordsUnRead[msg.From]['Inbox'] then
+      EmailRecordsCount['Inbox'] = #EmailRecordsUnRead[msg.From]['Inbox']
     else
       EmailRecordsCount['Inbox'] = 0
     end
-    if EmailRecords[msg.From]['Started'] then
-      EmailRecordsCount['Started'] = #EmailRecords[msg.From]['Started']
+    if EmailRecordsUnRead[msg.From]['Started'] then
+      EmailRecordsCount['Started'] = #EmailRecordsUnRead[msg.From]['Started']
     else
       EmailRecordsCount['Started'] = 0
     end
-    if EmailRecords[msg.From]['Snoozed'] then
-      EmailRecordsCount['Snoozed'] = #EmailRecords[msg.From]['Snoozed']
+    if EmailRecordsUnRead[msg.From]['Snoozed'] then
+      EmailRecordsCount['Snoozed'] = #EmailRecordsUnRead[msg.From]['Snoozed']
     else
       EmailRecordsCount['Snoozed'] = 0
     end
-    if EmailRecords[msg.From]['Sent'] then
-      EmailRecordsCount['Sent'] = #EmailRecords[msg.From]['Sent']
+    if EmailRecordsUnRead[msg.From]['Sent'] then
+      EmailRecordsCount['Sent'] = #EmailRecordsUnRead[msg.From]['Sent']
     else
       EmailRecordsCount['Sent'] = 0
     end
-    if EmailRecords[msg.From]['Drafts'] then
-      EmailRecordsCount['Drafts'] = #EmailRecords[msg.From]['Drafts']
+    if EmailRecordsUnRead[msg.From]['Drafts'] then
+      EmailRecordsCount['Drafts'] = #EmailRecordsUnRead[msg.From]['Drafts']
     else
       EmailRecordsCount['Drafts'] = 0
     end
-    if EmailRecords[msg.From]['Important'] then
-      EmailRecordsCount['Important'] = #EmailRecords[msg.From]['Important']
+    if EmailRecordsUnRead[msg.From]['Important'] then
+      EmailRecordsCount['Important'] = #EmailRecordsUnRead[msg.From]['Important']
     else
       EmailRecordsCount['Important'] = 0
     end
-    if EmailRecords[msg.From]['AllMail'] then
-      EmailRecordsCount['AllMail'] = #EmailRecords[msg.From]['AllMail']
+    if EmailRecordsUnRead[msg.From]['AllMail'] then
+      EmailRecordsCount['AllMail'] = #EmailRecordsUnRead[msg.From]['AllMail']
     else
       EmailRecordsCount['AllMail'] = 0
     end
-    if EmailRecords[msg.From]['Spam'] then
-      EmailRecordsCount['Spam'] = #EmailRecords[msg.From]['Spam']
+    if EmailRecordsUnRead[msg.From]['Spam'] then
+      EmailRecordsCount['Spam'] = #EmailRecordsUnRead[msg.From]['Spam']
     else
       EmailRecordsCount['Spam'] = 0
     end
-    if EmailRecords[msg.From]['Trash'] then
-      EmailRecordsCount['Trash'] = #EmailRecords[msg.From]['Trash']
+    if EmailRecordsUnRead[msg.From]['Trash'] then
+      EmailRecordsCount['Trash'] = #EmailRecordsUnRead[msg.From]['Trash']
     else
       EmailRecordsCount['Trash'] = 0
     end
     EmailRecordsCount['Categories'] = {}
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Social'] then
-      EmailRecordsCount['Categories']['Social'] = #EmailRecords[msg.From]['Categories']['Social']
+    if EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Social'] then
+      EmailRecordsCount['Categories']['Social'] = #EmailRecordsUnRead[msg.From]['Categories']['Social']
     else
       EmailRecordsCount['Categories']['Social'] = 0
     end
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Updates'] then
-      EmailRecordsCount['Categories']['Updates'] = #EmailRecords[msg.From]['Categories']['Updates']
+    if EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Updates'] then
+      EmailRecordsCount['Categories']['Updates'] = #EmailRecordsUnRead[msg.From]['Categories']['Updates']
     else
       EmailRecordsCount['Categories']['Updates'] = 0
     end
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Forums'] then
-      EmailRecordsCount['Categories']['Forums'] = #EmailRecords[msg.From]['Categories']['Forums']
+    if EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Forums'] then
+      EmailRecordsCount['Categories']['Forums'] = #EmailRecordsUnRead[msg.From]['Categories']['Forums']
     else
       EmailRecordsCount['Categories']['Forums'] = 0
     end
-    if EmailRecords[msg.From]['Categories'] and EmailRecords[msg.From]['Categories']['Promotions'] then
-      EmailRecordsCount['Categories']['Promotions'] = #EmailRecords[msg.From]['Categories']['Promotions']
+    if EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Promotions'] then
+      EmailRecordsCount['Categories']['Promotions'] = #EmailRecordsUnRead[msg.From]['Categories']['Promotions']
     else
       EmailRecordsCount['Categories']['Promotions'] = 0
     end
@@ -156,51 +157,6 @@ Handlers.add(
         Data = require('json').encode({filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount})
     })
 
-  end
-)
-
-Handlers.add(
-  "GetMySentRecords",
-  Handlers.utils.hasMatchingTag("Action", "GetMySentRecords"),
-  function (msg)
-    local emailResult = {}
-    if EmailRecords[msg.From] == nil then
-        EmailRecords[msg.From] = {}
-    end
-    local emailFolder = "Inbox"
-    if EmailRecords[msg.From][emailFolder] == nil then
-        EmailRecords[msg.From][emailFolder] = {}
-    end
-    local emailIdList = {}
-    for emailId in pairs(EmailRecords[msg.From][emailFolder]) do
-        table.insert(emailIdList, emailId)
-    end
-
-    local totalRecords = #emailIdList
-
-    local filterEmails = {}
-    local startIndex = tonumber(msg.Tags.startIndex) or 1
-    local endIndex = tonumber(msg.Tags.endIndex) or 1
-    if startIndex <= 0 then
-      startIndex = 1
-    end
-    if endIndex <= 0 then
-      endIndex = 1
-    end
-    if startIndex > endIndex then
-      startIndex = endIndex
-    end
-    for i = startIndex, endIndex do
-        local emailId = emailIdList[i]
-        if emailId and EmailDatas[emailId] then
-            table.insert(filterEmails, EmailDatas[emailId])
-        end
-    end
-    -- out email results
-    ao.send({
-        Target = msg.From,
-        Data = require('json').encode(filterEmails)
-    })
   end
 )
 
@@ -225,6 +181,15 @@ Handlers.add(
             EmailRecords[msg.To]['Inbox'] = {}
           end
           table.insert(EmailRecords[msg.To]['Inbox'], msg.Id)
+
+          
+          if EmailRecordsUnRead[msg.To] == nil then
+            EmailRecordsUnRead[msg.To] = {}
+          end
+          if EmailRecordsUnRead[msg.To]['Inbox'] == nil then
+            EmailRecordsUnRead[msg.To]['Inbox'] = {}
+          end
+          table.insert(EmailRecordsUnRead[msg.To]['Inbox'], msg.Id)
 
           EmailDatas[msg.Id] = {
               From = msg.From,
@@ -304,6 +269,23 @@ Handlers.add(
           EmailRecords[msg.Tags.Target]['Categories']['Updates'] = {}
           EmailRecords[msg.Tags.Target]['Categories']['Forums'] = {}
           EmailRecords[msg.Tags.Target]['Categories']['Promotions'] = {}
+        end
+        if EmailRecordsUnRead[msg.Tags.Target] == nil then
+          EmailRecordsUnRead[msg.Tags.Target] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Inbox'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Started'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Snoozed'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Sent'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Drafts'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Important'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['AllMail'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Spam'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Trash'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Categories'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Social'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Updates'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Forums'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Promotions'] = {}
         end
         if PublicKeys[msg.Tags.Target] == nil then
           ao.send({
