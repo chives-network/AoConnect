@@ -1,0 +1,216 @@
+
+-- Name: ChivesEmail
+-- Author: Chives-Network
+-- Email: chivescoin@gmail.com
+-- Copyright: MIT
+-- Version: 20240705
+-- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/chivesemail.lua
+
+-- Function
+-- 1. Send and receive email
+-- 2. Support encrypted email
+
+math.randomseed(os.time())
+
+PublicKeys = PublicKeys or {}
+EmailRecords = EmailRecords or {}
+EmailDatas = EmailDatas or {}
+
+function Welcome()
+  return(
+      "Welcome to ChivesEmail V0.1!\n\n" ..
+      "Main functoin:\n\n" ..
+      "1. Send and receive email.\n" ..
+      "2. Support encrypted email.\n" ..
+      "Have fun, be respectful !")
+end
+
+function generateRandomString(length)
+    local characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local randomChars = {}
+    for i = 1, length do
+        local randomIndex = math.random(1, #characters)
+        randomChars[i] = string.sub(characters, randomIndex, randomIndex)
+    end
+    return table.concat(randomChars)
+end
+
+function generateEmailId()
+    local characters = 'Email' .. generateRandomString(38)
+    return characters
+end
+
+Handlers.add(
+  "GetMyEmailRecords",
+  Handlers.utils.hasMatchingTag("Action", "GetMyEmailRecords"),
+  function (msg)
+    local emailResult = {}
+    if EmailRecords[msg.From] == nil then
+        EmailRecords[msg.From] = {}
+    end
+    local emailFolder = "Inbox"
+    if msg.Tags.folder then
+        emailFolder = tostring(msg.Tags.folder)
+    end
+    if EmailRecords[msg.From][emailFolder] == nil then
+        EmailRecords[msg.From][emailFolder] = {}
+    end
+    local emailIdList = {}
+    for emailId in pairs(EmailRecords[msg.From][emailFolder]) do
+        table.insert(emailIdList, emailId)
+    end
+
+    local totalRecords = #emailIdList
+
+    local filterEmails = {}
+    local startIndex = tonumber(msg.Tags.startIndex) or 1
+    local endIndex = tonumber(msg.Tags.endIndex) or 1
+    if startIndex <= 0 then
+      startIndex = 1
+    end
+    if endIndex <= 0 then
+      endIndex = 1
+    end
+    if startIndex > endIndex then
+      startIndex = endIndex
+    end
+    for i = startIndex, endIndex do
+        local emailId = emailIdList[i]
+        if emailId and EmailDatas[emailId] then
+            table.insert(filterEmails, EmailDatas[emailId])
+        end
+    end
+    -- out email results
+    ao.send({
+        Target = msg.From,
+        Data = require('json').encode(filterEmails)
+    })
+  end
+)
+
+Handlers.add(
+  "GetMySentRecords",
+  Handlers.utils.hasMatchingTag("Action", "GetMySentRecords"),
+  function (msg)
+    local emailResult = {}
+    if EmailRecords[msg.From] == nil then
+        EmailRecords[msg.From] = {}
+    end
+    local emailFolder = "Inbox"
+    if EmailRecords[msg.From][emailFolder] == nil then
+        EmailRecords[msg.From][emailFolder] = {}
+    end
+    local emailIdList = {}
+    for emailId in pairs(EmailRecords[msg.From][emailFolder]) do
+        table.insert(emailIdList, emailId)
+    end
+
+    local totalRecords = #emailIdList
+
+    local filterEmails = {}
+    local startIndex = tonumber(msg.Tags.startIndex) or 1
+    local endIndex = tonumber(msg.Tags.endIndex) or 1
+    if startIndex <= 0 then
+      startIndex = 1
+    end
+    if endIndex <= 0 then
+      endIndex = 1
+    end
+    if startIndex > endIndex then
+      startIndex = endIndex
+    end
+    for i = startIndex, endIndex do
+        local emailId = emailIdList[i]
+        if emailId and EmailDatas[emailId] then
+            table.insert(filterEmails, EmailDatas[emailId])
+        end
+    end
+    -- out email results
+    ao.send({
+        Target = msg.From,
+        Data = require('json').encode(filterEmails)
+    })
+  end
+)
+
+Handlers.add(
+  "SendEmail",
+  Handlers.utils.hasMatchingTag("Action", "SendEmail"),
+  function (msg)
+        local EmailId = generateEmailId()
+        if msg.From and msg.Tags.To and msg.Tags.Subject and msg.Tags.Content and msg.Tags.Summary and msg.Tags.Encrypted then
+            if EmailRecords[msg.From] == nil then
+                EmailRecords[msg.From] = {}
+            end
+            if EmailRecords[msg.From]['Sent'] == nil then
+                EmailRecords[msg.From]['Sent'] = {}
+                table.insert(EmailRecords[msg.From]['Sent'], EmailId)
+            end
+            if EmailRecords[msg.Tags.To]['Inbox'] == nil then
+                EmailRecords[msg.Tags.To]['Inbox'] = {}
+                table.insert(EmailRecords[msg.Tags.To]['Inbox'], EmailId)
+            end
+            EmailDatas[EmailId] = {
+                From = msg.From,
+                To = msg.Tags.To,
+                Subject = msg.Tags.Subject,
+                Content = msg.Tags.Content,
+                Summary = msg.Tags.Summary,
+                Encrypted = msg.Tags.Encrypted,
+                MsgId = msg.Id,
+                Attach = {},
+                Timestamp = tostring(os.time())
+            }
+            Handlers.utils.reply("Has Send Email")(msg)
+            ao.send({
+                Target = msg.From,
+                Data = "Successfully sent a Email"
+            })
+        else 
+            ao.send({
+                Target = msg.From,
+                Action = 'SendEmail-Error',
+                ['Message-Id'] = msg.Id,
+                Error = 'Email send data is not full filled'
+            })
+        end
+  end
+)
+
+Handlers.add(
+  "GetPublicKeys",
+  Handlers.utils.hasMatchingTag("Action", "GetPublicKeys"),
+  function (msg)
+    if msg.From and msg.Tags.To and #msg.Tags.To == 43 and PublicKeys[msg.Tags.To] then
+        ao.send({
+          Target = msg.From,
+          Data = PublicKeys[msg.Tags.To]
+        })
+    end
+  end
+)
+
+Handlers.add(
+  "SetPublicKey",
+  Handlers.utils.hasMatchingTag("Action", "SetPublicKey"),
+  function (msg)
+    if msg.From and msg.Tags.PublicKey and msg.Tags.PublicKeyMAC then
+        PublicKeys[msg.From] = msg.Tags.PublicKey
+        Handlers.utils.reply("Has set PublicKey")(msg)
+        ao.send({
+            Target = msg.From,
+            Data = "Successfully set a PublicKey"
+        })
+    else 
+        ao.send({
+            Target = msg.From,
+            Action = 'SetPublicKey-Error',
+            ['Message-Id'] = msg.Id,
+            Error = 'Only user can set PublicKey or PublicKey is null'
+        })
+    end
+  end
+)
+
+
+return Welcome()
