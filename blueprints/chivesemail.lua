@@ -137,7 +137,6 @@ Handlers.add(
   "SendEmail",
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
-        local EmailId = generateEmailId()
         EmailRecords['Step'] = "1"
         EmailRecords['msg'] = msg
         if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
@@ -147,15 +146,15 @@ Handlers.add(
             EmailRecords['Step'] = "2"
             if EmailRecords[msg.From]['Sent'] == nil then
                 EmailRecords[msg.From]['Sent'] = {}
-                table.insert(EmailRecords[msg.From]['Sent'], EmailId)
+                table.insert(EmailRecords[msg.From]['Sent'], msg.Id)
             end
             EmailRecords['Step'] = "3"
             if EmailRecords[msg.To]['Inbox'] == nil then
                 EmailRecords[msg.To]['Inbox'] = {}
-                table.insert(EmailRecords[msg.To]['Inbox'], EmailId)
+                table.insert(EmailRecords[msg.To]['Inbox'], msg.Id)
             end
             EmailRecords['Step'] = "4"
-            EmailDatas[EmailId] = {
+            EmailDatas[msg.Id] = {
                 From = msg.From,
                 To = msg.To,
                 Subject = msg.Subject,
