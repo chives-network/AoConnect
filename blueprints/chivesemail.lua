@@ -79,7 +79,7 @@ Handlers.add(
     for i = startIndex, endIndex do
         local emailId = emailIdList[i]
         if emailId and EmailDatas[emailId] then
-            table.insert(filterEmails, 1, EmailDatas[emailId])
+            table.insert(filterEmails, EmailDatas[emailId])
         end
     end
 
