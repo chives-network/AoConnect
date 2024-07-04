@@ -138,7 +138,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
         local EmailId = generateEmailId()
-        if msg.From and msg.Tags.To and msg.Tags.Subject and msg.Tags.Content and msg.Tags.Summary and msg.Tags.Encrypted then
+        if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
             if EmailRecords[msg.From] == nil then
                 EmailRecords[msg.From] = {}
             end
@@ -146,17 +146,17 @@ Handlers.add(
                 EmailRecords[msg.From]['Sent'] = {}
                 table.insert(EmailRecords[msg.From]['Sent'], EmailId)
             end
-            if EmailRecords[msg.Tags.To]['Inbox'] == nil then
-                EmailRecords[msg.Tags.To]['Inbox'] = {}
-                table.insert(EmailRecords[msg.Tags.To]['Inbox'], EmailId)
+            if EmailRecords[msg.To]['Inbox'] == nil then
+                EmailRecords[msg.To]['Inbox'] = {}
+                table.insert(EmailRecords[msg.To]['Inbox'], EmailId)
             end
             EmailDatas[EmailId] = {
                 From = msg.From,
-                To = msg.Tags.To,
-                Subject = msg.Tags.Subject,
-                Content = msg.Tags.Content,
-                Summary = msg.Tags.Summary,
-                Encrypted = msg.Tags.Encrypted,
+                To = msg.To,
+                Subject = msg.Subject,
+                Content = msg.Content,
+                Summary = msg.Summary,
+                Encrypted = msg.Encrypted,
                 MsgId = msg.Id,
                 Attach = {},
                 Timestamp = tostring(os.time())
@@ -194,8 +194,8 @@ Handlers.add(
   "SetPublicKey",
   Handlers.utils.hasMatchingTag("Action", "SetPublicKey"),
   function (msg)
-    if msg.From and msg.Tags.PublicKey and msg.Tags.PublicKeyMAC then
-        PublicKeys[msg.From] = msg.Tags.PublicKey
+    if msg.From and msg.PublicKey and msg.PublicKeyMAC then
+        PublicKeys[msg.From] = msg.PublicKey
         Handlers.utils.reply("Has set PublicKey")(msg)
         ao.send({
             Target = msg.From,
