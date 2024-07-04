@@ -139,48 +139,23 @@ Handlers.add(
   function (msg)
         EmailRecords['Step'] = "1"
         EmailRecords['msg'] = msg
-        if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
-            if EmailRecords[msg.From] == nil then
-                EmailRecords[msg.From] = {}
-            end
-            EmailRecords['Step'] = "2"
-            if EmailRecords[msg.From]['Sent'] == nil then
-                EmailRecords[msg.From]['Sent'] = {}
-                table.insert(EmailRecords[msg.From]['Sent'], msg.Id)
-            end
-            EmailRecords['Step'] = "3"
-            if EmailRecords[msg.To]['Inbox'] == nil then
-                EmailRecords[msg.To]['Inbox'] = {}
-                table.insert(EmailRecords[msg.To]['Inbox'], msg.Id)
-            end
-            EmailRecords['Step'] = "4"
-            EmailDatas[msg.Id] = {
-                From = msg.From,
-                To = msg.To,
-                Subject = msg.Subject,
-                Content = msg.Content,
-                Summary = msg.Summary,
-                Encrypted = msg.Encrypted,
-                MsgId = msg.Id,
-                Attach = {},
-                Timestamp = tostring(os.time())
-            }
-            EmailRecords['Step'] = "5"
-            Handlers.utils.reply("Has Send Email")(msg)
-            ao.send({
-                Target = msg.From,
-                Data = "Successfully sent a Email"
-            })
-            EmailRecords['Step'] = "6"
-        else 
-            ao.send({
-                Target = msg.From,
-                Action = 'SendEmail-Error',
-                ['Message-Id'] = msg.Id,
-                Error = 'Email send data is not full filled'
-            })
-            EmailRecords['Step'] = "7"
-        end
+        ao.send({
+          Target = msg.From,
+          Data = "Successfully sent a Email"
+        })
+  end
+)
+
+Handlers.add(
+  "GetEmailRecords",
+  Handlers.utils.hasMatchingTag("Action", "GetEmailRecords"),
+  function (msg)
+    if msg.From then
+        ao.send({
+          Target = msg.From,
+          Data = require('json').encode(EmailRecords)
+        })
+    end
   end
 )
 
