@@ -18,7 +18,7 @@ import TableContainer from '@mui/material/TableContainer'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Actions Imports
-import { fetchData } from 'src/store/apps/myfiles'
+import { fetchData } from 'src/store/apps/email'
 
 // ** Types Imports
 import { RootState, AppDispatch } from 'src/store'
@@ -94,7 +94,7 @@ const FileResourceModel = ({ activeTab } : any) => {
   
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.myfiles)
+  const store = useSelector((state: RootState) => state.email)
 
   const [addressBalance, setAddressBalance] = useState<string>('')
 
@@ -115,10 +115,10 @@ const FileResourceModel = ({ activeTab } : any) => {
     if(true && id && id.length == 43) {
       dispatch(
         fetchData({
+          folder: 'Inbox',
           address: String(id),
           pageId: paginationModel.page - 1,
           pageSize: paginationModel.pageSize,
-          type: activeTab
         })
       )
     }

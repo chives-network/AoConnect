@@ -14,7 +14,6 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Types
 import { RootState, AppDispatch } from 'src/store'
-import { DriveLayoutType } from 'src/types/apps/emailTypes'
 
 // ** Email App Component Imports
 import DriveList from 'src/views/Email/EmailList'
@@ -36,8 +35,6 @@ import {
   setCurrentFile,
   handleSelectFile,
   handleSelectAllFile,
-  fetchTotalNumber,
-  fetchAllFolder
 } from 'src/store/apps/email'
 
 // ** Context
@@ -51,7 +48,7 @@ const labelColors: any = {
   important: 'warning'
 }
 
-const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
+const DriveAppLayout = ({ initFolder }: any) => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -80,8 +77,6 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
   const leftSidebarWidth = 260
   const { skin, direction } = settings
   const routeParams = {
-    label: label || 'Social',
-    type: type || 'Text',
     initFolder: folder || 'Inbox'
   }
 
@@ -90,8 +85,8 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
   const currentAddress = auth.currentAddress
 
   // ** State
-  const paginationModelDefaultValue = { page: 1, pageSize: 9 }
-  const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 9 })
+  const paginationModelDefaultValue = { page: 1, pageSize: 10 }
+  const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 10 })
   
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
     setPaginationModel({ ...paginationModel, page });
@@ -137,7 +132,7 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
       setUploadFilesOpen(false)
       setUploadFilesTitle(`${t(`Write Email`)}`)
     }
-  }, [dispatch, paginationModel, type, folder, label, id])
+  }, [dispatch, paginationModel, folder, id])
 
   const toggleUploadFilesOpen = () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
@@ -195,7 +190,7 @@ const DriveAppLayout = ({ initFolder, label, type }: DriveLayoutType) => {
           dispatch={dispatch}
           setQuery={setQuery}
           direction={direction}
-          routeParams={routeParams}
+          initFolder={initFolder}
           labelColors={labelColors}
           folder={folder}
           setCurrentFile={setCurrentFile}

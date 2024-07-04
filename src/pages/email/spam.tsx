@@ -1,8 +1,8 @@
 // ** Demo Components Imports
-import Drive from 'src/views/Email/Email'
+import Email from 'src/views/Email/Email'
 
-const DriveApp = () => <Drive type='*' initFolder='Spam' label='*'/>
+const EmailApp = () => <Email initFolder='Spam'/>
 
-//DriveApp.contentHeightFixed = true
+EmailApp.contentHeightFixed = true
 
-export default DriveApp
+export default EmailApp

@@ -162,8 +162,8 @@ const SidebarLeft = (props: DriveSidebarType) => {
           <List component='div'>
             <ListItemStyled
               component={Link}
-              href='/email/myfiles'
-              onClick={()=>handleListItemClick("Root")}
+              href='/email/inbox'
+              onClick={()=>handleListItemClick("Inbox")}
               sx={{ borderLeftColor: activemyfilesCondition ? 'primary.main' : 'transparent' }}
             >
               <ListItemIcon sx={{ color: activemyfilesCondition ? 'primary.main' : 'text.secondary' }}>
@@ -176,7 +176,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
                   sx: { fontWeight: 500, ...(activemyfilesCondition && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('Root', 'primary')}
+              {RenderBadge('Inbox', 'primary')}
             </ListItemStyled>
             {/* 
             <ListItemStyled

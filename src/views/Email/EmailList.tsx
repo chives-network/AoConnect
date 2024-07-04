@@ -44,12 +44,8 @@ import { setTimeout } from 'timers'
 import DriveDetail from './EmailDetail'
 
 import Pagination from '@mui/material/Pagination'
-import { useRouter } from 'next/router'
 
 import toast from 'react-hot-toast'
-
-// ** Context
-import { useAuth } from 'src/hooks/useAuth'
 
 // ** Types
 import {
@@ -60,20 +56,20 @@ import {
 } from 'src/types/apps/emailTypes'
 import { OptionType } from 'src/@core/components/option-menu/types'
 
-import authConfig from 'src/configs/auth'
-
 import { formatTimestamp} from 'src/configs/functions';
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
+import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
+
 import { TrashMultiFiles, SpamMultiFiles, StarMultiFiles, UnStarMultiFiles, ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus, GetHaveToDoTask,ResetToDoTask, ActionsSubmitToBlockchain, CreateFolder } from 'src/functions/ChivesWallets'
 import { TxRecordType } from 'src/types/apps/Chivesweave'
 
-const FileItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
+const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
   cursor: 'pointer',
   paddingTop: theme.spacing(3),
-  paddingBottom: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   justifyContent: 'space-between',
   transition: 'border 0.15s ease-in-out, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
   '&:not(:first-of-type)': {
@@ -108,7 +104,6 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 const DriveList = (props: DriveListType) => {
   // ** Hook
   const { t } = useTranslation()
-  const router = useRouter()
   
   // ** Props
   const {
@@ -118,7 +113,7 @@ const DriveList = (props: DriveListType) => {
     dispatch,
     setQuery,
     direction,
-    routeParams,
+    initFolder,
     labelColors,
     folder,
     setCurrentFile,
@@ -175,7 +170,7 @@ const DriveList = (props: DriveListType) => {
 
   const [isNewFolderDialog, setIsNewFolderDialog] = useState<boolean>(false)
   const [folderName, setFodlerName] = useState<string>("")
-  const [folderNameParent, setFodlerNameParent] = useState<string>("Root")
+  const [folderNameParent, setFodlerNameParent] = useState<string>("Inbox")
   const [folderNameError, setFodlerNameError] = useState<string | null>(null)
   const handleFolderNameChange = (event: any) => {
     setFodlerName(event.target.value);
@@ -185,16 +180,13 @@ const DriveList = (props: DriveListType) => {
     }
   };
 
-  const auth = useAuth()
-  const currentAddress = auth.currentAddress
-
   // ** State
   const [refresh, setRefresh] = useState<boolean>(false)
 
   // ** Vars
   const folders: MailFoldersArrType[] = [
     {
-      name: 'draft',
+      name: 'Draft',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:pencil-outline' fontSize={20} />
@@ -202,7 +194,7 @@ const DriveList = (props: DriveListType) => {
       )
     },
     {
-      name: 'spam',
+      name: 'Spam',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:alert-octagon-outline' fontSize={20} />
@@ -210,7 +202,7 @@ const DriveList = (props: DriveListType) => {
       )
     },
     {
-      name: 'trash',
+      name: 'Trash',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:delete-outline' fontSize={20} />
@@ -218,7 +210,7 @@ const DriveList = (props: DriveListType) => {
       )
     },
     {
-      name: 'myfiles',
+      name: 'Inbox',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:email-outline' fontSize={20} />
@@ -228,32 +220,32 @@ const DriveList = (props: DriveListType) => {
   ]
 
   const foldersConfig = {
-    draft: {
-      name: 'draft',
+    Draft: {
+      name: 'Draft',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:pencil-outline' fontSize={20} />
         </Box>
       )
     },
-    spam: {
-      name: 'spam',
+    Spam: {
+      name: 'Spam',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:alert-octagon-outline' fontSize={20} />
         </Box>
       )
     },
-    trash: {
-      name: 'trash',
+    Trash: {
+      name: 'Trash',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:delete-outline' fontSize={20} />
         </Box>
       )
     },
-    myfiles: {
-      name: 'myfiles',
+    Inbox: {
+      name: 'Inbox',
       icon: (
         <Box component='span' sx={{ mr: 2, display: 'flex' }}>
           <Icon icon='mdi:email-outline' fontSize={20} />
@@ -263,11 +255,11 @@ const DriveList = (props: DriveListType) => {
   }
 
   const foldersObj: MailFoldersObjType = {
-    myfiles: [foldersConfig.spam, foldersConfig.trash],
-    sent: [foldersConfig.trash],
-    draft: [foldersConfig.trash],
-    spam: [foldersConfig.myfiles, foldersConfig.trash],
-    trash: [foldersConfig.myfiles, foldersConfig.spam]
+    Inbox: [foldersConfig.Spam, foldersConfig.Trash],
+    Sent: [foldersConfig.Trash],
+    Draft: [foldersConfig.Trash],
+    Spam: [foldersConfig.Inbox, foldersConfig.Trash],
+    Trash: [foldersConfig.Inbox, foldersConfig.Spam]
   }
 
   const handleMoveToTrash = (id: string | null) => {
@@ -383,23 +375,10 @@ const DriveList = (props: DriveListType) => {
     setIsHaveTaskToDo(isHaveTaskToDo + 1);
   }
 
-  const handleCreateFolderOperation = () => {
-    if(currentAddress == undefined || currentAddress.length != 43) {
-      toast.success(t(`Please create a wallet first`), {
-        duration: 4000
-      })
-      router.push("/mywallets");
-      
-      return
-    }
-    setOpen(true)
-    setIsNewFolderDialog(true)
-  }
-
   const handleCreateFolderSubmit = () => {
     if(folderName=="") {
       setFodlerNameError(`${t('Folder name can not be null')}`)
-      setFodlerNameParent("Root")
+      setFodlerNameParent("Inbox")
     }
     else {
       setOpen(false)
@@ -444,7 +423,7 @@ const DriveList = (props: DriveListType) => {
 
   const handleFoldersMenu = () => {
     const array: OptionType[] = []
-    store && store.folder && store.folder['Root'] && store.folder['Root'].map((Item: any) => {
+    store && store.folder && store.folder['Inbox'] && store.folder['Inbox'].map((Item: any) => {
       array.push({
         text: <Typography sx={{ textTransform: 'capitalize' }}>{Item.name}</Typography>,
         icon: (
@@ -470,7 +449,7 @@ const DriveList = (props: DriveListType) => {
     dispatch,
     direction,
     foldersObj,
-    routeParams,
+    initFolder,
     labelColors,
     handleStarDrive,
     driveFileOpen,
@@ -673,14 +652,14 @@ const DriveList = (props: DriveListType) => {
                 <Fragment>
                   <OptionsMenu leftAlignMenu options={handleFoldersMenu()} icon={<Icon icon='mdi:folder-outline' />} />
                   <OptionsMenu leftAlignMenu options={handleLabelsMenu()} icon={<Icon icon='mdi:label-outline' />} />
-                  {routeParams && routeParams.initFolder !== 'Trash' && routeParams.initFolder !== 'Spam' ? (
+                  {initFolder !== 'Trash' && initFolder !== 'Spam' ? (
                     <Tooltip title={`${t(`Move to Trash`)}`} arrow>
                       <IconButton onClick={()=>handleMoveToTrash(null)}>
                         <Icon icon='mdi:delete-outline' />
                       </IconButton>
                     </Tooltip>
                   ) : null}
-                  {routeParams && routeParams.initFolder !== 'Trash' && routeParams.initFolder !== 'Spam' ? (
+                  {initFolder !== 'Trash' && initFolder !== 'Spam' ? (
                     <Tooltip title={`${t(`Move to Spam`)}`} arrow>
                       <IconButton onClick={()=>handleMoveToSpam(null)}>
                         <Icon icon='mdi:alert-octagon-outline' />
@@ -713,24 +692,15 @@ const DriveList = (props: DriveListType) => {
                   </Tooltip>
                 </Fragment>
               }
-
-              {routeParams && routeParams.initFolder !== 'Trash' && routeParams.initFolder !== 'Spam' && routeParams.initFolder !== 'Star' ? (
-                <Tooltip title={`${t(`Create Folder`)}`} arrow>
-                  <Button variant='contained'size='small' onClick={handleCreateFolderOperation} sx={{ whiteSpace: 'nowrap' }}>
-                    <Icon icon='mdi:plus' />
-                    {`${t(`Create Folder`)}`}
-                  </Button>
-                </Tooltip>
-              ) : null}
               
             </Box>
           </Box>
         </Box>
         <Divider sx={{ m: '0 !important' }} />
-        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 12rem)' }}>
+        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 11.55rem)' }}>
           <ScrollWrapper hidden={hidden}>
             {store && store.data && store.data.length ? (
-              <List sx={{ p: 0 }}>
+              <List sx={{ p: 0, m: 1 }}>
                 {store.data.map((email: any) => {
                   const TagsMap: any = {}
                   email && email.tags && email.tags.length > 0 && email.tags.map( (Tag: any) => {
@@ -746,9 +716,11 @@ const DriveList = (props: DriveListType) => {
                     IsFileDisabled = true
                   }
 
+                  const mailReadToggleIcon = email?.isRead ? 'mdi:email-outline' : 'mdi:email-open-outline'
+
                   return (
-                    <FileItem
-                      key={email.id}
+                    <EmailItem
+                      key={email.Id}
                       sx={{ backgroundColor: true ? 'action.hover' : 'background.paper' }}
                       onClick={() => {
                         if(EntityType == "Folder") {
@@ -756,8 +728,8 @@ const DriveList = (props: DriveListType) => {
                           }
                           else {
                             console.log("email",email)
-                            handleFolderChange(email.id)
-                            handleFolderHeaderList({'name':EntityTarget, 'value':email.id})
+                            handleFolderChange(email.Id)
+                            handleFolderHeaderList({'name':EntityTarget, 'value':email.Id})
                           }
                         }
                         else {
@@ -779,13 +751,13 @@ const DriveList = (props: DriveListType) => {
                           
                           <Checkbox
                             onClick={e => e.stopPropagation()}
-                            onChange={() => dispatch(handleSelectFile(email.id))}
-                            checked={store.selectedFiles.includes(email.id) || false}
+                            onChange={() => dispatch(handleSelectFile(email.Id))}
+                            checked={store.selectedFiles.includes(email.Id) || false}
                             disabled={( IsFileDisabled || EntityType == "Folder" )}
                           />
                           <IconButton
                             size='small'
-                            onClick={e => handleStarDrive(e, email.id, !FileFullStatus['Star'])}
+                            onClick={e => handleStarDrive(e, email.Id, !FileFullStatus['Star'])}
                             disabled={IsFileDisabled}
                             sx={{
                               mr: { xs: 0, sm: 3 },
@@ -818,7 +790,7 @@ const DriveList = (props: DriveListType) => {
                           :
                             <Avatar
                               alt={TagsMap['File-Name']}
-                              src={`${authConfig.backEndApi}/${email.id}/thumbnail`}
+                              src={GetAppAvatarModId(email.Id)}
                               sx={{ mr: 3, width: '2rem', height: '2rem' }}
                             />
                           }
@@ -843,6 +815,9 @@ const DriveList = (props: DriveListType) => {
                             >
                               {email.Subject}
                             </Typography>
+                            <Typography noWrap variant='body2' sx={{ width: '100%' }}>
+                              {email.Summary}
+                            </Typography>
                           </Box>
                         </Box>
                       </Tooltip>
@@ -854,10 +829,45 @@ const DriveList = (props: DriveListType) => {
                           variant='caption'
                           sx={{ minWidth: '50px', textAlign: 'right', whiteSpace: 'nowrap', color: 'text.disabled' }}
                         >
-                          {email.Timestamp}
+                          {formatTimestamp(Number(email.Timestamp) - (new Date().getTimezoneOffset()) * 60 * 1000)}
                         </Typography>
                       </Box>
-                    </FileItem>
+                      <Box
+                        className='mail-actions'
+                        sx={{ display: 'none', alignItems: 'center', justifyContent: 'flex-end' }}
+                      >
+                        {email && email.folder !== 'trash' ? (
+                          <Tooltip placement='top' title='Delete Mail'>
+                            <IconButton
+                              onClick={e => {
+                                e.stopPropagation()
+                              }}
+                            >
+                              <Icon icon='mdi:delete-outline' />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
+
+                        <Tooltip placement='top' title={email.isRead ? 'Unread Mail' : 'Read Mail'}>
+                          <IconButton
+                            onClick={e => {
+                              e.stopPropagation()
+                            }}
+                          >
+                            <Icon icon={mailReadToggleIcon} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip placement='top' title='Move to Spam'>
+                          <IconButton
+                            onClick={e => {
+                              e.stopPropagation()
+                            }}
+                          >
+                            <Icon icon='mdi:alert-octagon-outline' />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    </EmailItem>
                   )
                 })}
 

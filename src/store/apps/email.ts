@@ -1,16 +1,11 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-// ** Axios Imports
-import axios from 'axios'
-
 import authConfig from 'src/configs/auth'
 
 import { TxRecordType } from 'src/types/apps/Chivesweave'
 
-import { AoLoadBlueprintChivesEmail, 
-  ChivesEmailGetMyEmailRecords, ChivesEmailSendEmail, ChivesEmailSetPublicKey, ChivesEmailGetPublicKeys, ChivesEmailGetEmailRecords, ChivesEmailReadEmailContent
- } from 'src/functions/AoConnect/ChivesEmail'
+import { ChivesEmailGetMyEmailRecords } from 'src/functions/AoConnect/ChivesEmail'
 
 interface DataParams {
     address: string
@@ -21,8 +16,10 @@ interface DataParams {
 
 // ** Fetch Data
 export const fetchData = createAsyncThunk('MyEmails/fetchData', async (params: DataParams) => {  
-
-  const ChivesEmailGetMyEmailRecordsData1 = await ChivesEmailGetMyEmailRecords(authConfig.AoConnectChivesEmailServerData, params.address, params.folder ?? "Inbox", '0', '10')
+  console.log("params", params)
+  const startIndex = params.pageId * params.pageSize + 1
+  const endIndex = (params.pageId+1) * params.pageSize
+  const ChivesEmailGetMyEmailRecordsData1 = await ChivesEmailGetMyEmailRecords(authConfig.AoConnectChivesEmailServerData, params.address, params.folder ?? "Inbox", String(startIndex), String(endIndex))
   if(ChivesEmailGetMyEmailRecordsData1) {
     console.log("ChivesEmailGetMyEmailRecordsData1", ChivesEmailGetMyEmailRecordsData1)
     const [filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount] = ChivesEmailGetMyEmailRecordsData1
@@ -35,29 +32,13 @@ export const fetchData = createAsyncThunk('MyEmails/fetchData', async (params: D
   }
 })
 
-// ** Fetch Data
-export const fetchTotalNumber = createAsyncThunk('MyEmails/fetchTotalNumber', async (params: DataParams) => {  
-
-  const TotalNumber: any = {};
-
-  
-  return TotalNumber
-})
-
-export const fetchAllFolder = createAsyncThunk('MyEmails/fetchAllFolder', async (params: DataParams) => {  
-
-  const FolderArray: any = {};
-  
-  return FolderArray
-})
-
-export const setCurrentFile = createAsyncThunk('appDrive/selectFile', async (FileTx: TxRecordType) => {
+export const setCurrentFile = createAsyncThunk('myEmail/selectFile', async (FileTx: TxRecordType) => {
 
   return FileTx
 })
 
-export const appDriveSlice = createSlice({
-  name: 'appDrive',
+export const myEmailSlice = createSlice({
+  name: 'myEmail',
   initialState: {
     files: null,
     mailMeta: null,
@@ -65,7 +46,7 @@ export const appDriveSlice = createSlice({
       q: '',
       label: '',
       type: '',
-      folder: 'myfiles'
+      folder: 'Inbox'
     },
     currentFile: {},
     selectedFiles: [],
@@ -115,14 +96,11 @@ export const appDriveSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
       console.log("action.payload", action.payload)
-      state.EmailRecordsCount = action.payload.EmailRecordsCount
-
+      state.allData = action.payload.EmailRecordsCount
       state.data = action.payload.filterEmails
       state.total = action.payload.totalRecords
       state.params = action.payload.filter
-      state.allData = action.payload.filterEmails
       state.allPages = Math.ceil(action.payload.totalRecords / 10)
-
     })
     builder.addCase(setCurrentFile.fulfilled, (state, action) => {
       state.currentFile = action.payload
@@ -130,6 +108,6 @@ export const appDriveSlice = createSlice({
   }
 })
 
-export const { handleSelectFile, handleSelectAllFile } = appDriveSlice.actions
+export const { handleSelectFile, handleSelectAllFile } = myEmailSlice.actions
 
-export default appDriveSlice.reducer
+export default myEmailSlice.reducer

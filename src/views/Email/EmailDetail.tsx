@@ -41,9 +41,6 @@ import { getContentTypeAbbreviation, formatTimestampMemo } from 'src/configs/fun
 import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 
 
-const toggleImagesPreviewDrawer = () => {
-  console.log("toggleImagesPreviewDrawer")
-}
 
 const ImgPreview = styled('img')(({  }) => ({
   maxWidth: '100%',

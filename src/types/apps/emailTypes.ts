@@ -5,7 +5,7 @@ import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 export type LabelType = 'personal' | 'company' | 'important' | 'private'
 
-export type FolderType = 'inbox' | 'sent' | 'draft' | 'starred' | 'spam' | 'trash' | 'myfiles' | 'uploaded' | 'Root'
+export type FolderType = 'Inbox' | 'Sent' | 'Draft' | 'Starred' | 'Spam' | 'Trash'
 
 export type RouteParams = {
   label: string
@@ -129,7 +129,7 @@ export type DriveListType = {
   dispatch: Dispatch<any>
   direction: 'ltr' | 'rtl'
   driveFileOpen: boolean
-  routeParams: RouteParams
+  initFolder: string
   labelColors: any
   folder: any
   setQuery: (val: string) => void

@@ -45,21 +45,20 @@ const ChivesEmail = () => {
 
     setIsDisabledButton(true)
 
-    const ChivesEmail = "rWvQbaoLLQTNk7YnSR3VSfEfeRQ-1VJ9U5HXRR_bl0E"
+    const ChivesEmail = "zSBSk-Qfum2XegF1toVmZRr2OLQHU2d7wp2USg8Gzbk"
     const TokenProcessTxId1 = "uk6oWsri6492CmYMA2iCgDlSSFwlhuyijfv9UNqtqvg"
     const TokenProcessTxId2 = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
 
     setToolInfo({ChivesEmail:ChivesEmail})
 
-    /*
-    const ChivesEmail = await AoCreateProcessAuto(currentWallet.jwk)
+    const ChivesEmail1 = await AoCreateProcessAuto(currentWallet.jwk)
     if(ChivesEmail) {
       setToolInfo((prevState: any)=>({
         ...prevState,
         ChivesEmail: ChivesEmail
       }))
     }
-    */
+    console.log("ChivesEmail1", ChivesEmail1)
 
     setToolInfo((prevState: any)=>({
         ...prevState,
@@ -89,6 +88,7 @@ const ChivesEmail = () => {
       }
     }
     console.log("LoadBlueprintChivesEmail", LoadBlueprintChivesEmail)
+
     /*
     const TokenProcessTxId1 = await AoCreateProcessAuto(currentWallet.jwk)
     if(TokenProcessTxId1) {
@@ -112,7 +112,7 @@ const ChivesEmail = () => {
       'Testing Email': '==================================================='
     }))
 
-    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject001', 'Content001', 'Summary001', 'Encrypted001')
+    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject001-0853', 'Content001', 'Summary001', 'Encrypted001')
     if(ChivesEmailSendEmail1) {
       console.log("ChivesEmailSendEmail1", ChivesEmailSendEmail1)
       if(ChivesEmailSendEmail1?.msg?.Output?.data?.output)  {
@@ -140,11 +140,11 @@ const ChivesEmail = () => {
 
       }
     }
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject002', 'Content002', 'Summary002', 'Encrypted002')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject003', 'Content003', 'Summary003', 'Encrypted003')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject004', 'Content004', 'Summary004', 'Encrypted004')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject005', 'Content005', 'Summary005', 'Encrypted005')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, TokenProcessTxId1, 'Subject006', 'Content006', 'Summary006', 'Encrypted005')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject002-0853', 'Content002', 'Summary002', 'Encrypted002')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject003-0853', 'Content003', 'Summary003', 'Encrypted003')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject004-0853', 'Content004', 'Summary004', 'Encrypted004')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject005-0853', 'Content005', 'Summary005', 'Encrypted005')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, TokenProcessTxId1, 'Subject006-0853', 'Content006', 'Summary006', 'Encrypted005')
 
     const ChivesEmailGetMyEmailRecordsData1 = await ChivesEmailGetMyEmailRecords(ChivesEmail, TokenProcessTxId1, "Inbox", '0', '10')
     if(ChivesEmailGetMyEmailRecordsData1) {
