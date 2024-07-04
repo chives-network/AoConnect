@@ -138,7 +138,6 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
         EmailRecords['Step'] = "1"
-        EmailRecords['msg'] = msg
         if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
           if EmailRecords[msg.From] == nil then
               EmailRecords[msg.From] = {}
