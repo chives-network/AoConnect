@@ -199,8 +199,12 @@ export const ChivesEmailGetEmailRecords = async (TargetTxId: string, myProcessTx
 export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, To: string, Subject: string, Content: string, Summary: string, Encrypted: string) => {
     try {
         console.log("ChivesEmailSendEmail To", To)
+        const currentTimestampWithOffset: number = Date.now();
+        const currentTimezoneOffset: number = new Date().getTimezoneOffset();
+        const currentTimestampInZeroUTC: number = currentTimestampWithOffset + (currentTimezoneOffset * 60 * 1000);
+
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + TargetTxId + '", Action = "SendEmail", To = "' + To + '", Subject = "' + Subject + '", Content = "' + Content + '", Summary = "' + Summary + '", Encrypted = "' + Encrypted + '" })'
+        const SendData = 'Send({Target = "' + TargetTxId + '", Action = "SendEmail", To = "' + To + '", Subject = "' + Subject + '", Content = "' + Content + '", Summary = "' + Summary + '", Encrypted = "' + Encrypted + '", Timestamp = "' + currentTimestampInZeroUTC + '" })'
         const Data = {
             process: myProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],

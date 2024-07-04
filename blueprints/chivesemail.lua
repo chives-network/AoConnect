@@ -208,7 +208,7 @@ Handlers.add(
   "SendEmail",
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
-        if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted then
+        if msg.From and msg.To and msg.Subject and msg.Content and msg.Summary and msg.Encrypted and msg.Timestamp then
           
           if EmailRecords[msg.From] == nil then
               EmailRecords[msg.From] = {}
