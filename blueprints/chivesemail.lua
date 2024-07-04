@@ -236,12 +236,14 @@ Handlers.add(
           table.insert(EmailRecordsUnRead[msg.To]['Inbox'], msg.Id)
 
           EmailDatas[msg.Id] = {
+              Id = msg.Id,
               From = msg.From,
               To = msg.To,
               Subject = msg.Subject,
               Content = msg.Content,
               Summary = msg.Summary,
               Encrypted = msg.Encrypted,
+              Timestamp = tostring(os.time()),
               Attach = {}
           }
 
