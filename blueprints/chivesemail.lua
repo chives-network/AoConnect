@@ -214,6 +214,7 @@ Handlers.add(
           EmailRecords[msg.From]['All Mail'] = {}
           EmailRecords[msg.From]['Spam'] = {}
           EmailRecords[msg.From]['Trash'] = {}
+          EmailRecords[msg.From]['Categories'] = {}
           EmailRecords[msg.From]['Categories']['Social'] = {}
           EmailRecords[msg.From]['Categories']['Updates'] = {}
           EmailRecords[msg.From]['Categories']['Forums'] = {}
@@ -230,6 +231,7 @@ Handlers.add(
           EmailRecords[msg.Tags.Target]['All Mail'] = {}
           EmailRecords[msg.Tags.Target]['Spam'] = {}
           EmailRecords[msg.Tags.Target]['Trash'] = {}
+          EmailRecords[msg.Tags.Target]['Categories'] = {}
           EmailRecords[msg.Tags.Target]['Categories']['Social'] = {}
           EmailRecords[msg.Tags.Target]['Categories']['Updates'] = {}
           EmailRecords[msg.Tags.Target]['Categories']['Forums'] = {}
