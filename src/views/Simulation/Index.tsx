@@ -11,6 +11,7 @@ import MyProcessTxIds from './MyProcessTxIds'
 import ChivesLottery from './ChivesLottery'
 import ChivesFaucet from './ChivesFaucet'
 import ChivesServerData from './ChivesServerData'
+import ChivesEmail from './ChivesEmail'
 
 
 const LearnCenter = () => {
@@ -18,6 +19,11 @@ const LearnCenter = () => {
 
   return (
     <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <Card sx={{ padding: '0 8px' }}>
+          <ChivesEmail />
+        </Card>
+      </Grid>
       <Grid item xs={12}>
         <Card sx={{ padding: '0 8px' }}>
           <ChivesServerData />
