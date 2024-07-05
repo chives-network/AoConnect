@@ -139,30 +139,29 @@ Handlers.add(
     else
       EmailRecordsCount['Trash'] = 0
     end
-    EmailRecordsCount['Categories'] = {}
-    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Social'] then
-      EmailRecordsCount['Categories']['Social'] = #EmailRecordsUnRead[msg.From]['Categories']['Social']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Social']
+    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Social'] then
+      EmailRecordsCount['Social'] = #EmailRecordsUnRead[msg.From]['Social']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Social']
     else
-      EmailRecordsCount['Categories']['Social'] = 0
+      EmailRecordsCount['Social'] = 0
     end
-    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Updates'] then
-      EmailRecordsCount['Categories']['Updates'] = #EmailRecordsUnRead[msg.From]['Categories']['Updates']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Updates']
+    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Updates'] then
+      EmailRecordsCount['Updates'] = #EmailRecordsUnRead[msg.From]['Updates']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Updates']
     else
-      EmailRecordsCount['Categories']['Updates'] = 0
+      EmailRecordsCount['Updates'] = 0
     end
-    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Forums'] then
-      EmailRecordsCount['Categories']['Forums'] = #EmailRecordsUnRead[msg.From]['Categories']['Forums']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Forums']
+    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Forums'] then
+      EmailRecordsCount['Forums'] = #EmailRecordsUnRead[msg.From]['Forums']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Forums']
     else
-      EmailRecordsCount['Categories']['Forums'] = 0
+      EmailRecordsCount['Forums'] = 0
     end
-    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Promotions'] then
-      EmailRecordsCount['Categories']['Promotions'] = #EmailRecordsUnRead[msg.From]['Categories']['Promotions']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Promotions']
+    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Promotions'] then
+      EmailRecordsCount['Promotions'] = #EmailRecordsUnRead[msg.From]['Promotions']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Promotions']
     else
-      EmailRecordsCount['Categories']['Promotions'] = 0
+      EmailRecordsCount['Promotions'] = 0
     end
 
     -- out email results
@@ -382,11 +381,10 @@ Handlers.add(
           EmailRecords[msg.From]['AllMail'] = {}
           EmailRecords[msg.From]['Spam'] = {}
           EmailRecords[msg.From]['Trash'] = {}
-          EmailRecords[msg.From]['Categories'] = {}
-          EmailRecords[msg.From]['Categories']['Social'] = {}
-          EmailRecords[msg.From]['Categories']['Updates'] = {}
-          EmailRecords[msg.From]['Categories']['Forums'] = {}
-          EmailRecords[msg.From]['Categories']['Promotions'] = {}
+          EmailRecords[msg.From]['Social'] = {}
+          EmailRecords[msg.From]['Updates'] = {}
+          EmailRecords[msg.From]['Forums'] = {}
+          EmailRecords[msg.From]['Promotions'] = {}
         end
         if EmailRecords[msg.Tags.Target] == nil then
           EmailRecords[msg.Tags.Target] = {}
@@ -399,11 +397,10 @@ Handlers.add(
           EmailRecords[msg.Tags.Target]['AllMail'] = {}
           EmailRecords[msg.Tags.Target]['Spam'] = {}
           EmailRecords[msg.Tags.Target]['Trash'] = {}
-          EmailRecords[msg.Tags.Target]['Categories'] = {}
-          EmailRecords[msg.Tags.Target]['Categories']['Social'] = {}
-          EmailRecords[msg.Tags.Target]['Categories']['Updates'] = {}
-          EmailRecords[msg.Tags.Target]['Categories']['Forums'] = {}
-          EmailRecords[msg.Tags.Target]['Categories']['Promotions'] = {}
+          EmailRecords[msg.Tags.Target]['Social'] = {}
+          EmailRecords[msg.Tags.Target]['Updates'] = {}
+          EmailRecords[msg.Tags.Target]['Forums'] = {}
+          EmailRecords[msg.Tags.Target]['Promotions'] = {}
         end
         if EmailRecordsUnRead[msg.Tags.Target] == nil then
           EmailRecordsUnRead[msg.Tags.Target] = {}
@@ -416,11 +413,10 @@ Handlers.add(
           EmailRecordsUnRead[msg.Tags.Target]['AllMail'] = {}
           EmailRecordsUnRead[msg.Tags.Target]['Spam'] = {}
           EmailRecordsUnRead[msg.Tags.Target]['Trash'] = {}
-          EmailRecordsUnRead[msg.Tags.Target]['Categories'] = {}
-          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Social'] = {}
-          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Updates'] = {}
-          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Forums'] = {}
-          EmailRecordsUnRead[msg.Tags.Target]['Categories']['Promotions'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Social'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Updates'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Forums'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Promotions'] = {}
         end
         if PublicKeys[msg.Tags.Target] == nil then
           ao.send({
