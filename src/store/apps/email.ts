@@ -3,8 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import authConfig from 'src/configs/auth'
 
-import { TxRecordType } from 'src/types/apps/Chivesweave'
-
 import { ChivesEmailGetMyEmailRecords } from 'src/functions/AoConnect/ChivesEmail'
 
 interface DataParams {
@@ -56,28 +54,6 @@ export const myEmailSlice = createSlice({
     folder:[],
   },
   reducers: {
-    handleSelectAllFile: (state, action) => {
-      const selectAllDrives: string[] = []
-      if (action.payload && state.files !== null) {
-        selectAllDrives.length = 0
-
-        // @ts-ignore
-        state.data.forEach((drive: TxRecordType) => {
-          const TagsMap: any = {}
-          drive && drive.tags && drive.tags.length > 0 && drive.tags.map( (Tag: any) => {
-            TagsMap[Tag.name] = Tag.value;
-          })
-          const EntityType = TagsMap['Entity-Type']
-          if(EntityType!="Folder") {
-            selectAllDrives.push(drive.id)
-          }
-        })
-      } else {
-        selectAllDrives.length = 0
-      }
-      console.log("selectAllDrives", selectAllDrives)
-      state.selectedFiles = selectAllDrives as any
-    }
   },
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
@@ -91,7 +67,5 @@ export const myEmailSlice = createSlice({
     })
   }
 })
-
-export const { handleSelectAllFile } = myEmailSlice.actions
 
 export default myEmailSlice.reducer

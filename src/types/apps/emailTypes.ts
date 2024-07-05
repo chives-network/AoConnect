@@ -118,7 +118,6 @@ export type MailSidebarType = {
   toggleUploadFilesOpen: () => void
   handleLeftSidebarToggle: () => void
   setFileDetailOpen: (val: boolean) => void
-  handleSelectAllFile: (val: boolean) => void
 }
 
 export type EmailListType = {
@@ -126,18 +125,14 @@ export type EmailListType = {
   hidden: boolean
   store: any
   lgAbove: boolean
-  dispatch: Dispatch<any>
   direction: 'ltr' | 'rtl'
   driveFileOpen: boolean
   labelColors: any
   folder: any
-  setFolder: (id: string) => void
   setQuery: (val: string) => void
-  handleLeftSidebarToggle: () => void
   currentEmail: any
   setCurrentEmail: (item: TxRecordType) => void
   setFileDetailOpen: (val: boolean) => void
-  handleSelectAllFile: (val: boolean) => void
   paginationModel: any
   handlePageChange: (event: any, page: number) => void
   handleFolderChange: (folder: string) => void  
@@ -167,6 +162,9 @@ export type EmailDetailType = {
   handleFolderUpdate: (id: string | null, folder: FolderType) => void
   handleMoveToTrash: (id: string | null) => void
   handleMoveToSpam: (id: string | null) => void
+  handleMoveToFolder: (id: string | null, oldFolder: string, newFolder: string) => void
+  currentWallet: any
+  currentAoAddress: string
 }
 
 export type MailComposeType = {

@@ -33,12 +33,7 @@ import EmailDetail from './EmailDetail'
 import Pagination from '@mui/material/Pagination'
 
 // ** Types
-import {
-  EmailListType,
-  LabelType,
-  MailFoldersArrType,
-  MailFoldersObjType
-} from 'src/types/apps/emailTypes'
+import { EmailListType } from 'src/types/apps/emailTypes'
 
 import { OptionType } from 'src/@core/components/option-menu/types'
 
@@ -49,11 +44,10 @@ import { useTranslation } from 'react-i18next'
 
 import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 
-import { ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus } from 'src/functions/ChivesWallets'
-import { TxRecordType } from 'src/types/apps/Chivesweave'
+import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 
 import { ChivesEmailMoveToFolder } from 'src/functions/AoConnect/ChivesEmail'
- import authConfig from 'src/configs/auth'
+import authConfig from 'src/configs/auth'
 
 
 const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
@@ -100,17 +94,14 @@ const EmailList = (props: EmailListType) => {
     store,
     query,
     hidden,
-    dispatch,
     setQuery,
     direction,
     labelColors,
     folder,
-    setFolder,
     currentEmail,
     setCurrentEmail,
     driveFileOpen,
     setFileDetailOpen,
-    handleSelectAllFile,
     paginationModel,
     handlePageChange,
     handleFolderChange,
@@ -131,89 +122,8 @@ const EmailList = (props: EmailListType) => {
     setSelectedFiles({})
   },[paginationModel, folder])
 
-  const [isHaveTaskToDo, setIsHaveTaskToDo] = useState<number>(0)
-
   // ** State
   const [refresh, setRefresh] = useState<boolean>(false)
-
-  // ** Vars
-  const folders: MailFoldersArrType[] = [
-    {
-      name: 'Draft',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:pencil-outline' fontSize={20} />
-        </Box>
-      )
-    },
-    {
-      name: 'Spam',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:alert-octagon-outline' fontSize={20} />
-        </Box>
-      )
-    },
-    {
-      name: 'Trash',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:delete-outline' fontSize={20} />
-        </Box>
-      )
-    },
-    {
-      name: 'Inbox',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:email-outline' fontSize={20} />
-        </Box>
-      )
-    }
-  ]
-
-  const foldersConfig = {
-    Draft: {
-      name: 'Draft',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:pencil-outline' fontSize={20} />
-        </Box>
-      )
-    },
-    Spam: {
-      name: 'Spam',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:alert-octagon-outline' fontSize={20} />
-        </Box>
-      )
-    },
-    Trash: {
-      name: 'Trash',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:delete-outline' fontSize={20} />
-        </Box>
-      )
-    },
-    Inbox: {
-      name: 'Inbox',
-      icon: (
-        <Box component='span' sx={{ mr: 2, display: 'flex' }}>
-          <Icon icon='mdi:email-outline' fontSize={20} />
-        </Box>
-      )
-    }
-  }
-
-  const foldersObj: MailFoldersObjType = {
-    Inbox: [foldersConfig.Spam, foldersConfig.Trash],
-    Sent: [foldersConfig.Trash],
-    Draft: [foldersConfig.Trash],
-    Spam: [foldersConfig.Inbox, foldersConfig.Trash],
-    Trash: [foldersConfig.Inbox, foldersConfig.Spam]
-  }
 
   const handleMoveToFolder = async (id: string | null, oldFolder: string, newFolder: string) => {
     console.log("selectedFiles", selectedFiles);
@@ -292,7 +202,10 @@ const EmailList = (props: EmailListType) => {
     driveFileOpen,
     setFileDetailOpen,
     handleMoveToTrash,
-    handleMoveToSpam
+    handleMoveToSpam,
+    handleMoveToFolder,
+    currentWallet,
+    currentAoAddress
   }
 
   return (
@@ -412,9 +325,6 @@ const EmailList = (props: EmailListType) => {
                           else {
                             setFileDetailOpen(true)
                             setCurrentEmail(email)
-                            setTimeout(() => {
-                              dispatch(handleSelectAllFile(false))
-                            }, 600)
                           }
                         }
                         

@@ -58,7 +58,6 @@ const SidebarLeft = (props: EmailSidebarType) => {
     store,
     hidden,
     lgAbove,
-    dispatch,
     folder,
     setFolder,
     leftSidebarOpen,
@@ -66,7 +65,6 @@ const SidebarLeft = (props: EmailSidebarType) => {
     uploadFilesTitle,
     toggleUploadFilesOpen,
     setFileDetailOpen,
-    handleSelectAllFile,
     handleLeftSidebarToggle
   } = props
 
@@ -101,7 +99,6 @@ const SidebarLeft = (props: EmailSidebarType) => {
   const handleListItemClick = (Folder: string | null) => {
     setFolder(Folder)
     setFileDetailOpen(false)
-    setTimeout(() => dispatch(handleSelectAllFile(false)), 50)
     handleLeftSidebarToggle()
   }
 

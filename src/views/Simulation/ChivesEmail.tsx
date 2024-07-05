@@ -164,13 +164,33 @@ const ChivesEmail = () => {
       }))
     }
 
-    const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(ChivesEmail, TokenProcessTxId2, 'Svwfh_fzyX5bcj1dvMrYT9DyU52l7EB9MWCtNHqTmhw')
+    const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'Svwfh_fzyX5bcj1dvMrYT9DyU52l7EB9MWCtNHqTmhw', 'Inbox')
     if(ChivesEmailReadEmailContentData) {
       console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        'ChivesEmailReadEmailContentData': JSON.stringify(ChivesEmailReadEmailContentData)
-      }))
+      if(ChivesEmailReadEmailContentData?.msg?.Output?.data?.output)  {
+        const formatText = ChivesEmailReadEmailContentData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesEmailSetPublicKey1: formatText
+          }))
+
+          //Read message from inbox
+          const ChivesEmailSetPublicKeyData1 = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId2)
+          if(ChivesEmailSetPublicKeyData1?.msg?.Output?.data?.output)  {
+            const formatText2 = ChivesEmailSetPublicKeyData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesEmailReadEmailContentData: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
     }
 
     const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'HEGz9y0hZXz48Ur_Rkpwml5aVwf18eiM6fpaLo9XnjI', 'Inbox', 'Starred')

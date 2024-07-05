@@ -26,7 +26,6 @@ export type EmailSidebarType = {
   toggleUploadFilesOpen: () => void
   handleLeftSidebarToggle: () => void
   setFileDetailOpen: (val: boolean) => void
-  handleSelectAllFile: (val: boolean) => void
 }
 
 export type BlockType = {

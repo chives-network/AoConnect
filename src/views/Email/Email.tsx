@@ -30,10 +30,7 @@ import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 
 // ** Actions
-import {
-  fetchData,
-  handleSelectAllFile,
-} from 'src/store/apps/email'
+import { fetchData } from 'src/store/apps/email'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
@@ -114,9 +111,8 @@ const DriveAppLayout = () => {
         console.log("loading", loading)
         setNoEmailText('No Email')
       })
-      dispatch(handleSelectAllFile(false))
       setUploadFilesOpen(false)
-      setUploadFilesTitle(`${t(`Write Email`)}`)
+      setUploadFilesTitle(`${t(`Compose`)}`)
     }
   }, [dispatch, paginationModel, folder, currentAoAddress, counter])
 
@@ -164,7 +160,6 @@ const DriveAppLayout = () => {
         uploadFilesTitle={uploadFilesTitle}
         toggleUploadFilesOpen={toggleUploadFilesOpen}
         setFileDetailOpen={setFileDetailOpen}
-        handleSelectAllFile={handleSelectAllFile}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
       />
       { !uploadFilesOpen ?
@@ -173,18 +168,14 @@ const DriveAppLayout = () => {
           store={store}
           hidden={hidden}
           lgAbove={lgAbove}
-          dispatch={dispatch}
           setQuery={setQuery}
           direction={direction}
           folder={folder}
-          setFolder={setFolder}
           labelColors={labelColors}
           currentEmail={currentEmail}
           setCurrentEmail={setCurrentEmail}
           driveFileOpen={driveFileOpen}
           setFileDetailOpen={setFileDetailOpen}
-          handleSelectAllFile={handleSelectAllFile}
-          handleLeftSidebarToggle={handleLeftSidebarToggle}        
           paginationModel={paginationModel}
           handlePageChange={handlePageChange}
           handleFolderChange={handleFolderChange}

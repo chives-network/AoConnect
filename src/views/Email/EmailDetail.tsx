@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, ReactNode, useEffect } from 'react'
+import { Fragment, ReactNode, useEffect } from 'react'
 
 // ** MUI Imports
 import Avatar from '@mui/material/Avatar'
@@ -23,10 +23,7 @@ import OptionsMenu from 'src/@core/components/option-menu'
 
 // ** Types
 import { OptionType } from 'src/@core/components/option-menu/types'
-import {
-  LabelType,
-  EmailDetailType
-} from 'src/types/apps/emailTypes'
+import { EmailDetailType } from 'src/types/apps/emailTypes'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -36,6 +33,10 @@ import { formatTimestampLocalTime } from 'src/configs/functions';
 import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 
 import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
+
+import { ChivesEmailReadEmailContent } from 'src/functions/AoConnect/ChivesEmail'
+
+import authConfig from 'src/configs/auth'
 
 const DriveDetail = (props: EmailDetailType) => {
   // ** Hook
@@ -52,20 +53,26 @@ const DriveDetail = (props: EmailDetailType) => {
     driveFileOpen,
     setFileDetailOpen,
     handleMoveToTrash,
-    handleMoveToSpam
+    handleMoveToSpam,
+    handleMoveToFolder,
+    currentWallet,
+    currentAoAddress
   } = props
 
   const FullStatusRS: any = GetFileCacheStatus(currentEmail)
   const FileFullStatus: any = FullStatusRS['FullStatus']
 
-  const [tags, setTags] = useState<any>({})
   useEffect(() => {
-    const tagsMap: any = {}
-    currentEmail && currentEmail.tags && currentEmail.tags.length > 0 && currentEmail.tags.map( (Tag: any) => {
-      tagsMap[Tag.name] = Tag.value;
-    })
-    setTags(tagsMap);
-  }, [currentEmail])
+    const fetchData = async () => {
+      if (currentEmail && currentEmail.Id && currentWallet) {
+        const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, currentEmail.Id, folder);
+        console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
+      }
+    };
+  
+    fetchData();
+  }, [currentEmail]);
+  
 
   // ** Hook
   const { settings } = useSettings()
@@ -92,7 +99,7 @@ const DriveDetail = (props: EmailDetailType) => {
         ),
         menuItemProps: {
           onClick: () => {
-            //handleLabelUpdate(currentEmail.Id, key as LabelType)
+            handleMoveToFolder(null, folder, key)
           }
         }
       })
@@ -100,29 +107,6 @@ const DriveDetail = (props: EmailDetailType) => {
 
     return array
   }
-  
-  /*
-  const handleFoldersMenu = () => {
-    const array: OptionType[] = []
-    Object.entries(folderColors).map(([key, value]: any) => {
-      array.push({
-        text: <Typography sx={{ textTransform: 'capitalize' }}>{key}</Typography>,
-        icon: (
-          <Box component='span' sx={{ mr: 2, color: `${value}.main` }}>
-            <Icon icon='mdi:circle' fontSize='0.75rem' />
-          </Box>
-        ),
-        menuItemProps: {
-          onClick: () => {
-            handleFolderUpdate([currentEmail.Id], key as FolderType)
-          }
-        }
-      })
-    })
-
-    return array
-  }
-  */
 
   const prevMailIcon = direction === 'rtl' ? 'mdi:chevron-right' : 'mdi:chevron-left'
   const goBackIcon = prevMailIcon
@@ -183,7 +167,7 @@ const DriveDetail = (props: EmailDetailType) => {
                   }}
                 >
                   <Typography noWrap sx={{ mr: 2, fontWeight: 500 }}>
-                    {tags['File-Name']}
+                    {currentEmail.Subject}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
