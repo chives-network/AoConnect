@@ -50,7 +50,6 @@ const DriveDetail = (props: EmailDetailType) => {
     folder,
     handleStarDrive,
     driveFileOpen,
-    handleLabelUpdate,
     setFileDetailOpen,
     handleMoveToTrash,
     handleMoveToSpam
@@ -93,7 +92,7 @@ const DriveDetail = (props: EmailDetailType) => {
         ),
         menuItemProps: {
           onClick: () => {
-            handleLabelUpdate(currentEmail.Id, key as LabelType)
+            //handleLabelUpdate(currentEmail.Id, key as LabelType)
           }
         }
       })

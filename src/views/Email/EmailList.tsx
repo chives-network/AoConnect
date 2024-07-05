@@ -232,11 +232,11 @@ const EmailList = (props: EmailListType) => {
   }
 
   const handleMoveToTrash = async (id: string | null) => {
-    handleMoveToFolder(id, "Inbox", "Trash")
+    handleMoveToFolder(id, folder, "Trash")
   }
   
   const handleMoveToSpam = async (id: string | null) => {
-    handleMoveToFolder(id, "Inbox", "Spam")
+    handleMoveToFolder(id, folder, "Spam")
   }
 
   const handleStarDrive = async (e: SyntheticEvent, id: string, value: boolean) => {
@@ -246,7 +246,7 @@ const EmailList = (props: EmailListType) => {
         ...prevState,
         [id]: true
       }))
-      handleMoveToFolder(id, "Inbox", "Starred")
+      handleMoveToFolder(id, folder, "Starred")
     }
     else {
       setStarredList((prevState: any)=>({
@@ -256,38 +256,7 @@ const EmailList = (props: EmailListType) => {
     }
   }
 
-  const handleLabelUpdate = (id: string | null, label: LabelType) => {
-    if( id == null && selectedFiles && selectedFiles.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => selectedFiles.includes(Item.id));
-      ChangeMultiFilesLabel(TargetFiles, label);
-      dispatch(handleSelectAllFile(false))
-    }
-    if( id && id.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => id == Item.id);
-      ChangeMultiFilesLabel(TargetFiles, label);
-      dispatch(handleSelectAllFile(false))
-    }
-  }
-
-  const handleFolderUpdate = (id: string | null, folder: any) => {
-    if( id == null && selectedFiles && selectedFiles.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => selectedFiles.includes(Item.id));
-      ChangeMultiFilesFolder(TargetFiles, folder.id, folder);
-      dispatch(handleSelectAllFile(false))
-    }
-    if( id && id.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => id == Item.id);
-      ChangeMultiFilesFolder(TargetFiles, folder.id, folder);
-      dispatch(handleSelectAllFile(false))
-    }
-  }
-
   const handleRefreshEmailClick = () => {
-    setIsHaveTaskToDo(isHaveTaskToDo + 1);
     setRefresh(true)
     setTimeout(() => setRefresh(false), 1000)
   }
@@ -304,8 +273,7 @@ const EmailList = (props: EmailListType) => {
         ),
         menuItemProps: {
           onClick: () => {
-            handleLabelUpdate(null, key as LabelType)
-            dispatch(handleSelectAllFile(false))
+            handleMoveToFolder(null, folder, key)
           }
         }
       })
@@ -315,20 +283,14 @@ const EmailList = (props: EmailListType) => {
   }
 
   const emailDetailsProps = {
+    currentEmail,
     hidden,
-    folders,
-    dispatch,
     direction,
-    foldersObj,
-    folder,
-    setFolder,
     labelColors,
+    folder,
     handleStarDrive,
     driveFileOpen,
-    handleLabelUpdate,
-    handleFolderUpdate,
     setFileDetailOpen,
-    currentEmail,
     handleMoveToTrash,
     handleMoveToSpam
   }

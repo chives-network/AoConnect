@@ -85,9 +85,6 @@ const SidebarLeft = (props: EmailSidebarType) => {
     if (store && store.recordsCount && store.recordsCount[folder]) {
       return <ListBadge skin='light' color={color} sx={{ ml: 2 }} badgeContent={store.recordsCount[folder]} />
     }
-    else if (store && store.recordsCount.Categories && store.recordsCount.Categories[folder]) {
-      return <ListBadge skin='light' color={color} sx={{ ml: 2 }} badgeContent={store.recordsCount.Categories[folder]} />
-    }
     else {
       return null
     }
