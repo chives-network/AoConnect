@@ -240,13 +240,11 @@ Handlers.add(
             break
         end
       end
-      if foundInNewFolder == false then
-        table.insert(EmailRecordsUnRead[msg.From][msg.NewFolder], msg.EmailId)
-      end
       local foundInOldFolder = false
       for i, v in ipairs(EmailRecordsUnRead[msg.From][msg.OldFolder]) do
         if v == msg.EmailId and foundInNewFolder == false then
             foundInOldFolder = true
+            table.insert(EmailRecordsUnRead[msg.From][msg.NewFolder], msg.EmailId)
             table.remove(EmailRecordsUnRead[msg.From][msg.OldFolder], i)
             break
         end
