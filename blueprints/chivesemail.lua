@@ -89,10 +89,10 @@ Handlers.add(
     else
       EmailRecordsCount['Inbox'] = 0
     end
-    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Started'] then
-      EmailRecordsCount['Started'] = #EmailRecordsUnRead[msg.From]['Started']
+    if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Starred'] then
+      EmailRecordsCount['Starred'] = #EmailRecordsUnRead[msg.From]['Starred']
     else
-      EmailRecordsCount['Started'] = 0
+      EmailRecordsCount['Starred'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Snoozed'] then
       EmailRecordsCount['Snoozed'] = #EmailRecordsUnRead[msg.From]['Snoozed']
@@ -331,7 +331,7 @@ Handlers.add(
         if EmailRecords[msg.From] == nil then
           EmailRecords[msg.From] = {}
           EmailRecords[msg.From]['Inbox'] = {}
-          EmailRecords[msg.From]['Started'] = {}
+          EmailRecords[msg.From]['Starred'] = {}
           EmailRecords[msg.From]['Snoozed'] = {}
           EmailRecords[msg.From]['Sent'] = {}
           EmailRecords[msg.From]['Drafts'] = {}
@@ -348,7 +348,7 @@ Handlers.add(
         if EmailRecords[msg.Tags.Target] == nil then
           EmailRecords[msg.Tags.Target] = {}
           EmailRecords[msg.Tags.Target]['Inbox'] = {}
-          EmailRecords[msg.Tags.Target]['Started'] = {}
+          EmailRecords[msg.Tags.Target]['Starred'] = {}
           EmailRecords[msg.Tags.Target]['Snoozed'] = {}
           EmailRecords[msg.Tags.Target]['Sent'] = {}
           EmailRecords[msg.Tags.Target]['Drafts'] = {}
@@ -365,7 +365,7 @@ Handlers.add(
         if EmailRecordsUnRead[msg.Tags.Target] == nil then
           EmailRecordsUnRead[msg.Tags.Target] = {}
           EmailRecordsUnRead[msg.Tags.Target]['Inbox'] = {}
-          EmailRecordsUnRead[msg.Tags.Target]['Started'] = {}
+          EmailRecordsUnRead[msg.Tags.Target]['Starred'] = {}
           EmailRecordsUnRead[msg.Tags.Target]['Snoozed'] = {}
           EmailRecordsUnRead[msg.Tags.Target]['Sent'] = {}
           EmailRecordsUnRead[msg.Tags.Target]['Drafts'] = {}
