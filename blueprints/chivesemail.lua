@@ -51,8 +51,8 @@ Handlers.add(
         EmailRecords[msg.From] = {}
     end
     local emailFolder = "Inbox"
-    if msg.Tags.folder then
-        emailFolder = tostring(msg.Tags.folder)
+    if msg.Tags.Folder then
+        emailFolder = msg.Tags.Folder
     end
     if EmailRecords[msg.From][emailFolder] == nil then
         EmailRecords[msg.From][emailFolder] = {}
