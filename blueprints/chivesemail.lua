@@ -84,69 +84,83 @@ Handlers.add(
     end
 
     local EmailRecordsCount = {}
+    local EmailRecordsUnRead = {}
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Inbox'] then
       EmailRecordsCount['Inbox'] = #EmailRecordsUnRead[msg.From]['Inbox']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Inbox']
     else
       EmailRecordsCount['Inbox'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Starred'] then
       EmailRecordsCount['Starred'] = #EmailRecordsUnRead[msg.From]['Starred']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Starred']
     else
       EmailRecordsCount['Starred'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Snoozed'] then
       EmailRecordsCount['Snoozed'] = #EmailRecordsUnRead[msg.From]['Snoozed']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Snoozed']
     else
       EmailRecordsCount['Snoozed'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Sent'] then
       EmailRecordsCount['Sent'] = #EmailRecordsUnRead[msg.From]['Sent']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Sent']
     else
       EmailRecordsCount['Sent'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Drafts'] then
       EmailRecordsCount['Drafts'] = #EmailRecordsUnRead[msg.From]['Drafts']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Drafts']
     else
       EmailRecordsCount['Drafts'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Important'] then
       EmailRecordsCount['Important'] = #EmailRecordsUnRead[msg.From]['Important']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Important']
     else
       EmailRecordsCount['Important'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['AllMail'] then
       EmailRecordsCount['AllMail'] = #EmailRecordsUnRead[msg.From]['AllMail']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['AllMail']
     else
       EmailRecordsCount['AllMail'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Spam'] then
       EmailRecordsCount['Spam'] = #EmailRecordsUnRead[msg.From]['Spam']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Spam']
     else
       EmailRecordsCount['Spam'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Trash'] then
       EmailRecordsCount['Trash'] = #EmailRecordsUnRead[msg.From]['Trash']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Trash']
     else
       EmailRecordsCount['Trash'] = 0
     end
     EmailRecordsCount['Categories'] = {}
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Social'] then
       EmailRecordsCount['Categories']['Social'] = #EmailRecordsUnRead[msg.From]['Categories']['Social']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Social']
     else
       EmailRecordsCount['Categories']['Social'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Updates'] then
       EmailRecordsCount['Categories']['Updates'] = #EmailRecordsUnRead[msg.From]['Categories']['Updates']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Updates']
     else
       EmailRecordsCount['Categories']['Updates'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Forums'] then
       EmailRecordsCount['Categories']['Forums'] = #EmailRecordsUnRead[msg.From]['Categories']['Forums']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Forums']
     else
       EmailRecordsCount['Categories']['Forums'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Promotions'] then
       EmailRecordsCount['Categories']['Promotions'] = #EmailRecordsUnRead[msg.From]['Categories']['Promotions']
+      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Promotions']
     else
       EmailRecordsCount['Categories']['Promotions'] = 0
     end
