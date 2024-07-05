@@ -16,7 +16,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 import { RootState, AppDispatch } from 'src/store'
 
 // ** Email App Component Imports
-import DriveList from 'src/views/Email/EmailList'
+import EmailList from 'src/views/Email/EmailList'
 import SidebarLeft from 'src/views/Email/SidebarLeft'
 import UploadFiles from 'src/views/form/uploadfiles';
 
@@ -62,6 +62,10 @@ const DriveAppLayout = ({ initFolder }: any) => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [folder, setFolder] = useState<string>(initFolder)
   const [folderHeaderList, setFolderHeaderList] = useState<any[]>([{'name': t(initFolder) as string, 'value': initFolder}])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [noEmailText, setNoEmailText] = useState<string>("No Email")
+
+  
 
   // ** Hooks
   const theme = useTheme()
@@ -85,12 +89,12 @@ const DriveAppLayout = ({ initFolder }: any) => {
   const currentAddress = auth.currentAddress
 
   // ** State
-  const paginationModelDefaultValue = { page: 1, pageSize: 10 }
-  const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 10 })
+  const paginationModelDefaultValue = { page: 1, pageSize: 12 }
+  const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 12 })
   
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
     setPaginationModel({ ...paginationModel, page });
-    console.log("handlePageChange", event)
+    console.log("handlePageChange", page)
   }
 
   const handleFolderChange = (folder: string) => {
@@ -120,6 +124,9 @@ const DriveAppLayout = ({ initFolder }: any) => {
   
   useEffect(() => {
     if(true && id && id.length == 43) {
+      setLoading(true)
+      console.log("loading", loading)
+      setNoEmailText('Loading...')
       dispatch(
         fetchData({
           address: String(id),
@@ -127,7 +134,11 @@ const DriveAppLayout = ({ initFolder }: any) => {
           pageSize: paginationModel.pageSize,
           folder: folder
         })
-      )
+      ).then(()=>{
+        setLoading(false)
+        console.log("loading", loading)
+        setNoEmailText('No Email')
+      })
       dispatch(handleSelectAllFile(false))
       setUploadFilesOpen(false)
       setUploadFilesTitle(`${t(`Write Email`)}`)
@@ -182,7 +193,7 @@ const DriveAppLayout = ({ initFolder }: any) => {
         handleLeftSidebarToggle={handleLeftSidebarToggle}
       />
       { !uploadFilesOpen ?
-        <DriveList
+        <EmailList
           query={query}
           store={store}
           hidden={hidden}
@@ -204,6 +215,8 @@ const DriveAppLayout = ({ initFolder }: any) => {
           handleFolderChange={handleFolderChange}
           folderHeaderList={folderHeaderList}
           handleFolderHeaderList={handleFolderHeaderList}
+          loading={loading}
+          noEmailText={noEmailText}
         />
         :
         <CardContent>

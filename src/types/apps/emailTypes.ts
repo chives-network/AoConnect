@@ -143,6 +143,8 @@ export type DriveListType = {
   handleFolderChange: (folder: string) => void  
   folderHeaderList: any[]
   handleFolderHeaderList: (folderHeader: any) => void  
+  loading: boolean
+  noEmailText: string
 }
 
 export type FileDetailType = {

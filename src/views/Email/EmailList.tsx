@@ -68,8 +68,8 @@ import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
   cursor: 'pointer',
-  paddingTop: theme.spacing(3),
-  paddingBottom: theme.spacing(2),
+  paddingTop: theme.spacing(1.9),
+  paddingBottom: theme.spacing(1.45),
   justifyContent: 'space-between',
   transition: 'border 0.15s ease-in-out, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
   '&:not(:first-of-type)': {
@@ -125,7 +125,9 @@ const DriveList = (props: DriveListType) => {
     handlePageChange,
     handleFolderChange,
     folderHeaderList,
-    handleFolderHeaderList
+    handleFolderHeaderList,
+    loading,
+    noEmailText
   } = props
 
   
@@ -461,177 +463,41 @@ const DriveList = (props: DriveListType) => {
     handleMoveToSpam
   }
 
+  console.log("folderHeaderList", folderHeaderList)
   return (
     <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', '& .ps__rail-y': { zIndex: 5 } }}>
-      {isSubmitBlockchainDialog == true ? 
-        <Fragment>
-          <Dialog
-              open={open}
-              disableEscapeKeyDown
-              aria-labelledby='alert-dialog-title'
-              aria-describedby='alert-dialog-description'
-              >
-              <DialogTitle id='alert-dialog-title'>{`${t(`Submit to Blockchain`)}`}</DialogTitle>
-              <DialogContent>
-                  <DialogContentText id='alert-dialog-description'>
-                    {`${t(`Would you like to submit your operations to the blockchain? This process may take 3-5 minutes.`)}`}
-                  </DialogContentText>
-              </DialogContent>
-              <DialogActions className='dialog-actions-dense'>
-                  {isProgress == true && haveSubmitTextTip == "" ? 
-                    <Fragment>
-                      <CircularProgress disableShrink sx={{ m: 6 }} />
-                    </Fragment>
-                  :
-                  <Fragment></Fragment>
-                  }
-                  {isProgress == true && haveSubmitTextTip != "" ? 
-                    <Fragment>
-                      <Typography
-                              sx={{
-                                mr: 4,
-                                fontWeight: 500,
-                                whiteSpace: 'nowrap',
-                                width: ['100%', 'auto'],
-                                overflow: ['hidden', 'unset'],
-                                textOverflow: ['ellipsis', 'unset']
-                              }}
-                            >
-                              {haveSubmitTextTip}
-                            </Typography>
-                    </Fragment>
-                  :
-                  <Fragment></Fragment>
-                  }
-                  {isProgress == false ? 
-                    <Fragment>
-                      <Button onClick={handleActionsSubmitToBlockchainYes} color="error" size='large' variant='contained' >{`${t(`Yes`)}`}</Button>
-                      <Button onClick={handleNoClose} color="primary">{`${t(`No`)}`}</Button>
-                    </Fragment>
-                  :
-                  <Fragment></Fragment>
-                  }
-                  
-              </DialogActions>
-          </Dialog>
-        </Fragment>
-      :
-      <Fragment></Fragment>
-      }
-      {isNewFolderDialog == true ? 
-        <Fragment>
-          <Dialog
-              open={open}
-              disableEscapeKeyDown
-              aria-labelledby='alert-dialog-title'
-              aria-describedby='alert-dialog-description'
-              >
-              <DialogTitle id='alert-dialog-title'>{`${t(`Create Folder`)}`}</DialogTitle>
-              <DialogContent>
-                  <DialogContentText id='alert-dialog-description' sx={{py: 2}}>
-                    <TextField
-                        fullWidth
-                        label={`${t('FolderName')}`}
-                        placeholder={`${t('FolderName')}`}
-                        value={folderName}
-                        onChange={handleFolderNameChange}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                  <Icon icon='mdi:folder-outline' />
-                                </InputAdornment>
-                            )
-                        }}
-                        error={!!folderNameError}
-                        helperText={folderNameError}
-                    />
-                  </DialogContentText>
-                  {`${t('After creating the folder, you need to manually submit it to the blockchain network')}`}
-              </DialogContent>
-              <DialogActions className='dialog-actions-dense'>
-                  {isProgress == true && haveSubmitTextTip == "" ? 
-                    <Fragment>
-                      <CircularProgress disableShrink sx={{ m: 6 }} />
-                    </Fragment>
-                  :
-                  <Fragment></Fragment>
-                  }
-                  {isProgress == true && haveSubmitTextTip != "" ? 
-                    <Fragment>
-                      <Typography
-                              sx={{
-                                mr: 4,
-                                fontWeight: 500,
-                                whiteSpace: 'nowrap',
-                                width: ['100%', 'auto'],
-                                overflow: ['hidden', 'unset'],
-                                textOverflow: ['ellipsis', 'unset']
-                              }}
-                            >
-                              {haveSubmitTextTip}
-                            </Typography>
-                    </Fragment>
-                  :
-                  <Fragment></Fragment>
-                  }
-                  {isProgress == false ? 
-                    <Fragment>
-                      <Button onClick={handleCreateFolderSubmit} color="error" size='large' variant='contained' >{`${t(`Submit`)}`}</Button>
-                      <Button onClick={handleNoClose} color="primary">{`${t(`Cancel`)}`}</Button>
-                    </Fragment>
-                  :
-                  <Fragment></Fragment>
-                  }
-                  
-              </DialogActions>
-          </Dialog>
-        </Fragment>
-      :
-      <Fragment></Fragment>
-      }
       <Box sx={{ height: '100%', backgroundColor: 'background.paper' }}>
-        <Box sx={{ px: 5, py: 3 }}>
+        <Box sx={{ px: 3, py: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-            {folderHeaderList && folderHeaderList.length > 0 ? 
-                <Stack spacing={2}>
-                  <Breadcrumbs
-                    separator={<Icon icon='mingcute:right-line' fontSize='1.375rem' />}
-                    aria-label="breadcrumb"
-                  >
-                    {folderHeaderList.map((Item: any, Index: number)=>{
-                      return (
-                          folderHeaderList.length == Index+1 ?
-                          <Typography key="3" color="text.primary">
-                            {Item.name}
-                          </Typography>
-                          :
-                          <Link underline="hover" style={{cursor: 'pointer'}} key={Index} color="inherit" onClick={()=>handleFolderHeaderList(Item)}>
-                            {Item.name}
-                          </Link>
-                          )
-                    })}
-                  </Breadcrumbs>
-                </Stack>
-              :
+            <Box sx={{ flex: 1 }}>
+              {folderHeaderList && folderHeaderList[0] && folderHeaderList[0].name && (
+                <Typography sx={{}} >
+                  {folderHeaderList[0].name}
+                </Typography>
+              )}
+            </Box>
+            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
               <Input
+                size="small"
+                disabled
                 value={query}
-                placeholder={`${t(`Search File Name`)}`}
+                placeholder={`${t(`Search Not Finished`)}`}
                 onChange={e => setQuery(e.target.value)}
-                sx={{ width: '100%', '&:before, &:after': { display: 'none' } }}
+                sx={{ width: '200px', '&:before, &:after': { display: 'none' } }}
                 startAdornment={
                   <InputAdornment position='start' sx={{ color: 'text.disabled' }}>
                     <Icon icon='mdi:magnify' fontSize='1.375rem' />
                   </InputAdornment>
                 }
               />
-            }
+            </Box>
           </Box>
         </Box>
         <Divider sx={{ m: '0 !important' }} />
-        <Box sx={{ py: 2, px: { xs: 2.5, sm: 5 } }}>
+        <Box sx={{ py: 1, px: { xs: 2.5, sm: 5 } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {store && store.data && store.selectedFiles ? (
+              {store && store.data && store.data.length ? (
                 <Checkbox
                   onChange={e => {
                     dispatch(handleSelectAllFile(e.target.checked))
@@ -697,7 +563,7 @@ const DriveList = (props: DriveListType) => {
           </Box>
         </Box>
         <Divider sx={{ m: '0 !important' }} />
-        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 11.55rem)' }}>
+        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 9.75rem)' }}>
           <ScrollWrapper hidden={hidden}>
             {store && store.data && store.data.length ? (
               <List sx={{ p: 0, m: 1 }}>
@@ -875,7 +741,7 @@ const DriveList = (props: DriveListType) => {
             ) : (
               <Box sx={{ mt: 6, display: 'flex', justifyContent: 'center', alignItems: 'center', '& svg': { mr: 2 } }}>
                 <Icon icon='mdi:alert-circle-outline' fontSize={20} />
-                <Typography>{`${t(`No Email`)}`}</Typography>
+                <Typography>{`${t(noEmailText)}`}</Typography>
               </Box>
             )}
           </ScrollWrapper>
@@ -894,9 +760,9 @@ const DriveList = (props: DriveListType) => {
         </Box>
         
         <Divider sx={{ m: '0 !important' }} />
-        <Box sx={{ px: 5, py: 3 }}>
+        <Box sx={{ px: 3, py: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-            <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
+            <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ py: 2 }}>
               <Pagination count={Number(store?.allPages)} variant='outlined' color='primary' page={paginationModel.page} onChange={handlePageChange} siblingCount={2} boundaryCount={3} />
             </Grid>
           </Box>
@@ -906,6 +772,11 @@ const DriveList = (props: DriveListType) => {
 
       {/* @ts-ignore */}
       <DriveDetail {...driveDetailsProps} />
+
+      <Backdrop open={loading} style={{ zIndex: 9999, color: '#fff' }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
     </Box>
   )
 }
