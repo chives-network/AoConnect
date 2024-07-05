@@ -84,83 +84,83 @@ Handlers.add(
     end
 
     local EmailRecordsCount = {}
-    local EmailRecordsUnRead = {}
+    local EmailRecordsUnReadFolder = {}
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Inbox'] then
       EmailRecordsCount['Inbox'] = #EmailRecordsUnRead[msg.From]['Inbox']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Inbox']
+      EmailRecordsUnReadFolder = EmailRecordsUnRead[msg.From]['Inbox']
     else
       EmailRecordsCount['Inbox'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Starred'] then
       EmailRecordsCount['Starred'] = #EmailRecordsUnRead[msg.From]['Starred']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Starred']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Starred']
     else
       EmailRecordsCount['Starred'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Snoozed'] then
       EmailRecordsCount['Snoozed'] = #EmailRecordsUnRead[msg.From]['Snoozed']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Snoozed']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Snoozed']
     else
       EmailRecordsCount['Snoozed'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Sent'] then
       EmailRecordsCount['Sent'] = #EmailRecordsUnRead[msg.From]['Sent']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Sent']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Sent']
     else
       EmailRecordsCount['Sent'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Drafts'] then
       EmailRecordsCount['Drafts'] = #EmailRecordsUnRead[msg.From]['Drafts']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Drafts']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Drafts']
     else
       EmailRecordsCount['Drafts'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Important'] then
       EmailRecordsCount['Important'] = #EmailRecordsUnRead[msg.From]['Important']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Important']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Important']
     else
       EmailRecordsCount['Important'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['AllMail'] then
       EmailRecordsCount['AllMail'] = #EmailRecordsUnRead[msg.From]['AllMail']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['AllMail']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['AllMail']
     else
       EmailRecordsCount['AllMail'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Spam'] then
       EmailRecordsCount['Spam'] = #EmailRecordsUnRead[msg.From]['Spam']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Spam']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Spam']
     else
       EmailRecordsCount['Spam'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Trash'] then
       EmailRecordsCount['Trash'] = #EmailRecordsUnRead[msg.From]['Trash']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Trash']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Trash']
     else
       EmailRecordsCount['Trash'] = 0
     end
     EmailRecordsCount['Categories'] = {}
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Social'] then
       EmailRecordsCount['Categories']['Social'] = #EmailRecordsUnRead[msg.From]['Categories']['Social']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Social']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Social']
     else
       EmailRecordsCount['Categories']['Social'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Updates'] then
       EmailRecordsCount['Categories']['Updates'] = #EmailRecordsUnRead[msg.From]['Categories']['Updates']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Updates']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Updates']
     else
       EmailRecordsCount['Categories']['Updates'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Forums'] then
       EmailRecordsCount['Categories']['Forums'] = #EmailRecordsUnRead[msg.From]['Categories']['Forums']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Forums']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Forums']
     else
       EmailRecordsCount['Categories']['Forums'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Categories'] and EmailRecordsUnRead[msg.From]['Categories']['Promotions'] then
       EmailRecordsCount['Categories']['Promotions'] = #EmailRecordsUnRead[msg.From]['Categories']['Promotions']
-      EmailRecordsUnRead = EmailRecordsUnRead[msg.From]['Categories']['Promotions']
+      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Categories']['Promotions']
     else
       EmailRecordsCount['Categories']['Promotions'] = 0
     end
@@ -168,7 +168,7 @@ Handlers.add(
     -- out email results
     ao.send({
         Target = msg.From,
-        Data = require('json').encode({filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount, EmailRecordsUnRead[msg.From]})
+        Data = require('json').encode({filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount, EmailRecordsUnReadFolder})
     })
 
   end
@@ -224,6 +224,35 @@ Handlers.add(
   function (msg)
 
     if msg.From and msg.EmailId and EmailDatas[msg.EmailId] and msg.NewFolder and msg.OldFolder then
+      -- Deal UnRead Data
+      if EmailRecordsUnRead[msg.From] == nil then
+          EmailRecordsUnRead[msg.From] = {}
+      end
+      if EmailRecordsUnRead[msg.From][msg.NewFolder] == nil then
+          EmailRecordsUnRead[msg.From][msg.NewFolder] = {}
+      end
+      if EmailRecordsUnRead[msg.From][msg.OldFolder] == nil then
+          EmailRecordsUnRead[msg.From][msg.OldFolder] = {}
+      end
+      local foundInNewFolder = false
+      for i, v in ipairs(EmailRecordsUnRead[msg.From][msg.NewFolder]) do
+        if v == msg.EmailId then
+            foundInNewFolder = true
+            break
+        end
+      end
+      if foundInNewFolder == false then
+        table.insert(EmailRecordsUnRead[msg.From][msg.NewFolder], msg.EmailId)
+      end
+      local foundInOldFolder = false
+      for i, v in ipairs(EmailRecordsUnRead[msg.From][msg.OldFolder]) do
+        if v == msg.EmailId and foundInNewFolder == false then
+            foundInOldFolder = true
+            table.remove(EmailRecordsUnRead[msg.From][msg.OldFolder], i)
+            break
+        end
+      end
+      --Deal EMail Data
       if EmailRecords[msg.From] == nil then
           EmailRecords[msg.From] = {}
       end
@@ -251,7 +280,7 @@ Handlers.add(
       end
       ao.send({
         Target = msg.From,
-        Data = require('json').encode({Data = EmailRecords[msg.From], Status = 'OK', foundInOldFolder = foundInOldFolder, tags = msg.Tags})
+        Data = require('json').encode({Data = "Successfully Move To Folder", Status = 'OK', foundInOldFolder = foundInOldFolder})
       })
     else
       ao.send({
