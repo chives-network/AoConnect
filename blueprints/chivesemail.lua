@@ -205,6 +205,47 @@ Handlers.add(
 )
 
 Handlers.add(
+  "MoveToFolder",
+  Handlers.utils.hasMatchingTag("Action", "MoveToFolder"),
+  function (msg)
+
+    if EmailRecords[msg.From] == nil then
+        EmailRecords[msg.From] = {}
+    end
+    if EmailRecords[msg.From][msg.Tags.newFolder] == nil then
+        EmailRecords[msg.From][msg.Tags.newFolder] = {}
+    end
+    if EmailRecords[msg.From][msg.Tags.oldFolder] == nil then
+        EmailRecords[msg.From][msg.Tags.oldFolder] = {}
+    end
+    if msg.From and msg.Tags.EmailId and EmailDatas[msg.Tags.EmailId] then
+      local foundInNewFolder = false
+      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.newFolder]) do
+        if v == msg.Tags.EmailId then
+            foundInNewFolder = true
+            break
+        end
+      end
+      local foundInOldFolder = false
+      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.oldFolder]) do
+        if v == msg.Tags.EmailId and foundInNewFolder == false then
+            foundInOldFolder = true
+            table.insert(EmailRecords[msg.From][msg.Tags.newFolder], msg.Tags.EmailId)
+            table.remove(EmailRecords[msg.From][msg.Tags.oldFolder], i)
+            break
+        end
+      end
+    else
+      ao.send({
+          Target = msg.From,
+          Data = require('json').encode({Data = 'Not Found Email 1', Status = 'ERROR'})
+      })
+    end
+
+  end
+)
+
+Handlers.add(
   "SendEmail",
   Handlers.utils.hasMatchingTag("Action", "SendEmail"),
   function (msg)
