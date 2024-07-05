@@ -162,6 +162,13 @@ export function formatTimestamp(timestamp: number): string {
   return formattedDate;
 }
 
+
+export function formatTimestampLocalTime(timestamp: number): string {
+  if(timestamp == undefined) return ""
+  
+  return formatTimestamp(Number(timestamp) - (new Date().getTimezoneOffset()) * 60 * 1000);
+}
+
 export function formatStorageSize(size: number): string {
   if (size < 1024) {
 

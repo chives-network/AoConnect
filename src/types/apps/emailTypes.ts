@@ -134,7 +134,8 @@ export type EmailListType = {
   setFolder: (id: string) => void
   setQuery: (val: string) => void
   handleLeftSidebarToggle: () => void
-  setCurrentFile: (item: TxRecordType) => void
+  currentEmail: any
+  setCurrentEmail: (item: TxRecordType) => void
   handleSelectFile: (id: string) => void
   setFileDetailOpen: (val: boolean) => void
   handleSelectAllFile: (val: boolean) => void
@@ -145,13 +146,13 @@ export type EmailListType = {
   noEmailText: string
 }
 
-export type FileDetailType = {
-  currentFile: TxRecordType
+export type EmailDetailType = {
+  currentEmail: any
   hidden: boolean
   dispatch: Dispatch<any>
   direction: 'ltr' | 'rtl'
   driveFileOpen: boolean
-  routeParams: RouteParams
+  folder: string
   labelColors: any
   folderColors: any
   folders: MailFoldersArrType[]

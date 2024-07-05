@@ -32,11 +32,6 @@ export const fetchData = createAsyncThunk('MyEmails/fetchData', async (params: D
   }
 })
 
-export const setCurrentFile = createAsyncThunk('myEmail/selectFile', async (FileTx: TxRecordType) => {
-
-  return FileTx
-})
-
 export const myEmailSlice = createSlice({
   name: 'myEmail',
   initialState: {
@@ -101,9 +96,6 @@ export const myEmailSlice = createSlice({
       state.total = action.payload.totalRecords
       state.params = action.payload.filter
       state.allPages = Math.ceil(action.payload.totalRecords / 10)
-    })
-    builder.addCase(setCurrentFile.fulfilled, (state, action) => {
-      state.currentFile = action.payload
     })
   }
 })

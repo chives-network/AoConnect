@@ -28,7 +28,7 @@ import OptionsMenu from 'src/@core/components/option-menu'
 
 // ** Email App Component Imports
 import { setTimeout } from 'timers'
-import DriveDetail from './EmailDetail'
+import EmailDetail from './EmailDetail'
 
 import Pagination from '@mui/material/Pagination'
 
@@ -42,7 +42,7 @@ import {
 
 import { OptionType } from 'src/@core/components/option-menu/types'
 
-import { formatTimestamp} from 'src/configs/functions';
+import { formatTimestampLocalTime} from 'src/configs/functions';
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -102,7 +102,8 @@ const EmailList = (props: EmailListType) => {
     labelColors,
     folder,
     setFolder,
-    setCurrentFile,
+    currentEmail,
+    setCurrentEmail,
     driveFileOpen,
     handleSelectFile,
     setFileDetailOpen,
@@ -350,7 +351,7 @@ const EmailList = (props: EmailListType) => {
     return array
   }
 
-  const driveDetailsProps = {
+  const emailDetailsProps = {
     hidden,
     folders,
     dispatch,
@@ -364,7 +365,7 @@ const EmailList = (props: EmailListType) => {
     handleLabelUpdate,
     handleFolderUpdate,
     setFileDetailOpen,
-    currentFile: store && store.currentFile ? store.currentFile : null,
+    currentEmail,
     handleMoveToTrash,
     handleMoveToSpam
   }
@@ -490,7 +491,7 @@ const EmailList = (props: EmailListType) => {
                           }
                           else {
                             setFileDetailOpen(true)
-                            dispatch(setCurrentFile(email))
+                            setCurrentEmail(email)
                             setTimeout(() => {
                               dispatch(handleSelectAllFile(false))
                             }, 600)
@@ -582,7 +583,7 @@ const EmailList = (props: EmailListType) => {
                           variant='caption'
                           sx={{ minWidth: '50px', textAlign: 'right', whiteSpace: 'nowrap', color: 'text.disabled' }}
                         >
-                          {formatTimestamp(Number(email.Timestamp) - (new Date().getTimezoneOffset()) * 60 * 1000)}
+                          {formatTimestampLocalTime(Number(email.Timestamp))}
                         </Typography>
                       </Box>
                       <Box
@@ -658,7 +659,7 @@ const EmailList = (props: EmailListType) => {
       </Box>
 
       {/* @ts-ignore */}
-      <DriveDetail {...driveDetailsProps} />
+      <EmailDetail {...emailDetailsProps} />
 
       <Backdrop open={loading} style={{ zIndex: 9999, color: 'common.white' }}>
         <CircularProgress color="inherit" />

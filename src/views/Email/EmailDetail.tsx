@@ -4,7 +4,6 @@ import { Fragment, useState, ReactNode, useEffect } from 'react'
 // ** MUI Imports
 import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
-import { styled } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -26,60 +25,29 @@ import OptionsMenu from 'src/@core/components/option-menu'
 import { OptionType } from 'src/@core/components/option-menu/types'
 import {
   LabelType,
-  FileDetailType
+  EmailDetailType
 } from 'src/types/apps/emailTypes'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import authConfig from 'src/configs/auth'
-
-import { TxRecordType } from 'src/types/apps/Chivesweave'
-
-import { getContentTypeAbbreviation, formatTimestampMemo } from 'src/configs/functions';
+import { formatTimestampLocalTime } from 'src/configs/functions';
 
 import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 
+import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 
-
-const ImgPreview = styled('img')(({  }) => ({
-  maxWidth: '100%',
-  maxHeight: '100%',
-  objectFit: 'cover',
-  style: { zIndex: 1 }
-}))
-
-function parseTxAndGetMemoFileInfoInTags(TxRecord: TxRecordType) {
-  const FileMap: { [key: string]: string } = {}
-  TxRecord.tags.map((Item: { [key: string]: string }) => {
-    FileMap[Item.name] = Item.value;
-  });
-  const FileType = getContentTypeAbbreviation(FileMap['Content-Type']);
-  
-  //console.log("FileType", `${authConfig.backEndApi}/${TxRecord.id}`)
-  switch(FileType) {
-    case 'PNG':
-    case 'GIF':
-    case 'JPEG':
-    case 'JPG':
-    case 'WEBM':
-      return <ImgPreview src={`${authConfig.backEndApi}/${TxRecord.id}`}/>
-    default:
-      return <Fragment></Fragment>
-  }
-}
-
-const DriveDetail = (props: FileDetailType) => {
+const DriveDetail = (props: EmailDetailType) => {
   // ** Hook
   const { t } = useTranslation()
 
   // ** Props
   const {
-    currentFile,
+    currentEmail,
     hidden,
     direction,
     labelColors,
-    routeParams,
+    folder,
     handleStarDrive,
     driveFileOpen,
     handleLabelUpdate,
@@ -88,28 +56,28 @@ const DriveDetail = (props: FileDetailType) => {
     handleMoveToSpam
   } = props
 
-  const FullStatusRS: any = GetFileCacheStatus(currentFile)
+  const FullStatusRS: any = GetFileCacheStatus(currentEmail)
   const FileFullStatus: any = FullStatusRS['FullStatus']
 
   const [tags, setTags] = useState<any>({})
   useEffect(() => {
     const tagsMap: any = {}
-    currentFile && currentFile.tags && currentFile.tags.length > 0 && currentFile.tags.map( (Tag: any) => {
+    currentEmail && currentEmail.tags && currentEmail.tags.length > 0 && currentEmail.tags.map( (Tag: any) => {
       tagsMap[Tag.name] = Tag.value;
     })
     setTags(tagsMap);
-  }, [currentFile])
+  }, [currentEmail])
 
   // ** Hook
   const { settings } = useSettings()
 
-  const handleMoveToTrashCurrentFile = () => {
-    handleMoveToTrash(currentFile.id)
+  const handleMoveToTrashcurrentEmail = () => {
+    handleMoveToTrash(currentEmail.Id)
     setFileDetailOpen(false)
   }
 
-  const handleMoveToSpamCurrentFile = () => {
-    handleMoveToSpam(currentFile.id)
+  const handleMoveToSpamcurrentEmail = () => {
+    handleMoveToSpam(currentEmail.Id)
     setFileDetailOpen(false)
   }
 
@@ -125,7 +93,7 @@ const DriveDetail = (props: FileDetailType) => {
         ),
         menuItemProps: {
           onClick: () => {
-            handleLabelUpdate(currentFile.id, key as LabelType)
+            handleLabelUpdate(currentEmail.Id, key as LabelType)
           }
         }
       })
@@ -147,7 +115,7 @@ const DriveDetail = (props: FileDetailType) => {
         ),
         menuItemProps: {
           onClick: () => {
-            handleFolderUpdate([currentFile.id], key as FolderType)
+            handleFolderUpdate([currentEmail.Id], key as FolderType)
           }
         }
       })
@@ -167,7 +135,7 @@ const DriveDetail = (props: FileDetailType) => {
     }
   }
 
-  //console.log("currentFile", currentFile)
+  console.log("currentEmail", currentEmail)
 
   return (
     <Sidebar
@@ -179,7 +147,7 @@ const DriveDetail = (props: FileDetailType) => {
         setFileDetailOpen(false)        
       }}
     >
-      {currentFile && currentFile.owner ? (
+      {currentEmail && currentEmail ? (
         <Fragment>
           <Box
             sx={{
@@ -222,12 +190,12 @@ const DriveDetail = (props: FileDetailType) => {
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {routeParams && routeParams.initFolder !== 'trash' ? (
-                    <IconButton size='small' onClick={handleMoveToTrashCurrentFile}>
+                  {folder !== 'trash' ? (
+                    <IconButton size='small' onClick={handleMoveToTrashcurrentEmail}>
                       <Icon icon='mdi:delete-outline' fontSize='1.375rem' />
                     </IconButton>
                   ) : null}
-                  <IconButton size='small' onClick={handleMoveToSpamCurrentFile}>
+                  <IconButton size='small' onClick={handleMoveToSpamcurrentEmail}>
                     <Icon icon='mdi:alert-circle-outline' fontSize='1.375rem' />
                   </IconButton>
                   <OptionsMenu
@@ -240,7 +208,7 @@ const DriveDetail = (props: FileDetailType) => {
               <div>
                 <IconButton
                   size='small'
-                  onClick={e => handleStarDrive(e, currentFile.id, !FileFullStatus['Star'])}
+                  onClick={e => handleStarDrive(e, currentEmail.Id, !FileFullStatus['Star'])}
                   sx={{ ...(true ? { color: FileFullStatus['Star'] ? 'warning.main' : 'text.secondary' } : {}) }}
                 >
                   <Icon icon={FileFullStatus['Star'] ? 'mdi:star' : 'mdi:star-outline'} fontSize='1.375rem'/>
@@ -253,8 +221,8 @@ const DriveDetail = (props: FileDetailType) => {
             <ScrollWrapper>
               <Box
                 sx={{
-                  py: 4,
-                  px: 4,
+                  py: 2,
+                  px: 2,
                   width: '100%',
                   display: 'flex',
                   alignItems: 'center',
@@ -274,30 +242,89 @@ const DriveDetail = (props: FileDetailType) => {
                     border: theme => `1px solid ${theme.palette.divider}`
                   }}
                 >
-                  <Box sx={{ p: 4 }}>
+                  <Box sx={{ p: 3 }}>
                     <Box
-                      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}
+                      sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Avatar
-                          alt={tags['File-Name']}
-                          src={`${authConfig.backEndApi}/${currentFile.id}/thumbnail`}
+                          alt={currentEmail.From}
+                          src={GetAppAvatarModId(currentEmail.From)}
                           sx={{ width: '2.375rem', height: '2.375rem', mr: 3 }}
                         />
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Typography variant='body2'>{t('Owner') as string}: {currentFile.owner.address}</Typography>
-                          <Typography variant='caption' sx={{ mr: 3 }}>
-                            {t('Time') as string}: {formatTimestampMemo(currentFile.block.timestamp)}</Typography>
+                          <Typography sx={{ fontWeight: 500 }}>{currentEmail.Subject}</Typography>
+                          <Typography variant='body2'>{currentEmail.From}</Typography>
                         </Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='caption' sx={{ mr: 3 }}>
+                          {formatTimestampLocalTime(currentEmail.Timestamp)}
+                        </Typography>
+                        {false ? (
+                          <IconButton size='small'>
+                            <Icon icon='mdi:attachment' fontSize='1.375rem' />
+                          </IconButton>
+                        ) : null}
+                        <OptionsMenu
+                          iconButtonProps={{ size: 'small' }}
+                          iconProps={{ fontSize: '1.375rem' }}
+                          options={[
+                            {
+                              text: t('Reply'),
+                              menuItemProps: { sx: { '& svg': { mr: 2 } } },
+                              icon: <Icon icon='mdi:share-outline' fontSize={20} />
+                            },
+                            {
+                              text: t('Forward'),
+                              menuItemProps: { sx: { '& svg': { mr: 2 } } },
+                              icon: <Icon icon='mdi:reply-outline' fontSize={20} />
+                            }
+                          ]}
+                        />
                       </Box>
                     </Box>
                   </Box>
                   <Divider sx={{ m: '0 !important' }} />
                   <Box sx={{ p: 4, pt: 4 }}>
                     <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-                      { parseTxAndGetMemoFileInfoInTags(currentFile) }                                  
+                    {currentEmail.Content}                                 
                     </Typography>
                   </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    p: 5,
+                    width: '100%',
+                    borderRadius: 1,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    backgroundColor: 'background.paper',
+                    boxShadow: settings.skin === 'bordered' ? 0 : 6
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 500 }}>
+                    Click here to{' '}
+                    <Typography
+                      component='span'
+                      sx={{ cursor: 'pointer', color: 'primary.main', fontWeight: 'inherit' }}
+                    >
+                      {t('Reply')}
+                    </Typography>{' '}
+                    or{' '}
+                    <Typography
+                      component='span'
+                      sx={{ cursor: 'pointer', color: 'primary.main', fontWeight: 'inherit' }}
+                    >
+                      {t('Forward')}
+                    </Typography>
+                  </Typography>
                 </Box>
 
               </Box>

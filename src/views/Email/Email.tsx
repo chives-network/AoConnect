@@ -32,7 +32,6 @@ import toast from 'react-hot-toast'
 // ** Actions
 import {
   fetchData,
-  setCurrentFile,
   handleSelectFile,
   handleSelectAllFile,
 } from 'src/store/apps/email'
@@ -63,6 +62,7 @@ const DriveAppLayout = () => {
   const [folder, setFolder] = useState<string>('Inbox')
   const [loading, setLoading] = useState<boolean>(false)
   const [noEmailText, setNoEmailText] = useState<string>("No Email")
+  const [currentEmail, setCurrentEmail] = useState<any>(null)
 
   
 
@@ -179,7 +179,8 @@ const DriveAppLayout = () => {
           folder={folder}
           setFolder={setFolder}
           labelColors={labelColors}
-          setCurrentFile={setCurrentFile}
+          currentEmail={currentEmail}
+          setCurrentEmail={setCurrentEmail}
           driveFileOpen={driveFileOpen}
           handleSelectFile={handleSelectFile}
           setFileDetailOpen={setFileDetailOpen}
