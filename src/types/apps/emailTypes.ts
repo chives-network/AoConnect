@@ -121,7 +121,7 @@ export type MailSidebarType = {
   handleSelectAllFile: (val: boolean) => void
 }
 
-export type DriveListType = {
+export type EmailListType = {
   query: string
   hidden: boolean
   store: any
@@ -129,9 +129,9 @@ export type DriveListType = {
   dispatch: Dispatch<any>
   direction: 'ltr' | 'rtl'
   driveFileOpen: boolean
-  initFolder: string
   labelColors: any
   folder: any
+  setFolder: (id: string) => void
   setQuery: (val: string) => void
   handleLeftSidebarToggle: () => void
   setCurrentFile: (item: TxRecordType) => void
@@ -142,7 +142,6 @@ export type DriveListType = {
   handlePageChange: (event: any, page: number) => void
   handleFolderChange: (folder: string) => void  
   folderHeaderList: any[]
-  handleFolderHeaderList: (folderHeader: any) => void  
   loading: boolean
   noEmailText: string
 }

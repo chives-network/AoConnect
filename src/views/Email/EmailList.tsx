@@ -19,18 +19,6 @@ import InputAdornment from '@mui/material/InputAdornment'
 import CircularProgress from '@mui/material/CircularProgress'
 import ListItem, { ListItemProps } from '@mui/material/ListItem'
 
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
-
-
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Link from '@mui/material/Link'
-import Stack from '@mui/material/Stack'
-
-import TextField from '@mui/material/TextField'
 import Icon from 'src/@core/components/icon'
 
 // ** Third Party Imports
@@ -45,15 +33,14 @@ import DriveDetail from './EmailDetail'
 
 import Pagination from '@mui/material/Pagination'
 
-import toast from 'react-hot-toast'
-
 // ** Types
 import {
-  DriveListType,
+  EmailListType,
   LabelType,
   MailFoldersArrType,
   MailFoldersObjType
 } from 'src/types/apps/emailTypes'
+
 import { OptionType } from 'src/@core/components/option-menu/types'
 
 import { formatTimestamp} from 'src/configs/functions';
@@ -63,7 +50,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 
-import { TrashMultiFiles, SpamMultiFiles, StarMultiFiles, UnStarMultiFiles, ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus, GetHaveToDoTask,ResetToDoTask, ActionsSubmitToBlockchain, CreateFolder } from 'src/functions/ChivesWallets'
+import { TrashMultiFiles, SpamMultiFiles, StarMultiFiles, UnStarMultiFiles, ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus, GetHaveToDoTask,ResetToDoTask } from 'src/functions/ChivesWallets'
 import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
@@ -101,7 +88,7 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
   }
 }
 
-const DriveList = (props: DriveListType) => {
+const EmailList = (props: EmailListType) => {
   // ** Hook
   const { t } = useTranslation()
   
@@ -113,9 +100,9 @@ const DriveList = (props: DriveListType) => {
     dispatch,
     setQuery,
     direction,
-    initFolder,
     labelColors,
     folder,
+    setFolder,
     setCurrentFile,
     driveFileOpen,
     handleSelectFile,
@@ -124,8 +111,6 @@ const DriveList = (props: DriveListType) => {
     paginationModel,
     handlePageChange,
     handleFolderChange,
-    folderHeaderList,
-    handleFolderHeaderList,
     loading,
     noEmailText
   } = props
@@ -156,7 +141,6 @@ const DriveList = (props: DriveListType) => {
   }
   
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({})
-  const [isSubmitBlockchainDialog, setIsSubmitBlockchainDialog] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const [isProgress, setIsProgress] = useState<boolean>(false)
   const [haveSubmitTextTip, setHaveSubmitTextTip] = useState<string>("")
@@ -342,34 +326,7 @@ const DriveList = (props: DriveListType) => {
   }
 
   const handleActionsSubmitToBlockchain = () => {
-    setIsSubmitBlockchainDialog(true);
     setOpen(true);
-  }
-
-  const handleActionsSubmitToBlockchainYes: any = async () => {
-    setIsProgress(true)
-    const ActionsSubmitToBlockchainResult = await ActionsSubmitToBlockchain(setUploadProgress);
-    console.log("ActionsSubmitToBlockchainResult", ActionsSubmitToBlockchainResult)
-    if(ActionsSubmitToBlockchainResult && ActionsSubmitToBlockchainResult.id) {
-      setHaveSubmitTextTip(`${t(`Submitted successfully`)}`)
-
-      const delayExecution = setTimeout(() => {
-        setOpen(false);
-        setIsSubmitBlockchainDialog(false);
-        setIsProgress(false);
-        setIsHaveTaskToDo(isHaveTaskToDo + 1);
-        toast.success(t(`Submitted successfully`), {
-          duration: 2000
-        })
-      }, 2000);
-
-      return () => clearTimeout(delayExecution);
-    }
-  }
-
-  const handleNoClose = () => {
-    setOpen(false)
-    setIsSubmitBlockchainDialog(false)
   }
 
   const handleCancelOperation = () => {
@@ -377,25 +334,7 @@ const DriveList = (props: DriveListType) => {
     setIsHaveTaskToDo(isHaveTaskToDo + 1);
   }
 
-  const handleCreateFolderSubmit = () => {
-    if(folderName=="") {
-      setFodlerNameError(`${t('Folder name can not be null')}`)
-      setFodlerNameParent("Inbox")
-    }
-    else {
-      setOpen(false)
-      setIsNewFolderDialog(false)
-      CreateFolder(folderName, folderNameParent)
-      setFodlerName("")
-      setFodlerNameError(null)
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      toast.success(t(`Save to drafts`), {
-        duration: 2000
-      })
-    }
-  }
-
-  const handleRefreshDriveClick = () => {
+  const handleRefreshEmailClick = () => {
     setIsHaveTaskToDo(isHaveTaskToDo + 1);
     setRefresh(true)
     setTimeout(() => setRefresh(false), 1000)
@@ -451,7 +390,8 @@ const DriveList = (props: DriveListType) => {
     dispatch,
     direction,
     foldersObj,
-    initFolder,
+    folder,
+    setFolder,
     labelColors,
     handleStarDrive,
     driveFileOpen,
@@ -463,18 +403,15 @@ const DriveList = (props: DriveListType) => {
     handleMoveToSpam
   }
 
-  console.log("folderHeaderList", folderHeaderList)
   return (
     <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', '& .ps__rail-y': { zIndex: 5 } }}>
       <Box sx={{ height: '100%', backgroundColor: 'background.paper' }}>
         <Box sx={{ px: 3, py: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
             <Box sx={{ flex: 1 }}>
-              {folderHeaderList && folderHeaderList[0] && folderHeaderList[0].name && (
-                <Typography sx={{}} >
-                  {folderHeaderList[0].name}
-                </Typography>
-              )}
+              <Typography sx={{}} >
+                {folder}
+              </Typography>
             </Box>
             <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
               <Input
@@ -518,14 +455,14 @@ const DriveList = (props: DriveListType) => {
                 <Fragment>
                   <OptionsMenu leftAlignMenu options={handleFoldersMenu()} icon={<Icon icon='mdi:folder-outline' />} />
                   <OptionsMenu leftAlignMenu options={handleLabelsMenu()} icon={<Icon icon='mdi:label-outline' />} />
-                  {initFolder !== 'Trash' && initFolder !== 'Spam' ? (
+                  {folder !== 'Trash' && folder !== 'Spam' ? (
                     <Tooltip title={`${t(`Move to Trash`)}`} arrow>
                       <IconButton onClick={()=>handleMoveToTrash(null)}>
                         <Icon icon='mdi:delete-outline' />
                       </IconButton>
                     </Tooltip>
                   ) : null}
-                  {initFolder !== 'Trash' && initFolder !== 'Spam' ? (
+                  {folder !== 'Trash' && folder !== 'Spam' ? (
                     <Tooltip title={`${t(`Move to Spam`)}`} arrow>
                       <IconButton onClick={()=>handleMoveToSpam(null)}>
                         <Icon icon='mdi:alert-octagon-outline' />
@@ -538,27 +475,13 @@ const DriveList = (props: DriveListType) => {
 
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {haveTaskToDoNumber && haveTaskToDoNumber>0 ?
-                <Fragment>
-                  <Tooltip title={isHaveTaskToDoText} arrow>
-                    <Button fullWidth color={'primary'} variant={'contained'} onClick={handleActionsSubmitToBlockchain}> {isHaveTaskToDoText} ({haveTaskToDoNumber}) </Button>
-                  </Tooltip>
-                  <Tooltip title={`${t(`Cancel Operation`)}`} arrow>
-                    <IconButton size='small' onClick={handleCancelOperation}>
-                      <Icon icon='mdi-redo-variant' fontSize='1.375rem' />
-                    </IconButton>
-                  </Tooltip>
-                </Fragment>
-                :
-                <Fragment>
-                  <Tooltip title={`${t(`Refresh`)}`} arrow>
-                    <IconButton size='small' onClick={handleRefreshDriveClick}>
-                      <Icon icon='mdi:reload' fontSize='1.375rem' />
-                    </IconButton>
-                  </Tooltip>
-                </Fragment>
-              }
-              
+              <Fragment>
+                <Tooltip title={`${t(`Refresh`)}`} arrow>
+                  <IconButton size='small' onClick={handleRefreshEmailClick}>
+                    <Icon icon='mdi:reload' fontSize='1.375rem' />
+                  </IconButton>
+                </Tooltip>
+              </Fragment>
             </Box>
           </Box>
         </Box>
@@ -595,7 +518,6 @@ const DriveList = (props: DriveListType) => {
                           else {
                             console.log("email",email)
                             handleFolderChange(email.Id)
-                            handleFolderHeaderList({'name':EntityTarget, 'value':email.Id})
                           }
                         }
                         else {
@@ -773,7 +695,7 @@ const DriveList = (props: DriveListType) => {
       {/* @ts-ignore */}
       <DriveDetail {...driveDetailsProps} />
 
-      <Backdrop open={loading} style={{ zIndex: 9999, color: '#fff' }}>
+      <Backdrop open={loading} style={{ zIndex: 9999, color: 'common.white' }}>
         <CircularProgress color="inherit" />
       </Backdrop>
 
@@ -781,4 +703,4 @@ const DriveList = (props: DriveListType) => {
   )
 }
 
-export default DriveList
+export default EmailList

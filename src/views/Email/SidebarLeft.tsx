@@ -26,7 +26,7 @@ import CustomBadge from 'src/@core/components/mui/badge'
 
 // ** Types
 import { CustomBadgeProps } from 'src/@core/components/mui/badge/types'
-import { DriveSidebarType } from 'src/types/apps/Chivesweave'
+import { EmailSidebarType } from 'src/types/apps/Chivesweave'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -49,7 +49,7 @@ const ListBadge = styled(CustomBadge)<CustomBadgeProps>(() => ({
   }
 }))
 
-const SidebarLeft = (props: DriveSidebarType) => {
+const SidebarLeft = (props: EmailSidebarType) => {
   // ** Hook
   const { t } = useTranslation()
   
@@ -59,8 +59,8 @@ const SidebarLeft = (props: DriveSidebarType) => {
     hidden,
     lgAbove,
     dispatch,
-    handleFolderHeaderList,
-    routeParams,
+    folder,
+    setFolder,
     leftSidebarOpen,
     leftSidebarWidth,
     uploadFilesTitle,
@@ -70,20 +70,16 @@ const SidebarLeft = (props: DriveSidebarType) => {
     handleLeftSidebarToggle
   } = props
 
-  const [sideBarActive, setSideBarActive] = useState<{ [key: string]: string }>({"folder": "myfiles"})
+  const [sideBarActive, setSideBarActive] = useState<{ [key: string]: string }>({"folder": "Inbox"})
 
   const [sideBarBadge, setSideBarBadge] = useState<{ [key: string]: string }>({"folder": ""})
 
   useEffect(() => {
-    if(routeParams && routeParams.initFolder) {
-      setSideBarActive({"folder": routeParams.initFolder})
+    if(folder) {
+      setSideBarActive({"folder": folder})
     }
-    if(store && store.total && routeParams && routeParams.initFolder) {
-      setSideBarBadge({...sideBarBadge, [routeParams.initFolder]: store.total})
-    }
-    
     //console.log("sideBarBadge", sideBarBadge)
-  }, [routeParams, store])
+  }, [folder, store])
 
   const RenderBadge = (
     folder: string,
@@ -109,16 +105,13 @@ const SidebarLeft = (props: DriveSidebarType) => {
   }
 
   const handleListItemClick = (Folder: string | null) => {
-    if(Folder) {
-      handleFolderHeaderList({name: Folder, value: Folder})
-    }
+    setFolder(Folder)
     setFileDetailOpen(false)
     setTimeout(() => dispatch(handleSelectAllFile(false)), 50)
     handleLeftSidebarToggle()
   }
 
-  const activemyfilesCondition =
-    store && handleActiveItem('folder', 'myfiles')
+  const activemyfilesCondition = store && handleActiveItem('folder', 'Inbox')
 
   const ScrollWrapper = ({ children }: { children: ReactNode }) => {
     if (hidden) {
@@ -162,8 +155,11 @@ const SidebarLeft = (props: DriveSidebarType) => {
           <List component='div'>
             <ListItemStyled
               component={Link}
-              href='/email/inbox'
-              onClick={()=>handleListItemClick("Inbox")}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Inbox")
+              }}
               sx={{ borderLeftColor: activemyfilesCondition ? 'primary.main' : 'transparent' }}
             >
               <ListItemIcon sx={{ color: activemyfilesCondition ? 'primary.main' : 'text.secondary' }}>
@@ -178,67 +174,20 @@ const SidebarLeft = (props: DriveSidebarType) => {
               />
               {RenderBadge('Inbox', 'primary')}
             </ListItemStyled>
-            {/* 
             <ListItemStyled
               component={Link}
-              href='/email/sharedfiles'
-              onClick={()=>handleListItemClick(null)}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Starred")
+              }}
               sx={{
-                borderLeftColor: handleActiveItem('folder', 'sharedfiles') ? 'primary.main' : 'transparent'
+                borderLeftColor: handleActiveItem('folder', 'Starred') ? 'primary.main' : 'transparent'
               }}
             >
               <ListItemIcon
                 sx={{
-                  color: handleActiveItem('folder', 'sharedfiles') ? 'primary.main' : 'text.secondary'
-                }}
-              >
-                <Icon icon='mdi:send-outline' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Shared Files`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'sharedfiles') && { color: 'primary.main' }) }
-                }}
-              />
-              {RenderBadge('sharedfiles', 'warning')}
-            </ListItemStyled>
-            <ListItemStyled
-              component={Link}
-              href='/email/uploaded'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('folder', 'uploaded') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  color: handleActiveItem('folder', 'uploaded') ? 'primary.main' : 'text.secondary'
-                }}
-              >
-                <Icon icon='mdi:pencil-outline' />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${t(`Uploaded`)}`}
-                primaryTypographyProps={{
-                  noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'uploaded') && { color: 'primary.main' }) }
-                }}
-              />
-              {RenderBadge('uploaded', 'secondary')}
-            </ListItemStyled>
-            */}
-            <ListItemStyled
-              component={Link}
-              href='/email/starred'
-              onClick={()=>handleListItemClick(null)}
-              sx={{
-                borderLeftColor: handleActiveItem('folder', 'starred') ? 'primary.main' : 'transparent'
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  color: handleActiveItem('folder', 'starred') ? 'primary.main' : 'text.secondary'
+                  color: handleActiveItem('folder', 'Starred') ? 'primary.main' : 'text.secondary'
                 }}
               >
                 <Icon icon='mdi:star-outline' />
@@ -247,22 +196,25 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 primary={`${t(`Starred`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'starred') && { color: 'primary.main' }) }
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Starred') && { color: 'primary.main' }) }
                 }}
               />
               {RenderBadge('Star', 'success')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/email/spam'
-              onClick={()=>handleListItemClick(null)}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Spam")
+              }}
               sx={{
-                borderLeftColor: handleActiveItem('folder', 'spam') ? 'primary.main' : 'transparent'
+                borderLeftColor: handleActiveItem('folder', 'Spam') ? 'primary.main' : 'transparent'
               }}
             >
               <ListItemIcon
                 sx={{
-                  color: handleActiveItem('folder', 'spam') ? 'primary.main' : 'text.secondary'
+                  color: handleActiveItem('folder', 'Spam') ? 'primary.main' : 'text.secondary'
                 }}
               >
                 <Icon icon='mdi:alert-octagon-outline' />
@@ -271,22 +223,25 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 primary={`${t(`Spam`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'spam') && { color: 'primary.main' }) }
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Spam') && { color: 'primary.main' }) }
                 }}
               />
               {RenderBadge('Spam', 'error')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/email/trash'
-              onClick={()=>handleListItemClick(null)}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Trash")
+              }}
               sx={{
-                borderLeftColor: handleActiveItem('folder', 'trash') ? 'primary.main' : 'transparent'
+                borderLeftColor: handleActiveItem('folder', 'Trash') ? 'primary.main' : 'transparent'
               }}
             >
               <ListItemIcon
                 sx={{
-                  color: handleActiveItem('folder', 'trash') ? 'primary.main' : 'text.secondary'
+                  color: handleActiveItem('folder', 'Trash') ? 'primary.main' : 'text.secondary'
                 }}
               >
                 <Icon icon='mdi:delete-outline' />
@@ -295,7 +250,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 primary={`${t(`Trash`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'trash') && { color: 'primary.main' }) }
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Trash') && { color: 'primary.main' }) }
                 }}
               />
               {RenderBadge('Trash', 'info')}
@@ -306,15 +261,18 @@ const SidebarLeft = (props: DriveSidebarType) => {
             variant='caption'
             sx={{ mx: 6, mt: 4, mb: 0, color: 'text.disabled', letterSpacing: '0.21px', textTransform: 'uppercase' }}
           >
-          Labels
+          {t('Categories')}
           </Typography>
           <List component='div'>
             <ListItemStyled
               component={Link}
-              href='/email/social'
-              onClick={()=>handleListItemClick(null)}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Social")
+              }}
               sx={{
-                borderLeftColor: handleActiveItem('type', 'image') ? 'primary.main' : 'transparent'
+                borderLeftColor: handleActiveItem('folder', 'Social') ? 'primary.main' : 'transparent'
               }}
             >
               <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'success.main' } }}>
@@ -324,17 +282,20 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 primary={`${t(`Social`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'image') && { color: 'primary.main' }) }
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Social') && { color: 'primary.main' }) }
                 }}
               />
               {RenderBadge('Social', 'success')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/email/updates'
-              onClick={()=>handleListItemClick(null)}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Updates")
+              }}
               sx={{
-                borderLeftColor: handleActiveItem('type', 'word') ? 'primary.main' : 'transparent'
+                borderLeftColor: handleActiveItem('folder', 'Updates') ? 'primary.main' : 'transparent'
               }}
             >
               <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'primary.main' } }}>
@@ -344,17 +305,20 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 primary={`${t(`Updates`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'word') && { color: 'primary.main' }) }
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Updates') && { color: 'primary.main' }) }
                 }}
               />
               {RenderBadge('Updates', 'primary')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/email/forums'
-              onClick={()=>handleListItemClick(null)}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Forums")
+              }}
               sx={{
-                borderLeftColor: handleActiveItem('type', 'excel') ? 'warning.main' : 'transparent'
+                borderLeftColor: handleActiveItem('folder', 'Forums') ? 'warning.main' : 'transparent'
               }}
             >
               <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'warning.main' } }}>
@@ -364,17 +328,20 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 primary={`${t(`Forums`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'excel') && { color: 'warning.main' }) }
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Forums') && { color: 'warning.main' }) }
                 }}
               />
               {RenderBadge('Forums', 'warning')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
-              href='/email/promotions'
-              onClick={()=>handleListItemClick(null)}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
+                handleListItemClick("Promotions")
+              }}
               sx={{
-                borderLeftColor: handleActiveItem('type', 'pptx') ? 'primary.main' : 'transparent'
+                borderLeftColor: handleActiveItem('folder', 'Promotions') ? 'primary.main' : 'transparent'
               }}
             >
               <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'error.main' } }}>
@@ -384,7 +351,7 @@ const SidebarLeft = (props: DriveSidebarType) => {
                 primary={`${t(`Promotions`)}`}
                 primaryTypographyProps={{
                   noWrap: true,
-                  sx: { fontWeight: 500, ...(handleActiveItem('type', 'pptx') && { color: 'primary.main' }) }
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Promotions') && { color: 'primary.main' }) }
                 }}
               />
               {RenderBadge('Promotions', 'error')}

@@ -48,7 +48,7 @@ const labelColors: any = {
   important: 'warning'
 }
 
-const DriveAppLayout = ({ initFolder }: any) => {
+const DriveAppLayout = () => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -60,8 +60,8 @@ const DriveAppLayout = ({ initFolder }: any) => {
   const [uploadFilesTitle, setUploadFilesTitle] = useState<string>(`${t(`Write Email`)}`)
   const [driveFileOpen, setFileDetailOpen] = useState<boolean>(false)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
-  const [folder, setFolder] = useState<string>(initFolder)
-  const [folderHeaderList, setFolderHeaderList] = useState<any[]>([{'name': t(initFolder) as string, 'value': initFolder}])
+  const [folder, setFolder] = useState<string>('Inbox')
+  const [folderHeaderList, setFolderHeaderList] = useState<any[]>([{'name': t('Inbox') as string, 'value': 'Inbox'}])
   const [loading, setLoading] = useState<boolean>(false)
   const [noEmailText, setNoEmailText] = useState<string>("No Email")
 
@@ -80,9 +80,6 @@ const DriveAppLayout = ({ initFolder }: any) => {
   // ** Vars
   const leftSidebarWidth = 260
   const { skin, direction } = settings
-  const routeParams = {
-    initFolder: folder || 'Inbox'
-  }
 
   const auth = useAuth()
   const id = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
@@ -102,26 +99,6 @@ const DriveAppLayout = ({ initFolder }: any) => {
     console.log("handleFolderChange", folder)
   }
 
-  const handleFolderHeaderList = (folderHeader: any) => {
-    const folderHeaderListNew: any = []
-    let isContinue = 1
-    folderHeaderList.forEach((Item: any)=>{
-      if(isContinue == 1) {
-        folderHeaderListNew.push(Item)
-        if(Item.value == folderHeader.value) {
-          isContinue = 2 
-        }
-      }
-    })
-    if(isContinue == 1) {
-      folderHeaderListNew.push(folderHeader)
-    }
-    setFolder(folderHeader.value);
-    setFolderHeaderList(folderHeaderListNew);
-    setPaginationModel(paginationModelDefaultValue)
-    console.log("folderHeaderListNew", folderHeaderListNew)
-  }
-  
   useEffect(() => {
     if(true && id && id.length == 43) {
       setLoading(true)
@@ -181,8 +158,8 @@ const DriveAppLayout = ({ initFolder }: any) => {
         hidden={hidden}
         lgAbove={lgAbove}
         dispatch={dispatch}
-        handleFolderHeaderList={handleFolderHeaderList}
-        routeParams={routeParams}
+        folder={folder}
+        setFolder={setFolder}
         driveFileOpen={driveFileOpen}
         leftSidebarOpen={leftSidebarOpen}
         leftSidebarWidth={leftSidebarWidth}
@@ -201,9 +178,9 @@ const DriveAppLayout = ({ initFolder }: any) => {
           dispatch={dispatch}
           setQuery={setQuery}
           direction={direction}
-          initFolder={initFolder}
-          labelColors={labelColors}
           folder={folder}
+          setFolder={setFolder}
+          labelColors={labelColors}
           setCurrentFile={setCurrentFile}
           driveFileOpen={driveFileOpen}
           handleSelectFile={handleSelectFile}
@@ -214,7 +191,6 @@ const DriveAppLayout = ({ initFolder }: any) => {
           handlePageChange={handlePageChange}
           handleFolderChange={handleFolderChange}
           folderHeaderList={folderHeaderList}
-          handleFolderHeaderList={handleFolderHeaderList}
           loading={loading}
           noEmailText={noEmailText}
         />

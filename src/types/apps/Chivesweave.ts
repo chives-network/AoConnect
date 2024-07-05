@@ -12,13 +12,13 @@ export type RouteParams = {
   type?: string
 }
 
-export type DriveSidebarType = {
+export type EmailSidebarType = {
   hidden: boolean
   store: any
   lgAbove: boolean
-  handleFolderHeaderList: (val: any) => void
   dispatch: Dispatch<any>
-  routeParams: RouteParams
+  folder: string
+  setFolder: (val: any) => void
   leftSidebarOpen: boolean
   leftSidebarWidth: number
   driveFileOpen: boolean
