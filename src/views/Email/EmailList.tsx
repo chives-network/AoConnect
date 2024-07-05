@@ -12,7 +12,6 @@ import Backdrop from '@mui/material/Backdrop'
 import Checkbox from '@mui/material/Checkbox'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -50,7 +49,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 
-import { TrashMultiFiles, SpamMultiFiles, StarMultiFiles, UnStarMultiFiles, ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus, GetHaveToDoTask,ResetToDoTask } from 'src/functions/ChivesWallets'
+import { TrashMultiFiles, SpamMultiFiles, StarMultiFiles, UnStarMultiFiles, ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus } from 'src/functions/ChivesWallets'
 import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
@@ -140,31 +139,7 @@ const EmailList = (props: EmailListType) => {
     setFileCounter(fileCounterItem)
   }
   
-  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({})
-  const [open, setOpen] = useState<boolean>(false)
-  const [isProgress, setIsProgress] = useState<boolean>(false)
-  const [haveSubmitTextTip, setHaveSubmitTextTip] = useState<string>("")
   const [isHaveTaskToDo, setIsHaveTaskToDo] = useState<number>(0)
-  const [haveTaskToDoNumber, setHaveTaskToDoNumber] = useState<number>(0)
-  const [isHaveTaskToDoText, setIsHaveTaskToDoText] = useState<string>("")
-  useEffect(()=>{
-    const GetHaveToDoTaskData: number = GetHaveToDoTask()
-    setHaveTaskToDoNumber(GetHaveToDoTaskData)
-    setIsHaveTaskToDoText(`${t(`Submit to Blockchain`)}`)
-    console.log("uploadProgress", uploadProgress)
-  },[isHaveTaskToDo])
-
-  const [isNewFolderDialog, setIsNewFolderDialog] = useState<boolean>(false)
-  const [folderName, setFodlerName] = useState<string>("")
-  const [folderNameParent, setFodlerNameParent] = useState<string>("Inbox")
-  const [folderNameError, setFodlerNameError] = useState<string | null>(null)
-  const handleFolderNameChange = (event: any) => {
-    setFodlerName(event.target.value);
-    console.log("folderName", folderName)
-    if(event.target.value.length == '' || event.target.value == undefined) {
-        setFodlerNameError(`${t('Folder name can not be null')}`)
-    }
-  };
 
   // ** State
   const [refresh, setRefresh] = useState<boolean>(false)
@@ -323,15 +298,6 @@ const EmailList = (props: EmailListType) => {
       ChangeMultiFilesFolder(TargetFiles, folder.id, folder);
       dispatch(handleSelectAllFile(false))
     }
-  }
-
-  const handleActionsSubmitToBlockchain = () => {
-    setOpen(true);
-  }
-
-  const handleCancelOperation = () => {
-    ResetToDoTask();
-    setIsHaveTaskToDo(isHaveTaskToDo + 1);
   }
 
   const handleRefreshEmailClick = () => {
@@ -496,7 +462,6 @@ const EmailList = (props: EmailListType) => {
                     TagsMap[Tag.name] = Tag.value;
                   })
                   const EntityType = TagsMap['Entity-Type']
-                  const EntityTarget = TagsMap['Entity-Target']
                   const FullStatusRS: any = GetFileCacheStatus(email)
                   const FileCacheStatus: any = FullStatusRS['CacheStatus']
                   const FileFullStatus: any = FullStatusRS['FullStatus']

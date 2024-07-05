@@ -141,7 +141,6 @@ export type EmailListType = {
   paginationModel: any
   handlePageChange: (event: any, page: number) => void
   handleFolderChange: (folder: string) => void  
-  folderHeaderList: any[]
   loading: boolean
   noEmailText: string
 }

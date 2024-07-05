@@ -72,13 +72,10 @@ const SidebarLeft = (props: EmailSidebarType) => {
 
   const [sideBarActive, setSideBarActive] = useState<{ [key: string]: string }>({"folder": "Inbox"})
 
-  const [sideBarBadge, setSideBarBadge] = useState<{ [key: string]: string }>({"folder": ""})
-
   useEffect(() => {
     if(folder) {
       setSideBarActive({"folder": folder})
     }
-    //console.log("sideBarBadge", sideBarBadge)
   }, [folder, store])
 
   const RenderBadge = (

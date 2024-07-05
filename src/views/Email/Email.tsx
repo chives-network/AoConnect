@@ -61,7 +61,6 @@ const DriveAppLayout = () => {
   const [driveFileOpen, setFileDetailOpen] = useState<boolean>(false)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [folder, setFolder] = useState<string>('Inbox')
-  const [folderHeaderList, setFolderHeaderList] = useState<any[]>([{'name': t('Inbox') as string, 'value': 'Inbox'}])
   const [loading, setLoading] = useState<boolean>(false)
   const [noEmailText, setNoEmailText] = useState<string>("No Email")
 
@@ -86,12 +85,11 @@ const DriveAppLayout = () => {
   const currentAddress = auth.currentAddress
 
   // ** State
-  const paginationModelDefaultValue = { page: 1, pageSize: 12 }
   const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 12 })
   
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
     setPaginationModel({ ...paginationModel, page });
-    console.log("handlePageChange", page)
+    console.log("handlePageChange", event)
   }
 
   const handleFolderChange = (folder: string) => {
@@ -190,7 +188,6 @@ const DriveAppLayout = () => {
           paginationModel={paginationModel}
           handlePageChange={handlePageChange}
           handleFolderChange={handleFolderChange}
-          folderHeaderList={folderHeaderList}
           loading={loading}
           noEmailText={noEmailText}
         />
