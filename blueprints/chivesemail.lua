@@ -212,26 +212,26 @@ Handlers.add(
     if EmailRecords[msg.From] == nil then
         EmailRecords[msg.From] = {}
     end
-    if EmailRecords[msg.From][msg.Tags.newFolder] == nil then
-        EmailRecords[msg.From][msg.Tags.newFolder] = {}
+    if EmailRecords[msg.From][msg.Tags.NewFolder] == nil then
+        EmailRecords[msg.From][msg.Tags.NewFolder] = {}
     end
-    if EmailRecords[msg.From][msg.Tags.oldFolder] == nil then
-        EmailRecords[msg.From][msg.Tags.oldFolder] = {}
+    if EmailRecords[msg.From][msg.Tags.OldFolder] == nil then
+        EmailRecords[msg.From][msg.Tags.OldFolder] = {}
     end
     if msg.From and msg.Tags.EmailId and EmailDatas[msg.Tags.EmailId] then
       local foundInNewFolder = false
-      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.newFolder]) do
+      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.NewFolder]) do
         if v == msg.Tags.EmailId then
             foundInNewFolder = true
             break
         end
       end
       local foundInOldFolder = false
-      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.oldFolder]) do
+      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.OldFolder]) do
         if v == msg.Tags.EmailId and foundInNewFolder == false then
             foundInOldFolder = true
-            table.insert(EmailRecords[msg.From][msg.Tags.newFolder], msg.Tags.EmailId)
-            table.remove(EmailRecords[msg.From][msg.Tags.oldFolder], i)
+            table.insert(EmailRecords[msg.From][msg.Tags.NewFolder], msg.Tags.EmailId)
+            table.remove(EmailRecords[msg.From][msg.Tags.OldFolder], i)
             break
         end
       end
