@@ -209,29 +209,29 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "MoveToFolder"),
   function (msg)
 
-    if msg.From and msg.Tags.EmailId and EmailDatas[msg.Tags.EmailId] and msg.Tags.NewFolder and msg.Tags.OldFolder then
+    if msg.From and msg.EmailId and EmailDatas[msg.EmailId] and msg.NewFolder and msg.OldFolder then
       if EmailRecords[msg.From] == nil then
           EmailRecords[msg.From] = {}
       end
-      if EmailRecords[msg.From][msg.Tags.NewFolder] == nil then
-          EmailRecords[msg.From][msg.Tags.NewFolder] = {}
+      if EmailRecords[msg.From][msg.NewFolder] == nil then
+          EmailRecords[msg.From][msg.NewFolder] = {}
       end
-      if EmailRecords[msg.From][msg.Tags.OldFolder] == nil then
-          EmailRecords[msg.From][msg.Tags.OldFolder] = {}
+      if EmailRecords[msg.From][msg.OldFolder] == nil then
+          EmailRecords[msg.From][msg.OldFolder] = {}
       end
       local foundInNewFolder = false
-      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.NewFolder]) do
-        if v == msg.Tags.EmailId then
+      for i, v in ipairs(EmailRecords[msg.From][msg.NewFolder]) do
+        if v == msg.EmailId then
             foundInNewFolder = true
             break
         end
       end
       local foundInOldFolder = false
-      for i, v in ipairs(EmailRecords[msg.From][msg.Tags.OldFolder]) do
-        if v == msg.Tags.EmailId and foundInNewFolder == false then
+      for i, v in ipairs(EmailRecords[msg.From][msg.OldFolder]) do
+        if v == msg.EmailId and foundInNewFolder == false then
             foundInOldFolder = true
-            table.insert(EmailRecords[msg.From][msg.Tags.NewFolder], msg.Tags.EmailId)
-            table.remove(EmailRecords[msg.From][msg.Tags.OldFolder], i)
+            table.insert(EmailRecords[msg.From][msg.NewFolder], msg.EmailId)
+            table.remove(EmailRecords[msg.From][msg.OldFolder], i)
             break
         end
       end
