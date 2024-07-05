@@ -237,7 +237,7 @@ Handlers.add(
       end
       ao.send({
         Target = msg.From,
-        Data = require('json').encode({Data = msg.Tags.EmailId, Status = 'OK'})
+        Data = require('json').encode({Data = EmailRecords[msg.From], Status = 'OK', foundInOldFolder = foundInOldFolder})
       })
     else
       ao.send({
