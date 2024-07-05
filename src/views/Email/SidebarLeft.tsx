@@ -76,24 +76,24 @@ const SidebarLeft = (props: EmailSidebarType) => {
     if(folder) {
       setSideBarActive({"folder": folder})
     }
-  }, [folder, store])
+  }, [folder])
 
   const RenderBadge = (
     folder: string,
     color: 'default' | 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info'
   ) => {
-    if (store && store.totalnumber && store.totalnumber[folder]) {
-      return <ListBadge skin='light' color={color} sx={{ ml: 2 }} badgeContent={store.totalnumber[folder]} />
+    if (store && store.recordsCount && store.recordsCount[folder]) {
+      return <ListBadge skin='light' color={color} sx={{ ml: 2 }} badgeContent={store.recordsCount[folder]} />
     }
-    else if (store && store.totalnumber.label && store.totalnumber.label[folder]) {
-      return <ListBadge skin='light' color={color} sx={{ ml: 2 }} badgeContent={store.totalnumber.label[folder]} />
+    else if (store && store.recordsCount.Categories && store.recordsCount.Categories[folder]) {
+      return <ListBadge skin='light' color={color} sx={{ ml: 2 }} badgeContent={store.recordsCount.Categories[folder]} />
     }
     else {
       return null
     }
   }
 
-  const handleActiveItem = (type: 'folder' | 'label' | 'type', value: string) => {
+  const handleActiveItem = (type: 'folder', value: string) => {
     if (sideBarActive && sideBarActive[type] !== value) {
       return false
     } else {

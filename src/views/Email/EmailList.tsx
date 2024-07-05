@@ -523,20 +523,7 @@ const EmailList = (props: EmailListType) => {
                           >
                             <Icon icon={FileFullStatus['Star'] ? 'mdi:star' : 'mdi:star-outline'} />
                           </IconButton>
-                          {FileFullStatus && FileFullStatus['Label'] && labelColors[FileFullStatus['Label']] ?
-                            <Tooltip title={FileFullStatus['Label']} arrow>
-                              <Box component='span' sx={{ mr: 2, ml: -2, color: `${labelColors[FileFullStatus['Label']]}.main` }}>
-                                <Icon icon='mdi:circle' fontSize='0.75rem' />
-                              </Box>
-                            </Tooltip>
-                          :
-                            <Tooltip title={'No label'} arrow>
-                              <Box component='span' sx={{ mr: 2, ml: -2, color: `text.secondary` }}>
-                                <Icon icon='mdi:circle' fontSize='0.75rem' />
-                              </Box>
-                            </Tooltip>
-                          }
-                          
+
                           {EntityType == "Folder" ? 
                             <Avatar sx={{ mr: 3, width: '2rem', height: '2rem' }}>
                               <Icon icon='mdi:folder-outline' />
@@ -544,7 +531,7 @@ const EmailList = (props: EmailListType) => {
                           :
                             <Avatar
                               alt={TagsMap['File-Name']}
-                              src={GetAppAvatarModId(email.Id)}
+                              src={GetAppAvatarModId(email.From)}
                               sx={{ mr: 3, width: '2rem', height: '2rem' }}
                             />
                           }
