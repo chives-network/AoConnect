@@ -150,6 +150,90 @@ export const ChivesEmailReadEmailContent = async (TargetTxId: string, myProcessT
     }
 }
 
+export const ChivesEmailMoveToFolder1 = async (TargetTxId: string, myProcessTxId: string, EmailId: string, OldFolder: string, NewFolder: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
+        
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: myProcessTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'MoveToFolder' },
+                { name: 'EmailId', value: EmailId },
+                { name: 'OldFolder', value: OldFolder },
+                { name: 'NewFolder', value: NewFolder },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return JSON.parse(result.Messages[0].Data)
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesEmailMoveToFolder Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
+export const ChivesEmailMoveToFolder = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, EmailId: string, OldFolder: string, NewFolder: string) => {
+    try {
+        console.log("ChivesEmailMoveToFolder EmailId", EmailId)
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const SendData = 'Send({Target = "' + TargetTxId + '", Action = "MoveToFolder", EmailId = "' + EmailId + '", OldFolder = "' + OldFolder + '", NewFolder = "' + NewFolder + '" })'
+        const Data = {
+            process: myProcessTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: SendData,
+        }
+        console.log("ChivesEmailMoveToFolder SendData", SendData)
+        console.log("ChivesEmailMoveToFolder Data", Data)
+        const GetChivesEmailMoveToFolderResult = await message(Data);
+        console.log("ChivesEmailMoveToFolder GetChivesEmailMoveToFolderResult", GetChivesEmailMoveToFolderResult)
+        
+        if(GetChivesEmailMoveToFolderResult && GetChivesEmailMoveToFolderResult.length == 43) {
+            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailMoveToFolderResult)
+
+            return { status: 'ok', id: GetChivesEmailMoveToFolderResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesEmailMoveToFolderResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesEmailMoveToFolder Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
 export const ChivesEmailGetEmailRecords = async (TargetTxId: string, myProcessTxId: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {

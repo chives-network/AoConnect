@@ -136,14 +136,18 @@ export type EmailListType = {
   handleLeftSidebarToggle: () => void
   currentEmail: any
   setCurrentEmail: (item: TxRecordType) => void
-  handleSelectFile: (id: string) => void
   setFileDetailOpen: (val: boolean) => void
   handleSelectAllFile: (val: boolean) => void
   paginationModel: any
   handlePageChange: (event: any, page: number) => void
   handleFolderChange: (folder: string) => void  
   loading: boolean
+  setLoading: (val: boolean) => void
   noEmailText: string
+  currentWallet: any
+  currentAoAddress: any
+  counter: number
+  setCounter: (id: number) => void
 }
 
 export type EmailDetailType = {

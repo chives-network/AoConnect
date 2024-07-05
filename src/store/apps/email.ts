@@ -22,13 +22,13 @@ export const fetchData = createAsyncThunk('MyEmails/fetchData', async (params: D
   const ChivesEmailGetMyEmailRecordsData1 = await ChivesEmailGetMyEmailRecords(authConfig.AoConnectChivesEmailServerData, params.address, params.folder ?? "Inbox", String(startIndex), String(endIndex))
   if(ChivesEmailGetMyEmailRecordsData1) {
     console.log("ChivesEmailGetMyEmailRecordsData1", ChivesEmailGetMyEmailRecordsData1)
-    const [filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount] = ChivesEmailGetMyEmailRecordsData1
+    const [filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount, recordsUnRead] = ChivesEmailGetMyEmailRecordsData1
     
-    return { ...{filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount}, filter: params }
+    return { ...{filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount, recordsUnRead}, filter: params }
   }
   else {
   
-    return { ...{filterEmails: [], totalRecords : 0, emailFolder: params.folder, startIndex: '0', endIndex: '10', EmailRecordsCount: {} }, filter: params }
+    return { ...{filterEmails: [], totalRecords : 0, emailFolder: params.folder, startIndex: '0', endIndex: '10', EmailRecordsCount: {}, recordsUnRead:{} }, filter: params }
   }
 })
 
@@ -50,20 +50,12 @@ export const myEmailSlice = createSlice({
     total: 1,
     params: {},
     recordsCount: [],
+    recordsUnRead: {},
     table: [],
     allPages: 1,
     folder:[],
   },
   reducers: {
-    handleSelectFile: (state, action) => {
-      const files: any = state.selectedFiles
-      if (!files.includes(action.payload)) {
-        files.push(action.payload)
-      } else {
-        files.splice(files.indexOf(action.payload), 1)
-      }
-      state.selectedFiles = files
-    },
     handleSelectAllFile: (state, action) => {
       const selectAllDrives: string[] = []
       if (action.payload && state.files !== null) {
@@ -94,11 +86,12 @@ export const myEmailSlice = createSlice({
       state.data = action.payload.filterEmails
       state.total = action.payload.totalRecords
       state.params = action.payload.filter
+      state.recordsUnRead = action.payload.recordsUnRead
       state.allPages = Math.ceil(action.payload.totalRecords / 10)
     })
   }
 })
 
-export const { handleSelectFile, handleSelectAllFile } = myEmailSlice.actions
+export const { handleSelectAllFile } = myEmailSlice.actions
 
 export default myEmailSlice.reducer

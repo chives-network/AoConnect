@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintChivesEmail, 
-  ChivesEmailGetMyEmailRecords, ChivesEmailSendEmail, ChivesEmailSetPublicKey, ChivesEmailGetPublicKeys, ChivesEmailGetEmailRecords, ChivesEmailReadEmailContent
+  ChivesEmailGetMyEmailRecords, ChivesEmailSendEmail, ChivesEmailSetPublicKey, ChivesEmailGetPublicKeys, ChivesEmailGetEmailRecords, ChivesEmailReadEmailContent, ChivesEmailMoveToFolder
  } from 'src/functions/AoConnect/ChivesEmail'
 
 const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -164,13 +164,42 @@ const ChivesEmail = () => {
       }))
     }
 
-    const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(ChivesEmail, TokenProcessTxId2, '0CYZehDTdN-l6uQ-P1_E4hOEVXSebC9GgV6SMZbBVRs')
+    const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(ChivesEmail, TokenProcessTxId2, 'Svwfh_fzyX5bcj1dvMrYT9DyU52l7EB9MWCtNHqTmhw')
     if(ChivesEmailReadEmailContentData) {
       console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
       setToolInfo((prevState: any)=>({
         ...prevState,
         'ChivesEmailReadEmailContentData': JSON.stringify(ChivesEmailReadEmailContentData)
       }))
+    }
+
+    const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'HEGz9y0hZXz48Ur_Rkpwml5aVwf18eiM6fpaLo9XnjI', 'Inbox', 'Starred')
+    if(ChivesEmailMoveToFolderData) {
+      console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData)
+      if(ChivesEmailMoveToFolderData?.msg?.Output?.data?.output)  {
+        const formatText = ChivesEmailMoveToFolderData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesEmailSetPublicKey1: formatText
+          }))
+
+          //Read message from inbox
+          const ChivesEmailSetPublicKeyData1 = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId2)
+          if(ChivesEmailSetPublicKeyData1?.msg?.Output?.data?.output)  {
+            const formatText2 = ChivesEmailSetPublicKeyData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesEmailMoveToFolderData: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
     }
 
     

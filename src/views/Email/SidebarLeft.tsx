@@ -196,7 +196,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                   sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Starred') && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('Star', 'success')}
+              {RenderBadge('Starred', 'success')}
             </ListItemStyled>
             <ListItemStyled
               component={Link}

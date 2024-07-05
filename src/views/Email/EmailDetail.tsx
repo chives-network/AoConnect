@@ -135,8 +135,6 @@ const DriveDetail = (props: EmailDetailType) => {
     }
   }
 
-  console.log("currentEmail", currentEmail)
-
   return (
     <Sidebar
       hideBackdrop

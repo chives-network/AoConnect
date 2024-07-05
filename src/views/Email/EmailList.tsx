@@ -49,8 +49,12 @@ import { useTranslation } from 'react-i18next'
 
 import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 
-import { TrashMultiFiles, SpamMultiFiles, StarMultiFiles, UnStarMultiFiles, ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus } from 'src/functions/ChivesWallets'
+import { ChangeMultiFilesLabel, ChangeMultiFilesFolder, GetFileCacheStatus } from 'src/functions/ChivesWallets'
 import { TxRecordType } from 'src/types/apps/Chivesweave'
+
+import { ChivesEmailMoveToFolder } from 'src/functions/AoConnect/ChivesEmail'
+ import authConfig from 'src/configs/auth'
+
 
 const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
   cursor: 'pointer',
@@ -105,41 +109,28 @@ const EmailList = (props: EmailListType) => {
     currentEmail,
     setCurrentEmail,
     driveFileOpen,
-    handleSelectFile,
     setFileDetailOpen,
     handleSelectAllFile,
     paginationModel,
     handlePageChange,
     handleFolderChange,
     loading,
-    noEmailText
+    setLoading,
+    noEmailText,
+    currentWallet,
+    currentAoAddress,
+    counter,
+    setCounter
   } = props
 
+  const [starredList, setStarredList] = useState<any>({})
+  const [selectedFiles, setSelectedFiles] = useState<any>({})
   
-  const [fileCounter, setFileCounter] = useState<number>(0)
-
   useEffect(()=>{
-    dispatch(handleSelectAllFile(false))
-
-    updateFileCounter()
-
+    setStarredList({})
+    setSelectedFiles({})
   },[paginationModel, folder])
 
-  function updateFileCounter() {
-    let fileCounterItem =0
-    store && store.data && store.data.forEach((email: any) => {
-      const TagsMap: any = {}
-      email && email.tags && email.tags.length > 0 && email.tags.map( (Tag: any) => {
-        TagsMap[Tag.name] = Tag.value;
-      })
-      const EntityType = TagsMap['Entity-Type']
-      if(EntityType!="Folder") {
-        fileCounterItem += 1
-      }
-    })
-    setFileCounter(fileCounterItem)
-  }
-  
   const [isHaveTaskToDo, setIsHaveTaskToDo] = useState<number>(0)
 
   // ** State
@@ -224,57 +215,51 @@ const EmailList = (props: EmailListType) => {
     Trash: [foldersConfig.Inbox, foldersConfig.Spam]
   }
 
-  const handleMoveToTrash = (id: string | null) => {
-    console.log("store.selectedFiles", store)
-    if( id == null && store.selectedFiles && store.selectedFiles.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => store.selectedFiles.includes(Item.id));
-      TrashMultiFiles(TargetFiles);
-      dispatch(handleSelectAllFile(false))
+  const handleMoveToFolder = async (id: string | null, oldFolder: string, newFolder: string) => {
+    console.log("selectedFiles", selectedFiles);
+    setLoading(true)
+    if (id === null && store.data && store.data.length > 0) {
+      await Promise.all(Object.keys(selectedFiles).map(async (EmailId: string) => {
+        const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, EmailId, oldFolder, newFolder);
+        console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData);
+      }));
     }
-    if( id && id.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => id == Item.id);
-      TrashMultiFiles(TargetFiles);
-      dispatch(handleSelectAllFile(false))
+    if (id && id.length > 0 && store.data && store.data.length > 0) {
+      const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, id, oldFolder, newFolder);
+      console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData);
     }
+    setCounter(counter + 1);
   }
 
-  const handleMoveToSpam = (id: string | null) => {
-    if( id == null && store.selectedFiles && store.selectedFiles.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => store.selectedFiles.includes(Item.id));
-      SpamMultiFiles(TargetFiles);
-      dispatch(handleSelectAllFile(false))
-    }
-    if( id && id.length > 0 && store.data && store.data.length > 0) {
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => id == Item.id);
-      SpamMultiFiles(TargetFiles);
-      dispatch(handleSelectAllFile(false))
-    }
+  const handleMoveToTrash = async (id: string | null) => {
+    handleMoveToFolder(id, "Inbox", "Trash")
+  }
+  
+  const handleMoveToSpam = async (id: string | null) => {
+    handleMoveToFolder(id, "Inbox", "Spam")
   }
 
-  const handleStarDrive = (e: SyntheticEvent, id: string, value: boolean) => {
+  const handleStarDrive = async (e: SyntheticEvent, id: string, value: boolean) => {
     e.stopPropagation()
-    if(value) {
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => Item.id == id );
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      StarMultiFiles(TargetFiles);
-      dispatch(handleSelectAllFile(false))
+    if(value && id && id.length == 43) {
+      setStarredList((prevState: any)=>({
+        ...prevState,
+        [id]: true
+      }))
+      handleMoveToFolder(id, "Inbox", "Starred")
     }
     else {
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => Item.id == id );
-      setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      UnStarMultiFiles(TargetFiles);
-      dispatch(handleSelectAllFile(false))
+      setStarredList((prevState: any)=>({
+        ...prevState,
+        [id]: false
+      }))
     }
   }
 
   const handleLabelUpdate = (id: string | null, label: LabelType) => {
-    if( id == null && store.selectedFiles && store.selectedFiles.length > 0 && store.data && store.data.length > 0) {
+    if( id == null && selectedFiles && selectedFiles.length > 0 && store.data && store.data.length > 0) {
       setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => store.selectedFiles.includes(Item.id));
+      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => selectedFiles.includes(Item.id));
       ChangeMultiFilesLabel(TargetFiles, label);
       dispatch(handleSelectAllFile(false))
     }
@@ -287,9 +272,9 @@ const EmailList = (props: EmailListType) => {
   }
 
   const handleFolderUpdate = (id: string | null, folder: any) => {
-    if( id == null && store.selectedFiles && store.selectedFiles.length > 0 && store.data && store.data.length > 0) {
+    if( id == null && selectedFiles && selectedFiles.length > 0 && store.data && store.data.length > 0) {
       setIsHaveTaskToDo(isHaveTaskToDo + 1);
-      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => store.selectedFiles.includes(Item.id));
+      const TargetFiles: TxRecordType[] = store.data.filter((Item: TxRecordType)  => selectedFiles.includes(Item.id));
       ChangeMultiFilesFolder(TargetFiles, folder.id, folder);
       dispatch(handleSelectAllFile(false))
     }
@@ -320,28 +305,6 @@ const EmailList = (props: EmailListType) => {
         menuItemProps: {
           onClick: () => {
             handleLabelUpdate(null, key as LabelType)
-            dispatch(handleSelectAllFile(false))
-          }
-        }
-      })
-    })
-
-    return array
-  }
-
-  const handleFoldersMenu = () => {
-    const array: OptionType[] = []
-    store && store.folder && store.folder['Inbox'] && store.folder['Inbox'].map((Item: any) => {
-      array.push({
-        text: <Typography sx={{ textTransform: 'capitalize' }}>{Item.name}</Typography>,
-        icon: (
-          <Box component='span' sx={{ mr: 2 }}>
-            <Icon icon='mdi:circle' fontSize='0.75rem' />
-          </Box>
-        ),
-        menuItemProps: {
-          onClick: () => {
-            handleFolderUpdate(null, Item)
             dispatch(handleSelectAllFile(false))
           }
         }
@@ -403,24 +366,19 @@ const EmailList = (props: EmailListType) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {store && store.data && store.data.length ? (
                 <Checkbox
-                  onChange={e => {
-                    dispatch(handleSelectAllFile(e.target.checked))
-                    updateFileCounter()
-                  }}
-                  checked={(store.data.length > 0 && fileCounter === store.selectedFiles.length && fileCounter > 0) }
+                  checked={(store.data.length > 0) }
                   indeterminate={
                     !!(
                       store.data.length &&
-                      store.selectedFiles.length &&
-                      store.data.length !== store.selectedFiles.length
+                      selectedFiles.length &&
+                      store.data.length !== selectedFiles.length
                     )
                   }
                 />
               ) : null}
 
-              {store && store.selectedFiles.length && store.data && store.data.length ? (
+              {selectedFiles && Object.keys(selectedFiles).length > 0 && store.data && store.data.length ? (
                 <Fragment>
-                  <OptionsMenu leftAlignMenu options={handleFoldersMenu()} icon={<Icon icon='mdi:folder-outline' />} />
                   <OptionsMenu leftAlignMenu options={handleLabelsMenu()} icon={<Icon icon='mdi:label-outline' />} />
                   {folder !== 'Trash' && folder !== 'Spam' ? (
                     <Tooltip title={`${t(`Move to Trash`)}`} arrow>
@@ -505,23 +463,37 @@ const EmailList = (props: EmailListType) => {
                           
                           <Checkbox
                             onClick={e => e.stopPropagation()}
-                            onChange={() => dispatch(handleSelectFile(email.Id))}
-                            checked={store.selectedFiles.includes(email.Id) || false}
-                            disabled={( IsFileDisabled || EntityType == "Folder" )}
+                            onChange={() => {
+                              if(selectedFiles[email.Id]) {
+                                setSelectedFiles((prevState: any) => {
+                                  const { [email.Id]: deletedKey, ...rest } = prevState;
+                                  console.log("deletedKey", deletedKey);
+
+                                  return rest;
+                                });
+                              }
+                              else {
+                                setSelectedFiles((prevState: any)=>({
+                                  ...prevState,
+                                  [email.Id]: true
+                                }))
+                              }
+                            }}
+                            checked={selectedFiles[email.Id]}
                           />
                           <IconButton
                             size='small'
-                            onClick={e => handleStarDrive(e, email.Id, !FileFullStatus['Star'])}
+                            onClick={e => handleStarDrive(e, email.Id, !starredList[email.Id])}
                             disabled={IsFileDisabled}
                             sx={{
                               mr: { xs: 0, sm: 3 },
-                              color: FileFullStatus['Star'] ? 'warning.main' : 'text.secondary',
+                              color: starredList[email.Id] ? 'warning.main' : 'text.secondary',
                               '& svg': {
                                 display: { xs: 'none', sm: 'block' }
                               }
                             }}
                           >
-                            <Icon icon={FileFullStatus['Star'] ? 'mdi:star' : 'mdi:star-outline'} />
+                            <Icon icon={starredList[email.Id] ? 'mdi:star' : 'mdi:star-outline'} />
                           </IconButton>
 
                           {EntityType == "Folder" ? 

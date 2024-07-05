@@ -32,7 +32,6 @@ import toast from 'react-hot-toast'
 // ** Actions
 import {
   fetchData,
-  handleSelectFile,
   handleSelectAllFile,
 } from 'src/store/apps/email'
 
@@ -41,10 +40,10 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Variables
 const labelColors: any = {
-  private: 'error',
-  personal: 'success',
-  company: 'primary',
-  important: 'warning'
+  Social: 'error',
+  Updates: 'success',
+  Forums: 'primary',
+  Promotions: 'warning'
 }
 
 const DriveAppLayout = () => {
@@ -63,8 +62,8 @@ const DriveAppLayout = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [noEmailText, setNoEmailText] = useState<string>("No Email")
   const [currentEmail, setCurrentEmail] = useState<any>(null)
+  const [counter, setCounter] = useState<number>(0)
 
-  
 
   // ** Hooks
   const theme = useTheme()
@@ -81,7 +80,8 @@ const DriveAppLayout = () => {
   const { skin, direction } = settings
 
   const auth = useAuth()
-  const id = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
+  const currentAoAddress = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
+  const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
   // ** State
@@ -98,13 +98,13 @@ const DriveAppLayout = () => {
   }
 
   useEffect(() => {
-    if(true && id && id.length == 43) {
+    if(true && currentAoAddress && currentAoAddress.length == 43) {
       setLoading(true)
       console.log("loading", loading)
       setNoEmailText('Loading...')
       dispatch(
         fetchData({
-          address: String(id),
+          address: String(currentAoAddress),
           pageId: paginationModel.page - 1,
           pageSize: paginationModel.pageSize,
           folder: folder
@@ -118,7 +118,7 @@ const DriveAppLayout = () => {
       setUploadFilesOpen(false)
       setUploadFilesTitle(`${t(`Write Email`)}`)
     }
-  }, [dispatch, paginationModel, folder, id])
+  }, [dispatch, paginationModel, folder, currentAoAddress, counter])
 
   const toggleUploadFilesOpen = () => {
     if(currentAddress == undefined || currentAddress.length != 43) {
@@ -182,7 +182,6 @@ const DriveAppLayout = () => {
           currentEmail={currentEmail}
           setCurrentEmail={setCurrentEmail}
           driveFileOpen={driveFileOpen}
-          handleSelectFile={handleSelectFile}
           setFileDetailOpen={setFileDetailOpen}
           handleSelectAllFile={handleSelectAllFile}
           handleLeftSidebarToggle={handleLeftSidebarToggle}        
@@ -190,7 +189,12 @@ const DriveAppLayout = () => {
           handlePageChange={handlePageChange}
           handleFolderChange={handleFolderChange}
           loading={loading}
+          setLoading={setLoading}
           noEmailText={noEmailText}
+          currentWallet={currentWallet}
+          currentAoAddress={currentAoAddress}
+          counter={counter}
+          setCounter={setCounter}
         />
         :
         <CardContent>
