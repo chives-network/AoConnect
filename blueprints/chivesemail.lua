@@ -209,16 +209,16 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "MoveToFolder"),
   function (msg)
 
-    if EmailRecords[msg.From] == nil then
-        EmailRecords[msg.From] = {}
-    end
-    if EmailRecords[msg.From][msg.Tags.NewFolder] == nil then
-        EmailRecords[msg.From][msg.Tags.NewFolder] = {}
-    end
-    if EmailRecords[msg.From][msg.Tags.OldFolder] == nil then
-        EmailRecords[msg.From][msg.Tags.OldFolder] = {}
-    end
-    if msg.From and msg.Tags.EmailId and EmailDatas[msg.Tags.EmailId] then
+    if msg.From and msg.Tags.EmailId and EmailDatas[msg.Tags.EmailId] and msg.Tags.NewFolder and msg.Tags.OldFolder then
+      if EmailRecords[msg.From] == nil then
+          EmailRecords[msg.From] = {}
+      end
+      if EmailRecords[msg.From][msg.Tags.NewFolder] == nil then
+          EmailRecords[msg.From][msg.Tags.NewFolder] = {}
+      end
+      if EmailRecords[msg.From][msg.Tags.OldFolder] == nil then
+          EmailRecords[msg.From][msg.Tags.OldFolder] = {}
+      end
       local foundInNewFolder = false
       for i, v in ipairs(EmailRecords[msg.From][msg.Tags.NewFolder]) do
         if v == msg.Tags.EmailId then
@@ -235,6 +235,10 @@ Handlers.add(
             break
         end
       end
+      ao.send({
+        Target = msg.From,
+        Data = require('json').encode({Data = msg.Tags.EmailId, Status = 'OK'})
+      })
     else
       ao.send({
           Target = msg.From,
