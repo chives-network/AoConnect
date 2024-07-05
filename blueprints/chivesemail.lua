@@ -179,13 +179,13 @@ Handlers.add(
   function (msg)
 
     local EmailContent = {}
-    if msg.From and msg.Tags.EmailId and EmailDatas[msg.Tags.EmailId] then
+    if msg.From and msg.Tags.EmailId and msg.Tags.Folder and EmailDatas[msg.Tags.EmailId] then
       EmailContent = EmailDatas[msg.Tags.EmailId]
-      if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Inbox'] then
+      if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From][msg.Tags.Folder] then
         local found = false
-        for i, v in ipairs(EmailRecordsUnRead[msg.From]['Inbox']) do
+        for i, v in ipairs(EmailRecordsUnRead[msg.From][msg.Tags.Folder]) do
             if v == msg.Tags.EmailId then
-                table.remove(EmailRecordsUnRead[msg.From]['Inbox'], i)
+                table.remove(EmailRecordsUnRead[msg.From][msg.Tags.Folder], i)
                 found = true
                 break
             end
