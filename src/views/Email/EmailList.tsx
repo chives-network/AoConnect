@@ -104,7 +104,6 @@ const EmailList = (props: EmailListType) => {
     setEmailDetailWindowOpen,
     paginationModel,
     handlePageChange,
-    handleFolderChange,
     loading,
     setLoading,
     noEmailText,
@@ -116,11 +115,14 @@ const EmailList = (props: EmailListType) => {
 
   const [starredList, setStarredList] = useState<any>({})
   const [selectedEmails, setSelectedEmails] = useState<any>({})
+  const [haveReadEmails, setHaveReadEmails] = useState<any>({})
   
   useEffect(()=>{
     setStarredList({})
     setSelectedEmails({})
   },[paginationModel, folder])
+
+  const recordsUnRead = store.recordsUnRead
 
   // ** State
   const [refresh, setRefresh] = useState<boolean>(false)
@@ -209,7 +211,8 @@ const EmailList = (props: EmailListType) => {
     handleMoveToSpam,
     handleMoveToFolder,
     currentWallet,
-    currentAoAddress
+    currentAoAddress,
+    setHaveReadEmails
   }
 
   return (
@@ -295,11 +298,6 @@ const EmailList = (props: EmailListType) => {
             {store && store.data && store.data.length ? (
               <List sx={{ p: 0, m: 1 }}>
                 {store.data.map((email: any) => {
-                  const TagsMap: any = {}
-                  email && email.tags && email.tags.length > 0 && email.tags.map( (Tag: any) => {
-                    TagsMap[Tag.name] = Tag.value;
-                  })
-                  const EntityType = TagsMap['Entity-Type']
                   const FullStatusRS: any = GetFileCacheStatus(email)
                   const FileCacheStatus: any = FullStatusRS['CacheStatus']
                   const FileFullStatus: any = FullStatusRS['FullStatus']
@@ -308,30 +306,15 @@ const EmailList = (props: EmailListType) => {
                     IsFileDisabled = true
                   }
 
-                  const mailReadToggleIcon = email?.isRead ? 'mdi:email-outline' : 'mdi:email-open-outline'
+                  const mailReadToggleIcon = recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id] ? 'mdi:email-outline' : 'mdi:email-open-outline'
 
                   return (
                     <EmailItem
                       key={email.Id}
-                      sx={{ backgroundColor: true ? 'action.hover' : 'background.paper' }}
+                      sx={{ backgroundColor: recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id] ? 'action.hover' : 'background.paper' }}
                       onClick={() => {
-                        if(EntityType == "Folder") {
-                          if(IsFileDisabled) {
-                          }
-                          else {
-                            console.log("email",email)
-                            handleFolderChange(email.Id)
-                          }
-                        }
-                        else {
-                          if(IsFileDisabled) {
-                          }
-                          else {
-                            setEmailDetailWindowOpen(true)
-                            setCurrentEmail(email)
-                          }
-                        }
-                        
+                        setEmailDetailWindowOpen(true)
+                        setCurrentEmail(email)
                       }}
                     >
                       <Tooltip title={(FileFullStatus.Folder == "Trash" || FileFullStatus.Folder == "Spam") ? `${t(`You cannot perform operations on files in the Trash or Spam`)}` :''} arrow>
@@ -370,17 +353,11 @@ const EmailList = (props: EmailListType) => {
                             <Icon icon={starredList[email.Id] ? 'mdi:star' : 'mdi:star-outline'} />
                           </IconButton>
 
-                          {EntityType == "Folder" ? 
-                            <Avatar sx={{ mr: 3, width: '2rem', height: '2rem' }}>
-                              <Icon icon='mdi:folder-outline' />
-                            </Avatar>
-                          :
-                            <Avatar
-                              alt={TagsMap['File-Name']}
-                              src={GetAppAvatarModId(email.From)}
-                              sx={{ mr: 3, width: '2rem', height: '2rem' }}
-                            />
-                          }
+                          <Avatar
+                            alt={email.From}
+                            src={GetAppAvatarModId(email.From)}
+                            sx={{ mr: 3, width: '2rem', height: '2rem' }}
+                          />
                           <Box
                             sx={{
                               display: 'flex',
@@ -408,6 +385,7 @@ const EmailList = (props: EmailListType) => {
                           </Box>
                         </Box>
                       </Tooltip>
+
                       <Box
                         className='mail-info-right'
                         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
@@ -435,7 +413,7 @@ const EmailList = (props: EmailListType) => {
                           </Tooltip>
                         ) : null}
 
-                        <Tooltip placement='top' title={email.isRead ? 'Unread Mail' : 'Read Mail'}>
+                        <Tooltip placement='top' title={recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id] ? t('Unread Mail') : t('Read Mail')}>
                           <IconButton
                             onClick={e => {
                               e.stopPropagation()

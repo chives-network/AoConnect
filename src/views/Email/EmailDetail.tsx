@@ -57,7 +57,8 @@ const EmailDetail = (props: EmailDetailType) => {
     handleMoveToSpam,
     handleMoveToFolder,
     currentWallet,
-    currentAoAddress
+    currentAoAddress,
+    setHaveReadEmails
   } = props
 
   const FullStatusRS: any = GetFileCacheStatus(currentEmail)
@@ -68,6 +69,10 @@ const EmailDetail = (props: EmailDetailType) => {
       if (currentEmail && currentEmail.Id && currentWallet) {
         const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, currentEmail.Id, folder);
         console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
+        setHaveReadEmails((prevState: any)=>({
+          ...prevState,
+          [currentEmail.Id]: true
+        }))
       }
     };
   
@@ -249,7 +254,9 @@ const EmailDetail = (props: EmailDetailType) => {
                         />
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                           <Typography sx={{ fontWeight: 500 }}>{currentEmail.Subject}</Typography>
-                          <Typography variant='body2'>{currentEmail.From}</Typography>
+                          <Typography variant='body2'>{t('From')}: {currentEmail.From}</Typography>
+                          <Typography variant='body2'>{t('To')}: {currentEmail.To}</Typography>
+                          <Typography variant='body2'>{t('Id')}: {currentEmail.Id}</Typography>
                         </Box>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>

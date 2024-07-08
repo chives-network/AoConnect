@@ -198,6 +198,33 @@ const SidebarLeft = (props: EmailSidebarType) => {
               href='#'
               onClick={(event: any)=>{
                 event.preventDefault();
+                handleListItemClick("Sent")
+              }}
+              sx={{
+                borderLeftColor: handleActiveItem('folder', 'Sent') ? 'primary.main' : 'transparent'
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color: handleActiveItem('folder', 'Sent') ? 'primary.main' : 'text.secondary'
+                }}
+              >
+                <Icon icon='mdi:send-outline'/>
+              </ListItemIcon>
+              <ListItemText
+                primary={`${t(`Sent`)}`}
+                primaryTypographyProps={{
+                  noWrap: true,
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Sent') && { color: 'primary.main' }) }
+                }}
+              />
+              {RenderBadge('Sent', 'warning')}
+            </ListItemStyled>
+            <ListItemStyled
+              component={Link}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
                 handleListItemClick("Spam")
               }}
               sx={{

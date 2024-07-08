@@ -135,7 +135,6 @@ export type EmailListType = {
   setEmailDetailWindowOpen: (val: boolean) => void
   paginationModel: any
   handlePageChange: (event: any, page: number) => void
-  handleFolderChange: (folder: string) => void  
   loading: boolean
   setLoading: (val: boolean) => void
   noEmailText: string
@@ -166,6 +165,7 @@ export type EmailDetailType = {
   currentWallet: any
   currentAoAddress: string
   EmailCategoriesColors: any
+  setHaveReadEmails: any
 }
 
 export type MailComposeType = {

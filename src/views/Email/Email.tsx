@@ -90,11 +90,6 @@ const EmailAppLayout = () => {
     console.log("handlePageChange", event)
   }
 
-  const handleFolderChange = (folder: string) => {
-    setFolder(folder);
-    console.log("handleFolderChange", folder)
-  }
-
   useEffect(() => {
     if(true && currentAoAddress && currentAoAddress.length == 43) {
       setLoading(true)
@@ -180,7 +175,6 @@ const EmailAppLayout = () => {
           setEmailDetailWindowOpen={setEmailDetailWindowOpen}
           paginationModel={paginationModel}
           handlePageChange={handlePageChange}
-          handleFolderChange={handleFolderChange}
           loading={loading}
           setLoading={setLoading}
           noEmailText={noEmailText}
