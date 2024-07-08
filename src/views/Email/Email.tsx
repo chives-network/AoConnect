@@ -36,7 +36,7 @@ import { fetchData } from 'src/store/apps/email'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Variables
-const labelColors: any = {
+const EmailCategoriesColors: any = {
   Social: 'error',
   Updates: 'success',
   Forums: 'primary',
@@ -171,7 +171,7 @@ const DriveAppLayout = () => {
           setQuery={setQuery}
           direction={direction}
           folder={folder}
-          labelColors={labelColors}
+          EmailCategoriesColors={EmailCategoriesColors}
           currentEmail={currentEmail}
           setCurrentEmail={setCurrentEmail}
           driveFileOpen={driveFileOpen}

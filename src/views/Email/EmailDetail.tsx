@@ -47,7 +47,7 @@ const DriveDetail = (props: EmailDetailType) => {
     currentEmail,
     hidden,
     direction,
-    labelColors,
+    EmailCategoriesColors,
     folder,
     handleStarDrive,
     driveFileOpen,
@@ -89,7 +89,7 @@ const DriveDetail = (props: EmailDetailType) => {
 
   const handleLabelsMenu = () => {
     const array: OptionType[] = []
-    Object.entries(labelColors).map(([key, value]: any) => {
+    Object.entries(EmailCategoriesColors).map(([key, value]: any) => {
       array.push({
         text: <Typography sx={{ textTransform: 'capitalize' }}>{key}</Typography>,
         icon: (

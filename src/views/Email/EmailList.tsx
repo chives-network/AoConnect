@@ -96,7 +96,7 @@ const EmailList = (props: EmailListType) => {
     hidden,
     setQuery,
     direction,
-    labelColors,
+    EmailCategoriesColors,
     folder,
     currentEmail,
     setCurrentEmail,
@@ -173,7 +173,7 @@ const EmailList = (props: EmailListType) => {
 
   const handleLabelsMenu = () => {
     const array: OptionType[] = []
-    Object.entries(labelColors).map(([key, value]: any) => {
+    Object.entries(EmailCategoriesColors).map(([key, value]: any) => {
       array.push({
         text: <Typography sx={{ textTransform: 'capitalize' }}>{key}</Typography>,
         icon: (
@@ -196,7 +196,7 @@ const EmailList = (props: EmailListType) => {
     currentEmail,
     hidden,
     direction,
-    labelColors,
+    EmailCategoriesColors,
     folder,
     handleStarDrive,
     driveFileOpen,
