@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import toast from 'react-hot-toast'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -38,7 +39,7 @@ import { ChivesEmailReadEmailContent } from 'src/functions/AoConnect/ChivesEmail
 
 import authConfig from 'src/configs/auth'
 
-const DriveDetail = (props: EmailDetailType) => {
+const EmailDetail = (props: EmailDetailType) => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -49,9 +50,9 @@ const DriveDetail = (props: EmailDetailType) => {
     direction,
     EmailCategoriesColors,
     folder,
-    handleStarDrive,
-    driveFileOpen,
-    setFileDetailOpen,
+    handleStarEmail,
+    emailDetailWindowOpen,
+    setEmailDetailWindowOpen,
     handleMoveToTrash,
     handleMoveToSpam,
     handleMoveToFolder,
@@ -79,15 +80,17 @@ const DriveDetail = (props: EmailDetailType) => {
 
   const handleMoveToTrashcurrentEmail = () => {
     handleMoveToTrash(currentEmail.Id)
-    setFileDetailOpen(false)
+    setEmailDetailWindowOpen(false)
+    toast.success(t('Have moved to trash.') as string, { duration: 2500 })
   }
 
   const handleMoveToSpamcurrentEmail = () => {
     handleMoveToSpam(currentEmail.Id)
-    setFileDetailOpen(false)
+    setEmailDetailWindowOpen(false)
+    toast.success(t('Have moved to spam.') as string, { duration: 2500 })
   }
 
-  const handleLabelsMenu = () => {
+  const handleCategoriesMenu = () => {
     const array: OptionType[] = []
     Object.entries(EmailCategoriesColors).map(([key, value]: any) => {
       array.push({
@@ -99,7 +102,9 @@ const DriveDetail = (props: EmailDetailType) => {
         ),
         menuItemProps: {
           onClick: () => {
-            handleMoveToFolder(null, folder, key)
+            handleMoveToFolder(currentEmail.Id, folder, key)
+            setEmailDetailWindowOpen(false)
+            toast.success(t('Have moved to ' + key) as string, { duration: 2500 })
           }
         }
       })
@@ -122,10 +127,10 @@ const DriveDetail = (props: EmailDetailType) => {
     <Sidebar
       hideBackdrop
       direction='right'
-      show={driveFileOpen}
+      show={emailDetailWindowOpen}
       sx={{ zIndex: 3, width: '100%', overflow: 'hidden' }}
       onClose={() => {
-        setFileDetailOpen(false)        
+        setEmailDetailWindowOpen(false)        
       }}
     >
       {currentEmail && currentEmail ? (
@@ -152,7 +157,7 @@ const DriveDetail = (props: EmailDetailType) => {
                   size='small'
                   sx={{ mr: 2 }}
                   onClick={() => {
-                    setFileDetailOpen(false)                    
+                    setEmailDetailWindowOpen(false)                    
                   }}
                 >
                   <Icon icon={goBackIcon} fontSize='2rem' />
@@ -181,7 +186,7 @@ const DriveDetail = (props: EmailDetailType) => {
                   </IconButton>
                   <OptionsMenu
                     leftAlignMenu
-                    options={handleLabelsMenu()}
+                    options={handleCategoriesMenu()}
                     iconButtonProps={{ size: 'small' }}
                     icon={<Icon icon='mdi:label-outline' fontSize='1.375rem' />}
                   />
@@ -189,7 +194,11 @@ const DriveDetail = (props: EmailDetailType) => {
               <div>
                 <IconButton
                   size='small'
-                  onClick={e => handleStarDrive(e, currentEmail.Id, !FileFullStatus['Star'])}
+                  onClick={e => {
+                    handleStarEmail(e, currentEmail.Id, !FileFullStatus['Star'])
+                    setEmailDetailWindowOpen(false)
+                    toast.success(t('Have added to starred.') as string, { duration: 2500 })
+                  }}
                   sx={{ ...(true ? { color: FileFullStatus['Star'] ? 'warning.main' : 'text.secondary' } : {}) }}
                 >
                   <Icon icon={FileFullStatus['Star'] ? 'mdi:star' : 'mdi:star-outline'} fontSize='1.375rem'/>
@@ -317,4 +326,4 @@ const DriveDetail = (props: EmailDetailType) => {
   )
 }
 
-export default DriveDetail
+export default EmailDetail

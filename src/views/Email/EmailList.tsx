@@ -100,8 +100,8 @@ const EmailList = (props: EmailListType) => {
     folder,
     currentEmail,
     setCurrentEmail,
-    driveFileOpen,
-    setFileDetailOpen,
+    emailDetailWindowOpen,
+    setEmailDetailWindowOpen,
     paginationModel,
     handlePageChange,
     handleFolderChange,
@@ -149,7 +149,7 @@ const EmailList = (props: EmailListType) => {
     handleMoveToFolder(id, folder, "Spam")
   }
 
-  const handleStarDrive = async (e: SyntheticEvent, id: string, value: boolean) => {
+  const handleStarEmail = async (e: SyntheticEvent, id: string, value: boolean) => {
     e.stopPropagation()
     if(value && id && id.length == 43) {
       setStarredList((prevState: any)=>({
@@ -198,9 +198,9 @@ const EmailList = (props: EmailListType) => {
     direction,
     EmailCategoriesColors,
     folder,
-    handleStarDrive,
-    driveFileOpen,
-    setFileDetailOpen,
+    handleStarEmail,
+    emailDetailWindowOpen,
+    setEmailDetailWindowOpen,
     handleMoveToTrash,
     handleMoveToSpam,
     handleMoveToFolder,
@@ -323,7 +323,7 @@ const EmailList = (props: EmailListType) => {
                           if(IsFileDisabled) {
                           }
                           else {
-                            setFileDetailOpen(true)
+                            setEmailDetailWindowOpen(true)
                             setCurrentEmail(email)
                           }
                         }
@@ -355,7 +355,7 @@ const EmailList = (props: EmailListType) => {
                           />
                           <IconButton
                             size='small'
-                            onClick={e => handleStarDrive(e, email.Id, !starredList[email.Id])}
+                            onClick={e => handleStarEmail(e, email.Id, !starredList[email.Id])}
                             disabled={IsFileDisabled}
                             sx={{
                               mr: { xs: 0, sm: 3 },

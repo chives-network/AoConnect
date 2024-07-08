@@ -64,7 +64,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
     leftSidebarWidth,
     uploadFilesTitle,
     toggleUploadFilesOpen,
-    setFileDetailOpen,
+    setEmailDetailWindowOpen,
     handleLeftSidebarToggle,
     EmailCategoriesColors
   } = props
@@ -99,7 +99,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
 
   const handleListItemClick = (Folder: string | null) => {
     setFolder(Folder)
-    setFileDetailOpen(false)
+    setEmailDetailWindowOpen(false)
     handleLeftSidebarToggle()
   }
 

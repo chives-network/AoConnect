@@ -114,10 +114,10 @@ export type MailSidebarType = {
   dispatch: Dispatch<any>
   leftSidebarOpen: boolean
   leftSidebarWidth: number
-  driveFileOpen: boolean
+  emailDetailWindowOpen: boolean
   toggleUploadFilesOpen: () => void
   handleLeftSidebarToggle: () => void
-  setFileDetailOpen: (val: boolean) => void
+  setEmailDetailWindowOpen: (val: boolean) => void
 }
 
 export type EmailListType = {
@@ -126,13 +126,13 @@ export type EmailListType = {
   store: any
   lgAbove: boolean
   direction: 'ltr' | 'rtl'
-  driveFileOpen: boolean
+  emailDetailWindowOpen: boolean
   EmailCategoriesColors: any
   folder: any
   setQuery: (val: string) => void
   currentEmail: any
   setCurrentEmail: (item: TxRecordType) => void
-  setFileDetailOpen: (val: boolean) => void
+  setEmailDetailWindowOpen: (val: boolean) => void
   paginationModel: any
   handlePageChange: (event: any, page: number) => void
   handleFolderChange: (folder: string) => void  
@@ -150,14 +150,14 @@ export type EmailDetailType = {
   hidden: boolean
   dispatch: Dispatch<any>
   direction: 'ltr' | 'rtl'
-  driveFileOpen: boolean
+  emailDetailWindowOpen: boolean
   folder: string
   labelColors: any
   folderColors: any
   folders: MailFoldersArrType[]
   foldersObj: MailFoldersObjType
-  setFileDetailOpen: (val: boolean) => void
-  handleStarDrive: (e: SyntheticEvent, id: string, value: boolean) => void
+  setEmailDetailWindowOpen: (val: boolean) => void
+  handleStarEmail: (e: SyntheticEvent, id: string, value: boolean) => void
   handleLabelUpdate: (id: string | null, label: LabelType) => void
   handleFolderUpdate: (id: string | null, folder: FolderType) => void
   handleMoveToTrash: (id: string | null) => void

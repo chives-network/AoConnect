@@ -44,7 +44,7 @@ const EmailCategoriesColors: any = {
   Promotions: 'warning'
 }
 
-const DriveAppLayout = () => {
+const EmailAppLayout = () => {
   // ** Hook
   const { t } = useTranslation()
 
@@ -54,7 +54,7 @@ const DriveAppLayout = () => {
   const [query, setQuery] = useState<string>('')
   const [uploadFilesOpen, setUploadFilesOpen] = useState<boolean>(false)
   const [uploadFilesTitle, setUploadFilesTitle] = useState<string>(`${t(`Write Email`)}`)
-  const [driveFileOpen, setFileDetailOpen] = useState<boolean>(false)
+  const [emailDetailWindowOpen, setEmailDetailWindowOpen] = useState<boolean>(false)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [folder, setFolder] = useState<string>('Inbox')
   const [loading, setLoading] = useState<boolean>(false)
@@ -155,12 +155,12 @@ const DriveAppLayout = () => {
         dispatch={dispatch}
         folder={folder}
         setFolder={setFolder}
-        driveFileOpen={driveFileOpen}
+        emailDetailWindowOpen={emailDetailWindowOpen}
         leftSidebarOpen={leftSidebarOpen}
         leftSidebarWidth={leftSidebarWidth}
         uploadFilesTitle={uploadFilesTitle}
         toggleUploadFilesOpen={toggleUploadFilesOpen}
-        setFileDetailOpen={setFileDetailOpen}
+        setEmailDetailWindowOpen={setEmailDetailWindowOpen}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         EmailCategoriesColors={EmailCategoriesColors}
       />
@@ -176,8 +176,8 @@ const DriveAppLayout = () => {
           EmailCategoriesColors={EmailCategoriesColors}
           currentEmail={currentEmail}
           setCurrentEmail={setCurrentEmail}
-          driveFileOpen={driveFileOpen}
-          setFileDetailOpen={setFileDetailOpen}
+          emailDetailWindowOpen={emailDetailWindowOpen}
+          setEmailDetailWindowOpen={setEmailDetailWindowOpen}
           paginationModel={paginationModel}
           handlePageChange={handlePageChange}
           handleFolderChange={handleFolderChange}
@@ -198,4 +198,4 @@ const DriveAppLayout = () => {
   )
 }
 
-export default DriveAppLayout
+export default EmailAppLayout

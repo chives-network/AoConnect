@@ -21,11 +21,11 @@ export type EmailSidebarType = {
   setFolder: (val: any) => void
   leftSidebarOpen: boolean
   leftSidebarWidth: number
-  driveFileOpen: boolean
+  emailDetailWindowOpen: boolean
   uploadFilesTitle: string
   toggleUploadFilesOpen: () => void
   handleLeftSidebarToggle: () => void
-  setFileDetailOpen: (val: boolean) => void
+  setEmailDetailWindowOpen: (val: boolean) => void
   EmailCategoriesColors: any
 }
 
