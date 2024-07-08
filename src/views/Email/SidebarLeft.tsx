@@ -65,7 +65,8 @@ const SidebarLeft = (props: EmailSidebarType) => {
     uploadFilesTitle,
     toggleUploadFilesOpen,
     setFileDetailOpen,
-    handleLeftSidebarToggle
+    handleLeftSidebarToggle,
+    EmailCategoriesColors
   } = props
 
   const [sideBarActive, setSideBarActive] = useState<{ [key: string]: string }>({"folder": "Inbox"})
@@ -260,13 +261,36 @@ const SidebarLeft = (props: EmailSidebarType) => {
               href='#'
               onClick={(event: any)=>{
                 event.preventDefault();
+                handleListItemClick("Important")
+              }}
+              sx={{
+                borderLeftColor: handleActiveItem('folder', 'Important') ? 'primary.main' : 'transparent'
+              }}
+            >
+              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: `${EmailCategoriesColors['Important']}.main` } }}>
+                <Icon icon='mdi:circle' fontSize='0.75rem' />
+              </ListItemIcon>
+              <ListItemText
+                primary={`${t(`Important`)}`}
+                primaryTypographyProps={{
+                  noWrap: true,
+                  sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Important') && { color: 'primary.main' }) }
+                }}
+              />
+              {RenderBadge('Important', EmailCategoriesColors['Important'])}
+            </ListItemStyled>
+            <ListItemStyled
+              component={Link}
+              href='#'
+              onClick={(event: any)=>{
+                event.preventDefault();
                 handleListItemClick("Social")
               }}
               sx={{
                 borderLeftColor: handleActiveItem('folder', 'Social') ? 'primary.main' : 'transparent'
               }}
             >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'success.main' } }}>
+              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: `${EmailCategoriesColors['Social']}.main` } }}>
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
@@ -276,7 +300,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                   sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Social') && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('Social', 'success')}
+              {RenderBadge('Social', EmailCategoriesColors['Social'])}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
@@ -289,7 +313,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                 borderLeftColor: handleActiveItem('folder', 'Updates') ? 'primary.main' : 'transparent'
               }}
             >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'primary.main' } }}>
+              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: `${EmailCategoriesColors['Updates']}.main` } }}>
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
@@ -299,7 +323,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                   sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Updates') && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('Updates', 'primary')}
+              {RenderBadge('Updates', EmailCategoriesColors['Updates'])}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
@@ -312,7 +336,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                 borderLeftColor: handleActiveItem('folder', 'Forums') ? 'warning.main' : 'transparent'
               }}
             >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'warning.main' } }}>
+              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: `${EmailCategoriesColors['Forums']}.main` } }}>
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
@@ -322,7 +346,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                   sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Forums') && { color: 'warning.main' }) }
                 }}
               />
-              {RenderBadge('Forums', 'warning')}
+              {RenderBadge('Forums', EmailCategoriesColors['Forums'])}
             </ListItemStyled>
             <ListItemStyled
               component={Link}
@@ -335,7 +359,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                 borderLeftColor: handleActiveItem('folder', 'Promotions') ? 'primary.main' : 'transparent'
               }}
             >
-              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: 'error.main' } }}>
+              <ListItemIcon sx={{ mr: 3.5, '& svg': { color: `${EmailCategoriesColors['Promotions']}.main` } }}>
                 <Icon icon='mdi:circle' fontSize='0.75rem' />
               </ListItemIcon>
               <ListItemText
@@ -345,7 +369,7 @@ const SidebarLeft = (props: EmailSidebarType) => {
                   sx: { fontWeight: 500, ...(handleActiveItem('folder', 'Promotions') && { color: 'primary.main' }) }
                 }}
               />
-              {RenderBadge('Promotions', 'error')}
+              {RenderBadge('Promotions', EmailCategoriesColors['Promotions'])}
             </ListItemStyled>
           </List>
 

@@ -127,7 +127,7 @@ export type EmailListType = {
   lgAbove: boolean
   direction: 'ltr' | 'rtl'
   driveFileOpen: boolean
-  labelColors: any
+  EmailCategoriesColors: any
   folder: any
   setQuery: (val: string) => void
   currentEmail: any

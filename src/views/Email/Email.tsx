@@ -37,7 +37,8 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Variables
 const EmailCategoriesColors: any = {
-  Social: 'error',
+  Important: 'error',
+  Social: 'info',
   Updates: 'success',
   Forums: 'primary',
   Promotions: 'warning'
@@ -161,6 +162,7 @@ const DriveAppLayout = () => {
         toggleUploadFilesOpen={toggleUploadFilesOpen}
         setFileDetailOpen={setFileDetailOpen}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
+        EmailCategoriesColors={EmailCategoriesColors}
       />
       { !uploadFilesOpen ?
         <EmailList
