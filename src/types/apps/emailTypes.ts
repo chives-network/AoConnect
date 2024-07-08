@@ -165,6 +165,7 @@ export type EmailDetailType = {
   handleMoveToFolder: (id: string | null, oldFolder: string, newFolder: string) => void
   currentWallet: any
   currentAoAddress: string
+  EmailCategoriesColors: any
 }
 
 export type MailComposeType = {
