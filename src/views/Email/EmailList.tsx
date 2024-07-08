@@ -115,21 +115,21 @@ const EmailList = (props: EmailListType) => {
   } = props
 
   const [starredList, setStarredList] = useState<any>({})
-  const [selectedFiles, setSelectedFiles] = useState<any>({})
+  const [selectedEmails, setSelectedEmails] = useState<any>({})
   
   useEffect(()=>{
     setStarredList({})
-    setSelectedFiles({})
+    setSelectedEmails({})
   },[paginationModel, folder])
 
   // ** State
   const [refresh, setRefresh] = useState<boolean>(false)
 
   const handleMoveToFolder = async (id: string | null, oldFolder: string, newFolder: string) => {
-    console.log("selectedFiles", selectedFiles);
+    console.log("selectedEmails", selectedEmails);
     setLoading(true)
     if (id === null && store.data && store.data.length > 0) {
-      await Promise.all(Object.keys(selectedFiles).map(async (EmailId: string) => {
+      await Promise.all(Object.keys(selectedEmails).map(async (EmailId: string) => {
         const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, EmailId, oldFolder, newFolder);
         console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData);
       }));
@@ -138,15 +138,18 @@ const EmailList = (props: EmailListType) => {
       const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, id, oldFolder, newFolder);
       console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData);
     }
+    setSelectedEmails({})
     setCounter(counter + 1);
   }
 
   const handleMoveToTrash = async (id: string | null) => {
     handleMoveToFolder(id, folder, "Trash")
+    setSelectedEmails({})
   }
   
   const handleMoveToSpam = async (id: string | null) => {
     handleMoveToFolder(id, folder, "Spam")
+    setSelectedEmails({})
   }
 
   const handleStarEmail = async (e: SyntheticEvent, id: string, value: boolean) => {
@@ -164,6 +167,7 @@ const EmailList = (props: EmailListType) => {
         [id]: false
       }))
     }
+    setSelectedEmails({})
   }
 
   const handleRefreshEmailClick = () => {
@@ -171,7 +175,7 @@ const EmailList = (props: EmailListType) => {
     setTimeout(() => setRefresh(false), 1000)
   }
 
-  const handleLabelsMenu = () => {
+  const handleCategoriesMenu = () => {
     const array: OptionType[] = []
     Object.entries(EmailCategoriesColors).map(([key, value]: any) => {
       array.push({
@@ -244,17 +248,17 @@ const EmailList = (props: EmailListType) => {
                   checked={(store.data.length > 0) }
                   indeterminate={
                     !!(
-                      store.data.length &&
-                      selectedFiles.length &&
-                      store.data.length !== selectedFiles.length
+                      store.data &&
+                      store.data.length > 0 &&
+                      store.data.length !== Object.keys(selectedEmails).length
                     )
                   }
                 />
               ) : null}
 
-              {selectedFiles && Object.keys(selectedFiles).length > 0 && store.data && store.data.length ? (
+              {selectedEmails && Object.keys(selectedEmails).length > 0 && store.data && store.data.length ? (
                 <Fragment>
-                  <OptionsMenu leftAlignMenu options={handleLabelsMenu()} icon={<Icon icon='mdi:label-outline' />} />
+                  <OptionsMenu leftAlignMenu options={handleCategoriesMenu()} icon={<Icon icon='mdi:label-outline' />} />
                   {folder !== 'Trash' && folder !== 'Spam' ? (
                     <Tooltip title={`${t(`Move to Trash`)}`} arrow>
                       <IconButton onClick={()=>handleMoveToTrash(null)}>
@@ -336,22 +340,20 @@ const EmailList = (props: EmailListType) => {
                           <Checkbox
                             onClick={e => e.stopPropagation()}
                             onChange={() => {
-                              if(selectedFiles[email.Id]) {
-                                setSelectedFiles((prevState: any) => {
-                                  const { [email.Id]: deletedKey, ...rest } = prevState;
-                                  console.log("deletedKey", deletedKey);
-
-                                  return rest;
-                                });
+                              if(email.Id && selectedEmails && selectedEmails[email.Id] == true ) {
+                                setSelectedEmails((prevState: any)=>({
+                                  ...prevState,
+                                  [email.Id]: false
+                                }))
                               }
                               else {
-                                setSelectedFiles((prevState: any)=>({
+                                setSelectedEmails((prevState: any)=>({
                                   ...prevState,
                                   [email.Id]: true
                                 }))
                               }
                             }}
-                            checked={selectedFiles[email.Id]}
+                            checked={selectedEmails && selectedEmails[email.Id] == true ? true : false}
                           />
                           <IconButton
                             size='small'
