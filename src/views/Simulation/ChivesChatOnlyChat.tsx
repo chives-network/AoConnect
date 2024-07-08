@@ -25,8 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetInboxs, ChivesChatApplyJoin, ChivesChatIsMember } from 'src/functions/AoConnect/ChivesChat'
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 const ChivesChatOnlyChat = () => {
   // ** Hook

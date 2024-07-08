@@ -12,6 +12,8 @@ export const MU_URL = "https://mu.ao-testnet.xyz"
 export const CU_URL = "https://cu.ao-testnet.xyz"
 export const GATEWAY_URL = "https://arweave.net"
 
+import { ansiRegex } from 'src/configs/functions'
+
 
 export const AoSendMsg = async (currentWalletJwk: any, processTxId: string, Msg: string, Tags: any[]) => {
     try {
@@ -212,7 +214,6 @@ export const GetMyInboxMsg = async (currentWalletJwk: any, processTxId: string) 
         const MsgContent = await AoGetMessage(processTxId, GetMyInboxMsgResult)
         console.log("GetMyInboxMsg MsgContent", MsgContent)
         if(MsgContent && MsgContent.Output && MsgContent.Output.data && MsgContent.Output.data.output) {
-            const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
             const InboxMsgList: any[] = ConvertInboxMessageFormatAndStorage(formatText, processTxId, true)
 
@@ -246,7 +247,6 @@ export const GetMyInboxLastMsg = async (currentWalletJwk: any, processTxId: stri
     if(GetMyInboxMsgResult && GetMyInboxMsgResult.length == 43) {
         const MsgContent = await AoGetMessage(processTxId, GetMyInboxMsgResult)
         if(MsgContent && MsgContent.Output && MsgContent.Output.data && MsgContent.Output.data.output) {
-            const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
             const formatText = MsgContent.Output.data.output.replace(ansiRegex, '');
             const InboxMsgList: any[] = ConvertInboxMessageFormatAndStorage("{" + formatText + "}", processTxId, false)
 

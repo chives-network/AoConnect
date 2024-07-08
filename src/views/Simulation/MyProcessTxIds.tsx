@@ -28,8 +28,7 @@ import { AoLoadBlueprintMyProcessTxIds,
   MyProcessTxIdsGetBlogs, MyProcessTxIdsAddBlog, MyProcessTxIdsDelBlog, 
   MyProcessTxIdsGetProjects, MyProcessTxIdsAddProject, MyProcessTxIdsDelProject
  } from 'src/functions/AoConnect/MyProcessTxIds'
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 const MyProcessTxIds = () => {
   // ** Hook

@@ -23,8 +23,7 @@ import TokenLeft from 'src/views/Token/TokenLeft'
 import TokenIndex from 'src/views/Token/TokenIndex'
 
 import { GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 const TokenModel = () => {
   // ** Hook

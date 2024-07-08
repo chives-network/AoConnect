@@ -22,8 +22,7 @@ import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnec
 import { AoLoadBlueprintChivesEmail, 
   ChivesEmailGetMyEmailRecords, ChivesEmailSendEmail, ChivesEmailSetPublicKey, ChivesEmailGetPublicKeys, ChivesEmailGetEmailRecords, ChivesEmailReadEmailContent, ChivesEmailMoveToFolder
  } from 'src/functions/AoConnect/ChivesEmail'
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 const ChivesEmail = () => {
   // ** Hook
@@ -112,7 +111,7 @@ const ChivesEmail = () => {
       'Testing Email': '==================================================='
     }))
 
-    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject001-0853', 'Content001', 'Summary001', 'Encrypted001')
+    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'He tried to oust OpenAI’s CEO. Now, he’s starting a ‘safe’ rival', 'The launch announcement from Safe Superintelligence suggests that the company wants to take a different approach: Our singular focus means no distraction by management overhead or product cycles, and our business model means safety, security, and progress are all insulated from short-term commercial pressures. Joining Sutskever in launching the new company are Daniel Levy, who had worked at OpenAI for the past two years, and Daniel Gross, an investor who previously worked as a partner at the startup accelerator Y Combinator and on machine learning efforts at Apple. The company says it will have offices in Palo Alto, California, and Tel Aviv, Israel.', "New York CNN — The OpenAI co-founder who left the high-flying artificial intelligence startup last month has announced his next venture: a company dedicated to building safe, powerful artificial intelligence that could become a rival to his old employer.", 'Encrypted001')
     if(ChivesEmailSendEmail1) {
       console.log("ChivesEmailSendEmail1", ChivesEmailSendEmail1)
       if(ChivesEmailSendEmail1?.msg?.Output?.data?.output)  {

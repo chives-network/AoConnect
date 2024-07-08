@@ -29,8 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { GetMyLastMsg, AoCreateProcessAuto, generateRandomNumber, sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalancesDryRun } from 'src/functions/AoConnect/Token'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 const TokenModel = () => {
   // ** Hook

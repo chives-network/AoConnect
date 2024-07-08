@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { ansiRegex } from 'src/configs/functions'
 
 const AnsiText = ({ text }: any) => {
     
     // 正则表达式匹配 ANSI 转义码
-    const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
     const formatText = String(text).replace(ansiRegex, '');
   
     return  <Box

@@ -18,9 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
 import { AoLoadBlueprintFaucet, AoFaucetCheckBalance, AoFaucetDeposit, AoFaucetCredit } from 'src/functions/AoConnect/ChivesFaucet'
-
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 const ChivesFaucetModel = () => {
   // ** Hook

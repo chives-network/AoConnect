@@ -51,8 +51,7 @@ import { downloadCsv } from 'src/functions/ChatBook'
 
 // ** Third Party Components
 import { BigNumber } from 'bignumber.js'
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 const TokenIndexModel = (prop: any) => {
   // ** Hook

@@ -44,8 +44,7 @@ import {
 import { AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 import { AoChatroomInfoDryRun } from 'src/functions/AoConnect/ChivesChat'
 
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 
 const SettingModel = () => {

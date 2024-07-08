@@ -40,7 +40,7 @@ import MembersInvite from 'src/views/Chat/MembersInvite'
 import MembersApplicant from 'src/views/Chat/MembersApplicant'
 import ChannelEdit from 'src/views/Chat/ChannelEdit'
 
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+import { ansiRegex } from 'src/configs/functions'
 
 
 const AppChat = (props: any) => {

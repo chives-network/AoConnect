@@ -287,9 +287,7 @@ export function isMobile(): boolean {
   return false;
 }
 
-
-
-
+export const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
 
 

@@ -1,5 +1,6 @@
 import { AoGetPageRecords } from './AoConnect'
 import authConfig from 'src/configs/auth'
+import { ansiRegex } from 'src/configs/functions'
 
 const AoConnectLocalStorage = 'AoConnectDb'
 const AoConnectLastCursor = 'AoConnectLastCursor'
@@ -79,8 +80,6 @@ export const GetAoConnectReminderProcessTxId = () => {
 
     return window.localStorage.getItem(AoConnectReminderProcessTxId) ?? ''
 }
-
-const ansiRegex = /[\u001b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
 export const ReminderMsgAndStoreToLocal = async (processTxId: string, reminder = true) => {
     
