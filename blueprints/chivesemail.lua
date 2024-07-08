@@ -61,6 +61,10 @@ Handlers.add(
     if EmailRecords[msg.From][emailFolder] then 
       emailIdList = EmailRecords[msg.From][emailFolder]
     end
+    local EmailRecordsUnReadFolder = {}
+    if EmailRecordsUnRead[msg.From][emailFolder] then 
+      EmailRecordsUnReadFolder = EmailRecordsUnRead[msg.From][emailFolder]
+    end
 
     local totalRecords = #emailIdList
 
@@ -84,82 +88,68 @@ Handlers.add(
     end
 
     local EmailRecordsCount = {}
-    local EmailRecordsUnReadFolder = {}
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Inbox'] then
       EmailRecordsCount['Inbox'] = #EmailRecordsUnRead[msg.From]['Inbox']
-      EmailRecordsUnReadFolder = EmailRecordsUnRead[msg.From]['Inbox']
     else
       EmailRecordsCount['Inbox'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Starred'] then
       EmailRecordsCount['Starred'] = #EmailRecordsUnRead[msg.From]['Starred']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Starred']
     else
       EmailRecordsCount['Starred'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Snoozed'] then
       EmailRecordsCount['Snoozed'] = #EmailRecordsUnRead[msg.From]['Snoozed']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Snoozed']
     else
       EmailRecordsCount['Snoozed'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Sent'] then
       EmailRecordsCount['Sent'] = #EmailRecordsUnRead[msg.From]['Sent']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Sent']
     else
       EmailRecordsCount['Sent'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Drafts'] then
       EmailRecordsCount['Drafts'] = #EmailRecordsUnRead[msg.From]['Drafts']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Drafts']
     else
       EmailRecordsCount['Drafts'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Important'] then
       EmailRecordsCount['Important'] = #EmailRecordsUnRead[msg.From]['Important']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Important']
     else
       EmailRecordsCount['Important'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['AllMail'] then
       EmailRecordsCount['AllMail'] = #EmailRecordsUnRead[msg.From]['AllMail']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['AllMail']
     else
       EmailRecordsCount['AllMail'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Spam'] then
       EmailRecordsCount['Spam'] = #EmailRecordsUnRead[msg.From]['Spam']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Spam']
     else
       EmailRecordsCount['Spam'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Trash'] then
       EmailRecordsCount['Trash'] = #EmailRecordsUnRead[msg.From]['Trash']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Trash']
     else
       EmailRecordsCount['Trash'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Social'] then
       EmailRecordsCount['Social'] = #EmailRecordsUnRead[msg.From]['Social']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Social']
     else
       EmailRecordsCount['Social'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Updates'] then
       EmailRecordsCount['Updates'] = #EmailRecordsUnRead[msg.From]['Updates']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Updates']
     else
       EmailRecordsCount['Updates'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Forums'] then
       EmailRecordsCount['Forums'] = #EmailRecordsUnRead[msg.From]['Forums']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Forums']
     else
       EmailRecordsCount['Forums'] = 0
     end
     if EmailRecordsUnRead[msg.From] and EmailRecordsUnRead[msg.From]['Promotions'] then
       EmailRecordsCount['Promotions'] = #EmailRecordsUnRead[msg.From]['Promotions']
-      EmailRecordsUnReadFolder= EmailRecordsUnRead[msg.From]['Promotions']
     else
       EmailRecordsCount['Promotions'] = 0
     end
