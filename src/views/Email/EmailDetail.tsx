@@ -35,10 +35,6 @@ import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 
 import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 
-import { ChivesEmailReadEmailContent } from 'src/functions/AoConnect/ChivesEmail'
-
-import authConfig from 'src/configs/auth'
-
 const EmailDetail = (props: EmailDetailType) => {
   // ** Hook
   const { t } = useTranslation()
@@ -57,8 +53,7 @@ const EmailDetail = (props: EmailDetailType) => {
     handleMoveToSpam,
     handleMoveToFolder,
     currentWallet,
-    currentAoAddress,
-    setHaveReadEmails
+    handleReadEmailContent
   } = props
 
   const FullStatusRS: any = GetFileCacheStatus(currentEmail)
@@ -67,12 +62,7 @@ const EmailDetail = (props: EmailDetailType) => {
   useEffect(() => {
     const fetchData = async () => {
       if (currentEmail && currentEmail.Id && currentWallet) {
-        const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, currentEmail.Id, folder);
-        console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
-        setHaveReadEmails((prevState: any)=>({
-          ...prevState,
-          [currentEmail.Id]: true
-        }))
+        handleReadEmailContent(currentEmail.Id, folder)
       }
     };
   

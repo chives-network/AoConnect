@@ -166,6 +166,7 @@ export type EmailDetailType = {
   currentAoAddress: string
   EmailCategoriesColors: any
   setHaveReadEmails: any
+  handleReadEmailContent: (id: string | null, folder: string) => void
 }
 
 export type MailComposeType = {

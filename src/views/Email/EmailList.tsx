@@ -45,9 +45,11 @@ import { useTranslation } from 'react-i18next'
 import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 
 import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
+import { ChivesEmailReadEmailContent } from 'src/functions/AoConnect/ChivesEmail'
 
 import { ChivesEmailMoveToFolder } from 'src/functions/AoConnect/ChivesEmail'
 import authConfig from 'src/configs/auth'
+import toast from 'react-hot-toast'
 
 
 const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
@@ -144,13 +146,26 @@ const EmailList = (props: EmailListType) => {
     setCounter(counter + 1);
   }
 
+  const handleReadEmailContent = async (id: string | null, folder: string) => {
+    if (id && id.length == 43 && currentWallet) {
+      setHaveReadEmails((prevState: any)=>({
+        ...prevState,
+        [id]: true
+      }))
+      const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, id, folder);
+      console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
+    }
+  }
+
   const handleMoveToTrash = async (id: string | null) => {
     handleMoveToFolder(id, folder, "Trash")
+    toast.success(t('Have moved to trash.') as string, { duration: 2500 })
     setSelectedEmails({})
   }
   
   const handleMoveToSpam = async (id: string | null) => {
     handleMoveToFolder(id, folder, "Spam")
+    toast.success(t('Have moved to spam.') as string, { duration: 2500 })
     setSelectedEmails({})
   }
 
@@ -162,6 +177,7 @@ const EmailList = (props: EmailListType) => {
         [id]: true
       }))
       handleMoveToFolder(id, folder, "Starred")
+      toast.success(t('Have moved to starred.') as string, { duration: 2500 })
     }
     else {
       setStarredList((prevState: any)=>({
@@ -212,7 +228,8 @@ const EmailList = (props: EmailListType) => {
     handleMoveToFolder,
     currentWallet,
     currentAoAddress,
-    setHaveReadEmails
+    setHaveReadEmails,
+    handleReadEmailContent
   }
 
   return (
@@ -406,6 +423,7 @@ const EmailList = (props: EmailListType) => {
                             <IconButton
                               onClick={e => {
                                 e.stopPropagation()
+                                handleMoveToTrash(email.Id)
                               }}
                             >
                               <Icon icon='mdi:delete-outline' />
@@ -417,6 +435,9 @@ const EmailList = (props: EmailListType) => {
                           <IconButton
                             onClick={e => {
                               e.stopPropagation()
+                              if(recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id]) {
+                                handleReadEmailContent(email.Id, folder)
+                              }
                             }}
                           >
                             <Icon icon={mailReadToggleIcon} />
@@ -426,6 +447,7 @@ const EmailList = (props: EmailListType) => {
                           <IconButton
                             onClick={e => {
                               e.stopPropagation()
+                              handleMoveToSpam(email.Id)
                             }}
                           >
                             <Icon icon='mdi:alert-octagon-outline' />
