@@ -142,6 +142,7 @@ export type EmailListType = {
   currentAoAddress: any
   counter: number
   setCounter: (id: number) => void
+  setComposeOpen: (val: boolean) => void
 }
 
 export type EmailDetailType = {
@@ -167,6 +168,8 @@ export type EmailDetailType = {
   EmailCategoriesColors: any
   setHaveReadEmails: any
   handleReadEmailContent: (id: string | null, folder: string) => void
+  setComposeOpen: (val: boolean) => void
+  setCurrentEmail: (val: any) => void
 }
 
 export type MailComposeType = {
@@ -176,4 +179,6 @@ export type MailComposeType = {
   composePopupWidth: string | number
   currentAoAddress: string
   currentWallet: any
+  currentEmail: any
+  folder: string
 }

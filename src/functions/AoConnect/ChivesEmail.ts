@@ -106,7 +106,6 @@ export const ChivesEmailGetPublicKeys = async (TargetTxId: string, myProcessTxId
 
 export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, EmailId: string, Folder: string) => {
     try {
-        console.log("ChivesEmailReadEmailContent EmailId", EmailId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const SendData = 'Send({Target = "' + TargetTxId + '", Action = "ReadEmailContent", EmailId = "' + EmailId + '", Folder = "' + Folder + '" })'
         const Data = {
@@ -115,10 +114,11 @@ export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetT
             signer: createDataItemSigner(currentWalletJwk),
             data: SendData,
         }
-        console.log("ChivesEmailReadEmailContent SendData", SendData)
-        console.log("ChivesEmailReadEmailContent Data", Data)
         const GetChivesEmailReadEmailContentResult = await message(Data);
-        console.log("ChivesEmailReadEmailContent GetChivesEmailReadEmailContentResult", GetChivesEmailReadEmailContentResult)
+        
+        //console.log("ChivesEmailReadEmailContent SendData", SendData)
+        //console.log("ChivesEmailReadEmailContent Data", Data)
+        //console.log("ChivesEmailReadEmailContent GetChivesEmailReadEmailContentResult", GetChivesEmailReadEmailContentResult)
         
         if(GetChivesEmailReadEmailContentResult && GetChivesEmailReadEmailContentResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailReadEmailContentResult)
@@ -142,7 +142,6 @@ export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetT
 
 export const ChivesEmailMoveToFolder = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, EmailId: string, OldFolder: string, NewFolder: string) => {
     try {
-        console.log("ChivesEmailMoveToFolder EmailId", EmailId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const SendData = 'Send({Target = "' + TargetTxId + '", Action = "MoveToFolder", EmailId = "' + EmailId + '", OldFolder = "' + OldFolder + '", NewFolder = "' + NewFolder + '" })'
         const Data = {
@@ -151,10 +150,12 @@ export const ChivesEmailMoveToFolder = async (currentWalletJwk: any, TargetTxId:
             signer: createDataItemSigner(currentWalletJwk),
             data: SendData,
         }
-        console.log("ChivesEmailMoveToFolder SendData", SendData)
-        console.log("ChivesEmailMoveToFolder Data", Data)
         const GetChivesEmailMoveToFolderResult = await message(Data);
-        console.log("ChivesEmailMoveToFolder GetChivesEmailMoveToFolderResult", GetChivesEmailMoveToFolderResult)
+
+        //console.log("ChivesEmailMoveToFolder EmailId", EmailId)
+        //console.log("ChivesEmailMoveToFolder SendData", SendData)
+        //console.log("ChivesEmailMoveToFolder Data", Data)
+        //console.log("ChivesEmailMoveToFolder GetChivesEmailMoveToFolderResult", GetChivesEmailMoveToFolderResult)
         
         if(GetChivesEmailMoveToFolderResult && GetChivesEmailMoveToFolderResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailMoveToFolderResult)
@@ -224,7 +225,6 @@ export const ChivesEmailGetEmailRecords = async (TargetTxId: string, myProcessTx
 
 export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, To: string, Subject: string, Content: string, Summary: string, Encrypted: string) => {
     try {
-        console.log("ChivesEmailSendEmail To", To)
         const currentTimestampWithOffset: number = Date.now();
         const currentTimezoneOffset: number = new Date().getTimezoneOffset();
         const currentTimestampInZeroUTC: number = currentTimestampWithOffset + (currentTimezoneOffset * 60 * 1000);
@@ -237,10 +237,11 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
             signer: createDataItemSigner(currentWalletJwk),
             data: SendData,
         }
-        console.log("ChivesEmailSendEmail SendData", SendData)
-        console.log("ChivesEmailSendEmail Data", Data)
         const GetChivesEmailSendEmailResult = await message(Data);
-        console.log("ChivesEmailSendEmail GetChivesEmailSendEmailResult", GetChivesEmailSendEmailResult)
+
+        //console.log("ChivesEmailSendEmail SendData", SendData)
+        //console.log("ChivesEmailSendEmail Data", Data)
+        //console.log("ChivesEmailSendEmail GetChivesEmailSendEmailResult", GetChivesEmailSendEmailResult)
         
         if(GetChivesEmailSendEmailResult && GetChivesEmailSendEmailResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailSendEmailResult)
@@ -264,7 +265,6 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
 
 export const ChivesEmailSetPublicKey = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, PublicKey: string, PublicKeyMAC: string) => {
     try {
-        console.log("ChivesEmailSetPublicKey PublicKey", PublicKey)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const Data = {
             process: myProcessTxId,
@@ -272,9 +272,11 @@ export const ChivesEmailSetPublicKey = async (currentWalletJwk: any, TargetTxId:
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({Target = "' + TargetTxId + '", Action = "SetPublicKey", PublicKey = "' + PublicKey + '", PublicKeyMAC = "' + PublicKeyMAC + '" })',
         }
-        console.log("ChivesEmailSetPublicKey Data", Data)
         const GetChivesEmailSetPublicKeyResult = await message(Data);
-        console.log("ChivesEmailSetPublicKey GetChivesEmailSetPublicKeyResult", GetChivesEmailSetPublicKeyResult)
+
+        //console.log("ChivesEmailSetPublicKey PublicKey", PublicKey)
+        //console.log("ChivesEmailSetPublicKey Data", Data)
+        //console.log("ChivesEmailSetPublicKey GetChivesEmailSetPublicKeyResult", GetChivesEmailSetPublicKeyResult)
         
         if(GetChivesEmailSetPublicKeyResult && GetChivesEmailSetPublicKeyResult.length == 43) {
             const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailSetPublicKeyResult)

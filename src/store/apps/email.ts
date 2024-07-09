@@ -57,7 +57,6 @@ export const myEmailSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
-      console.log("action.payload", action.payload)
       state.recordsCount = action.payload.EmailRecordsCount
       state.data = action.payload.filterEmails
       state.total = action.payload.totalRecords

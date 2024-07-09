@@ -19,7 +19,7 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { EncryptEmailAES256GCMV1 } from 'src/functions/ChivesEncrypt'
 
 import { ChivesEmailSendEmail } from 'src/functions/AoConnect/ChivesEmail'
- 
+
 import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
 import authConfig from 'src/configs/auth'
 import { ansiRegex } from 'src/configs/functions'
@@ -28,7 +28,7 @@ import { ansiRegex } from 'src/configs/functions'
 import Icon from 'src/@core/components/icon'
 
 // ** Third Party Components
-import { EditorState } from 'draft-js'
+import { EditorState, ContentState } from 'draft-js'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
@@ -42,6 +42,7 @@ import { MailComposeType, FieldMenuItems } from 'src/types/apps/emailTypes'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+
 
 // ** Styles
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -64,7 +65,7 @@ const ComposePopup = (props: MailComposeType) => {
   const { t } = useTranslation()
 
   // ** Props
-  const { mdAbove, composeOpen, composePopupWidth, toggleComposeOpen, currentAoAddress, currentWallet } = props
+  const { mdAbove, composeOpen, composePopupWidth, toggleComposeOpen, currentAoAddress, currentWallet, currentEmail, folder } = props
 
   // ** States
   const [emailTo, setEmailTo] = useState<FieldMenuItems[]>([])
@@ -82,6 +83,25 @@ const ComposePopup = (props: MailComposeType) => {
 
   useEffect(() => {
     setSendBtnOpen(false)
+    if(currentEmail?.Reply == true) {
+      setSubjectValue('Reply: ' + currentEmail.Subject)
+      if(folder == "Sent") {
+        setEmailTo([{name: currentEmail.To, value: currentEmail.To, src: ''}])
+      }
+      else {
+        setEmailTo([{name: currentEmail.From, value: currentEmail.From, src: ''}])
+      }
+      const contentState = ContentState.createFromText('\n\n----------------------------------\n' + currentEmail.Content);
+      const newEditorState = EditorState.createWithContent(contentState);
+      setMessageValue(newEditorState)
+    }
+    if(currentEmail?.Forward == true) {
+      setSubjectValue('Fw: ' + currentEmail.Subject)
+      setEmailTo([])
+      const contentState = ContentState.createFromText('\n\n----------------------------------\n' + currentEmail.Content);
+      const newEditorState = EditorState.createWithContent(contentState);
+      setMessageValue(newEditorState)
+    }
   }, [composeOpen])
 
   // ** Ref
@@ -99,8 +119,6 @@ const ComposePopup = (props: MailComposeType) => {
   }
 
   const handleSendEmail = async () => {
-    console.log("emailTo", emailTo)
-    console.log("emailToAddress", emailToAddress)
     if(emailTo && emailTo.length == 0 && emailToAddress.length != 43) {
       toast.error(t('Received address must input') as string, {
         duration: 2000
@@ -129,11 +147,16 @@ const ComposePopup = (props: MailComposeType) => {
     const EmailAddressList = Object.keys(EmailAddress);
     setSendBtnOpen(true)
 
+    if(EmailAddressList && EmailAddressList.length == 0) {
+      toast.error(t('Received address must input') as string, {
+        duration: 2000
+      })
+    }
+
     const EncryptedKey = EmailAddressList[0] + "" + currentAoAddress
     const SubjectEncryptd = EncryptEmailAES256GCMV1(subjectValue, EncryptedKey)
     const ContentEncryptd = EncryptEmailAES256GCMV1(messageValue.getCurrentContent().getPlainText(), EncryptedKey)
     const SummaryEncryptd = EncryptEmailAES256GCMV1(messageValue.getCurrentContent().getPlainText().slice(0, 200), EncryptedKey)
-    console.log("ContentEncryptd", ContentEncryptd)
 
     const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, EmailAddressList[0], SubjectEncryptd, ContentEncryptd, SummaryEncryptd, 'V1')
     if(ChivesEmailSendEmail1) {

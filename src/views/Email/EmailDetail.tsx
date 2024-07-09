@@ -53,7 +53,9 @@ const EmailDetail = (props: EmailDetailType) => {
     handleMoveToSpam,
     handleMoveToFolder,
     currentWallet,
-    handleReadEmailContent
+    handleReadEmailContent,
+    setComposeOpen,
+    setCurrentEmail
   } = props
 
   const FullStatusRS: any = GetFileCacheStatus(currentEmail)
@@ -72,6 +74,26 @@ const EmailDetail = (props: EmailDetailType) => {
 
   // ** Hook
   const { settings } = useSettings()
+
+  const handleReply = () => {
+    setEmailDetailWindowOpen(false)
+    setComposeOpen(true)
+    setCurrentEmail((prevState: any)=>({
+      ...prevState,
+      Reply: true,
+      Forward: false
+    }))
+  }
+
+  const handleForward = () => {
+    setEmailDetailWindowOpen(false)
+    setComposeOpen(true)
+    setCurrentEmail((prevState: any)=>({
+      ...prevState,
+      Reply: false,
+      Forward: true
+    }))
+  }
 
   const handleMoveToTrashcurrentEmail = () => {
     handleMoveToTrash(currentEmail.Id)
@@ -264,12 +286,22 @@ const EmailDetail = (props: EmailDetailType) => {
                           options={[
                             {
                               text: t('Reply'),
-                              menuItemProps: { sx: { '& svg': { mr: 2 } } },
+                              menuItemProps: { 
+                                sx: { '& svg': { mr: 2 } },
+                                onClick: () => {
+                                  handleReply()
+                                }
+                              },
                               icon: <Icon icon='mdi:share-outline' fontSize={20} />
                             },
                             {
                               text: t('Forward'),
-                              menuItemProps: { sx: { '& svg': { mr: 2 } } },
+                              menuItemProps: {
+                                sx: { '& svg': { mr: 2 } },
+                                onClick: () => {
+                                  handleForward()
+                                }
+                              },
                               icon: <Icon icon='mdi:reply-outline' fontSize={20} />
                             }
                           ]}
@@ -279,7 +311,7 @@ const EmailDetail = (props: EmailDetailType) => {
                   </Box>
                   <Divider sx={{ m: '0 !important' }} />
                   <Box sx={{ p: 4, pt: 4 }}>
-                    <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
+                    <Typography variant='subtitle2' sx={{ color: 'text.primary', whiteSpace: 'pre-line' }}>
                     {currentEmail.Content}                                 
                     </Typography>
                   </Box>
@@ -300,6 +332,7 @@ const EmailDetail = (props: EmailDetailType) => {
                     Click here to{' '}
                     <Typography
                       component='span'
+                      onClick={handleReply}
                       sx={{ cursor: 'pointer', color: 'primary.main', fontWeight: 'inherit' }}
                     >
                       {t('Reply')}
@@ -307,6 +340,7 @@ const EmailDetail = (props: EmailDetailType) => {
                     or{' '}
                     <Typography
                       component='span'
+                      onClick={handleForward}
                       sx={{ cursor: 'pointer', color: 'primary.main', fontWeight: 'inherit' }}
                     >
                       {t('Forward')}

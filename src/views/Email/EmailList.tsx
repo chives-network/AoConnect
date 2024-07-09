@@ -47,9 +47,11 @@ import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
 import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 import { ChivesEmailReadEmailContent } from 'src/functions/AoConnect/ChivesEmail'
 
+import { DecryptEmailAES256GCMV1 } from 'src/functions/ChivesEncrypt'
 import { ChivesEmailMoveToFolder } from 'src/functions/AoConnect/ChivesEmail'
 import authConfig from 'src/configs/auth'
 import toast from 'react-hot-toast'
+
 
 
 const EmailItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
@@ -112,7 +114,8 @@ const EmailList = (props: EmailListType) => {
     currentWallet,
     currentAoAddress,
     counter,
-    setCounter
+    setCounter,
+    setComposeOpen
   } = props
 
   const [starredList, setStarredList] = useState<any>({})
@@ -229,7 +232,9 @@ const EmailList = (props: EmailListType) => {
     currentWallet,
     currentAoAddress,
     setHaveReadEmails,
-    handleReadEmailContent
+    handleReadEmailContent,
+    setComposeOpen,
+    setCurrentEmail
   }
 
   return (
@@ -315,6 +320,18 @@ const EmailList = (props: EmailListType) => {
             {store && store.data && store.data.length ? (
               <List sx={{ p: 0, m: 1 }}>
                 {store.data.map((email: any) => {
+                  let Subject = email.Subject
+                  let Summary = email.Summary
+                  let Content = email.Content
+                  switch(email.Encrypted) {
+                    case 'V1':
+                      Subject = DecryptEmailAES256GCMV1(email.Subject, email.To + email.From)
+                      Summary = DecryptEmailAES256GCMV1(email.Summary, email.To + email.From)
+                      Content = DecryptEmailAES256GCMV1(email.Content, email.To + email.From)
+                      break;
+                    default:
+                      break;
+                  }
                   const FullStatusRS: any = GetFileCacheStatus(email)
                   const FileCacheStatus: any = FullStatusRS['CacheStatus']
                   const FileFullStatus: any = FullStatusRS['FullStatus']
@@ -331,7 +348,7 @@ const EmailList = (props: EmailListType) => {
                       sx={{ backgroundColor: recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id] ? 'action.hover' : 'background.paper' }}
                       onClick={() => {
                         setEmailDetailWindowOpen(true)
-                        setCurrentEmail(email)
+                        setCurrentEmail({...email, Subject, Summary, Content})
                       }}
                     >
                       <Tooltip title={(FileFullStatus.Folder == "Trash" || FileFullStatus.Folder == "Spam") ? `${t(`You cannot perform operations on files in the Trash or Spam`)}` :''} arrow>
@@ -394,10 +411,10 @@ const EmailList = (props: EmailListType) => {
                                 color: IsFileDisabled ? 'text.disabled' : ''
                               }}
                             >
-                              {email.Subject}
+                              {Subject}
                             </Typography>
                             <Typography noWrap variant='body2' sx={{ width: '100%' }}>
-                              {email.Summary}
+                              {Summary}
                             </Typography>
                           </Box>
                         </Box>

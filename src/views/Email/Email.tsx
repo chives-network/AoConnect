@@ -160,6 +160,7 @@ const EmailAppLayout = () => {
         currentAoAddress={currentAoAddress}
         counter={counter}
         setCounter={setCounter}
+        setComposeOpen={setComposeOpen}
       />
       <ComposePopup
         mdAbove={mdAbove}
@@ -168,6 +169,8 @@ const EmailAppLayout = () => {
         toggleComposeOpen={toggleComposeOpen}
         currentAoAddress={currentAoAddress}
         currentWallet={currentWallet}
+        currentEmail={currentEmail}
+        folder={folder}
       />
     </Box>
   )
