@@ -109,6 +109,7 @@ const UserDropdown = (props: Props) => {
         })
         const ChivesChatProcessTxId = await AoCreateProcessAuto(generateNewMnemonicAndGetWallet.jwk)
         if(ChivesChatProcessTxId) {
+          console.log("ChivesChatProcessTxId", ChivesChatProcessTxId)
           SetAoConnectMyAoConnectTxId(generateNewMnemonicAndGetWallet.data.arweave.key, ChivesChatProcessTxId)
         }
       }

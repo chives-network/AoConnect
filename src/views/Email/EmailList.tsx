@@ -249,6 +249,12 @@ const EmailList = (props: EmailListType) => {
               <Typography variant="body2" >
               MyAo: {currentAoAddress}
               </Typography>
+              <IconButton sx={{mt: 1, ml: 1}} aria-label='capture screenshot' color='secondary' size='small' onClick={() => {
+                  navigator.clipboard.writeText(currentAoAddress);
+                  toast.success(t('Copied success') as string, { duration: 1000 });
+              }}>
+                  <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+              </IconButton>
             </Box>
             <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
               <Input
@@ -318,7 +324,7 @@ const EmailList = (props: EmailListType) => {
           </Box>
         </Box>
         <Divider sx={{ m: '0 !important' }} />
-        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 9.75rem)' }}>
+        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 10.5rem)' }}>
           <ScrollWrapper hidden={hidden}>
             {store && store.data && store.data.length ? (
               <List sx={{ p: 0, m: 1 }}>

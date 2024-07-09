@@ -17,7 +17,9 @@ import { useRouter } from 'next/router'
 
 import { useAuth } from 'src/hooks/useAuth'
 
-import { GetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
+import { AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
+import { GetAoConnectMyAoConnectTxId, SetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
+
 
 const Chat = () => {
   // ** States
@@ -32,6 +34,7 @@ const Chat = () => {
 
   const auth = useAuth()
   const currentAddress = auth.currentAddress
+  const currentWallet = auth.currentWallet
 
   useEffect(() => {
     if(id && id.length == 43) {
@@ -44,12 +47,28 @@ const Chat = () => {
           setApp(AppNew[0])
         }
       }
-      const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress)
-      if(MyProcessTxIdData) {
-        setMyAoConnectTxId(MyProcessTxIdData)
-      }
     }
   }, [id])
+
+  useEffect(() => {
+    const fetchData = async () => {
+        if(currentAddress && currentAddress.length === 43) {
+            const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress);
+            if(MyProcessTxIdData && MyProcessTxIdData.length === 43) {
+                setMyAoConnectTxId(MyProcessTxIdData);
+            }
+            if(MyProcessTxIdData === '') {
+                const ChivesMyAoConnectProcessTxId = await AoCreateProcessAuto(currentWallet.jwk);
+                if(ChivesMyAoConnectProcessTxId) {
+                    console.log("ChivesMyAoConnectProcessTxId", ChivesMyAoConnectProcessTxId);
+                    SetAoConnectMyAoConnectTxId(currentAddress, ChivesMyAoConnectProcessTxId);
+                    setMyAoConnectTxId(ChivesMyAoConnectProcessTxId);
+                }
+            }
+        }
+    };
+    fetchData();
+  }, [currentAddress]);
 
   // ** Vars
   const { skin } = settings

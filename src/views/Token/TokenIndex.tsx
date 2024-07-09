@@ -685,21 +685,20 @@ const TokenIndexModel = (prop: any) => {
               <Grid container>
                 <Grid item xs={12}>
                   <Card>
-                      <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography noWrap variant='body1' sx={{my: 2, mx: 2}}>
-                          {t("Token Explorer")} 
-                          (<Typography noWrap variant='body2' sx={{display: 'inline'}}>MyAo: {myProcessTxIdInPage}</Typography> 
-                            {searchToken && (
-                              <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                  navigator.clipboard.writeText(myProcessTxIdInPage);
-                                  toast.success(t('Copied success') as string, { duration: 1000 })
-                              }}>
-                                  <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
-                              </IconButton>
-                            )}
-                            )
-                          </Typography>
-                      </Grid>
+                    <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography noWrap variant='body1' sx={{ my: 2, mx: 2 }}>
+                          {t("Token Explorer")}
+                      </Typography>
+                      <Typography noWrap variant='body2' sx={{}}>
+                          MyAo: {myProcessTxIdInPage}
+                      </Typography>
+                      <IconButton sx={{mt: 1, ml: 1}} aria-label='capture screenshot' color='secondary' size='small' onClick={() => {
+                          navigator.clipboard.writeText(myProcessTxIdInPage);
+                          toast.success(t('Copied success') as string, { duration: 1000 });
+                      }}>
+                          <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                      </IconButton>
+                    </Grid>
                   </Card>
                 </Grid>
                 <Grid item xs={12} sx={{my: 2}}>

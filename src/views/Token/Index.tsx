@@ -22,8 +22,9 @@ import { MyProcessTxIdsGetTokens, MyProcessTxIdsAddToken, MyProcessTxIdsDelToken
 import TokenLeft from 'src/views/Token/TokenLeft'
 import TokenIndex from 'src/views/Token/TokenIndex'
 
-import { GetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 import { ansiRegex } from 'src/configs/functions'
+import { AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
+import { GetAoConnectMyAoConnectTxId, SetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 
 const TokenModel = () => {
   // ** Hook
@@ -66,13 +67,24 @@ const TokenModel = () => {
   
   const [myAoConnectTxId, setMyAoConnectTxId] = useState<string>('')
   useEffect(() => {
-    if(currentAddress && currentAddress.length == 43) {
-      const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress)
-      if(MyProcessTxIdData && MyProcessTxIdData.length == 43) {
-        setMyAoConnectTxId(MyProcessTxIdData)
-      }
-    }
-  }, [currentAddress])
+    const fetchData = async () => {
+        if(currentAddress && currentAddress.length === 43) {
+            const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress);
+            if(MyProcessTxIdData && MyProcessTxIdData.length === 43) {
+                setMyAoConnectTxId(MyProcessTxIdData);
+            }
+            if(MyProcessTxIdData === '') {
+                const ChivesMyAoConnectProcessTxId = await AoCreateProcessAuto(currentWallet.jwk);
+                if(ChivesMyAoConnectProcessTxId) {
+                    console.log("ChivesMyAoConnectProcessTxId", ChivesMyAoConnectProcessTxId);
+                    SetAoConnectMyAoConnectTxId(currentAddress, ChivesMyAoConnectProcessTxId);
+                    setMyAoConnectTxId(ChivesMyAoConnectProcessTxId);
+                }
+            }
+        }
+    };
+    fetchData();
+  }, [currentAddress]);
 
   useEffect(() => {
     if(myAoConnectTxId && myAoConnectTxId.length == 43 && currentAddress && currentAddress.length == 43 && myAoConnectTxId!= currentAddress ) {      

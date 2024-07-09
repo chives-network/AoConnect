@@ -10,20 +10,23 @@ import CardMedia from '@mui/material/CardMedia'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
 
 import Avatar from '@mui/material/Avatar'
 import Container from '@mui/material/Container'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
-import { GetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 import { GetChatroomAvatar } from 'src/functions/AoConnect/ChivesChat'
+import { AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
+import { GetAoConnectMyAoConnectTxId, SetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 
 const AppModel = (props: any) => {
   // ** Hook
@@ -42,17 +45,29 @@ const AppModel = (props: any) => {
 
   
   const auth = useAuth()
+  const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
   const [myAoConnectTxId, setMyAoConnectTxId] = useState<string>('')
   useEffect(() => {
-    if(currentAddress && currentAddress.length == 43) {
-      const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress)
-      if(MyProcessTxIdData && MyProcessTxIdData.length == 43) {
-        setMyAoConnectTxId(MyProcessTxIdData)
-      }
-    }
-  }, [currentAddress])
+    const fetchData = async () => {
+        if(currentAddress && currentAddress.length === 43) {
+            const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress);
+            if(MyProcessTxIdData && MyProcessTxIdData.length === 43) {
+                setMyAoConnectTxId(MyProcessTxIdData);
+            }
+            if(MyProcessTxIdData === '') {
+                const ChivesMyAoConnectProcessTxId = await AoCreateProcessAuto(currentWallet.jwk);
+                if(ChivesMyAoConnectProcessTxId) {
+                    console.log("ChivesMyAoConnectProcessTxId", ChivesMyAoConnectProcessTxId);
+                    SetAoConnectMyAoConnectTxId(currentAddress, ChivesMyAoConnectProcessTxId);
+                    setMyAoConnectTxId(ChivesMyAoConnectProcessTxId);
+                }
+            }
+        }
+    };
+    fetchData();
+  }, [currentAddress]);
 
   const ChatroomAvatar = GetChatroomAvatar('Chives')
 
@@ -68,6 +83,12 @@ const AppModel = (props: any) => {
                       <Box p={2} display="flex" alignItems="center">
                         <Typography variant="h6" sx={{ marginRight: '8px' }}>{t('Chatroom')}</Typography>
                         <Typography variant="body2">MyAo: {myAoConnectTxId}</Typography>
+                        <IconButton sx={{mt: 1, ml: 1}} aria-label='capture screenshot' color='secondary' size='small' onClick={() => {
+                            navigator.clipboard.writeText(myAoConnectTxId);
+                            toast.success(t('Copied success') as string, { duration: 1000 });
+                        }}>
+                            <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
+                        </IconButton>
                       </Box>
                     </Grid>
                   </Grid>
