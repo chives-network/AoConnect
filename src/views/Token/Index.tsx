@@ -67,7 +67,6 @@ const TokenModel = () => {
   const [myAoConnectTxId, setMyAoConnectTxId] = useState<string>('')
   useEffect(() => {
     if(currentAddress && currentAddress.length == 43) {
-
       const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress)
       if(MyProcessTxIdData && MyProcessTxIdData.length == 43) {
         setMyAoConnectTxId(MyProcessTxIdData)

@@ -686,10 +686,9 @@ const TokenIndexModel = (prop: any) => {
                 <Grid item xs={12}>
                   <Card>
                       <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography noWrap variant='body1' sx={{my: 2, ml: 2}}>
+                          <Typography noWrap variant='body1' sx={{my: 2, mx: 2}}>
                           {t("Token Explorer")} 
-                          ( MyAoAddress: 
-                          <Typography noWrap variant='body2' sx={{ml:2, display: 'inline', color: 'primary.main'}}>{myProcessTxIdInPage}</Typography> 
+                          (<Typography noWrap variant='body2' sx={{display: 'inline'}}>MyAo: {myProcessTxIdInPage}</Typography> 
                             {searchToken && (
                               <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                                   navigator.clipboard.writeText(myProcessTxIdInPage);

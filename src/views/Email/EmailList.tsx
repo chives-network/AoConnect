@@ -242,9 +242,12 @@ const EmailList = (props: EmailListType) => {
       <Box sx={{ height: '100%', backgroundColor: 'background.paper' }}>
         <Box sx={{ px: 3, py: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-            <Box sx={{ flex: 1 }}>
-              <Typography sx={{}} >
+            <Box p={2} display="flex" alignItems="center">
+              <Typography sx={{mr: 2}} >
                 {folder}
+              </Typography>
+              <Typography variant="body2" >
+              MyAo: {currentAoAddress}
               </Typography>
             </Box>
             <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>

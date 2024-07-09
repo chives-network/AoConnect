@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -20,7 +20,9 @@ import { useRouter } from 'next/router'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
+import { GetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 import { GetChatroomAvatar } from 'src/functions/AoConnect/ChivesChat'
 
 const AppModel = (props: any) => {
@@ -38,6 +40,20 @@ const AppModel = (props: any) => {
     setShow
   } = props
 
+  
+  const auth = useAuth()
+  const currentAddress = auth.currentAddress
+
+  const [myAoConnectTxId, setMyAoConnectTxId] = useState<string>('')
+  useEffect(() => {
+    if(currentAddress && currentAddress.length == 43) {
+      const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress)
+      if(MyProcessTxIdData && MyProcessTxIdData.length == 43) {
+        setMyAoConnectTxId(MyProcessTxIdData)
+      }
+    }
+  }, [currentAddress])
+
   const ChatroomAvatar = GetChatroomAvatar('Chives')
 
   const renderContent = () => {
@@ -49,8 +65,9 @@ const AppModel = (props: any) => {
                 <Fragment>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
-                      <Box p={2}>
-                        <Typography variant="h6">{t('Chatroom (Under development)')}</Typography>
+                      <Box p={2} display="flex" alignItems="center">
+                        <Typography variant="h6" sx={{ marginRight: '8px' }}>{t('Chatroom')}</Typography>
+                        <Typography variant="body2">MyAo: {myAoConnectTxId}</Typography>
                       </Box>
                     </Grid>
                   </Grid>

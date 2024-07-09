@@ -207,7 +207,7 @@ const AoSendMsgModel = () => {
     <Fragment>
     
     <Card>
-            <CardHeader title={`${t('Set chatroomId and processTxId')}`} />
+            <CardHeader title={`${t('Set chatroomId and MyAoConnectTxid')}`} />
             <CardContent>
                 <Grid container spacing={5}>
                     <Grid item xs={5}>

@@ -28,6 +28,7 @@ import { fetchData } from 'src/store/apps/email'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
+import { GetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 
 // ** Variables
 const EmailCategoriesColors: any = {
@@ -75,8 +76,18 @@ const EmailAppLayout = () => {
   const { skin, direction } = settings
 
   const auth = useAuth()
-  const currentAoAddress = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
   const currentWallet = auth.currentWallet
+  const currentAddress = auth.currentAddress
+
+  const [currentAoAddress, setMyAoConnectTxId] = useState<string>('')
+  useEffect(() => {
+    if(currentAddress && currentAddress.length == 43) {
+      const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress)
+      if(MyProcessTxIdData && MyProcessTxIdData.length == 43) {
+        setMyAoConnectTxId(MyProcessTxIdData)
+      }
+    }
+  }, [currentAddress])
 
   // ** State
   const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 12 })
