@@ -8,7 +8,10 @@
 
 -- Function
 -- 1. Send and receive email
--- 2. Support encrypted email
+-- 2. Reply and forward email
+-- 3. Support Inbox, Starred, Trash, Spam, Sent box
+-- 4. Support Important, Socail, Updates, Forums, Promotions categories
+-- 5. Support encrypted email
 
 math.randomseed(os.time())
 
@@ -22,7 +25,10 @@ function Welcome()
       "Welcome to ChivesEmail V0.1!\n\n" ..
       "Main functoin:\n\n" ..
       "1. Send and receive email.\n" ..
-      "2. Support encrypted email.\n" ..
+      "2. Reply and forward email.\n" ..
+      "3. Support Inbox, Starred, Trash, Spam, Sent box.\n" ..
+      "4. Support Important, Socail, Updates, Forums, Promotions categories.\n" ..
+      "5. Support encrypted email.\n" ..
       "Have fun, be respectful !")
 end
 
