@@ -71,7 +71,7 @@ export function EncryptDataWithKey(FileContent: string, FileName: string, wallet
     return FileEncrypt;
 }
 
-export function EncryptDataAES256GCM(text: string, IV: Buffer, key: string) {
+export function EncryptDataAES256GCM(text: string, key: string) {
     const iv = GetIV();
     const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
     let encrypted = cipher.update(text, 'utf-8', 'hex');
@@ -97,3 +97,26 @@ export function calculateSHA256(input: string) {
   return hash.digest('hex');
 }
 
+export function EncryptEmailAES256GCMV1(text: string, key: string) {
+    const keyHash = calculateSHA256(key)
+    const iv = GetIV();
+    const cipher = crypto.createCipheriv('aes-256-gcm', keyHash.slice(0, 32), iv);
+    let encrypted = cipher.update(text, 'utf-8', 'hex');
+    encrypted += cipher.final('hex');
+    const tag = cipher.getAuthTag();
+
+    return iv.toString('hex') + encrypted + tag.toString('hex');
+}
+
+export function DecryptEmailAES256GCMV1(encrypted: string, key: string) {
+    const iv = encrypted.slice(0, 32);
+    const tag = encrypted.slice(-32);
+    const encryptedText = encrypted.slice(32, -32);
+    const keyHash = calculateSHA256(key)
+    const decipher = crypto.createDecipheriv('aes-256-gcm', keyHash.slice(0, 32), Buffer.from(iv, 'hex'));
+    decipher.setAuthTag(Buffer.from(tag, 'hex'));
+    let decrypted = decipher.update(encryptedText, 'hex', 'utf-8');
+    decrypted += decipher.final('utf-8');
+
+    return decrypted;
+}

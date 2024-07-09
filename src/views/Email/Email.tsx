@@ -166,6 +166,8 @@ const EmailAppLayout = () => {
         composeOpen={composeOpen}
         composePopupWidth={composePopupWidth}
         toggleComposeOpen={toggleComposeOpen}
+        currentAoAddress={currentAoAddress}
+        currentWallet={currentWallet}
       />
     </Box>
   )

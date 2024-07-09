@@ -1,15 +1,13 @@
 // ** React Imports
-import { useState, useRef, HTMLAttributes } from 'react'
+import { useState, useRef, HTMLAttributes, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import List from '@mui/material/List'
-import Menu from '@mui/material/Menu'
 import Input from '@mui/material/Input'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
-import MenuItem from '@mui/material/MenuItem'
 import ListItem from '@mui/material/ListItem'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
@@ -18,6 +16,14 @@ import InputLabel from '@mui/material/InputLabel'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 
+import { EncryptEmailAES256GCMV1 } from 'src/functions/ChivesEncrypt'
+
+import { ChivesEmailSendEmail } from 'src/functions/AoConnect/ChivesEmail'
+ 
+import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
+import authConfig from 'src/configs/auth'
+import { ansiRegex } from 'src/configs/functions'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -25,7 +31,6 @@ import Icon from 'src/@core/components/icon'
 import { EditorState } from 'draft-js'
 
 // ** Custom Components Imports
-import OptionsMenu from 'src/@core/components/option-menu'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import ReactDraftWysiwyg from 'src/@core/components/react-draft-wysiwyg'
 
@@ -41,49 +46,25 @@ import { getInitials } from 'src/@core/utils/get-initials'
 // ** Styles
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
+import toast from 'react-hot-toast'
+
+import { useTranslation } from 'react-i18next'
+
 interface MailFields {
   cc: boolean
   bcc: boolean
 }
 
-const menuItemsArr = [
-  {
-    name: 'Ross Geller',
-    value: 'ross',
-    src: '/images/avatars/1.png'
-  },
-  {
-    name: 'Pheobe Buffay',
-    value: 'pheobe',
-    src: '/images/avatars/2.png'
-  },
-  {
-    name: 'Joey Tribbiani',
-    value: 'joey',
-    src: '/images/avatars/3.png'
-  },
-  {
-    name: 'Rachel Green',
-    value: 'rachel',
-    src: '/images/avatars/4.png'
-  },
-  {
-    name: 'Chandler Bing',
-    value: 'chandler',
-    src: '/images/avatars/5.png'
-  },
-  {
-    name: 'Monica Geller',
-    value: 'monica',
-    src: '/images/avatars/8.png'
-  }
-]
+const menuItemsArr: FieldMenuItems[] = []
 
 const filter = createFilterOptions()
 
 const ComposePopup = (props: MailComposeType) => {
+
+  const { t } = useTranslation()
+
   // ** Props
-  const { mdAbove, composeOpen, composePopupWidth, toggleComposeOpen } = props
+  const { mdAbove, composeOpen, composePopupWidth, toggleComposeOpen, currentAoAddress, currentWallet } = props
 
   // ** States
   const [emailTo, setEmailTo] = useState<FieldMenuItems[]>([])
@@ -96,19 +77,15 @@ const ComposePopup = (props: MailComposeType) => {
     cc: false,
     bcc: false
   })
+  const [emailToAddressError, setEmailToAddressError] = useState<string>('')
+  const [emailToAddress, setEmailToAddress] = useState<string>('')
+
+  useEffect(() => {
+    setSendBtnOpen(false)
+  }, [composeOpen])
 
   // ** Ref
   const anchorRefSendBtn = useRef<HTMLDivElement>(null)
-
-  const toggleVisibility = (value: 'cc' | 'bcc') => setVisibility({ ...visibility, [value]: !visibility[value] })
-
-  const handleSendMenuItemClick = () => {
-    setSendBtnOpen(false)
-  }
-
-  const handleSendBtnToggle = () => {
-    setSendBtnOpen(prevOpen => !prevOpen)
-  }
 
   const handleMailDelete = (value: string, state: FieldMenuItems[], setState: (val: FieldMenuItems[]) => void) => {
     const arr = state
@@ -119,6 +96,74 @@ const ComposePopup = (props: MailComposeType) => {
 
   const handlePopupClose = () => {
     toggleComposeOpen()
+  }
+
+  const handleSendEmail = async () => {
+    console.log("emailTo", emailTo)
+    console.log("emailToAddress", emailToAddress)
+    if(emailTo && emailTo.length == 0 && emailToAddress.length != 43) {
+      toast.error(t('Received address must input') as string, {
+        duration: 2000
+      })
+    }
+    if(subjectValue.length == 0) {
+      toast.error(t('Email subject must input') as string, {
+        duration: 2000
+      })
+    }
+    const isMessageValueEmpty = messageValue.getCurrentContent().getPlainText().trim().length === 0;
+    if(isMessageValueEmpty) {
+      toast.error(t('Email content must input') as string, {
+        duration: 2000
+      })
+    }
+    const EmailAddress: any = {}
+    emailTo.map((item: any)=>{
+      if(item.value && item.value.length == 43) {
+        EmailAddress[item.value] = 1;
+      }
+    })
+    if(emailToAddress && emailToAddress.length == 43) {
+      EmailAddress[emailToAddress] = 1
+    }
+    const EmailAddressList = Object.keys(EmailAddress);
+    setSendBtnOpen(true)
+
+    const EncryptedKey = EmailAddressList[0] + "" + currentAoAddress
+    const SubjectEncryptd = EncryptEmailAES256GCMV1(subjectValue, EncryptedKey)
+    const ContentEncryptd = EncryptEmailAES256GCMV1(messageValue.getCurrentContent().getPlainText(), EncryptedKey)
+    const SummaryEncryptd = EncryptEmailAES256GCMV1(messageValue.getCurrentContent().getPlainText().slice(0, 200), EncryptedKey)
+    console.log("ContentEncryptd", ContentEncryptd)
+
+    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, EmailAddressList[0], SubjectEncryptd, ContentEncryptd, SummaryEncryptd, 'V1')
+    if(ChivesEmailSendEmail1) {
+      if(ChivesEmailSendEmail1?.msg?.Output?.data?.output)  {
+        const formatText = ChivesEmailSendEmail1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+          const ChivesEmailSendEmailData1 = await GetMyLastMsg(currentWallet.jwk, currentAoAddress)
+          if(ChivesEmailSendEmailData1?.msg?.Output?.data?.output)  {
+            const formatText2 = ChivesEmailSendEmailData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              toast.success(t(formatText2) as string, {
+                duration: 2000
+              })
+            }
+          }
+
+        }
+
+      }
+    }
+
+    //const DecryptEmailAES256GCMV1Data = DecryptEmailAES256GCMV1(ContentEncryptd, EncryptedKey)
+    //console.log("DecryptEmailAES256GCMV1Data", DecryptEmailAES256GCMV1Data)
+
+    handlePopupCloseAndDeleteDraft()
+
+  }
+
+  const handlePopupCloseAndDeleteDraft = () => {
+    toggleComposeOpen()
     setEmailTo([])
     setccValue([])
     setbccValue([])
@@ -128,6 +173,7 @@ const ComposePopup = (props: MailComposeType) => {
       cc: false,
       bcc: false
     })
+    setEmailToAddress('')
   }
 
   const handleMinimize = () => {
@@ -185,7 +231,7 @@ const ComposePopup = (props: MailComposeType) => {
     const { inputValue } = params
     const isExisting = options.some(option => inputValue === option.name)
 
-    if (inputValue !== '' && !isExisting) {
+    if (inputValue !== '' && inputValue.length == 43 && !isExisting) {
       filtered.push({
         name: inputValue,
         value: inputValue,
@@ -278,6 +324,31 @@ const ComposePopup = (props: MailComposeType) => {
               <TextField
                 {...params}
                 autoComplete='new-password'
+                onClick={(e: any)=>{
+                  if(e.target.value && e.target.value.length == 43) {
+                    setEmailToAddressError("")
+                    setEmailToAddress(e.target.value)
+                  }
+                  else if(e.target.value == "") {
+                    setEmailToAddressError("")
+                  }
+                  else {
+                    setEmailToAddressError("Received address length must is 43")
+                  }
+                }}
+                onChange={(e: any)=>{
+                  if(e.target.value && e.target.value.length == 43) {
+                    setEmailToAddressError("")
+                  }
+                  else if(e.target.value == "") {
+                    setEmailToAddressError("")
+                  }
+                  else {
+                    setEmailToAddressError("Received address length must is 43")
+                  }
+                }}
+                error={!!emailToAddressError}
+                helperText={emailToAddressError}
                 sx={{
                   border: 0,
                   '& fieldset': { border: '0 !important' },
@@ -287,17 +358,6 @@ const ComposePopup = (props: MailComposeType) => {
             )}
           />
         </Box>
-        <Typography>
-          <Box component='span' sx={{ cursor: 'pointer' }} onClick={() => toggleVisibility('cc')}>
-            Cc
-          </Box>
-          <Box component='span' sx={{ mx: 2 }}>
-            |
-          </Box>
-          <Box component='span' sx={{ cursor: 'pointer' }} onClick={() => toggleVisibility('bcc')}>
-            Bcc
-          </Box>
-        </Typography>
       </Box>
       {visibility.cc ? (
         <Box
@@ -399,51 +459,11 @@ const ComposePopup = (props: MailComposeType) => {
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <ButtonGroup variant='contained' ref={anchorRefSendBtn} aria-label='split button'>
-            <Button onClick={handlePopupClose}>Send</Button>
-            <Button
-              size='small'
-              aria-haspopup='true'
-              onClick={handleSendBtnToggle}
-              aria-label='select merge strategy'
-              aria-expanded={sendBtnOpen ? 'true' : undefined}
-              aria-controls={sendBtnOpen ? 'email-send-menu' : undefined}
-            >
-              <Icon icon='mdi:chevron-up' fontSize='1.25rem' />
-            </Button>
+            <Button onClick={handleSendEmail} disabled={sendBtnOpen}>Send</Button>
           </ButtonGroup>
-          <Menu
-            keepMounted
-            open={sendBtnOpen}
-            id='email-send-menu'
-            onClose={handleSendMenuItemClick}
-            anchorEl={anchorRefSendBtn.current}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'left'
-            }}
-            transformOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left'
-            }}
-          >
-            <MenuItem onClick={handleSendMenuItemClick}>Schedule Send</MenuItem>
-            <MenuItem onClick={handleSendMenuItemClick}>Save as Draft</MenuItem>
-          </Menu>
-          <IconButton size='small' sx={{ ml: 3, color: 'text.secondary' }}>
-            <Icon icon='mdi:attachment' fontSize='1.375rem' />
-          </IconButton>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <OptionsMenu
-            iconButtonProps={{ size: 'small' }}
-            iconProps={{ fontSize: '1.375rem' }}
-            options={['Print', 'Check spelling', 'Plain text mode']}
-            menuProps={{
-              anchorOrigin: { vertical: 'top', horizontal: 'right' },
-              transformOrigin: { vertical: 'bottom', horizontal: 'right' }
-            }}
-          />
-          <IconButton size='small' onClick={handlePopupClose}>
+          <IconButton size='small' onClick={handlePopupCloseAndDeleteDraft} disabled={sendBtnOpen}>
             <Icon icon='mdi:delete-outline' fontSize='1.375rem' />
           </IconButton>
         </Box>
