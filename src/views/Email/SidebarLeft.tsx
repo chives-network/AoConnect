@@ -62,8 +62,8 @@ const SidebarLeft = (props: EmailSidebarType) => {
     setFolder,
     leftSidebarOpen,
     leftSidebarWidth,
-    uploadFilesTitle,
-    toggleUploadFilesOpen,
+    composeTitle,
+    toggleComposeOpen,
     setEmailDetailWindowOpen,
     handleLeftSidebarToggle,
     EmailCategoriesColors
@@ -138,8 +138,8 @@ const SidebarLeft = (props: EmailSidebarType) => {
       }}
     >
       <Box sx={{ p: 5, overflowY: 'hidden' }}>
-        <Button fullWidth variant='contained' onClick={toggleUploadFilesOpen}>
-          {uploadFilesTitle}
+        <Button fullWidth variant='contained' onClick={toggleComposeOpen}>
+          {composeTitle}
         </Button>
       </Box>
       <ScrollWrapper>

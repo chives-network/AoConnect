@@ -18,16 +18,10 @@ import { RootState, AppDispatch } from 'src/store'
 // ** Email App Component Imports
 import EmailList from 'src/views/Email/EmailList'
 import SidebarLeft from 'src/views/Email/SidebarLeft'
-import UploadFiles from 'src/views/form/uploadfiles';
-
-import CardContent from '@mui/material/CardContent'
-import { useRouter } from 'next/router'
+import ComposePopup from 'src/views/Email/ComposePopup'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
-
-// ** Third Party Components
-import toast from 'react-hot-toast'
 
 // ** Actions
 import { fetchData } from 'src/store/apps/email'
@@ -48,12 +42,8 @@ const EmailAppLayout = () => {
   // ** Hook
   const { t } = useTranslation()
 
-  const router = useRouter()
-  
   // ** States
   const [query, setQuery] = useState<string>('')
-  const [uploadFilesOpen, setUploadFilesOpen] = useState<boolean>(false)
-  const [uploadFilesTitle, setUploadFilesTitle] = useState<string>(`${t(`Write Email`)}`)
   const [emailDetailWindowOpen, setEmailDetailWindowOpen] = useState<boolean>(false)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [folder, setFolder] = useState<string>('Inbox')
@@ -68,6 +58,13 @@ const EmailAppLayout = () => {
   const { settings } = useSettings()
   const dispatch = useDispatch<AppDispatch>()
   const lgAbove = useMediaQuery(theme.breakpoints.up('lg'))
+  const mdAbove = useMediaQuery(theme.breakpoints.up('md'))
+  const smAbove = useMediaQuery(theme.breakpoints.up('sm'))
+
+  const composePopupWidth = mdAbove ? 754 : smAbove ? 520 : '100%'
+  const [composeTitle, setComposeTitle] = useState<string>(`${t(`Compose`)}`)
+  const [composeOpen, setComposeOpen] = useState<boolean>(false)
+  const toggleComposeOpen = () => setComposeOpen(!composeOpen)
   
   //const hidden = useMediaQuery(theme.breakpoints.down('lg'))
   const hidden = true
@@ -80,7 +77,6 @@ const EmailAppLayout = () => {
   const auth = useAuth()
   const currentAoAddress = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
   const currentWallet = auth.currentWallet
-  const currentAddress = auth.currentAddress
 
   // ** State
   const [paginationModel, setPaginationModel] = useState({ page: 1, pageSize: 12 })
@@ -107,28 +103,11 @@ const EmailAppLayout = () => {
         console.log("loading", loading)
         setNoEmailText('No Email')
       })
-      setUploadFilesOpen(false)
-      setUploadFilesTitle(`${t(`Compose`)}`)
+      setComposeOpen(false)
+      setComposeTitle(`${t(`Compose`)}`)
     }
   }, [dispatch, paginationModel, folder, currentAoAddress, counter])
 
-  const toggleUploadFilesOpen = () => {
-    if(currentAddress == undefined || currentAddress.length != 43) {
-      toast.success(t(`Please create a wallet first`), {
-        duration: 4000
-      })
-      router.push("/mywallets");
-      
-      return
-    }
-    setUploadFilesOpen(!uploadFilesOpen)
-    if(uploadFilesOpen) {
-      setUploadFilesTitle(`${t(`Write Email`)}`)
-    }
-    else {
-      setUploadFilesTitle(`${t(`Back To List`)}`)
-    }
-  }
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
 
   return (
@@ -153,41 +132,41 @@ const EmailAppLayout = () => {
         emailDetailWindowOpen={emailDetailWindowOpen}
         leftSidebarOpen={leftSidebarOpen}
         leftSidebarWidth={leftSidebarWidth}
-        uploadFilesTitle={uploadFilesTitle}
-        toggleUploadFilesOpen={toggleUploadFilesOpen}
+        composeTitle={composeTitle}
+        toggleComposeOpen={toggleComposeOpen}
         setEmailDetailWindowOpen={setEmailDetailWindowOpen}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         EmailCategoriesColors={EmailCategoriesColors}
       />
-      { !uploadFilesOpen ?
-        <EmailList
-          query={query}
-          store={store}
-          hidden={hidden}
-          lgAbove={lgAbove}
-          setQuery={setQuery}
-          direction={direction}
-          folder={folder}
-          EmailCategoriesColors={EmailCategoriesColors}
-          currentEmail={currentEmail}
-          setCurrentEmail={setCurrentEmail}
-          emailDetailWindowOpen={emailDetailWindowOpen}
-          setEmailDetailWindowOpen={setEmailDetailWindowOpen}
-          paginationModel={paginationModel}
-          handlePageChange={handlePageChange}
-          loading={loading}
-          setLoading={setLoading}
-          noEmailText={noEmailText}
-          currentWallet={currentWallet}
-          currentAoAddress={currentAoAddress}
-          counter={counter}
-          setCounter={setCounter}
-        />
-        :
-        <CardContent>
-          <UploadFiles />
-        </CardContent>
-      }
+      <EmailList
+        query={query}
+        store={store}
+        hidden={hidden}
+        lgAbove={lgAbove}
+        setQuery={setQuery}
+        direction={direction}
+        folder={folder}
+        EmailCategoriesColors={EmailCategoriesColors}
+        currentEmail={currentEmail}
+        setCurrentEmail={setCurrentEmail}
+        emailDetailWindowOpen={emailDetailWindowOpen}
+        setEmailDetailWindowOpen={setEmailDetailWindowOpen}
+        paginationModel={paginationModel}
+        handlePageChange={handlePageChange}
+        loading={loading}
+        setLoading={setLoading}
+        noEmailText={noEmailText}
+        currentWallet={currentWallet}
+        currentAoAddress={currentAoAddress}
+        counter={counter}
+        setCounter={setCounter}
+      />
+      <ComposePopup
+        mdAbove={mdAbove}
+        composeOpen={composeOpen}
+        composePopupWidth={composePopupWidth}
+        toggleComposeOpen={toggleComposeOpen}
+      />
     </Box>
   )
 }

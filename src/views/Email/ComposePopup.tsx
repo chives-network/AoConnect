@@ -41,9 +41,6 @@ import { getInitials } from 'src/@core/utils/get-initials'
 // ** Styles
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
-// ** Third Party Import
-import { useTranslation } from 'react-i18next'
-
 interface MailFields {
   cc: boolean
   bcc: boolean
@@ -84,12 +81,9 @@ const menuItemsArr = [
 
 const filter = createFilterOptions()
 
-const UploadFiles = (props: MailComposeType) => {
-  // ** Hook
-  const { t } = useTranslation()
-  
+const ComposePopup = (props: MailComposeType) => {
   // ** Props
-  const { mdAbove, uploadFilesOpen, composePopupWidth, toggleUploadFilesOpen } = props
+  const { mdAbove, composeOpen, composePopupWidth, toggleComposeOpen } = props
 
   // ** States
   const [emailTo, setEmailTo] = useState<FieldMenuItems[]>([])
@@ -124,7 +118,7 @@ const UploadFiles = (props: MailComposeType) => {
   }
 
   const handlePopupClose = () => {
-    toggleUploadFilesOpen()
+    toggleComposeOpen()
     setEmailTo([])
     setccValue([])
     setbccValue([])
@@ -137,7 +131,7 @@ const UploadFiles = (props: MailComposeType) => {
   }
 
   const handleMinimize = () => {
-    toggleUploadFilesOpen()
+    toggleComposeOpen()
     setEmailTo(emailTo)
     setccValue(ccValue)
     setbccValue(bccValue)
@@ -207,9 +201,9 @@ const UploadFiles = (props: MailComposeType) => {
     <Drawer
       hideBackdrop
       anchor='bottom'
-      open={uploadFilesOpen}
+      open={composeOpen}
       variant='temporary'
-      onClose={toggleUploadFilesOpen}
+      onClose={toggleComposeOpen}
       sx={{
         top: 'auto',
         left: 'auto',
@@ -257,7 +251,7 @@ const UploadFiles = (props: MailComposeType) => {
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
           <div>
             <InputLabel sx={{ mr: 3, fontSize: '0.875rem' }} htmlFor='email-to-select'>
-              {`${t(`To`)}`}:
+              To:
             </InputLabel>
           </div>
           <Autocomplete
@@ -458,4 +452,4 @@ const UploadFiles = (props: MailComposeType) => {
   )
 }
 
-export default UploadFiles
+export default ComposePopup

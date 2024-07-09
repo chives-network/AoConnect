@@ -22,8 +22,8 @@ export type EmailSidebarType = {
   leftSidebarOpen: boolean
   leftSidebarWidth: number
   emailDetailWindowOpen: boolean
-  uploadFilesTitle: string
-  toggleUploadFilesOpen: () => void
+  composeTitle: string
+  toggleComposeOpen: () => void
   handleLeftSidebarToggle: () => void
   setEmailDetailWindowOpen: (val: boolean) => void
   EmailCategoriesColors: any

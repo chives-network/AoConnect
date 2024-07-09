@@ -171,7 +171,7 @@ export type EmailDetailType = {
 
 export type MailComposeType = {
   mdAbove: boolean
-  uploadFilesOpen: boolean
-  toggleUploadFilesOpen: () => void
-  composePopupWidth: string
+  composeOpen: boolean
+  toggleComposeOpen: () => void
+  composePopupWidth: string | number
 }
