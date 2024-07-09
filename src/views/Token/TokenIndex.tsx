@@ -61,7 +61,7 @@ const TokenIndexModel = (prop: any) => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
   
-  const { myProcessTxId,
+  const { myAoConnectTxId,
           tokenLeft,
           tokenInfo,
           setTokenInfo,
@@ -88,13 +88,13 @@ const TokenIndexModel = (prop: any) => {
           setCancelTokenButtonDisabled
         } = prop
   
-  const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myProcessTxId)
+  const [myProcessTxIdInPage, setMyProcessTxIdInPage] = useState<string>(myAoConnectTxId)
   useEffect(()=>{
-    if(myProcessTxId && myProcessTxId.length == 43 && myProcessTxIdInPage.length != 43 && myProcessTxId != myProcessTxIdInPage) {
-      //setMyProcessTxIdInPage(myProcessTxId)
+    if(myAoConnectTxId && myAoConnectTxId.length == 43 && myProcessTxIdInPage.length != 43 && myAoConnectTxId != myProcessTxIdInPage) {
+      //setMyProcessTxIdInPage(myAoConnectTxId)
     }
-  }, [myProcessTxId])
-  console.log("myProcessTxIdmyProcessTxId", myProcessTxId, "myProcessTxIdInPage", myProcessTxIdInPage)
+  }, [myAoConnectTxId])
+  console.log("myProcessTxIdmyProcessTxId", myAoConnectTxId, "myProcessTxIdInPage", myProcessTxIdInPage)
 
   //const [tokenMint, setTokenMint] = useState<any>({ openMintToken: false, FormSubmit: 'Submit', isDisabledButton: false })
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)

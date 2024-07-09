@@ -40,7 +40,7 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 const TokenLeft = (props: any) => {
   // ** Props
   const {
-    myProcessTxId,
+    myAoConnectTxId,
     hidden,
     mdAbove,
     tokenLeftWidth,
@@ -62,7 +62,7 @@ const TokenLeft = (props: any) => {
 
   const { t } = useTranslation()
 
-  console.log("TokenLeft myProcessTxId", myProcessTxId, tokenLeft)
+  console.log("TokenLeft myAoConnectTxId", myAoConnectTxId, tokenLeft)
 
   const handleTokenClick = (id: string) => {
     setActive(id)

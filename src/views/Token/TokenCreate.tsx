@@ -152,7 +152,7 @@ const TokenCreate = (props: any) => {
                             disabled={tokenCreate.isDisabledButton}
                             value={tokenCreate?.ManualProcessTxId}
                             onChange={(e: any)=>{
-                                setTokenCreate( (prevState: any) => ({ ...prevState, ManualProcessTxId: e.target.value, ManualProcessTxIdError: null }) )
+                                setTokenCreate( (prevState: any) => ({ ...prevState, ManualProcessTxId: e.target.value, ManualAoConnectTxIdError: null }) )
                             }}
                             InputProps={{
                                 startAdornment: (
@@ -161,8 +161,8 @@ const TokenCreate = (props: any) => {
                                     </InputAdornment>
                                 )
                             }}
-                            error={!!tokenCreate?.ManualProcessTxIdError}
-                            helperText={tokenCreate?.ManualProcessTxIdError}
+                            error={!!tokenCreate?.ManualAoConnectTxIdError}
+                            helperText={tokenCreate?.ManualAoConnectTxIdError}
                         />
                     </Grid>
                     <Grid item xs={12}>

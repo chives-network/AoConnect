@@ -22,7 +22,7 @@ import { MyProcessTxIdsGetTokens, MyProcessTxIdsAddToken, MyProcessTxIdsDelToken
 import TokenLeft from 'src/views/Token/TokenLeft'
 import TokenIndex from 'src/views/Token/TokenIndex'
 
-import { GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
+import { GetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 import { ansiRegex } from 'src/configs/functions'
 
 const TokenModel = () => {
@@ -46,7 +46,6 @@ const TokenModel = () => {
   const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
 
-  const [myProcessTxId, setMyProcessTxId] = useState<string>('')
   const [tokenLeft, setTokenLeft] = useState<any[]>([])
   const [counter, setCounter] = useState<number>(0)
   const [searchToken, setSearchToken] = useState<string>('')
@@ -65,26 +64,27 @@ const TokenModel = () => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
   
+  const [myAoConnectTxId, setMyAoConnectTxId] = useState<string>('')
   useEffect(() => {
     if(currentAddress && currentAddress.length == 43) {
 
-      const MyProcessTxIdData: string = GetAoConnectReminderChatroomTxId(currentAddress)
+      const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress)
       if(MyProcessTxIdData && MyProcessTxIdData.length == 43) {
-        setMyProcessTxId(MyProcessTxIdData)
+        setMyAoConnectTxId(MyProcessTxIdData)
       }
     }
   }, [currentAddress])
 
   useEffect(() => {
-    if(myProcessTxId && myProcessTxId.length == 43 && currentAddress && currentAddress.length == 43 && myProcessTxId!= currentAddress ) {      
+    if(myAoConnectTxId && myAoConnectTxId.length == 43 && currentAddress && currentAddress.length == 43 && myAoConnectTxId!= currentAddress ) {      
       handleGetTokenInfo()
     }
-  }, [myProcessTxId, counter, currentAddress])
+  }, [myAoConnectTxId, counter, currentAddress])
 
 
   const handleGetTokenInfo = async () => {
     setLoadingGetTokens(true)
-    const MyProcessTxIdsGetTokensData = await MyProcessTxIdsGetTokens(authConfig.AoConnectMyProcessTxIds, myProcessTxId);
+    const MyProcessTxIdsGetTokensData = await MyProcessTxIdsGetTokens(authConfig.AoConnectMyProcessTxIds, myAoConnectTxId);
     if (MyProcessTxIdsGetTokensData) {
         console.log("MyProcessTxIdsGetTokensData", MyProcessTxIdsGetTokensData);
         const TokenList = Object.values(MyProcessTxIdsGetTokensData);
@@ -119,7 +119,7 @@ const TokenModel = () => {
     if(tokenInfo)  {
       setAddTokenButtonDisabled(true)
       setAddTokenButtonText('waiting')
-      const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId, tokenGetInfor?.Sort ?? '10', 'My Tokens', JSON.stringify(tokenInfo).replace(/"/g, '\\"') )
+      const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myAoConnectTxId, WantToSaveTokenProcessTxId, tokenGetInfor?.Sort ?? '10', 'My Tokens', JSON.stringify(tokenInfo).replace(/"/g, '\\"') )
       if(WantToSaveTokenProcessTxIdData) {
         setAddTokenButtonText('Have add')
         console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
@@ -147,7 +147,7 @@ const TokenModel = () => {
   const handleCancelFavoriteToken = async (WantToSaveTokenProcessTxId: string) => {
     setCancelTokenButtonDisabled(true)
     setCancelTokenButtonText('waiting')
-    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsDelToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myProcessTxId, WantToSaveTokenProcessTxId)
+    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsDelToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myAoConnectTxId, WantToSaveTokenProcessTxId)
     if(WantToSaveTokenProcessTxIdData) {
       console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
       if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {
@@ -194,7 +194,7 @@ const TokenModel = () => {
 
         <Fragment>
           <TokenLeft
-            myProcessTxId={myProcessTxId}
+            myAoConnectTxId={myAoConnectTxId}
             hidden={hidden}
             mdAbove={mdAbove}
             tokenLeftWidth={tokenLeftWidth}
@@ -213,9 +213,9 @@ const TokenModel = () => {
             setTokenGetInfor={setTokenGetInfor}
             setCancelTokenFavorite={setCancelTokenFavorite}
           />
-          {myProcessTxId && myProcessTxId.length == 43 && (
+          {myAoConnectTxId && myAoConnectTxId.length == 43 && (
             <TokenIndex 
-              myProcessTxId={myProcessTxId}
+              myAoConnectTxId={myAoConnectTxId}
               tokenLeft={tokenLeft}
               tokenInfo={tokenInfo}
               setTokenInfo={setTokenInfo}

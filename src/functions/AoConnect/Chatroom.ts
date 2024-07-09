@@ -40,12 +40,12 @@ export const GetChatroomMembers = async (currentWalletJwk: any, processTxId: str
   
 }
 
-export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string) => {
+export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId: string, myAoConnectTxId: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const GetChatroomMembersResult = await message({
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({ Target = "' + chatroomTxId + '", Action = "Register" })',
@@ -53,7 +53,7 @@ export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId
         console.log("GetChatroomMembers GetChatroomMembers", GetChatroomMembersResult)
         
         if(GetChatroomMembersResult && GetChatroomMembersResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, GetChatroomMembersResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChatroomMembersResult)
 
             return { status: 'ok', id: GetChatroomMembersResult, msg: MsgContent };
         }
@@ -72,12 +72,12 @@ export const RegisterChatroomMember = async (currentWalletJwk: any, chatroomTxId
   
 }
 
-export const SendMessageToChatroom = async (currentWalletJwk: any, chatroomTxId: string, myProcessTxId: string, Message: string) => {
+export const SendMessageToChatroom = async (currentWalletJwk: any, chatroomTxId: string, myAoConnectTxId: string, Message: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendMessageResult = await message({
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({Target = "' + chatroomTxId + '", Action = "Broadcast", Data = "' + Message + '" })',
@@ -85,7 +85,7 @@ export const SendMessageToChatroom = async (currentWalletJwk: any, chatroomTxId:
         console.log("SendMessageToChatroom SendMessage", SendMessageResult)
         
         if(SendMessageResult && SendMessageResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, SendMessageResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, SendMessageResult)
 
             return { status: 'ok', id: SendMessageResult, msg: MsgContent };
         }

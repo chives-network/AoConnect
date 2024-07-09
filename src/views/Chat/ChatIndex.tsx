@@ -98,7 +98,7 @@ const AppChat = (props: any) => {
   const currentWallet = auth.currentWallet
 
   const { t } = useTranslation()
-  const { id, app, myProcessTxId, currentAddress } = props
+  const { id, app, myAoConnectTxId, currentAddress } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [counter, setCounter] = useState<number>(0)
@@ -112,14 +112,14 @@ const AppChat = (props: any) => {
 
   useEffect(() => {
     const checkChivesChatIsMember = async () => {
-        const ChivesChatIsMemberData = await ChivesChatIsMember(id, myProcessTxId)
+        const ChivesChatIsMemberData = await ChivesChatIsMember(id, myAoConnectTxId)
         console.log("ChivesChatIsMemberData", ChivesChatIsMemberData)
         if (ChivesChatIsMemberData) {
           setCurrentMemberStatus(ChivesChatIsMemberData)
         }
     };
     checkChivesChatIsMember();
-  }, [id, myProcessTxId]);
+  }, [id, myAoConnectTxId]);
 
   //console.log("GetChatroomAvatarData app", app, GetChatroomAvatarData)
 
@@ -213,10 +213,10 @@ const AppChat = (props: any) => {
 
   const handleAddChannelAdmin = async function (MemberId: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myProcessTxId)  {
+    if(id != myAoConnectTxId)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
     }
-    const AddAdminByMemberId = await ChivesChatAddAdmin(currentWallet.jwk, id, myProcessTxId, MemberId)
+    const AddAdminByMemberId = await ChivesChatAddAdmin(currentWallet.jwk, id, myAoConnectTxId, MemberId)
     if(AddAdminByMemberId) {
       toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
       console.log("handleAddChannelAdmin AddAdminByMemberId", AddAdminByMemberId)
@@ -242,10 +242,10 @@ const AppChat = (props: any) => {
 
   const handleDelChannelAdmin = async function (MemberId: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myProcessTxId)  {
+    if(id != myAoConnectTxId)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
     }
-    const DelAdminByMemberId = await ChivesChatDelAdmin(currentWallet.jwk, id, myProcessTxId, MemberId)
+    const DelAdminByMemberId = await ChivesChatDelAdmin(currentWallet.jwk, id, myAoConnectTxId, MemberId)
     if(DelAdminByMemberId) {
       toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
       console.log("handleDelChannelAdmin DelAdminByMemberId", DelAdminByMemberId)
@@ -271,10 +271,10 @@ const AppChat = (props: any) => {
 
   const handleInviteMember = async function () {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myProcessTxId)  {
+    if(id != myAoConnectTxId)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
     }
-    const ChivesChatAddInvitesUserOne = await ChivesChatAddInvites(currentWallet.jwk, id, myProcessTxId, valueMembersInvite.replace(/\n/g, '\\n'), "Invite Member", "Hope you join this chatroom")
+    const ChivesChatAddInvitesUserOne = await ChivesChatAddInvites(currentWallet.jwk, id, myAoConnectTxId, valueMembersInvite.replace(/\n/g, '\\n'), "Invite Member", "Hope you join this chatroom")
     if(ChivesChatAddInvitesUserOne) {
       toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
       console.log("handleInviteMember ChivesChatAddInvitesUserOne", ChivesChatAddInvitesUserOne)
@@ -299,7 +299,7 @@ const AppChat = (props: any) => {
 
   const handleApplicantMember = async function (Applicants: string, Action: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myProcessTxId)  {
+    if(id != myAoConnectTxId)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
     }
     console.log("Action", Action)
@@ -318,7 +318,7 @@ const AppChat = (props: any) => {
     }
 
     if(Action == 'Accept')  {
-      const ChivesChatApprovalApplyMembers = await ChivesChatApprovalApply(currentWallet.jwk, id, myProcessTxId, Applicants, "Applicant Member", "Administrator approval your request")
+      const ChivesChatApprovalApplyMembers = await ChivesChatApprovalApply(currentWallet.jwk, id, myAoConnectTxId, Applicants, "Applicant Member", "Administrator approval your request")
       if(ChivesChatApprovalApplyMembers) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
         console.log("handleApplicantMember ChivesChatApprovalApplyMembers", ChivesChatApprovalApplyMembers)
@@ -342,7 +342,7 @@ const AppChat = (props: any) => {
       }
     }
     if(Action == 'Refuse')  {
-      const ChivesChatRefuseApplyMembers = await ChivesChatRefuseApply(currentWallet.jwk, id, myProcessTxId, Applicants, "Applicant Member", "Administrator approval your request")
+      const ChivesChatRefuseApplyMembers = await ChivesChatRefuseApply(currentWallet.jwk, id, myAoConnectTxId, Applicants, "Applicant Member", "Administrator approval your request")
       if(ChivesChatRefuseApplyMembers) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
         console.log("handleApplicantMember ChivesChatRefuseApplyMembers", ChivesChatRefuseApplyMembers)
@@ -369,10 +369,10 @@ const AppChat = (props: any) => {
 
   const handleKickOutMember = async function (MemberId: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myProcessTxId)  {
+    if(id != myAoConnectTxId)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
     }
-    const KictOutMemberByMemberId = await ChivesChatDelMember(currentWallet.jwk, id, myProcessTxId, MemberId)
+    const KictOutMemberByMemberId = await ChivesChatDelMember(currentWallet.jwk, id, myAoConnectTxId, MemberId)
     if(KictOutMemberByMemberId) {
       toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
       console.log("handleKickOutMember KictOutMemberByMemberId", KictOutMemberByMemberId)
@@ -399,7 +399,7 @@ const AppChat = (props: any) => {
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
     getChatLogList()
-    await GetMyInboxMsg(currentWallet.jwk, myProcessTxId)
+    await GetMyInboxMsg(currentWallet.jwk, myAoConnectTxId)
     
     //setProcessingMessages([])
     getChatLogList()
@@ -413,9 +413,9 @@ const AppChat = (props: any) => {
       const GetAoConnectMembersData = GetAoConnectMembers(currentAddress)
       setGetChivesChatGetMembers(GetAoConnectMembersData)
     }
-    if(id && myProcessTxId)  {
+    if(id && myAoConnectTxId)  {
       setLoadingGetMembers(true)
-      const GetChivesChatGetMembers = await ChivesChatGetMembers(id, myProcessTxId)
+      const GetChivesChatGetMembers = await ChivesChatGetMembers(id, myAoConnectTxId)
       if(GetChivesChatGetMembers) {
         setGetChivesChatGetMembers(GetChivesChatGetMembers)
         SetAoConnectMembers(currentAddress, GetChivesChatGetMembers)
@@ -430,9 +430,9 @@ const AppChat = (props: any) => {
       const GetAoConnectChannelsData = GetAoConnectChannels(currentAddress)
       setGetChivesChatGetChannels(GetAoConnectChannelsData)
     }
-    if(id && myProcessTxId)  {
+    if(id && myAoConnectTxId)  {
       setLoadingGetChannels(true)
-      const GetChivesChatGetChannels = await ChivesChatGetChannels(id, myProcessTxId)
+      const GetChivesChatGetChannels = await ChivesChatGetChannels(id, myAoConnectTxId)
       if(GetChivesChatGetChannels) {
         setGetChivesChatGetChannels(GetChivesChatGetChannels)
         SetAoConnectChannels(currentAddress, GetChivesChatGetChannels)
@@ -444,7 +444,7 @@ const AppChat = (props: any) => {
 
   const getChatLogList = async function () {
     if(id && currentAddress) {
-      const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(myProcessTxId, 0, 20)
+      const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(myAoConnectTxId, 0, 20)
       
       console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
       if(GetInboxMsgFromLocalStorageData)  {
@@ -452,7 +452,7 @@ const AppChat = (props: any) => {
         const selectedChat = {
           "chat": {
               "id": 1,
-              "userId": myProcessTxId,
+              "userId": myAoConnectTxId,
               "unseenMsgs": 0,
               "chat": ChatChatInitList
           }
@@ -460,7 +460,7 @@ const AppChat = (props: any) => {
         const storeInit = {
           "chats": [],
           "userProfile": {
-              "id": myProcessTxId,
+              "id": myAoConnectTxId,
               "avatar": "/images/avatars/1.png",
               "fullName": "Current User",
           },
@@ -522,10 +522,10 @@ const AppChat = (props: any) => {
     console.log("Action", Action, openChannelEdit)
     if(Action == 'Add')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-      if(id != myProcessTxId)  {
+      if(id != myAoConnectTxId)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
       }
-      const AddChannel = await ChivesChatAddChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
+      const AddChannel = await ChivesChatAddChannel(currentWallet.jwk, id, myAoConnectTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
       if(AddChannel) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
         console.log("handleAddOrEditOrDelChannel AddChannel", AddChannel)
@@ -551,10 +551,10 @@ const AppChat = (props: any) => {
 
     else if(Action == 'Edit')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-      if(id != myProcessTxId)  {
+      if(id != myAoConnectTxId)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
       }
-      const EditChannel = await ChivesChatEditChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
+      const EditChannel = await ChivesChatEditChannel(currentWallet.jwk, id, myAoConnectTxId, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
       if(EditChannel) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
         console.log("handleEditOrEditOrDelChannel EditChannel", EditChannel)
@@ -580,10 +580,10 @@ const AppChat = (props: any) => {
 
     else if(Action == 'Del')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-      if(id != myProcessTxId)  {
+      if(id != myAoConnectTxId)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
       }
-      const DelChannel = await ChivesChatDelChannel(currentWallet.jwk, id, myProcessTxId, openChannelEdit.Channel.ChannelId)
+      const DelChannel = await ChivesChatDelChannel(currentWallet.jwk, id, myAoConnectTxId, openChannelEdit.Channel.ChannelId)
       if(DelChannel) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
         console.log("handleDelOrEditOrDelChannel DelChannel", DelChannel)
@@ -620,7 +620,7 @@ const AppChat = (props: any) => {
   
   const handleChivesChatApplyJoin = async function () {
     setSendButtonDisable(true)
-    const ChivesChatUserApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, id, myProcessTxId, "User" + myProcessTxId.substring(0, 6), "Hope join this chatroom")
+    const ChivesChatUserApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, id, myAoConnectTxId, "User" + myAoConnectTxId.substring(0, 6), "Hope join this chatroom")
     if(ChivesChatUserApplyJoin) {
       console.log("ChivesChatUserApplyJoin", ChivesChatUserApplyJoin)
       if(ChivesChatUserApplyJoin.status == 'error' && ChivesChatUserApplyJoin.msg)  {
@@ -631,7 +631,7 @@ const AppChat = (props: any) => {
         if(formatText) {
 
           //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, myProcessTxId)
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, myAoConnectTxId)
           if(AdminOneInboxData?.msg?.Output?.data?.output)  {
             const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
@@ -659,10 +659,10 @@ const AppChat = (props: any) => {
       setSendInputText(t("Answering...") as string)
       setRefreshChatCounter(refreshChatCounter + 1)
       
-      const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, myProcessTxId, Obj.message)
+      const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, myAoConnectTxId, Obj.message)
       if(SendMessageToChatroomDataUserOne && SendMessageToChatroomDataUserOne.id && SendMessageToChatroomDataUserOne.NanoId) {
         const messageInfor = {
-          Sender: myProcessTxId,
+          Sender: myAoConnectTxId,
           NanoId: SendMessageToChatroomDataUserOne.NanoId,
           messages: [
             {
@@ -722,7 +722,7 @@ const AppChat = (props: any) => {
             handleLeftSidebarToggle={handleLeftSidebarToggle}
             handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
             loadingGetChannels={loadingGetChannels}
-            isOwner={id == myProcessTxId ? true : false}
+            isOwner={id == myAoConnectTxId ? true : false}
             setOpenChannelEdit={setOpenChannelEdit}
             handleAddOrEditOrDelChannel={handleAddOrEditOrDelChannel}
           />
@@ -742,7 +742,7 @@ const AppChat = (props: any) => {
             handleGetAllMessages={handleGetAllMessages}
             app={app}
             handleDeleteOneChatLogById={handleDeleteOneChatLogById}
-            myProcessTxId={myProcessTxId}
+            myAoConnectTxId={myAoConnectTxId}
             setMember={setMember}
             setUserProfileRightOpen={setUserProfileRightOpen}
             allMembers={allMembers}
@@ -766,7 +766,7 @@ const AppChat = (props: any) => {
             handleAddChannelAdmin={handleAddChannelAdmin}
             handleDelChannelAdmin={handleDelChannelAdmin}
             handleKickOutMember={handleKickOutMember}
-            isOwner={id == myProcessTxId ? true : false}
+            isOwner={id == myAoConnectTxId ? true : false}
             app={app}
             setOpenMembersInvite={setOpenMembersInvite}
             setOpenMembersApplicant={setOpenMembersApplicant}
@@ -795,7 +795,7 @@ const AppChat = (props: any) => {
                       ChatroomId: {app.id}
                     </Typography>
                     <Typography sx={{ mr: 2, mb: 2, fontWeight: 500, fontSize: '0.875rem' }}>
-                      MyId: {myProcessTxId}
+                      MyId: {myAoConnectTxId}
                     </Typography>
                     {currentMemberStatus[2]==false && (
                       <Button sx={{textTransform: 'none', }} variant='contained' onClick={

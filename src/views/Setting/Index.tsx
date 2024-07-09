@@ -64,7 +64,7 @@ const SettingModel = () => {
   
   const [processTxId, setProcessTxId] = useState<string>("")
   const [processInfo, setProcessInfo] = useState<any>({})
-  const [AddProcessTxIdError, setAddProcessTxIdError] = useState<string>('')
+  const [AddAoConnectTxIdError, setAddAoConnectTxIdError] = useState<string>('')
   const [groupValue, setGroupValue] = useState<string>("")
   const [sortValue, setSortValue] = useState<string>("")
   const [groupError, setGroupError] = useState<string>('')
@@ -723,11 +723,11 @@ const SettingModel = () => {
                                 value={processTxId}
                                 onChange={(e: any)=>{
                                     if(e.target.value && e.target.value.length == 43) {
-                                        setAddProcessTxIdError('')
+                                        setAddAoConnectTxIdError('')
                                         setProcessTxId(e.target.value)
                                     }
                                     else {
-                                        setAddProcessTxIdError('Please set AddProcessTxId first!')
+                                        setAddAoConnectTxIdError('Please set AddProcessTxId first!')
                                         setIsDisabledButton(false)
                                     }
                                 }}
@@ -738,8 +738,8 @@ const SettingModel = () => {
                                         </InputAdornment>
                                     )
                                 }}
-                                error={!!AddProcessTxIdError}
-                                helperText={AddProcessTxIdError}
+                                error={!!AddAoConnectTxIdError}
+                                helperText={AddAoConnectTxIdError}
                             />
                             <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
                                 () => { handleSearchProcessData(serverModel) }

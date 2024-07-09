@@ -60,24 +60,24 @@ export const AoLoadBlueprintLottery = async (currentWalletJwk: any, processTxId:
     }
 }
 
-export const AoLotteryCheckBalance = async (currentWalletJwk: any, LotteryTxId: string, myProcessTxId: string) => {
+export const AoLotteryCheckBalance = async (currentWalletJwk: any, LotteryTxId: string, myAoConnectTxId: string) => {
     try {
         if(LotteryTxId && LotteryTxId.length != 43) {
 
             return
         }
-        if(myProcessTxId && myProcessTxId.length != 43) {
+        if(myAoConnectTxId && myAoConnectTxId.length != 43) {
 
             return
         }
-        if(typeof LotteryTxId != 'string' || typeof myProcessTxId != 'string') {
+        if(typeof LotteryTxId != 'string' || typeof myAoConnectTxId != 'string') {
 
             return 
         }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendLotteryResult = await message({
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({ Target = "' + LotteryTxId + '", Action = "CheckBalance", Tags = { Target = ao.id } })',
@@ -85,7 +85,7 @@ export const AoLotteryCheckBalance = async (currentWalletJwk: any, LotteryTxId: 
         console.log("AoLotteryCheckBalance Balance", SendLotteryResult)
         
         if(SendLotteryResult && SendLotteryResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, SendLotteryResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, SendLotteryResult)
             console.log("AoLotteryCheckBalance MsgContent", MsgContent)
 
             return { status: 'ok', id: SendLotteryResult, msg: MsgContent };
@@ -105,24 +105,24 @@ export const AoLotteryCheckBalance = async (currentWalletJwk: any, LotteryTxId: 
   
 }
 
-export const AoLotteryUpdateBalance = async (currentWalletJwk: any, LotteryTxId: string, myProcessTxId: string) => {
+export const AoLotteryUpdateBalance = async (currentWalletJwk: any, LotteryTxId: string, myAoConnectTxId: string) => {
     try {
         if(LotteryTxId && LotteryTxId.length != 43) {
 
             return
         }
-        if(myProcessTxId && myProcessTxId.length != 43) {
+        if(myAoConnectTxId && myAoConnectTxId.length != 43) {
 
             return
         }
-        if(typeof LotteryTxId != 'string' || typeof myProcessTxId != 'string') {
+        if(typeof LotteryTxId != 'string' || typeof myAoConnectTxId != 'string') {
 
             return 
         }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendLotteryResult = await message({
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({ Target = "' + LotteryTxId + '", Action = "UpdateBalance", Tags = { Target = ao.id } })',
@@ -130,7 +130,7 @@ export const AoLotteryUpdateBalance = async (currentWalletJwk: any, LotteryTxId:
         console.log("AoLotteryUpdateBalance Balance", SendLotteryResult)
         
         if(SendLotteryResult && SendLotteryResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, SendLotteryResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, SendLotteryResult)
             console.log("AoLotteryUpdateBalance MsgContent", MsgContent)
 
             return { status: 'ok', id: SendLotteryResult, msg: MsgContent };

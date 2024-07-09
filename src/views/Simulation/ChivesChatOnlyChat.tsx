@@ -37,7 +37,7 @@ const ChivesChatOnlyChat = () => {
   
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>({ChivesChatProcessTxId:''})
-  const [ChivesChatProcessTxIdError, setChivesChatProcessTxIdError] = useState<string>('')
+  const [ChivesChatAoConnectTxIdError, setChivesChatAoConnectTxIdError] = useState<string>('')
 
   const handleSimulatedChivesChat = async function () {
 
@@ -84,13 +84,13 @@ const ChivesChatOnlyChat = () => {
 
     const ChivesChatProcessTxId = toolInfo?.ChivesChatProcessTxId
     if(!ChivesChatProcessTxId || ChivesChatProcessTxId == "" || ChivesChatProcessTxId.length != 43) {
-        setChivesChatProcessTxIdError('Please set ChivesChatProcessTxId first!')
+        setChivesChatAoConnectTxIdError('Please set ChivesChatProcessTxId first!')
         setIsDisabledButton(false)
 
         return 
     }
     else {
-        setChivesChatProcessTxIdError('')
+        setChivesChatAoConnectTxIdError('')
     }
 
     const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
@@ -449,10 +449,10 @@ const ChivesChatOnlyChat = () => {
                         value={toolInfo?.ChivesChatProcessTxId ?? ''}
                         onChange={(e: any)=>{
                             if(e.target.value && e.target.value.length == 43) {
-                                setChivesChatProcessTxIdError('')
+                                setChivesChatAoConnectTxIdError('')
                             }
                             else {
-                                setChivesChatProcessTxIdError('Please set ChivesChatProcessTxId first!')
+                                setChivesChatAoConnectTxIdError('Please set ChivesChatProcessTxId first!')
                                 setIsDisabledButton(false)
                             }
                             setToolInfo((prevState: any)=>({
@@ -467,8 +467,8 @@ const ChivesChatOnlyChat = () => {
                                 </InputAdornment>
                             )
                         }}
-                        error={!!ChivesChatProcessTxIdError}
-                        helperText={ChivesChatProcessTxIdError}
+                        error={!!ChivesChatAoConnectTxIdError}
+                        helperText={ChivesChatAoConnectTxIdError}
                     />
                     <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
                         () => { handleSimulatedChivesChat() }

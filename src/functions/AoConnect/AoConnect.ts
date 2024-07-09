@@ -372,12 +372,12 @@ export const sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const isOwner = async (myProcessTxId: string, CurrentAddress: string) => {
+export const isOwner = async (myAoConnectTxId: string, CurrentAddress: string) => {
         
     const endpoint = authConfig.AoConnectGraphql;
 
     const query = `{
-        transactions(ids: ["`+myProcessTxId+`"]) {
+        transactions(ids: ["`+myAoConnectTxId+`"]) {
             edges {
                 node {
                     id

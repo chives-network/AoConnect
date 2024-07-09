@@ -60,24 +60,24 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
     }
 }
 
-export const AoFaucetCheckBalance = async (currentWalletJwk: any, FaucetTxId: string, myProcessTxId: string) => {
+export const AoFaucetCheckBalance = async (currentWalletJwk: any, FaucetTxId: string, myAoConnectTxId: string) => {
     try {
         if(FaucetTxId && FaucetTxId.length != 43) {
 
             return
         }
-        if(myProcessTxId && myProcessTxId.length != 43) {
+        if(myAoConnectTxId && myAoConnectTxId.length != 43) {
 
             return
         }
-        if(typeof FaucetTxId != 'string' || typeof myProcessTxId != 'string') {
+        if(typeof FaucetTxId != 'string' || typeof myAoConnectTxId != 'string') {
 
             return 
         }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendFaucetResult = await message({
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({ Target = "' + FaucetTxId + '", Action = "CheckBalance", Tags = { Target = ao.id } })',
@@ -85,7 +85,7 @@ export const AoFaucetCheckBalance = async (currentWalletJwk: any, FaucetTxId: st
         console.log("AoFaucetCheckBalance Balance", SendFaucetResult)
         
         if(SendFaucetResult && SendFaucetResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, SendFaucetResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, SendFaucetResult)
             console.log("AoFaucetCheckBalance MsgContent", MsgContent)
 
             return { status: 'ok', id: SendFaucetResult, msg: MsgContent };

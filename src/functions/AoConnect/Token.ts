@@ -66,24 +66,24 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
     }
 }
 
-export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, myProcessTxId: string) => {
+export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, myAoConnectTxId: string) => {
     try {
         if(tokenTxId && tokenTxId.length != 43) {
 
             return
         }
-        if(myProcessTxId && myProcessTxId.length != 43) {
+        if(myAoConnectTxId && myAoConnectTxId.length != 43) {
 
             return
         }
-        if(typeof tokenTxId != 'string' || typeof myProcessTxId != 'string') {
+        if(typeof tokenTxId != 'string' || typeof myAoConnectTxId != 'string') {
 
             return 
         }
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const SendTokenResult = await message({
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({ Target = "' + tokenTxId + '", Action = "Balance", Tags = { Target = ao.id } })',
@@ -91,7 +91,7 @@ export const AoTokenBalance = async (currentWalletJwk: any, tokenTxId: string, m
         console.log("AoTokenBalance Balance", SendTokenResult)
         
         if(SendTokenResult && SendTokenResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, SendTokenResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, SendTokenResult)
 
             return { status: 'ok', id: SendTokenResult, msg: MsgContent };
         }

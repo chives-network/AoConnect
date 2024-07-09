@@ -39,7 +39,7 @@ const TokenOnlySendAndMintModel = () => {
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   const [toolInfo, setToolInfo] = useState<any>()
-  const [TokenProcessTxIdError, setTokenProcessTxIdError] = useState<string>('')
+  const [TokenAoConnectTxIdError, setTokenAoConnectTxIdError] = useState<string>('')
 
   // ** State
   //const [isLoading, setIsLoading] = useState(false);
@@ -208,10 +208,10 @@ const TokenOnlySendAndMintModel = () => {
                         value={toolInfo?.TokenProcessTxId ?? ''}
                         onChange={(e: any)=>{
                             if(e.target.value && e.target.value.length == 43) {
-                                setTokenProcessTxIdError('')
+                                setTokenAoConnectTxIdError('')
                             }
                             else {
-                                setTokenProcessTxIdError('Please set TokenProcessTxId first!')
+                                setTokenAoConnectTxIdError('Please set TokenProcessTxId first!')
                                 setIsDisabledButton(false)
                             }
                             setToolInfo((prevState: any)=>({
@@ -226,8 +226,8 @@ const TokenOnlySendAndMintModel = () => {
                                 </InputAdornment>
                             )
                         }}
-                        error={!!TokenProcessTxIdError}
-                        helperText={TokenProcessTxIdError}
+                        error={!!TokenAoConnectTxIdError}
+                        helperText={TokenAoConnectTxIdError}
                     />
                     <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
                         () => { handleSimulatedToken() }

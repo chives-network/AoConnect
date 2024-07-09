@@ -34,7 +34,7 @@ import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 
 import { AoSendMsg, AoGetMessage, generateRandomNumber } from 'src/functions/AoConnect/AoConnect'
-import { SetAoConnectReminderProcessTxId, GetAoConnectReminderProcessTxId, SetAoConnectReminderChatroomTxId, GetAoConnectReminderChatroomTxId } from 'src/functions/AoConnect/MsgReminder'
+import { SetAoConnectReminderProcessTxId, GetAoConnectReminderProcessTxId, SetAoConnectMyAoConnectTxId, GetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 
 
 import MessageRender from './MessageRender'
@@ -75,18 +75,18 @@ const AoSendMsgModel = () => {
     console.log("ChatroomId", chatroomId)
   };
 
-  const [myProcessTxId, setMyProcessTxId] = useState<string>("")
-  const [myProcessTxIdError, setMyProcessTxIdError] = useState<string | null>(null)
+  const [myAoConnectTxId, setMyAoConnectTxId] = useState<string>("")
+  const [myAoConnectTxIdError, setMyAoConnectTxIdError] = useState<string | null>(null)
   const handleMyProcessTxIdChange = (event: any) => {
-    setMyProcessTxId(event.target.value);
+    setMyAoConnectTxId(event.target.value);
     if(event.target.value.length != 43) {
-        setMyProcessTxIdError(`${t('myProcessTxId length must be 43')}`)
+        setMyAoConnectTxIdError(`${t('myAoConnectTxId length must be 43')}`)
     }
     else {
-        setMyProcessTxIdError("")
+        setMyAoConnectTxIdError("")
     }
     
-    console.log("myProcessTxId", myProcessTxId)
+    console.log("myAoConnectTxId", myAoConnectTxId)
   };
 
   const [processTxId, setProcessTxId] = useState<string>("")
@@ -104,8 +104,8 @@ const AoSendMsgModel = () => {
   };
 
   useEffect(()=>{
-    setChatroomId(GetAoConnectReminderChatroomTxId(currentAddress))
-    setMyProcessTxId(GetAoConnectReminderProcessTxId())
+    setChatroomId(GetAoConnectMyAoConnectTxId(currentAddress))
+    setMyAoConnectTxId(GetAoConnectReminderProcessTxId())
   }, [])
   
   const [message, setMessage] = useState<string>("Hello World : " + String(generateRandomNumber(1111, 9999)).substring(0, 4) + ".")
@@ -132,8 +132,8 @@ const AoSendMsgModel = () => {
   };
 
   const handleSaveLocalStorage = () => {
-    SetAoConnectReminderChatroomTxId(currentAddress, chatroomId);
-    SetAoConnectReminderProcessTxId(myProcessTxId);
+    SetAoConnectMyAoConnectTxId(currentAddress, myAoConnectTxId);
+    SetAoConnectReminderProcessTxId(myAoConnectTxId);
     toast.success('Save Success', { 
         position: 'top-right', 
         duration: 4000 
@@ -235,9 +235,9 @@ const AoSendMsgModel = () => {
                     <Grid item xs={5}>
                         <TextField
                             fullWidth
-                            label={`${t('My Wallet Process TxId')}`}
-                            placeholder={`${t('myProcessTxId')}`}
-                            value={myProcessTxId}
+                            label={`${t('My AoConnect Process TxId')}`}
+                            placeholder={`${t('myAoConnectTxId')}`}
+                            value={myAoConnectTxId}
                             onChange={handleMyProcessTxIdChange}
                             InputProps={{
                                 startAdornment: (
@@ -246,8 +246,8 @@ const AoSendMsgModel = () => {
                                     </InputAdornment>
                                 )
                             }}
-                            error={!!myProcessTxIdError}
-                            helperText={myProcessTxIdError}
+                            error={!!myAoConnectTxIdError}
+                            helperText={myAoConnectTxIdError}
                         />
                     </Grid>
                     <Grid item xs={2} justifyContent="flex-end">
@@ -373,7 +373,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(myProcessTxId)
+                                        setProcessTxId(myAoConnectTxId)
                                     }}>
                                         Inbox[#Inbox]
                                     </Button>
@@ -386,7 +386,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(myProcessTxId)
+                                        setProcessTxId(myAoConnectTxId)
                                     }}>
                                         Inbox[#Inbox].Data
                                     </Button>
@@ -430,7 +430,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Send({ Target = "' + chatroomId + '", Action = "Register" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('1 Send({ Target = [ChatroomTxId], Action = "Register" }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(myProcessTxId)
+                                        setProcessTxId(myAoConnectTxId)
                                     }}>
                                         {'Send({ Target = ao.id, Action = "Register" })'}
                                     </Button>
@@ -477,7 +477,7 @@ const AoSendMsgModel = () => {
                                     setMessage('Send({Target = "' + chatroomId + '", Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
                                     setMessageHelp('1 Send({ Target = [ChatroomTxId], ... }) 2 ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                    setProcessTxId(myProcessTxId)
+                                    setProcessTxId(myAoConnectTxId)
                                 }}>
                                     {'Send({Target = ao.id, Action = "Broadcast", Data = "From Chives: Broadcasting My 1st Message" })'}
                                 </Button>
@@ -565,7 +565,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox]')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(myProcessTxId)
+                                        setProcessTxId(myAoConnectTxId)
                                     }}>
                                         Inbox[#Inbox]
                                     </Button>
@@ -578,7 +578,7 @@ const AoSendMsgModel = () => {
                                         setMessage('Inbox[#Inbox].Data')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
                                         setMessageHelp('ProcessTxId: My Wallet Process TxId / Reminder Id')
-                                        setProcessTxId(myProcessTxId)
+                                        setProcessTxId(myAoConnectTxId)
                                     }}>
                                         Inbox[#Inbox].Data
                                     </Button>
@@ -618,7 +618,7 @@ const AoSendMsgModel = () => {
                                     <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                         setMessage('Send({ Target = "' + chatroomId + '", Action = "Info" })')
                                         setTags('[ { "name": "Action", "value": "Eval" } ]')
-                                        setProcessTxId(myProcessTxId)
+                                        setProcessTxId(myAoConnectTxId)
                                     }}>
                                         {'Send({ Target = ao.id, Action = "Info" })'}
                                     </Button>
@@ -631,7 +631,7 @@ const AoSendMsgModel = () => {
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = "' + chatroomId + '", Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
-                                    setProcessTxId(myProcessTxId)
+                                    setProcessTxId(myAoConnectTxId)
                                 }}>
                                     {'Send({ Target = ao.id, Action = "Transfer", Recipient = "UREzA_KXE112ZrcnCcI5tiCUk1zzuKG8dV52EgVa-g8", Quantity = "1111"})'}
                                 </Button>
@@ -639,7 +639,7 @@ const AoSendMsgModel = () => {
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = "' + chatroomId + '", Tags = { Action = "Mint", Quantity = "2222" }})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
-                                    setProcessTxId(myProcessTxId)
+                                    setProcessTxId(myAoConnectTxId)
                                 }}>
                                     {'Send({ Target = ao.id, Tags = { Action = "Mint", Quantity = "2222" }})'}
                                 </Button>
@@ -647,7 +647,7 @@ const AoSendMsgModel = () => {
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = "' + chatroomId + '", Tags = { Action = "Balances" }})')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
-                                    setProcessTxId(myProcessTxId)
+                                    setProcessTxId(myAoConnectTxId)
                                 }}>
                                     {'Send({ Target = ao.id, Tags = { Action = "Balances" }})'}
                                 </Button>
@@ -655,7 +655,7 @@ const AoSendMsgModel = () => {
                                 <Button variant='outlined' size='small' sx={{ textTransform: 'none', mr:3, mb: 2 }} onClick={()=>{
                                     setMessage('Send({ Target = "' + chatroomId + '", Action = "Balance", Tags = { Target = ao.id } })')
                                     setTags('[ { "name": "Action", "value": "Eval" } ]')
-                                    setProcessTxId(myProcessTxId)
+                                    setProcessTxId(myAoConnectTxId)
                                 }}>
                                     {'Send({ Target = ao.id, Action = "Balance", Tags = { Target = ao.id } })'}
                                 </Button>

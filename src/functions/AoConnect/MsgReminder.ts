@@ -5,7 +5,7 @@ import { ansiRegex } from 'src/configs/functions'
 const AoConnectLocalStorage = 'AoConnectDb'
 const AoConnectLastCursor = 'AoConnectLastCursor'
 const AoConnectReminderProcessTxId = 'AoConnectReminderProcessTxId'
-const AoConnectReminderChatroomTxId = 'AoConnectReminderChatroomTxId'
+const AoConnectMyAoConnectTxId = 'AoConnectMyAoConnectTxId'
 const AoConnectMembers = 'AoConnectMembers'
 const AoConnectChannels = 'AoConnectChannels'
 const AoConnectEveryTimeGetMsgCount = 10
@@ -54,17 +54,17 @@ export const GetAoConnectChannels = (Address: string) => {
     }
 }
 
-export const SetAoConnectReminderChatroomTxId = (Address: string, chatroomTxId: string) => {
-    const JsonDataText: string = window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? "{}"
+export const SetAoConnectMyAoConnectTxId = (Address: string, chatroomTxId: string) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectMyAoConnectTxId) ?? "{}"
     const JsonData = JSON.parse(JsonDataText)
     JsonData[Address] = chatroomTxId
-    window.localStorage.setItem(AoConnectReminderChatroomTxId, JSON.stringify(JsonData))
+    window.localStorage.setItem(AoConnectMyAoConnectTxId, JSON.stringify(JsonData))
 
     return chatroomTxId
 }
 
-export const GetAoConnectReminderChatroomTxId = (Address: string) => {
-    const JsonDataText: string = window.localStorage.getItem(AoConnectReminderChatroomTxId) ?? "{}"
+export const GetAoConnectMyAoConnectTxId = (Address: string) => {
+    const JsonDataText: string = window.localStorage.getItem(AoConnectMyAoConnectTxId) ?? "{}"
     const JsonData = JSON.parse(JsonDataText)
     
     return JsonData[Address] ?? ''

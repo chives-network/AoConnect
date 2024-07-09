@@ -8,7 +8,7 @@ export const AoLoadBlueprintChivesEmail = async (currentWalletJwk: any, processT
     return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chivesemail')
 }
 
-export const ChivesEmailGetMyEmailRecords = async (TargetTxId: string, myProcessTxId: string, folder: string, startIndex: string, endIndex: string) => {
+export const ChivesEmailGetMyEmailRecords = async (TargetTxId: string, myAoConnectTxId: string, folder: string, startIndex: string, endIndex: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {
 
@@ -22,12 +22,12 @@ export const ChivesEmailGetMyEmailRecords = async (TargetTxId: string, myProcess
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: myProcessTxId,
+            Owner: myAoConnectTxId,
             process: TargetTxId,
             data: null,
             tags: [
                 { name: 'Action', value: 'GetMyEmailRecords' },
-                { name: 'Target', value: myProcessTxId },
+                { name: 'Target', value: myAoConnectTxId },
                 { name: 'Folder', value: folder },
                 { name: 'startIndex', value: startIndex },
                 { name: 'endIndex', value: endIndex },
@@ -58,7 +58,7 @@ export const ChivesEmailGetMyEmailRecords = async (TargetTxId: string, myProcess
     }
 }
 
-export const ChivesEmailGetPublicKeys = async (TargetTxId: string, myProcessTxId: string, Target: string) => {
+export const ChivesEmailGetPublicKeys = async (TargetTxId: string, myAoConnectTxId: string, Target: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {
 
@@ -72,7 +72,7 @@ export const ChivesEmailGetPublicKeys = async (TargetTxId: string, myProcessTxId
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: myProcessTxId,
+            Owner: myAoConnectTxId,
             process: TargetTxId,
             data: null,
             tags: [
@@ -104,12 +104,12 @@ export const ChivesEmailGetPublicKeys = async (TargetTxId: string, myProcessTxId
     }
 }
 
-export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, EmailId: string, Folder: string) => {
+export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetTxId: string, myAoConnectTxId: string, EmailId: string, Folder: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const SendData = 'Send({Target = "' + TargetTxId + '", Action = "ReadEmailContent", EmailId = "' + EmailId + '", Folder = "' + Folder + '" })'
         const Data = {
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: SendData,
@@ -121,7 +121,7 @@ export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetT
         //console.log("ChivesEmailReadEmailContent GetChivesEmailReadEmailContentResult", GetChivesEmailReadEmailContentResult)
         
         if(GetChivesEmailReadEmailContentResult && GetChivesEmailReadEmailContentResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailReadEmailContentResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChivesEmailReadEmailContentResult)
 
             return { status: 'ok', id: GetChivesEmailReadEmailContentResult, msg: MsgContent };
         }
@@ -140,12 +140,12 @@ export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetT
   
 }
 
-export const ChivesEmailMoveToFolder = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, EmailId: string, OldFolder: string, NewFolder: string) => {
+export const ChivesEmailMoveToFolder = async (currentWalletJwk: any, TargetTxId: string, myAoConnectTxId: string, EmailId: string, OldFolder: string, NewFolder: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const SendData = 'Send({Target = "' + TargetTxId + '", Action = "MoveToFolder", EmailId = "' + EmailId + '", OldFolder = "' + OldFolder + '", NewFolder = "' + NewFolder + '" })'
         const Data = {
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: SendData,
@@ -158,7 +158,7 @@ export const ChivesEmailMoveToFolder = async (currentWalletJwk: any, TargetTxId:
         //console.log("ChivesEmailMoveToFolder GetChivesEmailMoveToFolderResult", GetChivesEmailMoveToFolderResult)
         
         if(GetChivesEmailMoveToFolderResult && GetChivesEmailMoveToFolderResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailMoveToFolderResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChivesEmailMoveToFolderResult)
 
             return { status: 'ok', id: GetChivesEmailMoveToFolderResult, msg: MsgContent };
         }
@@ -177,7 +177,7 @@ export const ChivesEmailMoveToFolder = async (currentWalletJwk: any, TargetTxId:
   
 }
 
-export const ChivesEmailGetEmailRecords = async (TargetTxId: string, myProcessTxId: string) => {
+export const ChivesEmailGetEmailRecords = async (TargetTxId: string, myAoConnectTxId: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {
 
@@ -191,12 +191,12 @@ export const ChivesEmailGetEmailRecords = async (TargetTxId: string, myProcessTx
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: myProcessTxId,
+            Owner: myAoConnectTxId,
             process: TargetTxId,
             data: null,
             tags: [
                 { name: 'Action', value: 'GetEmailRecords' },
-                { name: 'Target', value: myProcessTxId },
+                { name: 'Target', value: myAoConnectTxId },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -223,7 +223,7 @@ export const ChivesEmailGetEmailRecords = async (TargetTxId: string, myProcessTx
     }
 }
 
-export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, To: string, Subject: string, Content: string, Summary: string, Encrypted: string) => {
+export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: string, myAoConnectTxId: string, To: string, Subject: string, Content: string, Summary: string, Encrypted: string) => {
     try {
         const currentTimestampWithOffset: number = Date.now();
         const currentTimezoneOffset: number = new Date().getTimezoneOffset();
@@ -232,7 +232,7 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const SendData = 'Send({Target = "' + TargetTxId + '", Action = "SendEmail", To = "' + To + '", Subject = "' + Subject + '", Content = "' + Content + '", Summary = "' + Summary + '", Encrypted = "' + Encrypted + '", Timestamp = "' + currentTimestampInZeroUTC + '" })'
         const Data = {
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: SendData,
@@ -244,7 +244,7 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
         //console.log("ChivesEmailSendEmail GetChivesEmailSendEmailResult", GetChivesEmailSendEmailResult)
         
         if(GetChivesEmailSendEmailResult && GetChivesEmailSendEmailResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailSendEmailResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChivesEmailSendEmailResult)
 
             return { status: 'ok', id: GetChivesEmailSendEmailResult, msg: MsgContent };
         }
@@ -263,11 +263,11 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
   
 }
 
-export const ChivesEmailSetPublicKey = async (currentWalletJwk: any, TargetTxId: string, myProcessTxId: string, PublicKey: string, PublicKeyMAC: string) => {
+export const ChivesEmailSetPublicKey = async (currentWalletJwk: any, TargetTxId: string, myAoConnectTxId: string, PublicKey: string, PublicKeyMAC: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
         const Data = {
-            process: myProcessTxId,
+            process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
             data: 'Send({Target = "' + TargetTxId + '", Action = "SetPublicKey", PublicKey = "' + PublicKey + '", PublicKeyMAC = "' + PublicKeyMAC + '" })',
@@ -279,7 +279,7 @@ export const ChivesEmailSetPublicKey = async (currentWalletJwk: any, TargetTxId:
         //console.log("ChivesEmailSetPublicKey GetChivesEmailSetPublicKeyResult", GetChivesEmailSetPublicKeyResult)
         
         if(GetChivesEmailSetPublicKeyResult && GetChivesEmailSetPublicKeyResult.length == 43) {
-            const MsgContent = await AoGetRecord(myProcessTxId, GetChivesEmailSetPublicKeyResult)
+            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChivesEmailSetPublicKeyResult)
 
             return { status: 'ok', id: GetChivesEmailSetPublicKeyResult, msg: MsgContent };
         }
