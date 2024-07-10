@@ -240,7 +240,7 @@ const EmailList = (props: EmailListType) => {
   return (
     <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', '& .ps__rail-y': { zIndex: 5 } }}>
       <Box sx={{ height: '100%', backgroundColor: 'background.paper' }}>
-        <Box sx={{ px: 3, py: 3 }}>
+        <Box sx={{ px: 3, py: 0 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
             <Box p={2} display="flex" alignItems="center">
               <Typography sx={{mr: 2}} >
@@ -279,11 +279,24 @@ const EmailList = (props: EmailListType) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {store && store.data && store.data.length ? (
                 <Checkbox
-                  checked={(store.data.length > 0) }
+                  checked={(store.data.length > 0 && Object.keys(selectedEmails).length > 0 && Object.keys(selectedEmails).length == store.data.length) }
+                  onChange={() => {
+                    if(store.data.length > 0 && selectedEmails && Object.keys(selectedEmails) < store.data.length) {
+                      const selectedTemp: any = {}
+                      store.data.map((item: any)=>{
+                        selectedTemp[item.Id] = true
+                      })
+                      setSelectedEmails(selectedTemp)
+                    }
+                    else {
+                      setSelectedEmails({})
+                    }
+                  }}
                   indeterminate={
                     !!(
                       store.data &&
                       store.data.length > 0 &&
+                      Object.keys(selectedEmails).length > 0 &&
                       store.data.length !== Object.keys(selectedEmails).length
                     )
                   }
@@ -324,7 +337,7 @@ const EmailList = (props: EmailListType) => {
           </Box>
         </Box>
         <Divider sx={{ m: '0 !important' }} />
-        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 10.5rem)' }}>
+        <Box sx={{ p: 0, position: 'relative', overflowX: 'hidden', height: 'calc(100% - 9.75rem)' }}>
           <ScrollWrapper hidden={hidden}>
             {store && store.data && store.data.length ? (
               <List sx={{ p: 0, m: 1 }}>

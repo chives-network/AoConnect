@@ -9,7 +9,7 @@ const navigation = (): HorizontalNavItemsType => {
       icon: 'mdi:home-outline',
       badgeContent: 'new',
       badgeColor: 'error',
-      path: '/chat/room'
+      path: '/email'
     },
     {
       title: 'Blocks',

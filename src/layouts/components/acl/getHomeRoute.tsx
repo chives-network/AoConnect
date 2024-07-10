@@ -3,7 +3,7 @@
  */
 const getHomeRoute = (role: string) => {
   if (role === 'client') return '/acl'
-  else return '/chat/room'
+  else return '/email'
 }
 
 export default getHomeRoute
