@@ -163,7 +163,7 @@ Handlers.add(
     -- out email results
     ao.send({
         Target = msg.From,
-        Data = require('json').encode({filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount, EmailRecordsUnReadFolder})
+        Data = require('json').encode({filterEmails, totalRecords, emailFolder, startIndex, endIndex, EmailRecordsCount, EmailRecordsUnReadFolder, msg})
     })
 
   end
