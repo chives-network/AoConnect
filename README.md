@@ -3,11 +3,69 @@
 ## Introduction
 AOConnect is an application based on the AO Open Network, aiming to become a graphical operating system on the AO network, providing developers with the ability to build and iterate AO applications quickly. The design goal of AOConnect is to reduce the development complexity of AO network applications and provide some classic application scenarios for developers to learn and reference.
 
-Currently in the development stage, the main focus is on visualizing and instantiating AO's official API calls, showcasing the API calls through a graphical interface. Additionally, a more powerful chat room and TOKEN functionality have been added, along with corresponding graphical interfaces. These features aim to provide developers with an intuitive learning experience, improve learning efficiency, reduce learning curves, and expand the audience of the AO community.
 
-The final stage will consider developing a decentralized instant messaging tool based on the AO network, supporting encrypted messages, groups, TOKEN distribution, exchange, staking, rewards, and more. The reference target will be DISCORD, while incorporating some features of the AO network to create an instant encrypted communication tool based on the AO and AR networks.
+## **Email**
 
-The final development plan is not yet set in stone. If anyone has better ideas, we can all discuss and collaborate together.
+Email is a tool developed based on AO for managing emails, with the following key features:
+
+1. Send Email: Supports sending encrypted emails to any AO address.
+   
+2. Email List: Supports pagination display of emails, moving to other folders, marking as read, starring, etc.
+   
+3. Read Emails: Mark emails as read, reply to and forward emails, move to other folders, mark as read, star, etc.
+   
+4. Reply and Forward: Supports replying to or forwarding emails.
+   
+5. Folder Support: Starred, Spam, Trash, and directories Important, Social, Updates, Forums, Promotions.
+
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Email-List-1.png" width="600" />
+
+
+## **Token**
+
+Token is a tool developed based on AO for managing TOKENs, with the following main functionalities:
+
+1. Issue TOKEN: Support setting logo, name, total amount, and other information for the TOKEN.
+   
+2. Mint TOKEN: Mint a certain quantity of TOKENs for existing TOKENs.
+   
+3. Airdrop TOKEN: Support sending TOKENs to multiple addresses and amounts at once.
+   
+4. All TOKEN transaction records: View all send and receive records of the entire TOKEN.
+   
+5. My transaction records: All transaction records of the current user.
+   
+6. Send records.
+   
+7. Receive records.
+   
+8. All holders: List all addresses and amounts holding the current TOKEN.
+   
+9. Send TOKEN: Send TOKEN externally.
+   
+10. Support adding all TOKENs on the AO chain.
+   
+11. Support bookmarking external TOKENs.
+
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Token/TokenSummary.png" width="600" />
+
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Token/AllHolders.png" width="600" />
+
+
+## **Chat**
+
+Chat is a tool for Chat built on AO, with the following main functions:
+
+1. Create a Chat Server
+2. Manage Channels, including add channel, edit channel, delete channel.
+3. Manage Users, including invite, approval.
+4. Engage in Chatting
+5. Set Administrators, including add admin, del admin.
+
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Chat/ChatList.png" width="600" />
+
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Chat/ChatSummary.png" width="600" />
+
 
 ## Requirements
 - [NodeJS](https://nodejs.org) version 18.17 +
@@ -27,85 +85,6 @@ npm run build
 
 [![][vercel-deploy-shield]][vercel-deploy-link]
 
-## Demo Video & Site
-
-[AOConnect Demo Video](https://www.youtube.com/watch?v=Qf-QkezSoVg)
-
-[AOConnect Demo Site](https://ao-connect.vercel.app/)
-
-## For Developers
-  You need to provide information about the following projects.
-
-  - **AO Developer's Handbook**: [Link](https://cookbook_ao.g8way.io/)
-  - **AOS Command-line based client tool officially released by AO**: [Link](https://github.com/permaweb/aos/)
-
-#### 1 The difference between AOConnect and AOS
-  - AOS is a command-line based client software officially released by AO, with main functionalities including sending and receiving messages, loading LUA files, and executing function operations.
-
-  - Inspired by the design of AOS, AOConnect abandons the command-line design style in favor of a graphical user interface. It also provides online simulation debugging and API invocation features, along with numerous examples to simplify the learning curve for developers. It is an essential tool for learning AO network development.
-
-  - Developers are advised to first learn AOS to gain basic concepts and experience, and then delve into AOConnect for further exploration.
-
-#### 2 Data storage
-  - This project is a frontend-only project without using a backend. The storage functionality utilized in the project is the browser's LocalStorage.
-
-#### 3 @permaweb/aoconnect (0.0.53)
-  - Currently, I am using version 0.0.53 of @permaweb/aoconnect. In the system, I need to use the Node version of @permaweb/aoconnect, but for some reason, it always loads the browser version of @permaweb/aoconnect. Therefore, I saved the @permaweb/aoconnect files saved as 'scripts/@permaweb/aoconnect' and forced it to use the Node mode. If anyone can solve this issue, I would be very grateful.
-
-## AOConnect Main Functions
-  1. **Wallet**: Integrated a simplified version of an AR wallet.
-
-  2. **Learn**: Create processes, send messages, view messages. Load LUA files, integrate examples of code calls needed on the official documentation into the page, allowing developers to simulate common message function calls directly on the page.
-
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/Learn.png" width="600" />
-
-  3. **Tool**: Supports three on-chain programs, including the official demo version of a chat room, TOKEN creation, minting, transfers, and balance queries, as well as an improved version of a chat room program supporting channels, administrators, invitations, and reviews.
-  please go to [AOConnect Application Simulation] section.
-
-  4. **Chat**: A decentralized prototype of an instant messaging tool, still under development.
-  [Not Ready]
-
-  5. **TOKEN**: Supports online creation of TOKENs, minting, transfers, balance queries, member queries, calculating total circulation, and other functions.
-
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/TokenList.png" width="600" />
-
-## AOConnect Application Simulation
-#### Chatroom
-- **Function**
-  1. Register
-  2. Broadcast
-  3. Unregister
-
-  Simulate Chatroom lua module (This is not a specific function, but a simulator that simulates all relevant functions):
-
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/SimulatedChatroom.png" width="600" />
-
-#### Token
-- **Function**
-  1. Token Balances
-  2. Create Token
-  3. Mint Token
-  4. Transfer Token
-  
-  Simulate Token lua module (This is not a specific function, but a simulator that simulates all relevant functions):
-
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/SimulatedToken.png" width="600" />
-
-#### ChivesChat
-- **Function**
-  1. Chatroom support three roles: owner, admin, member.
-  2. Owner: Can add or delete admins, add or delete channels, invite members (requiring user agreement), adding members, and deleting members.
-  3. Admin: Approval for joining the application, inviting members (requiring user agreement), adding members, and deleting members.
-  4. Member: Apply to join the chatroom, get approval from the admin, then send messages, and finally leave the chatroom.
-  5. Everyone needs to apply to join the chatroom first. Once approved, they can send messages.
-  6. Anyone can get channel information.
-  7. Only members can get information on all members.
-  8. This version of the message is public, not encrypted.
-  Simulate ChivesChat lua module (This is not a specific function, but a simulator that simulates all relevant functions):
-  <img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/V0.1/SimulatedChivesChat.png" width="600" />
-
-## Future Planning
-Currently in the development phase, the final stage will consider developing a decentralized instant messaging tool based on the AO network, supporting encrypted messages, groups, TOKEN distribution, exchange, staking, rewards, and more. The reference target will be DISCORD, while incorporating some features of the AO network to create an instant encrypted communication tool based on the AO and AR networks.
 
 ## Contact
 
