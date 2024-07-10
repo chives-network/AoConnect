@@ -342,7 +342,6 @@ const EmailList = (props: EmailListType) => {
             {store && store.data && store.data.length ? (
               <List sx={{ p: 0, m: 1 }}>
                 {store.data.map((email: any) => {
-                  console.log("email", email)
                   let Subject = email.Subject
                   let Summary = email.Summary
                   let Content = email.Content

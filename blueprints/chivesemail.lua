@@ -190,7 +190,7 @@ Handlers.add(
         if found then
             ao.send({
                 Target = msg.From,
-                Data = require('json').encode({Data = EmailContent, Status = 'OK', msg})
+                Data = require('json').encode({Data = EmailContent, Status = 'OK'})
             })
         end
 
