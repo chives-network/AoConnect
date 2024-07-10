@@ -169,6 +169,7 @@ Handlers.add(
   end
 )
 
+
 Handlers.add(
   "ReadEmailContent",
   Handlers.utils.hasMatchingTag("Action", "ReadEmailContent"),
@@ -192,13 +193,18 @@ Handlers.add(
                 Target = msg.From,
                 Data = require('json').encode({Data = EmailContent, Status = 'OK'})
             })
+        else
+          ao.send({
+              Target = msg.From,
+              Data = require('json').encode({Data = 'Not Found Email in ReadEmailContent 1', Status = 'ERROR'})
+          })
         end
 
       end
     else
       ao.send({
           Target = msg.From,
-          Data = require('json').encode({Data = 'Not Found Email in ReadEmailContent', Status = 'ERROR'})
+          Data = require('json').encode({Data = 'Not Found Email in ReadEmailContent 2', Status = 'ERROR'})
       })
     end
   end
