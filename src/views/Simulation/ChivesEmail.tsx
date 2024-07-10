@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
+import authConfig from 'src/configs/auth'
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
@@ -44,7 +45,7 @@ const ChivesEmail = () => {
 
     setIsDisabledButton(true)
 
-    const ChivesEmail = "zSBSk-Qfum2XegF1toVmZRr2OLQHU2d7wp2USg8Gzbk"
+    const ChivesEmail = authConfig.AoConnectChivesEmailServerData
     const TokenProcessTxId1 = "uk6oWsri6492CmYMA2iCgDlSSFwlhuyijfv9UNqtqvg"
     const TokenProcessTxId2 = "Bxp-92cN0pUt621JPMTeLfTm1WE70a3kKX7HkU0QQkM"
 

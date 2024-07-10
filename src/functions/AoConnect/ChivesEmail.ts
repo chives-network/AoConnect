@@ -239,7 +239,7 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
         }
         const GetChivesEmailSendEmailResult = await message(Data);
 
-        console.log("ChivesEmailSendEmail SendData", SendData)
+        //console.log("ChivesEmailSendEmail SendData", SendData)
         //console.log("ChivesEmailSendEmail Data", Data)
         //console.log("ChivesEmailSendEmail GetChivesEmailSendEmailResult", GetChivesEmailSendEmailResult)
         
