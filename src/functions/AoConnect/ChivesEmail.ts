@@ -230,7 +230,7 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
         const currentTimestampInZeroUTC: number = currentTimestampWithOffset + (currentTimezoneOffset * 60 * 1000);
 
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + TargetTxId + '", Action = "SendEmail", To = "' + To + '", Subject = "' + Subject + '", Content = "' + Content + '", Summary = "' + Summary + '", Encrypted = "' + Encrypted + '", Timestamp = "' + currentTimestampInZeroUTC + '" })'
+        const SendData = 'Send({Target = "' + TargetTxId + '", Action = "SendEmail", To = "' + To + '", Subject = "' + Subject + '", Data = "' + Content + '", Summary = "' + Summary + '", Encrypted = "' + Encrypted + '", Timestamp = "' + currentTimestampInZeroUTC + '" })'
         const Data = {
             process: myAoConnectTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
@@ -239,7 +239,7 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
         }
         const GetChivesEmailSendEmailResult = await message(Data);
 
-        //console.log("ChivesEmailSendEmail SendData", SendData)
+        console.log("ChivesEmailSendEmail SendData", SendData)
         //console.log("ChivesEmailSendEmail Data", Data)
         //console.log("ChivesEmailSendEmail GetChivesEmailSendEmailResult", GetChivesEmailSendEmailResult)
         
