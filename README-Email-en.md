@@ -2,82 +2,54 @@
 
 ## Introduction
 
-AOConnect-Email is a tool developed based on AO for managing Emails, with the following main functionalities:
+AOConnect-Email is a tool developed based on AO for managing emails, with the following key features:
 
-1. Issue Email: Support setting logo, name, total amount, and other information for the Email.
+1. Send Email: Supports sending encrypted emails to any AO address.
    
-2. Mint Email: Mint a certain quantity of Emails for existing Emails.
+2. Email List: Supports pagination display of emails, moving to other folders, marking as read, starring, etc.
    
-3. Airdrop Email: Support sending Emails to multiple addresses and amounts at once.
+3. Read Emails: Mark emails as read, reply to and forward emails, move to other folders, mark as read, star, etc.
    
-4. All Email transaction records: View all send and receive records of the entire Email.
+4. Reply and Forward: Supports replying to or forwarding emails.
    
-5. My transaction records: All transaction records of the current user.
-   
-6. Send records.
-   
-7. Receive records.
-   
-8. All holders: List all addresses and amounts holding the current Email.
-   
-9. Send Email: Send Email externally.
-   
-10. Support adding all Emails on the AO chain.
-   
-11. Support bookmarking external Emails.
+5. Folder Support: Starred, Spam, Trash, and directories Important, Social, Updates, Forums, Promotions.
 
-## Screen Shot Explanation - Project Issuer:
+## Email Encryption
 
-1. Issue Email: Support setting logo, name, total amount, and other information for the Email.
+### Current Version V1 - Symmetric Encryption
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/CreateEmail.png" width="600" />
+Encryption Algorithm: Utilizes AES-256-GCM symmetric encryption to encrypt the subject and content of emails separately, then stores them on the AO network.
+Encryption Steps: Uses the recipient and sender addresses as input, computes the SHA-256 hash to get a HASH value, takes the first 32 bits as the KEY for AES-256-GCM encryption algorithm, generates a random IV, and the TAG as the return value of the encryption algorithm. Concatenates the 32-bit IV, the email ciphertext, and the 32-bit TAG directly to obtain the final ciphertext used. 
+Encryption Scope: The encryption algorithm encrypts the Subject and Content separately, resulting in two independent ciphertexts.
+Additional Notes: Version number V1 is also stored on the AO network for selecting different decryption algorithms.
+Security: Anyone can decrypt the email content following the encryption steps mentioned above, so use with caution.
 
-2. Mint Email: Mint a certain quantity of Emails for existing Emails.
+### Improved Version V2 - Asymmetric Encryption - Under Development
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/MintEmail.png" width="600" />
+Main Improvement: Building upon the V1 algorithm, V2 incorporates asymmetric encryption to encrypt the KEY used in AES-256-GCM. The sender uses the recipient's public key and their private key to encrypt the KEY, and the recipient uses their private key to decrypt it, then uses AES-256-GCM symmetric encryption to decrypt the email content.
+Additional Steps: When setting up email, users automatically generate a public-private key pair, storing the derived public key on the AO network, enabling others to send encrypted emails using this public key.
+Security: Encrypting the KEY with asymmetric encryption ensures only the sender and recipient can view the email content. Each email uses a different KEY. The current solution offers extremely high security, making it safe to use.
+Public-Private Keys: The public key stored on the AO network is a derived public key, not the wallet's public key, so there are no concerns regarding the exposure of the wallet's public key.
 
-3. Airdrop Email: Support sending Emails to multiple addresses and amounts at once.
+## Screenshots
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Airdrop.png" width="600" />
+1. Send Email: Supports sending encrypted emails to any AO address
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Airdrop-Result-Check.png" width="600" />
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Email-ComposeEmail.png" width="600" />
 
-4. All Email transaction records: View all send and receive records of the entire Email.
+2. Email List: Supports pagination display of emails, moving to other folders
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/AllTxs.png" width="600" />
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Email-List-1.png" width="600" />
 
-5. My transaction records: All transaction records of the current user.
+3. Read Emails: Mark emails as read, reply to and forward emails
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/MyTxs.png" width="600" />
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Email-ReadEmail.png" width="600" />
 
-6. Send records.
+4. Reply and Forward: Supports replying to or forwarding emails
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/SentTxs.png" width="600" />
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Email-ReplyEmail.png" width="600" />
 
-7. Receive records.
+5. Other Language Testing
 
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/ReceivedTxs.png" width="600" />
-
-8. All holders: List all addresses and amounts holding the current Email.
-
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/AllHolders.png" width="600" />
-
-9. Send Email: Send Email externally.
-
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/EmailSendOut.png" width="600" />
-
-10. Support adding all Emails on the AO chain.
-
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/EmailSummary.png" width="600" />
-
-11. Support bookmarking external Emails.
-
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/EmailSummary.png" width="600" />
-
-## Screen Shot Explanation - Regular User:
-
-If the current user is not the creator of the Email, they will automatically filter out administrative permissions and only display regular permissions.
-
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/User-MyTxs.png" width="600" />
-
-<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/User-SendOut.png" width="600" />
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Email-ChineseList.png" width="600" />
+<img src="https://raw.githubusercontent.com/chives-network/AoConnect/main/public/screen/Email/Email-Chinese-ReadEMail.png" width="600" />
