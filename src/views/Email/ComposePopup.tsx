@@ -20,9 +20,7 @@ import { EncryptEmailAES256GCMV1 } from 'src/functions/ChivesEncrypt'
 
 import { ChivesEmailSendEmail } from 'src/functions/AoConnect/ChivesEmail'
 
-import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
 import authConfig from 'src/configs/auth'
-import { ansiRegex } from 'src/configs/functions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -159,22 +157,12 @@ const ComposePopup = (props: MailComposeType) => {
     const SummaryEncryptd = EncryptEmailAES256GCMV1(messageValue.getCurrentContent().getPlainText().slice(0, 200), EncryptedKey)
 
     const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, EmailAddressList[0], SubjectEncryptd, ContentEncryptd, SummaryEncryptd, 'V1')
+    console.log("ChivesEmailSendEmail1", ChivesEmailSendEmail1)
     if(ChivesEmailSendEmail1) {
-      if(ChivesEmailSendEmail1?.msg?.Output?.data?.output)  {
-        const formatText = ChivesEmailSendEmail1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-          const ChivesEmailSendEmailData1 = await GetMyLastMsg(currentWallet.jwk, currentAoAddress)
-          if(ChivesEmailSendEmailData1?.msg?.Output?.data?.output)  {
-            const formatText2 = ChivesEmailSendEmailData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(t(formatText2) as string, {
-                duration: 2000
-              })
-            }
-          }
-
-        }
-
+      if(ChivesEmailSendEmail1?.msg?.Messages[0]?.Data)  {
+        toast.success(t(ChivesEmailSendEmail1?.msg?.Messages[0]?.Data) as string, {
+          duration: 2000
+        })
       }
     }
 
