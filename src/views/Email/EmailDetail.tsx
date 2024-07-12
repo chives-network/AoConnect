@@ -193,14 +193,16 @@ const EmailDetail = (props: EmailDetailType) => {
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {folder !== 'trash' ? (
+                  {folder !== 'Trash' ? (
                     <IconButton size='small' onClick={handleMoveToTrashcurrentEmail}>
                       <Icon icon='mdi:delete-outline' fontSize='1.375rem' />
                     </IconButton>
                   ) : null}
-                  <IconButton size='small' onClick={handleMoveToSpamcurrentEmail}>
-                    <Icon icon='mdi:alert-circle-outline' fontSize='1.375rem' />
-                  </IconButton>
+                  {folder !== 'Sent' && folder !== 'Spam' ? (
+                    <IconButton size='small' onClick={handleMoveToSpamcurrentEmail}>
+                      <Icon icon='mdi:alert-circle-outline' fontSize='1.375rem' />
+                    </IconButton>
+                  ) : null}
                   <OptionsMenu
                     leftAlignMenu
                     options={handleCategoriesMenu()}

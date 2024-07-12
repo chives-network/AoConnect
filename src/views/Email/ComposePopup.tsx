@@ -158,7 +158,7 @@ const ComposePopup = (props: MailComposeType) => {
     const ContentEncryptd = EncryptEmailAES256GCMV1(messageValue.getCurrentContent().getPlainText(), EncryptedKey)
     const SummaryEncryptd = EncryptEmailAES256GCMV1(messageValue.getCurrentContent().getPlainText().slice(0, 200), EncryptedKey)
 
-    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, EmailAddressList[0], SubjectEncryptd, ContentEncryptd, SummaryEncryptd, 'V1')
+    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, EmailAddressList[0], SubjectEncryptd, ContentEncryptd, SummaryEncryptd, 'V1')
     if(ChivesEmailSendEmail1) {
       if(ChivesEmailSendEmail1?.msg?.Output?.data?.output)  {
         const formatText = ChivesEmailSendEmail1?.msg?.Output?.data?.output.replace(ansiRegex, '');

@@ -137,12 +137,12 @@ const EmailList = (props: EmailListType) => {
     setLoading(true)
     if (id === null && store.data && store.data.length > 0) {
       await Promise.all(Object.keys(selectedEmails).map(async (EmailId: string) => {
-        const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, EmailId, oldFolder, newFolder);
+        const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, EmailId, oldFolder, newFolder);
         console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData);
       }));
     }
     if (id && id.length > 0 && store.data && store.data.length > 0) {
-      const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, id, oldFolder, newFolder);
+      const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, id, oldFolder, newFolder);
       console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData);
     }
     setSelectedEmails({})
@@ -155,7 +155,7 @@ const EmailList = (props: EmailListType) => {
         ...prevState,
         [id]: true
       }))
-      const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, currentAoAddress, id, folder);
+      const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, authConfig.AoConnectChivesEmailServerData, id, folder);
       console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
     }
   }
@@ -313,7 +313,7 @@ const EmailList = (props: EmailListType) => {
                       </IconButton>
                     </Tooltip>
                   ) : null}
-                  {folder !== 'Trash' && folder !== 'Spam' ? (
+                  {folder !== 'Sent' && folder !== 'Spam' ? (
                     <Tooltip title={`${t(`Move to Spam`)}`} arrow>
                       <IconButton onClick={()=>handleMoveToSpam(null)}>
                         <Icon icon='mdi:alert-octagon-outline' />
@@ -457,7 +457,7 @@ const EmailList = (props: EmailListType) => {
                         className='mail-actions'
                         sx={{ display: 'none', alignItems: 'center', justifyContent: 'flex-end' }}
                       >
-                        {email && email.folder !== 'trash' ? (
+                        {email && folder !== 'Trash' ? (
                           <Tooltip placement='top' title='Delete Mail'>
                             <IconButton
                               onClick={e => {
@@ -470,28 +470,35 @@ const EmailList = (props: EmailListType) => {
                           </Tooltip>
                         ) : null}
 
-                        <Tooltip placement='top' title={recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id] ? t('Unread Mail') : t('Read Mail')}>
-                          <IconButton
-                            onClick={e => {
-                              e.stopPropagation()
-                              if(recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id]) {
-                                handleReadEmailContent(email.Id, folder)
-                              }
-                            }}
-                          >
-                            <Icon icon={mailReadToggleIcon} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip placement='top' title='Move to Spam'>
-                          <IconButton
-                            onClick={e => {
-                              e.stopPropagation()
-                              handleMoveToSpam(email.Id)
-                            }}
-                          >
-                            <Icon icon='mdi:alert-octagon-outline' />
-                          </IconButton>
-                        </Tooltip>
+                        {email && folder !== 'Sent' ? (
+                          <Tooltip placement='top' title={recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id] ? t('Unread Mail') : t('Read Mail')}>
+                            <IconButton
+                              onClick={e => {
+                                e.stopPropagation()
+                                if(recordsUnRead.includes(email.Id) && !haveReadEmails[email.Id]) {
+                                  handleReadEmailContent(email.Id, folder)
+                                }
+                              }}
+                            >
+                              <Icon icon={mailReadToggleIcon} />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
+                        
+
+                        {email && folder !== 'Spam' && folder !== 'Sent' ? (
+                          <Tooltip placement='top' title='Move to Spam'>
+                            <IconButton
+                              onClick={e => {
+                                e.stopPropagation()
+                                handleMoveToSpam(email.Id)
+                              }}
+                            >
+                              <Icon icon='mdi:alert-octagon-outline' />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
+
                       </Box>
                     </EmailItem>
                   )

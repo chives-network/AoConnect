@@ -112,7 +112,7 @@ const ChivesEmail = () => {
       'Testing Email': '==================================================='
     }))
 
-    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'He tried to oust OpenAI’s CEO. Now, he’s starting a ‘safe’ rival', 'The launch announcement from Safe Superintelligence suggests that the company wants to take a different approach: Our singular focus means no distraction by management overhead or product cycles, and our business model means safety, security, and progress are all insulated from short-term commercial pressures. Joining Sutskever in launching the new company are Daniel Levy, who had worked at OpenAI for the past two years, and Daniel Gross, an investor who previously worked as a partner at the startup accelerator Y Combinator and on machine learning efforts at Apple. The company says it will have offices in Palo Alto, California, and Tel Aviv, Israel.', "New York CNN — The OpenAI co-founder who left the high-flying artificial intelligence startup last month has announced his next venture: a company dedicated to building safe, powerful artificial intelligence that could become a rival to his old employer.", 'Encrypted001')
+    const ChivesEmailSendEmail1 = await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'He tried to oust OpenAI’s CEO. Now, he’s starting a ‘safe’ rival', 'The launch announcement from Safe Superintelligence suggests that the company wants to take a different approach: Our singular focus means no distraction by management overhead or product cycles, and our business model means safety, security, and progress are all insulated from short-term commercial pressures. Joining Sutskever in launching the new company are Daniel Levy, who had worked at OpenAI for the past two years, and Daniel Gross, an investor who previously worked as a partner at the startup accelerator Y Combinator and on machine learning efforts at Apple. The company says it will have offices in Palo Alto, California, and Tel Aviv, Israel.', "New York CNN — The OpenAI co-founder who left the high-flying artificial intelligence startup last month has announced his next venture: a company dedicated to building safe, powerful artificial intelligence that could become a rival to his old employer.", 'Encrypted001')
     if(ChivesEmailSendEmail1) {
       console.log("ChivesEmailSendEmail1", ChivesEmailSendEmail1)
       if(ChivesEmailSendEmail1?.msg?.Output?.data?.output)  {
@@ -140,11 +140,11 @@ const ChivesEmail = () => {
 
       }
     }
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject002-0853', 'Content002', 'Summary002', 'Encrypted002')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject003-0853', 'Content003', 'Summary003', 'Encrypted003')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject004-0853', 'Content004', 'Summary004', 'Encrypted004')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId1, TokenProcessTxId2, 'Subject005-0853', 'Content005', 'Summary005', 'Encrypted005')
-    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, TokenProcessTxId1, 'Subject006-0853', 'Content006', 'Summary006', 'Encrypted005')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'Subject002-0853', 'Content002', 'Summary002', 'Text')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'Subject003-0853', 'Content003', 'Summary003', 'Text')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'Subject004-0853', 'Content004', 'Summary004', 'Text')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'Subject005-0853', 'Content005', 'Summary005', 'Text')
+    await ChivesEmailSendEmail(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'Subject006-0853', 'Content006', 'Summary006', 'Text')
 
     const ChivesEmailGetMyEmailRecordsData1 = await ChivesEmailGetMyEmailRecords(ChivesEmail, TokenProcessTxId1, "Inbox", '0', '10')
     if(ChivesEmailGetMyEmailRecordsData1) {
@@ -164,7 +164,7 @@ const ChivesEmail = () => {
       }))
     }
 
-    const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'Svwfh_fzyX5bcj1dvMrYT9DyU52l7EB9MWCtNHqTmhw', 'Inbox')
+    const ChivesEmailReadEmailContentData = await ChivesEmailReadEmailContent(currentWallet.jwk, ChivesEmail, 'Svwfh_fzyX5bcj1dvMrYT9DyU52l7EB9MWCtNHqTmhw', 'Inbox')
     if(ChivesEmailReadEmailContentData) {
       console.log("ChivesEmailReadEmailContentData", ChivesEmailReadEmailContentData)
       if(ChivesEmailReadEmailContentData?.msg?.Output?.data?.output)  {
@@ -193,7 +193,7 @@ const ChivesEmail = () => {
       }
     }
 
-    const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, ChivesEmail, TokenProcessTxId2, 'HEGz9y0hZXz48Ur_Rkpwml5aVwf18eiM6fpaLo9XnjI', 'Inbox', 'Starred')
+    const ChivesEmailMoveToFolderData = await ChivesEmailMoveToFolder(currentWallet.jwk, ChivesEmail, 'HEGz9y0hZXz48Ur_Rkpwml5aVwf18eiM6fpaLo9XnjI', 'Inbox', 'Starred')
     if(ChivesEmailMoveToFolderData) {
       console.log("ChivesEmailMoveToFolderData", ChivesEmailMoveToFolderData)
       if(ChivesEmailMoveToFolderData?.msg?.Output?.data?.output)  {
