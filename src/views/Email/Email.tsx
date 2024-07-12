@@ -28,8 +28,6 @@ import { fetchData } from 'src/store/apps/email'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
-import { AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
-import { GetAoConnectMyAoConnectTxId, SetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 
 // ** Variables
 const EmailCategoriesColors: any = {
@@ -82,23 +80,9 @@ const EmailAppLayout = () => {
 
   const [currentAoAddress, setMyAoConnectTxId] = useState<string>('')
   useEffect(() => {
-    const fetchData = async () => {
-        if(currentAddress && currentAddress.length === 43) {
-            const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress);
-            if(MyProcessTxIdData && MyProcessTxIdData.length === 43) {
-                setMyAoConnectTxId(MyProcessTxIdData);
-            }
-            if(MyProcessTxIdData === '') {
-                const ChivesMyAoConnectProcessTxId = await AoCreateProcessAuto(currentWallet.jwk);
-                if(ChivesMyAoConnectProcessTxId) {
-                    console.log("ChivesMyAoConnectProcessTxId", ChivesMyAoConnectProcessTxId);
-                    SetAoConnectMyAoConnectTxId(currentAddress, ChivesMyAoConnectProcessTxId);
-                    setMyAoConnectTxId(ChivesMyAoConnectProcessTxId);
-                }
-            }
-        }
-    };
-    fetchData();
+    if(currentAddress && currentAddress.length === 43) {
+      setMyAoConnectTxId(currentAddress);
+    }
   }, [currentAddress]);
 
 

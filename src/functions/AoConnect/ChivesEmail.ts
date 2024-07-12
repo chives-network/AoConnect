@@ -230,21 +230,27 @@ export const ChivesEmailSendEmail = async (currentWalletJwk: any, TargetTxId: st
         const currentTimestampInZeroUTC: number = currentTimestampWithOffset + (currentTimezoneOffset * 60 * 1000);
 
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + TargetTxId + '", Action = "SendEmail", To = "' + To + '", Subject = "' + Subject + '", Data = "' + Content + '", Summary = "' + Summary + '", Encrypted = "' + Encrypted + '", Timestamp = "' + currentTimestampInZeroUTC + '" })'
-        const Data = {
-            process: myAoConnectTxId,
-            tags: [ { name: 'Action', value: 'Eval' } ],
+        const data = {
+            process: TargetTxId,
+            tags: [
+              { name: "Action", value: "SendEmail" },
+              { name: "To", value: To.toString() },
+              { name: "Subject", value: Subject.toString() },
+              { name: "Summary", value: Summary.toString() },
+              { name: "Encrypted", value: Encrypted.toString() },
+              { name: "Timestamp", value: currentTimestampInZeroUTC.toString() },
+              ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: SendData,
+            data: Content.toString()
         }
-        const GetChivesEmailSendEmailResult = await message(Data);
+        const GetChivesEmailSendEmailResult = await message(data)
 
-        //console.log("ChivesEmailSendEmail SendData", SendData)
-        //console.log("ChivesEmailSendEmail Data", Data)
-        //console.log("ChivesEmailSendEmail GetChivesEmailSendEmailResult", GetChivesEmailSendEmailResult)
+        console.log("ChivesEmailSendEmail Data", data)
+        console.log("ChivesEmailSendEmail GetChivesEmailSendEmailResult", GetChivesEmailSendEmailResult)
         
         if(GetChivesEmailSendEmailResult && GetChivesEmailSendEmailResult.length == 43) {
-            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChivesEmailSendEmailResult)
+            const MsgContent = await AoGetRecord(TargetTxId, GetChivesEmailSendEmailResult)
+            console.log("ChivesEmailSendEmail MsgContent", MsgContent)
 
             return { status: 'ok', id: GetChivesEmailSendEmailResult, msg: MsgContent };
         }
