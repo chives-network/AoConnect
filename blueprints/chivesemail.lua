@@ -20,16 +20,6 @@ EmailRecords = EmailRecords or {}
 EmailDatas = EmailDatas or {}
 EmailRecordsUnRead = EmailRecordsUnRead or {}
 
-local crypto = require(".crypto")
-EncryptedText = "t5SrAnDXhQnpzNMBSZB7tU8k3BX7YkGnJFS2O9UgEc4"
-EncryptedKey = "uk6oWsri6492CmYMA2iCgDlSSFwlhuyijfv9UNqtqvg"
-function DecryptEmailAddressAES256CBC(EncryptedText, EncryptedKey)
-    local iv = EncryptedText:sub(1, 16)
-    local key = EncryptedKey:sub(1, 32)
-    local encrypted = crypto.cipher.aes.encrypt(EncryptedText, key, iv, 'CBC', 256).asHex()
-    return encrypted
-end
-
 function Welcome()
   return (
       "Welcome to ChivesEmail V0.1!\n\n" ..
