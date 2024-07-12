@@ -4,7 +4,7 @@
 
 AOConnect-Email is a tool developed based on AO for managing emails, with the following key features:
 
-1. Send Email: Supports sending encrypted emails to any AO address.
+1. Send Email: Supports sending encrypted emails to any AR wallet address.
    
 2. Email List: Supports pagination display of emails, moving to other folders, marking as read, starring, etc.
    
