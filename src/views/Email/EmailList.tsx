@@ -247,7 +247,7 @@ const EmailList = (props: EmailListType) => {
                 {folder}
               </Typography>
               <Typography variant="body2" >
-              MyAo: {currentAoAddress}
+              Address: {currentAoAddress}
               </Typography>
               <IconButton sx={{mt: 1, ml: 1}} aria-label='capture screenshot' color='secondary' size='small' onClick={() => {
                   navigator.clipboard.writeText(currentAoAddress);
