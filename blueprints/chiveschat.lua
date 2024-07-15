@@ -266,7 +266,6 @@ Handlers.add(
           ChannelSort = msg.ChannelSort,
           ChannelIntro = msg.ChannelIntro
         }
-        Handlers.utils.reply("Has save channel")(msg)
         ao.send({
             Target = msg.From,
             Data = "Successfully add a channel"
@@ -295,7 +294,6 @@ Handlers.add(
           ChannelSort = msg.ChannelSort,
           ChannelIntro = msg.ChannelIntro
         }
-        Handlers.utils.reply("Has save channel")(msg)
         ao.send({
             Target = msg.From,
             Data = "Successfully edit a channel"
@@ -319,7 +317,6 @@ Handlers.add(
     if msg.From == Owner and msg.ChannelId and #msg.ChannelId == 43 then
         if Channels[msg.ChannelId] then
           Channels[msg.ChannelId] = nil
-          Handlers.utils.reply("Channel deleted")(msg)
           ao.send({
               Target = msg.From,
               Data = "Successfully deleted the channel"
@@ -358,9 +355,6 @@ Handlers.add(
 
         if not found then
             table.insert(Admins, msg.AdminId)
-            Handlers.utils.reply("Have add administrator")(msg)
-        else
-            Handlers.utils.reply("Already is administrator")(msg)
         end
 
         ao.send({
@@ -392,7 +386,6 @@ Handlers.add(
         for i, v in ipairs(Admins) do
             if v == msg.AdminId then
                 table.remove(Admins, i)
-                Handlers.utils.reply("Have delete administrator")(msg)
                 found = true
                 break
             end
@@ -858,14 +851,12 @@ Handlers.add(
   function (msg)
     if Members[msg.From] then
       Members[msg.From] = nil
-      Handlers.utils.reply("You have successfully exited from chatroom")(msg)
       ao.send({
         Target = msg.From,
         ['Message-Id'] = msg.Id,
         Data = 'You have successfully exited from chatroom ' .. msg.Data
       })
     else 
-      Handlers.utils.reply("You are not a memeber")(msg)
       ao.send({
         Target = msg.From,
         Action = 'Quit-Error',
@@ -891,19 +882,8 @@ Handlers.add(
         end
     end
     if Members[msg.From] or isAdmin then
-      local haveSentRecords = {}
-      for memberId, memberData in pairs(Members) do
-        ao.send({Target = memberId, Data = "CCC" .. msg.Data, Sender = msg.From, NanoId = msg.NanoId })
-      end    
-      ao.send({Target = ao.id, Data = "AAA" .. msg.Data, Sender = msg.From, NanoId = msg.NanoId})
-      -- Handlers.utils.reply("Broadcasted")(msg)
-      ao.send({
-        Target = msg.From,
-        ['Message-Id'] = msg.Id,
-        Data = "BBB" .. 'Successfully Broadcasted ' .. msg.Data
-      })
+      ao.send({Target = ao.id, Data = msg.Data, Sender = msg.From, NanoId = msg.NanoId})
     else 
-      Handlers.utils.reply("You are not a memeber")(msg)
       ao.send({
         Target = msg.From,
         Action = 'Broadcast-Error',
