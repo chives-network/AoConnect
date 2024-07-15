@@ -224,10 +224,11 @@ Handlers.add(
   "IsMember",
   Handlers.utils.hasMatchingTag("Action", "IsMember"),
   function (msg)
-    local isAdmin = false
+    local isOwner = false
     if msg.From == Owner then
-      isAdmin = true
+      isOwner = true
     end
+    local isAdmin = false
     for _, Admin in ipairs(Admins) do
         if Admin == msg.From then
             isAdmin = true
@@ -248,7 +249,7 @@ Handlers.add(
     end
     ao.send({
       Target = msg.From,
-      Data = require('json').encode({isAdmin, isMember, isApplicant, isInvite})
+      Data = require('json').encode({isOwner, isAdmin, isMember, isApplicant, isInvite})
     })
   end
 )
