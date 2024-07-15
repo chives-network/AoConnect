@@ -276,18 +276,20 @@ const ChannelsList = (props: any) => {
                             <Typography variant='h6' sx={{ color: 'primary.main' }}>
                                 {t(ChannelGroupName)}
                             </Typography>
-                            <IconButton size="small" edge="end" onClick={()=>{
-                              setOpenChannelEdit((prevState: any)=>({
-                                ...prevState,
-                                add: true,
-                                edit: false,
-                                del: false,
-                                open: true,
-                                Channel: {ChannelId: getNanoid(43), ChannelName: '', ChannelGroup: ChannelGroupName, ChannelIntro: ''}
-                              }))
-                            }} aria-label="add">
-                                <Icon icon='mdi:add' />
-                            </IconButton>
+                            {isOwner && (
+                              <IconButton size="small" edge="end" onClick={()=>{
+                                setOpenChannelEdit((prevState: any)=>({
+                                  ...prevState,
+                                  add: true,
+                                  edit: false,
+                                  del: false,
+                                  open: true,
+                                  Channel: {ChannelId: getNanoid(43), ChannelName: '', ChannelGroup: ChannelGroupName, ChannelIntro: ''}
+                                }))
+                              }} aria-label="add">
+                                  <Icon icon='mdi:add' />
+                              </IconButton>
+                            )}
                         </Box>
                         <List sx={{ p: 0 }}>{renderChannels(getChivesChatGetChannelsMap[ChannelGroupName])}</List>
                     </Fragment>

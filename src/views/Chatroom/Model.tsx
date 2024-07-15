@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -25,8 +25,6 @@ import Icon from 'src/@core/components/icon'
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 import { GetChatroomAvatar } from 'src/functions/AoConnect/ChivesChat'
-import { AoCreateProcessAuto } from 'src/functions/AoConnect/AoConnect'
-import { GetAoConnectMyAoConnectTxId, SetAoConnectMyAoConnectTxId } from 'src/functions/AoConnect/MsgReminder'
 
 const AppModel = (props: any) => {
   // ** Hook
@@ -45,29 +43,7 @@ const AppModel = (props: any) => {
 
   
   const auth = useAuth()
-  const currentWallet = auth.currentWallet
   const currentAddress = auth.currentAddress
-
-  const [myAoConnectTxId, setMyAoConnectTxId] = useState<string>('')
-  useEffect(() => {
-    const fetchData = async () => {
-        if(currentAddress && currentAddress.length === 43) {
-            const MyProcessTxIdData: string = GetAoConnectMyAoConnectTxId(currentAddress);
-            if(MyProcessTxIdData && MyProcessTxIdData.length === 43) {
-                setMyAoConnectTxId(MyProcessTxIdData);
-            }
-            if(MyProcessTxIdData === '') {
-                const ChivesMyAoConnectProcessTxId = await AoCreateProcessAuto(currentWallet.jwk);
-                if(ChivesMyAoConnectProcessTxId) {
-                    console.log("ChivesMyAoConnectProcessTxId", ChivesMyAoConnectProcessTxId);
-                    SetAoConnectMyAoConnectTxId(currentAddress, ChivesMyAoConnectProcessTxId);
-                    setMyAoConnectTxId(ChivesMyAoConnectProcessTxId);
-                }
-            }
-        }
-    };
-    fetchData();
-  }, [currentAddress]);
 
   const ChatroomAvatar = GetChatroomAvatar('Chives')
 
@@ -82,9 +58,9 @@ const AppModel = (props: any) => {
                     <Grid item xs={12}>
                       <Box p={2} display="flex" alignItems="center">
                         <Typography variant="h6" sx={{ marginRight: '8px' }}>{t('Chatroom')}</Typography>
-                        <Typography variant="body2">MyAo: {myAoConnectTxId}</Typography>
+                        <Typography variant="body2">Address: {currentAddress}</Typography>
                         <IconButton sx={{mt: 1, ml: 1}} aria-label='capture screenshot' color='secondary' size='small' onClick={() => {
-                            navigator.clipboard.writeText(myAoConnectTxId);
+                            navigator.clipboard.writeText(currentAddress);
                             toast.success(t('Copied success') as string, { duration: 1000 });
                         }}>
                             <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />

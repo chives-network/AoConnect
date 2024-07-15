@@ -707,17 +707,17 @@ export const ChivesChatDelChannel = async (currentWalletJwk: any, chatroomTxId: 
   
 }
 
-export const ChivesChatGetChannels = async (TargetTxId: string, processTxId: string) => {
+export const ChivesChatGetChannels = async (TargetTxId: string, currentAddress: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: processTxId,
+            Owner: currentAddress,
             process: TargetTxId,
             data: null,
             tags: [
                 { name: 'Action', value: 'GetChannels' },
-                { name: 'Target', value: processTxId },
+                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -744,17 +744,17 @@ export const ChivesChatGetChannels = async (TargetTxId: string, processTxId: str
     }
 }
 
-export const ChivesChatGetMembers = async (TargetTxId: string, processTxId: string) => {
+export const ChivesChatGetMembers = async (TargetTxId: string, currentAddress: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: processTxId,
+            Owner: currentAddress,
             process: TargetTxId,
             data: null,
             tags: [
                 { name: 'Action', value: 'GetMembers' },
-                { name: 'Target', value: processTxId },
+                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -786,17 +786,17 @@ export const ChivesChatGetMembers = async (TargetTxId: string, processTxId: stri
     }
 }
 
-export const ChivesChatIsMember = async (TargetTxId: string, processTxId: string) => {
+export const ChivesChatIsMember = async (TargetTxId: string, currentAddress: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: processTxId,
+            Owner: currentAddress,
             process: TargetTxId,
             data: null,
             tags: [
                 { name: 'Action', value: 'IsMember' },
-                { name: 'Target', value: processTxId },
+                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -828,17 +828,17 @@ export const ChivesChatIsMember = async (TargetTxId: string, processTxId: string
     }
 }
 
-export const ChivesChatGetApplicants = async (TargetTxId: string, processTxId: string) => {
+export const ChivesChatGetApplicants = async (TargetTxId: string, currentAddress: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: processTxId,
+            Owner: currentAddress,
             process: TargetTxId,
             data: null,
             tags: [
                 { name: 'Action', value: 'GetApplicants' },
-                { name: 'Target', value: processTxId },
+                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -865,18 +865,18 @@ export const ChivesChatGetApplicants = async (TargetTxId: string, processTxId: s
     }
 }
 
-export const ChivesChatGetInboxs = async (TargetTxId: string, processTxId: string, startIndex: string, endIndex: string) => {
+export const ChivesChatGetInboxs = async (TargetTxId: string, currentAddress: string, startIndex: string, endIndex: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: processTxId,
+            Owner: currentAddress,
             process: TargetTxId,
             Id: getNanoid(32),
             data: "ChivesChatGetInboxs",
             tags: [
                 { name: 'Action', value: 'GetInboxs' },
-                { name: 'Target', value: processTxId },
+                { name: 'Target', value: currentAddress },
                 { name: 'startIndex', value: startIndex },
                 { name: 'endIndex', value: endIndex },
                 { name: 'Data-Protocol', value: 'ao' },

@@ -102,9 +102,10 @@ const AppChat = (props: any) => {
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [counter, setCounter] = useState<number>(0)
+  const [counter2, setCounter2] = useState<number>(0)
   const [membersCounter, setMembersCounter] = useState<number>(0)
   const [channelsCounter, setChannelsCounter] = useState<number>(0)
-  const [currentMemberStatus, setCurrentMemberStatus] = useState<boolean[] | null[]>([null, null, null, null])
+  const [currentMemberStatus, setCurrentMemberStatus] = useState<boolean[] | null[]>([null, null, null, null, null])
   
   const GetChatroomAvatarData = GetChatroomAvatar(app.logo)
   
@@ -119,12 +120,12 @@ const AppChat = (props: any) => {
         }
     };
     checkChivesChatIsMember();
-  }, [id, currentAddress]);
+  }, [id, currentAddress, counter2]);
 
   //console.log("GetChatroomAvatarData app", app, GetChatroomAvatarData)
 
   useEffect(() => {
-    if(currentMemberStatus[0] == true || currentMemberStatus[1] == true)  {
+    if(currentMemberStatus[0] == true || currentMemberStatus[1] == true || currentMemberStatus[2] == true)  {
       let timeoutId: any = null;
 
       setUserStatus('online')
@@ -213,8 +214,10 @@ const AppChat = (props: any) => {
 
   const handleAddChannelAdmin = async function (MemberId: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myAoConnectTxId)  {
+    if(currentMemberStatus && currentMemberStatus[0] != true)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+      return
     }
     const AddAdminByMemberId = await ChivesChatAddAdmin(currentWallet.jwk, id, MemberId)
     if(AddAdminByMemberId) {
@@ -242,8 +245,10 @@ const AppChat = (props: any) => {
 
   const handleDelChannelAdmin = async function (MemberId: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myAoConnectTxId)  {
+    if(currentMemberStatus && currentMemberStatus[0] != true)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+      return
     }
     const DelAdminByMemberId = await ChivesChatDelAdmin(currentWallet.jwk, id, MemberId)
     if(DelAdminByMemberId) {
@@ -271,8 +276,10 @@ const AppChat = (props: any) => {
 
   const handleInviteMember = async function () {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myAoConnectTxId)  {
+    if(currentMemberStatus && currentMemberStatus[0] != true)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+      return
     }
     const ChivesChatAddInvitesUserOne = await ChivesChatAddInvites(currentWallet.jwk, id, valueMembersInvite.replace(/\n/g, '\\n'), "Invite Member", "Hope you join this chatroom")
     if(ChivesChatAddInvitesUserOne) {
@@ -299,10 +306,11 @@ const AppChat = (props: any) => {
 
   const handleApplicantMember = async function (Applicants: string, Action: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myAoConnectTxId)  {
+    if(currentMemberStatus && currentMemberStatus[0] != true)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+      return
     }
-    console.log("Action", Action)
 
     //Clearn the local var
     const ApplicantsList = Applicants.split("****")
@@ -369,8 +377,10 @@ const AppChat = (props: any) => {
 
   const handleKickOutMember = async function (MemberId: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-    if(id != myAoConnectTxId)  {
+    if(currentMemberStatus && currentMemberStatus[0] != true)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+      return
     }
     const KictOutMemberByMemberId = await ChivesChatDelMember(currentWallet.jwk, id, MemberId)
     if(KictOutMemberByMemberId) {
@@ -410,12 +420,15 @@ const AppChat = (props: any) => {
 
   const handleGetAllMembers = async function () {
     if(currentAddress) {
+
+      // Get Data from localStorage
       const GetAoConnectMembersData = GetAoConnectMembers(currentAddress)
       setGetChivesChatGetMembers(GetAoConnectMembersData)
+
     }
-    if(id && myAoConnectTxId)  {
+    if(id && currentAddress)  {
       setLoadingGetMembers(true)
-      const GetChivesChatGetMembers = await ChivesChatGetMembers(id, myAoConnectTxId)
+      const GetChivesChatGetMembers = await ChivesChatGetMembers(id, currentAddress)
       if(GetChivesChatGetMembers) {
         setGetChivesChatGetMembers(GetChivesChatGetMembers)
         SetAoConnectMembers(currentAddress, GetChivesChatGetMembers)
@@ -522,8 +535,10 @@ const AppChat = (props: any) => {
     console.log("Action", Action, openChannelEdit)
     if(Action == 'Add')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-      if(id != myAoConnectTxId)  {
+      if(currentMemberStatus && currentMemberStatus[0] != true)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+        return
       }
       const AddChannel = await ChivesChatAddChannel(currentWallet.jwk, id, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
       if(AddChannel) {
@@ -551,8 +566,10 @@ const AppChat = (props: any) => {
 
     else if(Action == 'Edit')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-      if(id != myAoConnectTxId)  {
+      if(currentMemberStatus && currentMemberStatus[0] != true)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+        return
       }
       const EditChannel = await ChivesChatEditChannel(currentWallet.jwk, id, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
       if(EditChannel) {
@@ -580,8 +597,10 @@ const AppChat = (props: any) => {
 
     else if(Action == 'Del')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
-      if(id != myAoConnectTxId)  {
+      if(currentMemberStatus && currentMemberStatus[0] != true)  {
         toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
+
+        return
       }
       const DelChannel = await ChivesChatDelChannel(currentWallet.jwk, id, openChannelEdit.Channel.ChannelId)
       if(DelChannel) {
@@ -623,23 +642,13 @@ const AppChat = (props: any) => {
     const ChivesChatUserApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, id, "User" + myAoConnectTxId.substring(0, 6), "Hope join this chatroom")
     if(ChivesChatUserApplyJoin) {
       console.log("ChivesChatUserApplyJoin", ChivesChatUserApplyJoin)
+      setCounter2(counter2+1)
       if(ChivesChatUserApplyJoin.status == 'error' && ChivesChatUserApplyJoin.msg)  {
         toast.success(t(ChivesChatUserApplyJoin.msg) as string, { duration: 2500, position: 'top-center' })
       }
-      if(ChivesChatUserApplyJoin?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatUserApplyJoin?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, myAoConnectTxId)
-          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-            }
-          }
-
-        }
+      if(ChivesChatUserApplyJoin?.msg?.Messages[0]?.Data)  {
+        const formatText = ChivesChatUserApplyJoin?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+        toast.success(t(formatText) as string, { duration: 2500, position: 'top-center' })
 
       }
     }
@@ -707,7 +716,7 @@ const AppChat = (props: any) => {
         }}
       >
 
-      {currentMemberStatus && (currentMemberStatus[0] == true || currentMemberStatus[1] == true) && (
+      {currentMemberStatus && (currentMemberStatus[0] == true || currentMemberStatus[1] == true || currentMemberStatus[2] == true) && (
         <Fragment>
           <ChannelsList
             store={store}
@@ -722,7 +731,7 @@ const AppChat = (props: any) => {
             handleLeftSidebarToggle={handleLeftSidebarToggle}
             handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
             loadingGetChannels={loadingGetChannels}
-            isOwner={id == myAoConnectTxId ? true : false}
+            isOwner={currentMemberStatus[0] ? true : false}
             setOpenChannelEdit={setOpenChannelEdit}
             handleAddOrEditOrDelChannel={handleAddOrEditOrDelChannel}
           />
@@ -766,7 +775,7 @@ const AppChat = (props: any) => {
             handleAddChannelAdmin={handleAddChannelAdmin}
             handleDelChannelAdmin={handleDelChannelAdmin}
             handleKickOutMember={handleKickOutMember}
-            isOwner={id == myAoConnectTxId ? true : false}
+            isOwner={currentMemberStatus[0] ? true : false}
             app={app}
             setOpenMembersInvite={setOpenMembersInvite}
             setOpenMembersApplicant={setOpenMembersApplicant}
@@ -776,7 +785,7 @@ const AppChat = (props: any) => {
         </Fragment>
       )}
 
-      {currentMemberStatus && (currentMemberStatus[0]!=true && currentMemberStatus[1]!=true) && (
+      {currentMemberStatus && (currentMemberStatus[0]!=true && currentMemberStatus[1]!=true && currentMemberStatus[2]!=true) && (
         <Fragment>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -795,21 +804,21 @@ const AppChat = (props: any) => {
                       ChatroomId: {app.id}
                     </Typography>
                     <Typography sx={{ mr: 2, mb: 2, fontWeight: 500, fontSize: '0.875rem' }}>
-                      MyId: {myAoConnectTxId}
+                      Address: {currentAddress}
                     </Typography>
-                    {currentMemberStatus[2]==false && (
+                    {currentMemberStatus[3]==false && (
                       <Button sx={{textTransform: 'none', }} variant='contained' onClick={
                           () => { handleChivesChatApplyJoin() }
                       }>
                       {t('Join in')}
                       </Button>
                     )}
-                    {currentMemberStatus[2]==true && (
+                    {currentMemberStatus[3]==true && (
                       <Button sx={{textTransform: 'none', }} variant='contained' disabled>
                       {t('Waiting approval')}
                       </Button>
                     )}
-                    {currentMemberStatus[2]==null && (
+                    {currentMemberStatus[3]==null && (
                       <CircularProgress size={40}/>
                     )}
                 </CardContent>
