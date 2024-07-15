@@ -666,6 +666,29 @@ Handlers.add(
   "ApplyJoin",
   Handlers.utils.hasMatchingTag("Action", "ApplyJoin"),
   function (msg)
+    if not Members[msg.From] then
+      Members[msg.From] = {
+        MemberId = msg.From,
+        MemberName = msg.MemberName,
+        MemberReason = msg.MemberReason
+      }
+      ao.send({Target = msg.From, Data = 'Your application has been submitted and approval.'})
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'ApplyJoin-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'You have already join this chatroom, there is no need to apply again'
+      })
+    end
+    
+  end
+)
+
+Handlers.add(
+  "ApplyJoinNeedApproval",
+  Handlers.utils.hasMatchingTag("Action", "ApplyJoin"),
+  function (msg)
     if not Applicants[msg.From] then
       Applicants[msg.From] = {
         MemberId = msg.From,
