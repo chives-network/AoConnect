@@ -283,7 +283,7 @@ const ChannelsList = (props: any) => {
                                 edit: false,
                                 del: false,
                                 open: true,
-                                Channel: {ChannelId: getNanoid(32), ChannelName: '', ChannelGroup: ChannelGroupName, ChannelIntro: ''}
+                                Channel: {ChannelId: getNanoid(43), ChannelName: '', ChannelGroup: ChannelGroupName, ChannelIntro: ''}
                               }))
                             }} aria-label="add">
                                 <Icon icon='mdi:add' />

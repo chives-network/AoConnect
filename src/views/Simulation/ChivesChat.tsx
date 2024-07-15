@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
+import { getNanoid } from 'src/functions/string.tools'
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
@@ -109,10 +110,10 @@ const ChivesChat = () => {
 
     //setTimeout(async () => {
     
-    let LoadBlueprintChivesChat: any = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId);
+    let LoadBlueprintChivesChat: any = await AoLoadBlueprintChivesChat(currentWallet.jwk, currentAddress, ChivesChatProcessTxId);
     while(LoadBlueprintChivesChat && LoadBlueprintChivesChat.status == 'ok' && LoadBlueprintChivesChat.msg && LoadBlueprintChivesChat.msg.error)  {
       sleep(6000)
-      LoadBlueprintChivesChat = await AoLoadBlueprintChivesChat(currentWallet.jwk, ChivesChatProcessTxId);
+      LoadBlueprintChivesChat = await AoLoadBlueprintChivesChat(currentWallet.jwk, currentAddress, ChivesChatProcessTxId);
       console.log("handleSimulatedToken LoadBlueprintChivesChat:", LoadBlueprintChivesChat);
     }
     if(LoadBlueprintChivesChat) {
@@ -146,8 +147,8 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminOne, AdminOne, "AdminOne", "AdminOne Reason")
-    const ChivesChatAddAdminOne = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminOne)
+    await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminOne, "AdminOne", "AdminOne Reason")
+    const ChivesChatAddAdminOne = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, AdminOne)
     if(ChivesChatAddAdminOne) {
       console.log("ChivesChatAddAdminOne", ChivesChatAddAdminOne)
       if(ChivesChatAddAdminOne?.msg?.Output?.data?.output)  {
@@ -192,8 +193,8 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminOne, AdminTwo, "AdminTwo", "AdminTwo Reason")
-    const ChivesChatAddAdminTwo = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminTwo)
+    await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, "AdminTwo", "AdminTwo Reason")
+    const ChivesChatAddAdminTwo = await ChivesChatAddAdmin(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo)
     if(ChivesChatAddAdminTwo) {
       console.log("ChivesChatAddAdminTwo", ChivesChatAddAdminTwo)
       if(ChivesChatAddAdminTwo?.msg?.Output?.data?.output)  {
@@ -238,7 +239,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatDelAdminOne = await ChivesChatDelAdmin(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, AdminOne)
+    const ChivesChatDelAdminOne = await ChivesChatDelAdmin(currentWallet.jwk, ChivesChatProcessTxId, AdminOne)
     if(ChivesChatDelAdminOne) {
       console.log("ChivesChatDelAdminOne", ChivesChatDelAdminOne)
       if(ChivesChatDelAdminOne?.msg?.Output?.data?.output)  {
@@ -283,6 +284,209 @@ const ChivesChat = () => {
 
     await sleep(500)
 
+    
+
+
+    
+    setToolInfo((prevState: any)=>({
+      ...prevState,
+      'Testing Channel': '....................................................'
+    }))
+
+    const ChivesChatAddChannel1 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, getNanoid(43), "Announcement", "Welcome", "1", "Intro", "Owner")
+    if(ChivesChatAddChannel1) {
+      console.log("ChivesChatAddChannel1", ChivesChatAddChannel1)
+      if(ChivesChatAddChannel1?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatAddChannel1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatAddChannel1: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatAddChannel1: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    await sleep(500)
+
+    const ChivesChatAddChannel2 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, getNanoid(43), "Rules", "Welcome", "2", "Intro", "Owner")
+    if(ChivesChatAddChannel2) {
+      console.log("ChivesChatAddChannel2", ChivesChatAddChannel2)
+      if(ChivesChatAddChannel2?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatAddChannel2?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatAddChannel2: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatAddChannel2: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    await sleep(500)
+
+    const ChivesChatAddChannel3 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, getNanoid(43), "Introduction", "Introduction", "3", "Intro", "")
+    if(ChivesChatAddChannel3) {
+      console.log("ChivesChatAddChannel3", ChivesChatAddChannel3)
+      if(ChivesChatAddChannel3?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatAddChannel3?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatAddChannel3: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatAddChannel3: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    await sleep(500)
+
+    const ChivesChatAddChannel4 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, getNanoid(43), "Community", "Community", "4", "Intro", "")
+    if(ChivesChatAddChannel4) {
+      console.log("ChivesChatAddChannel4", ChivesChatAddChannel4)
+      if(ChivesChatAddChannel4?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatAddChannel4?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatAddChannel4: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatAddChannel4: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    await sleep(500)
+       
+    const ChivesChatAddChannel5 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, getNanoid(43), "Support", "Community", "5", "Intro", "")
+    if(ChivesChatAddChannel5) {
+      console.log("ChivesChatAddChannel5", ChivesChatAddChannel5)
+      if(ChivesChatAddChannel5?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatAddChannel5?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatAddChannel5: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatAddChannel5: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    await sleep(500)
+
+    const ChivesChatAddChannel6 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, getNanoid(43), "Admin Team", "Administrators", "6", "Intro", "Owner,Admin")
+    if(ChivesChatAddChannel6) {
+      console.log("ChivesChatAddChannel6", ChivesChatAddChannel6)
+      if(ChivesChatAddChannel6?.msg?.Output?.data?.output)  {
+        const formatText = ChivesChatAddChannel6?.msg?.Output?.data?.output.replace(ansiRegex, '');
+        if(formatText) {
+
+          setToolInfo((prevState: any)=>({
+            ...prevState,
+            ChivesChatAddChannel6: formatText
+          }))
+
+          //Read message from inbox
+          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
+          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
+            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+            if(formatText2) {
+              setToolInfo((prevState: any)=>({
+                ...prevState,
+                ChivesChatAddChannel6: formatText2
+              }))
+            }
+          }
+
+        }
+
+      }
+    }
+
+    await sleep(500)
+
+    const ChivesChatGetChannelsData = await ChivesChatGetChannels(ChivesChatProcessTxId, UserOne)
+    if(ChivesChatGetChannelsData) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        'ChivesChatGetChannelsData(2 channels)': JSON.stringify(ChivesChatGetChannelsData)
+      }))
+    }
+
 
     setToolInfo((prevState: any)=>({
       ...prevState,
@@ -290,7 +494,7 @@ const ChivesChat = () => {
     }))
 
     //Admin add or del member
-    const ChivesChatAddInviteUserOne = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserOne, "UserOne", "Hope join this chatroom")
+    const ChivesChatAddInviteUserOne = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, UserOne, "UserOne", "Hope join this chatroom")
     if(ChivesChatAddInviteUserOne) {
       console.log("ChivesChatAddInviteUserOne", ChivesChatAddInviteUserOne)
       if(ChivesChatAddInviteUserOne?.msg?.Output?.data?.output)  {
@@ -321,7 +525,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatAddInviteUserTwo = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo, "UserTwo", "Interesting This Chatroom")
+    const ChivesChatAddInviteUserTwo = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "UserTwo", "Interesting This Chatroom")
     if(ChivesChatAddInviteUserTwo) {
       console.log("ChivesChatAddInviteUserTwo", ChivesChatAddInviteUserTwo)
       if(ChivesChatAddInviteUserTwo?.msg?.Output?.data?.output)  {
@@ -352,7 +556,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatAddInviteUserThree = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree, "UserThree", "Interesting This Chatroom")
+    const ChivesChatAddInviteUserThree = await ChivesChatAddInvite(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "UserThree", "Interesting This Chatroom")
     if(ChivesChatAddInviteUserThree) {
       console.log("ChivesChatAddInviteUserThree", ChivesChatAddInviteUserThree)
       if(ChivesChatAddInviteUserThree?.msg?.Output?.data?.output)  {
@@ -397,7 +601,7 @@ const ChivesChat = () => {
 
     await sleep(500)
     
-    const ChivesChatUserOneAgreeInvite = await ChivesChatAgreeInvite(currentWallet.jwk, ChivesChatProcessTxId, UserOne)
+    const ChivesChatUserOneAgreeInvite = await ChivesChatAgreeInvite(currentWallet.jwk, UserOne)
     if(ChivesChatUserOneAgreeInvite) {
       console.log("ChivesChatUserOneAgreeInvite", ChivesChatUserOneAgreeInvite)
       if(ChivesChatUserOneAgreeInvite?.msg?.Output?.data?.output)  {
@@ -428,7 +632,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatUserTwoRefuseInvite = await ChivesChatRefuseInvite(currentWallet.jwk, ChivesChatProcessTxId, UserTwo)
+    const ChivesChatUserTwoRefuseInvite = await ChivesChatRefuseInvite(currentWallet.jwk, UserTwo)
     if(ChivesChatUserTwoRefuseInvite) {
       console.log("ChivesChatUserTwoRefuseInvite", ChivesChatUserTwoRefuseInvite)
       if(ChivesChatUserTwoRefuseInvite?.msg?.Output?.data?.output)  {
@@ -473,7 +677,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatUserThreeRefuseInvite = await ChivesChatRefuseInvite(currentWallet.jwk, ChivesChatProcessTxId, UserThree)
+    const ChivesChatUserThreeRefuseInvite = await ChivesChatRefuseInvite(currentWallet.jwk, UserThree)
     if(ChivesChatUserThreeRefuseInvite) {
       console.log("ChivesChatUserThreeRefuseInvite", ChivesChatUserThreeRefuseInvite)
       if(ChivesChatUserThreeRefuseInvite?.msg?.Output?.data?.output)  {
@@ -537,7 +741,7 @@ const ChivesChat = () => {
       'Testing Apply': '....................................................'
     }))
 
-    const ChivesChatUserTwoApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "UserTwo", "Hope join this chatroom")
+    const ChivesChatUserTwoApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, "UserTwo", "Hope join this chatroom")
     if(ChivesChatUserTwoApplyJoin) {
       console.log("ChivesChatUserTwoApplyJoin", ChivesChatUserTwoApplyJoin)
       if(ChivesChatUserTwoApplyJoin?.msg?.Output?.data?.output)  {
@@ -568,7 +772,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatUserThreeApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "UserThree", "Hope join this chatroom")
+    const ChivesChatUserThreeApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, ChivesChatProcessTxId, "UserThree", "Hope join this chatroom")
     if(ChivesChatUserThreeApplyJoin) {
       console.log("ChivesChatUserThreeApplyJoin", ChivesChatUserThreeApplyJoin)
       if(ChivesChatUserThreeApplyJoin?.msg?.Output?.data?.output)  {
@@ -613,7 +817,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatAdminTwoApprovalApplyUserTwo = await ChivesChatApprovalApply(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserTwo, "UserTwo", "ChivesChatAdminTwoApprovalApplyUserTwo")
+    const ChivesChatAdminTwoApprovalApplyUserTwo = await ChivesChatApprovalApply(currentWallet.jwk, ChivesChatProcessTxId, UserTwo, "UserTwo", "ChivesChatAdminTwoApprovalApplyUserTwo")
     if(ChivesChatAdminTwoApprovalApplyUserTwo) {
       console.log("ChivesChatAdminTwoApprovalApplyUserTwo", ChivesChatAdminTwoApprovalApplyUserTwo)
       if(ChivesChatAdminTwoApprovalApplyUserTwo?.msg?.Output?.data?.output)  {
@@ -658,7 +862,7 @@ const ChivesChat = () => {
 
     await sleep(500)
 
-    const ChivesChatAdminTwoRefuseApplyUserThree = await ChivesChatRefuseApply(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserThree, "UserThree", "ChivesChatAdminTwoRefuseApplyUserThree")
+    const ChivesChatAdminTwoRefuseApplyUserThree = await ChivesChatRefuseApply(currentWallet.jwk, ChivesChatProcessTxId, UserThree, "UserThree", "ChivesChatAdminTwoRefuseApplyUserThree")
     if(ChivesChatAdminTwoRefuseApplyUserThree) {
       console.log("ChivesChatAdminTwoRefuseApplyUserThree", ChivesChatAdminTwoRefuseApplyUserThree)
       if(ChivesChatAdminTwoRefuseApplyUserThree?.msg?.Output?.data?.output)  {
@@ -737,7 +941,7 @@ const ChivesChat = () => {
     }
 
     //Admin add or del member
-    const ChivesChatAdminTwoAddUserFour = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserFour, "UserFour", "UserFour Reason")
+    const ChivesChatAdminTwoAddUserFour = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, UserFour, "UserFour", "UserFour Reason")
     if(ChivesChatAdminTwoAddUserFour) {
       console.log("ChivesChatAdminTwoAddUserFour", ChivesChatAdminTwoAddUserFour)
       if(ChivesChatAdminTwoAddUserFour?.msg?.Output?.data?.output)  {
@@ -766,7 +970,7 @@ const ChivesChat = () => {
       }
     }
 
-    const ChivesChatAdminTwoAddUserFive = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserFive, "UserFive", "UserFive Reason")
+    const ChivesChatAdminTwoAddUserFive = await ChivesChatAddMember(currentWallet.jwk, ChivesChatProcessTxId, UserFive, "UserFive", "UserFive Reason")
     if(ChivesChatAdminTwoAddUserFive) {
       console.log("ChivesChatAdminTwoAddUserFive", ChivesChatAdminTwoAddUserFive)
       if(ChivesChatAdminTwoAddUserFive?.msg?.Output?.data?.output)  {
@@ -807,7 +1011,7 @@ const ChivesChat = () => {
       }
     }
 
-    const ChivesChatAdminTwoDelUserFive = await ChivesChatDelMember(currentWallet.jwk, ChivesChatProcessTxId, AdminTwo, UserFive)
+    const ChivesChatAdminTwoDelUserFive = await ChivesChatDelMember(currentWallet.jwk, ChivesChatProcessTxId, UserFive)
     if(ChivesChatAdminTwoDelUserFive) {
       console.log("ChivesChatAdminTwoDelUserFive", ChivesChatAdminTwoDelUserFive)
       if(ChivesChatAdminTwoDelUserFive?.msg?.Output?.data?.output)  {
@@ -848,204 +1052,6 @@ const ChivesChat = () => {
       }
     }
 
-    setToolInfo((prevState: any)=>({
-      ...prevState,
-      'Testing Channel': '....................................................'
-    }))
-
-    const ChivesChatAddChannel1 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "1", "Announcement", "Welcome", "1", "Intro", "Owner")
-    if(ChivesChatAddChannel1) {
-      console.log("ChivesChatAddChannel1", ChivesChatAddChannel1)
-      if(ChivesChatAddChannel1?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatAddChannel1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            ChivesChatAddChannel1: formatText
-          }))
-
-          //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
-          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                ChivesChatAddChannel1: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(500)
-
-    const ChivesChatAddChannel2 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "2", "Rules", "Welcome", "2", "Intro", "Owner")
-    if(ChivesChatAddChannel2) {
-      console.log("ChivesChatAddChannel2", ChivesChatAddChannel2)
-      if(ChivesChatAddChannel2?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatAddChannel2?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            ChivesChatAddChannel2: formatText
-          }))
-
-          //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
-          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                ChivesChatAddChannel2: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(500)
-
-    const ChivesChatAddChannel3 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "3", "Introduction", "Introduction", "3", "Intro", "")
-    if(ChivesChatAddChannel3) {
-      console.log("ChivesChatAddChannel3", ChivesChatAddChannel3)
-      if(ChivesChatAddChannel3?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatAddChannel3?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            ChivesChatAddChannel3: formatText
-          }))
-
-          //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
-          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                ChivesChatAddChannel3: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(500)
-
-    const ChivesChatAddChannel4 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "4", "Community", "Community", "4", "Intro", "")
-    if(ChivesChatAddChannel4) {
-      console.log("ChivesChatAddChannel4", ChivesChatAddChannel4)
-      if(ChivesChatAddChannel4?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatAddChannel4?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            ChivesChatAddChannel4: formatText
-          }))
-
-          //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
-          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                ChivesChatAddChannel4: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(500)
-       
-    const ChivesChatAddChannel5 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "5", "Support", "Community", "5", "Intro", "")
-    if(ChivesChatAddChannel5) {
-      console.log("ChivesChatAddChannel5", ChivesChatAddChannel5)
-      if(ChivesChatAddChannel5?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatAddChannel5?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            ChivesChatAddChannel5: formatText
-          }))
-
-          //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
-          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                ChivesChatAddChannel5: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(500)
-
-    const ChivesChatAddChannel6 = await ChivesChatAddChannel(currentWallet.jwk, ChivesChatProcessTxId, ChivesChatProcessTxId, "6", "Admin Team", "Administrators", "6", "Intro", "Owner,Admin")
-    if(ChivesChatAddChannel6) {
-      console.log("ChivesChatAddChannel6", ChivesChatAddChannel6)
-      if(ChivesChatAddChannel6?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatAddChannel6?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            ChivesChatAddChannel6: formatText
-          }))
-
-          //Read message from inbox
-          const AdminOneInboxData = await GetMyLastMsg(currentWallet.jwk, ChivesChatProcessTxId)
-          if(AdminOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                ChivesChatAddChannel6: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(500)
-
-    const ChivesChatGetChannelsData = await ChivesChatGetChannels(ChivesChatProcessTxId, UserOne)
-    if(ChivesChatGetChannelsData) {
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        'ChivesChatGetChannelsData(2 channels)': JSON.stringify(ChivesChatGetChannelsData)
-      }))
-    }
 
     await sleep(500)
     
