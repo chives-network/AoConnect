@@ -3,7 +3,7 @@
 -- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
--- Version: 20240528
+-- Version: 20240715
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/chiveschat.lua
 
 -- Function
@@ -43,7 +43,7 @@
 -- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "5", ChannelName = "Support", ChannelGroup = "Community", ChannelSort = "5", ChannelIntro = "ChannelIntro" })
 -- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "6", ChannelName = "Admin Team", ChannelGroup = "Administrators", ChannelSort = "6", ChannelIntro = "ChannelIntro", ChannelReadPermission = "Owner,Admin" })
 
-Owners = Owners or {}
+Owner = Owner or "OwnerWalletAddress"
 Admins = Admins or {}
 Members = Members or {}
 Invites = Invites or {}
@@ -69,7 +69,7 @@ end
 Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
 
   Info['Statics'] = {}
-  Info['Statics']['Owners'] = #Owners
+  Info['Statics']['Owner'] = #Owner
   Info['Statics']['Admins'] = #Admins
   Info['Statics']['Members'] = #Members
   Info['Statics']['Invites'] = #Invites
@@ -86,7 +86,7 @@ end)
 Handlers.add('SetInfo', Handlers.utils.hasMatchingTag('Action', 'SetInfo'), function(msg)
 
   local isAdmin = false
-  if msg.From == ao.id then
+  if msg.From == Owner then
     isAdmin = true
   end
   for _, Admin in ipairs(Admins) do
@@ -101,7 +101,7 @@ Handlers.add('SetInfo', Handlers.utils.hasMatchingTag('Action', 'SetInfo'), func
     Info['Name'] = msg.Name
     Info['Logo'] = msg.Logo
     Info['Release'] = 'ChivesChatroom'
-    Info['Version'] = '20240620'
+    Info['Version'] = '20240715'
     Info['Summary'] = msg.Summary
     Info['Group'] = msg.Group
     ao.send({
@@ -163,7 +163,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "GetMembers"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -196,7 +196,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "GetApplicants"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -225,7 +225,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "IsMember"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -257,7 +257,7 @@ Handlers.add(
   "AddChannel",
   Handlers.utils.hasMatchingTag("Action", "AddChannel"),
   function (msg)
-    if msg.From == ao.id and msg.ChannelId and #msg.ChannelId == 43 then
+    if msg.From == Owner and msg.ChannelId and #msg.ChannelId == 43 then
         Channels[msg.ChannelId] = {
           ChannelId = msg.ChannelId,
           ChannelName = msg.ChannelName,
@@ -286,7 +286,7 @@ Handlers.add(
   "EditChannel",
   Handlers.utils.hasMatchingTag("Action", "EditChannel"),
   function (msg)
-    if msg.From == ao.id and msg.ChannelId and #msg.ChannelId == 43 then
+    if msg.From == Owner and msg.ChannelId and #msg.ChannelId == 43 then
         Channels[msg.ChannelId] = {
           ChannelId = msg.ChannelId,
           ChannelName = msg.ChannelName,
@@ -315,7 +315,7 @@ Handlers.add(
   "DelChannel",
   Handlers.utils.hasMatchingTag("Action", "DelChannel"),
   function (msg)
-    if msg.From == ao.id and msg.ChannelId and #msg.ChannelId == 43 then
+    if msg.From == Owner and msg.ChannelId and #msg.ChannelId == 43 then
         if Channels[msg.ChannelId] then
           Channels[msg.ChannelId] = nil
           Handlers.utils.reply("Channel deleted")(msg)
@@ -346,7 +346,7 @@ Handlers.add(
   "AddAdmin",
   Handlers.utils.hasMatchingTag("Action", "AddAdmin"),
   function (msg)
-    if msg.From == ao.id and msg.AdminId and #msg.AdminId == 43 then
+    if msg.From == Owner and msg.AdminId and #msg.AdminId == 43 then
         local found = false
         for _, Admin in ipairs(Admins) do
             if Admin == msg.AdminId then
@@ -386,7 +386,7 @@ Handlers.add(
   "DelAdmin",
   Handlers.utils.hasMatchingTag("Action", "DelAdmin"),
   function (msg)
-    if msg.From == ao.id and msg.AdminId and #msg.AdminId == 43 then
+    if msg.From == Owner and msg.AdminId and #msg.AdminId == 43 then
         local found = false
         for i, v in ipairs(Admins) do
             if v == msg.AdminId then
@@ -429,7 +429,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "AddInvite"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -478,7 +478,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "AddInvites"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -580,7 +580,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "AddMember"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -629,7 +629,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "DelMember"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -720,7 +720,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "ApprovalApply"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -794,7 +794,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "RefuseApply"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
@@ -880,7 +880,7 @@ Handlers.add(
   Handlers.utils.hasMatchingTag("Action", "Broadcast"),
   function (msg)
     local isAdmin = false
-    if msg.From == ao.id then
+    if msg.From == Owner then
       isAdmin = true
     end
     for _, Admin in ipairs(Admins) do
