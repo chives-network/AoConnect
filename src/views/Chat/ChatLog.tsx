@@ -9,6 +9,8 @@ import toast from 'react-hot-toast'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -28,7 +30,7 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { re
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { data, hidden, app, rowInMsg, maxRows, handleDeleteOneChatLogById, processingMessages, setUserProfileRightOpen, setMember, allMembers } = props
+  const { data, hidden, app, rowInMsg, maxRows, handleDeleteOneChatLogById, processingMessages, setUserProfileRightOpen, setMember, allMembers, loadingGetChatLogs } = props
 
   // ** Ref
   const chatArea = useRef(null)
@@ -273,6 +275,9 @@ const ChatLog = (props: any) => {
     <Fragment>
       <Box sx={{ height: `calc(100% - 6.2rem - ${inputMsgHeight}rem)` }}>
         <ScrollWrapper hidden={hidden}>{renderChats()}</ScrollWrapper>
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loadingGetChatLogs}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </Box>
     </Fragment>
   )

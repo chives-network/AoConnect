@@ -51,6 +51,7 @@ const AppChat = (props: any) => {
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState<boolean>(false)
   const [userProfileRightOpen, setUserProfileRightOpen] = useState<boolean>(false)
 
+  const [loadingGetChatLogs, setLoadingGetChatLogs] = useState<boolean>(false)
   const [loadingGetMembers, setLoadingGetMembers] = useState<boolean>(false)
   const [loadingGetChannels, setLoadingGetChannels] = useState<boolean>(false)
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}, {}])
@@ -101,16 +102,13 @@ const AppChat = (props: any) => {
   const { id, app, myAoConnectTxId, currentAddress } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
-  const [counter2, setCounter2] = useState<number>(0)
+  const [counter, setCounter] = useState<number>(0)
   const [membersCounter, setMembersCounter] = useState<number>(0)
   const [channelsCounter, setChannelsCounter] = useState<number>(0)
   const [currentMemberStatus, setCurrentMemberStatus] = useState<boolean[] | null[]>([null, null, null, null, null])
   
   const GetChatroomAvatarData = GetChatroomAvatar(app.logo)
   
-  //const [messagesCounter, setMessagesCounter] = useState<number>(0)
-  console.log("channelId", channelId)
-
   useEffect(() => {
     const checkChivesChatIsMember = async () => {
         const ChivesChatIsMemberData = await ChivesChatIsMember(id, currentAddress)
@@ -120,7 +118,7 @@ const AppChat = (props: any) => {
         }
     };
     checkChivesChatIsMember();
-  }, [id, currentAddress, counter2]);
+  }, [id, currentAddress, counter]);
 
   useEffect(() => {
     if(currentMemberStatus[0] == true || currentMemberStatus[1] == true || currentMemberStatus[2] == true)  {
@@ -200,7 +198,19 @@ const AppChat = (props: any) => {
         }
       }
     }
-  }, [currentAddress, id, currentMemberStatus, channelId]);
+  }, [currentAddress, id, currentMemberStatus]);
+
+  useEffect(() => {
+    if(channelId) {
+      handleChangeChannelIdModel(channelId)
+    }
+  }, [channelId]);
+  
+  const handleChangeChannelIdModel = async function (channelId: string) {
+    setLoadingGetChatLogs(true)
+    await getChatLogList(channelId)
+    setLoadingGetChatLogs(false)
+  }
 
   useEffect(() => {
     if(membersCounter>0) {
@@ -331,9 +341,17 @@ const AppChat = (props: any) => {
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
     if(channelId != '') {
+      setLoadingGetChatLogs(true)
       getChatLogList(channelId)
+      setLoadingGetChatLogs(false)
     }
     setDownloadButtonDisable(false)
+  }
+
+  const handleChangeChannelId = (ChannelId: string) => {
+    setLoadingGetChatLogs(true)
+    setChannelId(ChannelId)
+    setLoadingGetChatLogs(false)
   }
 
   const handleGetAllMembers = async function () {
@@ -416,6 +434,7 @@ const AppChat = (props: any) => {
         console.log("GetChatRecordsFromLocalStorageData ChatChatInitList", ChatChatInitList)
         setStore(storeInit)
       }
+
     }
   }
 
@@ -529,7 +548,7 @@ const AppChat = (props: any) => {
     const ChivesChatUserApplyJoin = await ChivesChatApplyJoin(currentWallet.jwk, id, "User" + myAoConnectTxId.substring(0, 6), "Hope join this chatroom")
     if(ChivesChatUserApplyJoin) {
       console.log("ChivesChatUserApplyJoin", ChivesChatUserApplyJoin)
-      setCounter2(counter2+1)
+      setCounter(counter+1)
       if(ChivesChatUserApplyJoin.status == 'error' && ChivesChatUserApplyJoin.msg)  {
         toast.success(t(ChivesChatUserApplyJoin.msg) as string, { duration: 2500, position: 'top-center' })
       }
@@ -578,7 +597,6 @@ const AppChat = (props: any) => {
         console.log("SendMessageToChatroomDataUserOne.NanoId", SendMessageToChatroomDataUserOne)
       }
       
-
       if(true)      {
         setSendButtonDisable(false)
         setSendButtonLoading(false)
@@ -586,6 +604,7 @@ const AppChat = (props: any) => {
         setSendButtonText(t("Send") as string)
         setSendInputText(t("Your message...") as string)
       }
+
     }
   }
 
@@ -614,7 +633,7 @@ const AppChat = (props: any) => {
             statusObj={statusObj}
             userStatus={userStatus}
             channelId={channelId}
-            setChannelId={setChannelId}
+            handleChangeChannelId={handleChangeChannelId}
             channelsListWidth={channelsListWidth}
             getChivesChatGetChannels={getChivesChatGetChannels}
             leftSidebarOpen={leftSidebarOpen}
@@ -646,6 +665,7 @@ const AppChat = (props: any) => {
             setMember={setMember}
             setUserProfileRightOpen={setUserProfileRightOpen}
             allMembers={allMembers}
+            loadingGetChatLogs={loadingGetChatLogs}
           />
           <MembersList
             id={id}

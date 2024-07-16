@@ -44,7 +44,7 @@ const ChannelsList = (props: any) => {
     hidden,
     mdAbove,
     channelId,
-    setChannelId,
+    handleChangeChannelId,
     channelsListWidth,
     getChivesChatGetChannels,
     leftSidebarOpen,
@@ -65,11 +65,9 @@ const ChannelsList = (props: any) => {
   // ** Hooks
   const router = useRouter()
 
-  console.log("channelId", channelId)
-
   const handleChatClick = (id: string) => {
     setActive(id)
-    setChannelId(id)
+    handleChangeChannelId(id)
     if (!mdAbove) {
       handleLeftSidebarToggle()
     }
@@ -79,6 +77,8 @@ const ChannelsList = (props: any) => {
     router.events.on('routeChangeComplete', () => {
       setActive('')
     })
+
+    console.log("ChannelsList channelId", channelId)
     
     if(getChivesChatGetChannels)   {
       const getChivesChatGetChannelsValues: any[] = Object.values(getChivesChatGetChannels)
@@ -129,7 +129,7 @@ const ChannelsList = (props: any) => {
                 }
               ]
   
-              if(isOwner) {
+              if(isOwner && Channel.ChannelName != "Announcement") {
                 optionsMenus.push({
                   text: 'Edit Channel',
                   menuItemProps: {
@@ -148,7 +148,7 @@ const ChannelsList = (props: any) => {
                 })
               }
   
-              if(isOwner) {
+              if(isOwner && Channel.ChannelName != "Announcement") {
                 optionsMenus.push({
                   text: 'Del Channel',
                   menuItemProps: {

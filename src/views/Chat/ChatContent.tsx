@@ -33,7 +33,8 @@ const ChatContent = (props: any) => {
     myAoConnectTxId,
     setMember,
     setUserProfileRightOpen,
-    allMembers
+    allMembers,
+    loadingGetChatLogs
   } = props
 
   const { t } = useTranslation()
@@ -119,7 +120,7 @@ const ChatContent = (props: any) => {
                 </Box>
               </Box>
 
-              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessages={processingMessages} myAoConnectTxId={myAoConnectTxId} setUserProfileRightOpen={setUserProfileRightOpen} setMember={setMember} allMembers={allMembers} />
+              <ChatLog hidden={hidden} data={{ ...store?.selectedChat, userContact: store?.userProfile }} app={app} rowInMsg={rowInMsg} maxRows={maxRows} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} processingMessages={processingMessages} myAoConnectTxId={myAoConnectTxId} setUserProfileRightOpen={setUserProfileRightOpen} setMember={setMember} allMembers={allMembers} loadingGetChatLogs={loadingGetChatLogs}/>
 
               <SendMsgForm store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows} />
 
