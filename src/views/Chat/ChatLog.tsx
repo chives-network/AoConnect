@@ -277,7 +277,7 @@ const ChatLog = (props: any) => {
   return (
     <Fragment>
       <Box sx={{ height: `calc(100% - 6.2rem - ${inputMsgHeight}rem)` }}>
-        <ScrollWrapper hidden={hidden}>{renderChats()}</ScrollWrapper>
+        <ScrollWrapper hidden={false}>{renderChats()}</ScrollWrapper>
         <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loadingGetChatLogs}>
           <CircularProgress color="inherit" />
         </Backdrop>

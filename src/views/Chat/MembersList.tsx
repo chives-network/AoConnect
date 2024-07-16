@@ -47,21 +47,6 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
   }
 }
 
-const MockData: { profileUser: ProfileUserType } = {
-  profileUser: {
-    id: 11,
-    avatar: '/images/avatars/1.png',
-    fullName: 'John Doe',
-    role: 'admin',
-    about:
-      'Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.',
-    status: 'online',
-    settings: {
-      isTwoStepAuthVerificationEnabled: true,
-      isNotificationsOn: false
-    }
-  }
-}
 
 const MembersList = (props: any) => {
   // ** Props
@@ -88,8 +73,24 @@ const MembersList = (props: any) => {
     setOpenMembersInvite,
     setOpenMembersApplicant,
     valueMembersApplicant,
-    setValueMembersApplicant
+    setValueMembersApplicant,
+    currentAddress
   } = props
+
+  const MockData: { profileUser: ProfileUserType } = {
+    profileUser: {
+      id: 11,
+      avatar: '/images/avatars/' + ((currentAddress.charAt(0).charCodeAt(0)%8)+1) + '.png',
+      fullName: 'Chives Chat',
+      role: 'admin',
+      about: 'Chives Chat User',
+      status: 'online',
+      settings: {
+        isTwoStepAuthVerificationEnabled: true,
+        isNotificationsOn: false
+      }
+    }
+  }
 
   // ** States
   const [query, setQuery] = useState<string>('')
@@ -119,16 +120,16 @@ const MembersList = (props: any) => {
 
       const allMembersTemp: any = {}
       allMembersTemp[id] = {MemberAbout: 'Owner', MemberAvatar: '/images/chives.png', MemberId: id, MemberName: 'Owner', MemberReason: '', MemberRole: 'Admins', MemberStatus: 'online' }
-      const MembersListOriginal: any[] = Object.values(Members).map((item: any, index: number)=>{
+      const MembersListOriginal: any[] = Object.values(Members).map((item: any)=>{
 
-        const MemberAvatar = '/images/avatars/' + ((index%8)+1) + '.png'
+        const MemberAvatar = '/images/avatars/' + ((item.MemberId.charAt(0).charCodeAt(0)%8)+1) + '.png'
         const MemberAbout = item.MemberAbout ? item.MemberAbout : item.MemberId
         const Member = {...item, MemberRole:'user', MemberAbout: MemberAbout, MemberAvatar: MemberAvatar, MemberStatus: 'online'}
         allMembersTemp[item.MemberId] = Member
 
         return Member
       })
-
+      
       setAllMembers(allMembersTemp)
 
       if(query == '') {

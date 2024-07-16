@@ -60,7 +60,7 @@ const AppChat = (props: any) => {
   const [channelId, setChannelId] = useState<string>('')
 
   const [openMembersInvite, setOpenMembersInvite] = useState<boolean>(false)
-  const [valueMembersInvite, setValueMembersInvite] = useState<string>('W8KNkIsXPTxIM9dBlVkZD7AM2IjyHrHIoSbQPZ3fOFk\nK4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw\nJQbi-qZBHWQCCl3BoPEwWOfGzNlYhxK0DmlwQlBb4cM')
+  const [valueMembersInvite, setValueMembersInvite] = useState<string>('')
 
   const [openMembersApplicant, setOpenMembersApplicant] = useState<boolean>(false)
   const [valueMembersApplicant, setValueMembersApplicant] = useState<any[]>([])
@@ -180,6 +180,7 @@ const AppChat = (props: any) => {
       const CronTaskLastMessage = () => {
         const delay = Math.random() * 10000;
         timeoutId = setTimeout(() => {
+          console.log(`Simulating a long running process: ${delay}ms`, channelId);
           if(channelId != '' && currentAddress && id) {
             getChatLogList(channelId)
             console.log('Finished long running process', channelId);
@@ -198,7 +199,7 @@ const AppChat = (props: any) => {
         }
       }
     }
-  }, [currentAddress, id, currentMemberStatus]);
+  }, [currentAddress, id, currentMemberStatus, channelId]);
 
   useEffect(() => {
     if(channelId) {
@@ -426,12 +427,11 @@ const AppChat = (props: any) => {
           "chats": [],
           "userProfile": {
               "id": currentAddress,
-              "avatar": "/images/avatars/1.png",
+              "avatar": '/images/avatars/' + ((currentAddress.charAt(0).charCodeAt(0)%8)+1) + '.png',
               "fullName": "Current User",
           },
           "selectedChat": selectedChat
         }
-        console.log("GetChatRecordsFromLocalStorageData ChatChatInitList", ChatChatInitList)
         setStore(storeInit)
       }
 
@@ -697,6 +697,7 @@ const AppChat = (props: any) => {
             setOpenMembersApplicant={setOpenMembersApplicant}
             valueMembersApplicant={valueMembersApplicant}
             setValueMembersApplicant={setValueMembersApplicant}
+            currentAddress={currentAddress}
           />
         </Fragment>
       )}
