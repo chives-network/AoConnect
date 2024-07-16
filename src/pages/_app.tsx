@@ -117,12 +117,12 @@ const App = (props: ExtendedAppProps) => {
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - A PERMANENT STORAGE PUBLIC CHAIN!`}</title>
+          <title>{`${themeConfig.templateName} - By Chives Network`}</title>
           <meta
             name='description'
-            content={`${themeConfig.templateName} – A PERMANENT STORAGE PUBLIC CHAIN!`}
+            content={`${themeConfig.templateName} – By Chives Network`}
           />
-          <meta name='keywords' content='Chivesweave, A PERMANENT STORAGE PUBLIC CHAIN!' />
+          <meta name='keywords' content='Chives & AoConnect' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
 
