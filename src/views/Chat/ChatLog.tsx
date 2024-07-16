@@ -21,7 +21,7 @@ import PerfectScrollbarComponent, { ScrollBarProps } from 'react-perfect-scrollb
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
-import { formatHash, formatTimestampAge} from 'src/configs/functions';
+import { formatHash, formatTimestampLocalTime} from 'src/configs/functions';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)<ScrollBarProps & { ref: Ref<unknown> }>(({ theme }) => ({
   padding: theme.spacing(3, 5, 3, 3)
@@ -148,6 +148,9 @@ const ChatLog = (props: any) => {
                 <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
               </IconButton>
             </Tooltip>
+            <Tooltip title={item.Sender}>
+              <Typography sx={{my: 0.5, mx: 1}} variant='body2'>{formatTimestampLocalTime(item.messages[0].Timestamp)}</Typography>
+            </Tooltip>
             <Tooltip title={t('Delete')}>
               <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                 handleDeleteOneChatLogById(item.messages[0].Id)
@@ -207,7 +210,7 @@ const ChatLog = (props: any) => {
                 </IconButton>
               </Tooltip>
               <Tooltip title={item.Sender}>
-                <Typography sx={{my: 0.5, mx: 1}} variant='body2'>{formatTimestampAge(item.messages[0].Timestamp)}</Typography>
+                <Typography sx={{my: 0.5, mx: 1}} variant='body2'>{formatTimestampLocalTime(item.messages[0].Timestamp)}</Typography>
               </Tooltip>
             </Fragment>
 

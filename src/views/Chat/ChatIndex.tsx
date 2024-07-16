@@ -574,6 +574,10 @@ const AppChat = (props: any) => {
       setSendButtonText(t("Sending") as string)
       setSendInputText(t("Answering...") as string)
       setRefreshChatCounter(refreshChatCounter + 1)
+
+      const currentTimestampWithOffset: number = Date.now();
+      const currentTimezoneOffset: number = new Date().getTimezoneOffset();
+      const currentTimestampInZeroUTC: number = currentTimestampWithOffset + (currentTimezoneOffset * 60 * 1000);
       
       const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, channelId, Obj.message)
       console.log("SendMessageToChatroomDataUserOne", SendMessageToChatroomDataUserOne)
@@ -583,7 +587,7 @@ const AppChat = (props: any) => {
           NanoId: SendMessageToChatroomDataUserOne.NanoId,
           messages: [
             {
-              Timestamp: String(Date.now()),
+              Timestamp: String(currentTimestampInZeroUTC),
               msg: Obj.message,
               NanoId: SendMessageToChatroomDataUserOne.NanoId,
               feedback: false

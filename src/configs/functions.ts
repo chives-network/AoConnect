@@ -120,6 +120,7 @@ export function formatTimestampMemo(timestamp: number): string {
 
 export function formatTimestampAge(timestamp: number): string {
   const date = String(timestamp).length == 10 ? new Date(timestamp * 1000) : new Date(timestamp)
+  console.log("date", date)
   const currentDate = new Date();
   const timeDifference = (currentDate.getTime() - date.getTime()) / 1000;
   if(timestamp == undefined) return ""

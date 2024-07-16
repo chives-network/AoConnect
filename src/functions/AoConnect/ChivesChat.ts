@@ -945,7 +945,7 @@ export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxI
         const currentTimestampWithOffset: number = Date.now();
         const currentTimezoneOffset: number = new Date().getTimezoneOffset();
         const currentTimestampInZeroUTC: number = currentTimestampWithOffset + (currentTimezoneOffset * 60 * 1000);
-
+        
         const NanoId = getNanoid(32)
 
         const Data = {

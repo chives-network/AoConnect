@@ -96,8 +96,6 @@ const ChannelsList = (props: any) => {
 
       const ChannelsGroupList = Object.keys(getChivesChatGetChannelsMap)
 
-      //console.log("getChivesChatGetChannelsValues", getChivesChatGetChannelsValues)
-
       setChannelsGroupList(ChannelsGroupList)
       setGetChivesChatGetChannelsMap(getChivesChatGetChannelsMap)
 
