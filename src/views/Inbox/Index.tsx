@@ -69,8 +69,9 @@ const Inbox = () => {
   }
   
   const GetChatRecordsFromLocalStorageInbox = async function (paginationModel: any) {
+    const channelId = "AAA"
     const GetMyCurrentProcessTxIdData: string = GetAoConnectReminderProcessTxId()
-    const GetChatRecordsFromLocalStorageData = await GetChatRecordsFromLocalStorage(GetMyCurrentProcessTxIdData, paginationModel.page, paginationModel.pageSize)
+    const GetChatRecordsFromLocalStorageData = await GetChatRecordsFromLocalStorage(GetMyCurrentProcessTxIdData, channelId, paginationModel.page, paginationModel.pageSize)
     console.log("GetChatRecordsFromLocalStorageData", GetChatRecordsFromLocalStorageData, paginationModel)
     setStore(GetChatRecordsFromLocalStorageData)
   }
