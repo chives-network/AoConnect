@@ -31,7 +31,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
 import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember, GetChatroomAvatar, ChivesChatApplyJoin } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember, GetChatroomAvatar, ChivesChatApplyJoin, ChivesChatGetChatRecords } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
@@ -57,6 +57,7 @@ const AppChat = (props: any) => {
   const [getChivesChatGetMembers, setGetChivesChatGetMembers] = useState<any>([[], {}, {}])
   const [getChivesChatGetChannels, setGetChivesChatGetChannels] = useState<any>([])
   const [allMembers, setAllMembers] = useState<any>({})
+  const [channelId, setChannelId] = useState<string>('')
 
   const [openMembersInvite, setOpenMembersInvite] = useState<boolean>(false)
   const [valueMembersInvite, setValueMembersInvite] = useState<string>('W8KNkIsXPTxIM9dBlVkZD7AM2IjyHrHIoSbQPZ3fOFk\nK4kzmPPoxWp0YQqG0UNDeXIhWuhWkMcG0Hx8HYCjmLw\nJQbi-qZBHWQCCl3BoPEwWOfGzNlYhxK0DmlwQlBb4cM')
@@ -110,6 +111,7 @@ const AppChat = (props: any) => {
   const GetChatroomAvatarData = GetChatroomAvatar(app.logo)
   
   //const [messagesCounter, setMessagesCounter] = useState<number>(0)
+  console.log("channelId", channelId)
 
   useEffect(() => {
     const checkChivesChatIsMember = async () => {
@@ -122,27 +124,11 @@ const AppChat = (props: any) => {
     checkChivesChatIsMember();
   }, [id, currentAddress, counter2]);
 
-  //console.log("GetChatroomAvatarData app", app, GetChatroomAvatarData)
-
   useEffect(() => {
     if(currentMemberStatus[0] == true || currentMemberStatus[1] == true || currentMemberStatus[2] == true)  {
       let timeoutId: any = null;
 
       setUserStatus('online')
-
-      const CronTaskLastMessage = () => {
-        
-        //console.log('This message will appear every 10 seconds');
-        const delay = Math.random() * 10000;
-        
-        //console.log(`Simulating a long running process: ${delay}ms`);
-        timeoutId = setTimeout(() => {
-          handleGetLastMessage();
-          
-          //console.log('Finished long running process');
-          timeoutId = setTimeout(CronTaskLastMessage, 10000);
-        }, delay);
-      };
 
       const CronTaskGetMembers = () => {
         
@@ -173,10 +159,8 @@ const AppChat = (props: any) => {
       };
     
       if (t && currentAddress && id) {
-        CronTaskLastMessage();
         CronTaskGetMembers();
         CronTaskGetChannels();
-        handleGetAllMessages();
         handleGetAllMembers();
         handleGetAllChannels();
         setSendButtonText(t("Send") as string);
@@ -192,6 +176,35 @@ const AppChat = (props: any) => {
   }, [t, currentAddress, id, currentMemberStatus]);
 
   useEffect(() => {
+    if(currentMemberStatus[0] == true || currentMemberStatus[1] == true || currentMemberStatus[2] == true)  {
+      let timeoutId: any = null;
+
+      setUserStatus('online')
+
+      const CronTaskLastMessage = () => {
+        const delay = Math.random() * 10000;
+        timeoutId = setTimeout(() => {
+          if(channelId != '' && currentAddress && id) {
+            ChivesChatGetChatRecords(id, currentAddress, channelId, '0', '9');
+            console.log('Finished long running process', channelId);
+          }
+          timeoutId = setTimeout(CronTaskLastMessage, 10000);
+        }, delay);
+      };
+    
+      if (currentAddress && id) {
+        CronTaskLastMessage();
+      }
+    
+      return () => {
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId)
+        }
+      }
+    }
+  }, [currentAddress, id, currentMemberStatus, channelId]);
+
+  useEffect(() => {
     if(membersCounter>0) {
       handleGetAllMembers();
     }
@@ -203,15 +216,6 @@ const AppChat = (props: any) => {
     }
   }, [channelsCounter]);
   
-  const handleGetLastMessage = async function () {
-    await GetMyInboxLastMsg(currentWallet.jwk, id, 'Inbox[#Inbox]')
-    sleep(500)
-    setCounter(counter+1)
-    getChatLogList()
-    
-    //console.log("handleGetLastMessage counter", counter)
-  }
-
   const handleAddChannelAdmin = async function (MemberId: string) {
     toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
     if(currentMemberStatus && currentMemberStatus[0] != true)  {
@@ -409,22 +413,17 @@ const AppChat = (props: any) => {
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
     getChatLogList()
-    await GetMyInboxMsg(currentWallet.jwk, myAoConnectTxId)
-    
-    //setProcessingMessages([])
-    getChatLogList()
-
-    //console.log("handleGetAllMessages counter", counter)
+    if(channelId != '') {
+      ChivesChatGetChatRecords(id, currentAddress, channelId, '0', '9')
+      getChatLogList()
+    }
     setDownloadButtonDisable(false)
   }
 
   const handleGetAllMembers = async function () {
     if(currentAddress) {
-
-      // Get Data from localStorage
       const GetAoConnectMembersData = GetAoConnectMembers(currentAddress)
       setGetChivesChatGetMembers(GetAoConnectMembersData)
-
     }
     if(id && currentAddress)  {
       setLoadingGetMembers(true)
@@ -442,14 +441,29 @@ const AppChat = (props: any) => {
     if(currentAddress) {
       const GetAoConnectChannelsData = GetAoConnectChannels(currentAddress)
       setGetChivesChatGetChannels(GetAoConnectChannelsData)
+
+      //Set the Announcement as the default ChannelId
+      Object.values(GetAoConnectChannelsData).map((item: any)=>{
+        if(item.ChannelName == 'Announcement' && channelId == '') {
+          setChannelId(item.ChannelId)
+        }
+      })
+
     }
-    if(id && myAoConnectTxId)  {
+    if(id && currentAddress)  {
       setLoadingGetChannels(true)
-      const GetChivesChatGetChannels = await ChivesChatGetChannels(id, myAoConnectTxId)
+      const GetChivesChatGetChannels = await ChivesChatGetChannels(id, currentAddress)
       if(GetChivesChatGetChannels) {
         setGetChivesChatGetChannels(GetChivesChatGetChannels)
         SetAoConnectChannels(currentAddress, GetChivesChatGetChannels)
-        console.log("GetChivesChatGetChannels", GetChivesChatGetChannels)
+
+        //Set the Announcement as the default ChannelId
+        Object.values(GetChivesChatGetChannels).map((item: any)=>{
+          if(item.ChannelName == 'Announcement' && channelId == '') {
+            setChannelId(item.ChannelId)
+          }
+        })
+
       }
       setLoadingGetChannels(false)
     }

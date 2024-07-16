@@ -40,12 +40,17 @@ const Chat = () => {
     if(id && id.length == 43) {
 
       const AoConnectChatRoomData = window.localStorage.getItem(authConfig.AoConnectChatRoom) || '{}';
-      const AoConnectChatRoomJson = JSON.parse(AoConnectChatRoomData)
-      if(AoConnectChatRoomJson) {
-        const AppNew = AoConnectChatRoomJson.filter((item: any)=>item.id == id)
-        if(AppNew && AppNew[0]) {
-          setApp(AppNew[0])
+      try{
+        const AoConnectChatRoomJson = JSON.parse(AoConnectChatRoomData)
+        if(AoConnectChatRoomJson) {
+          const AppNew = AoConnectChatRoomJson.filter((item: any)=>item.id == id)
+          if(AppNew && AppNew[0]) {
+            setApp(AppNew[0])
+          }
         }
+      }
+      catch(e: any) {
+        console.log("AoConnectChatRoomData AoConnectChatRoomJson", e)
       }
     }
   }, [id])

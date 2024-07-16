@@ -24,7 +24,7 @@ import Icon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
-import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetInboxs, ChivesChatApplyJoin, ChivesChatIsMember } from 'src/functions/AoConnect/ChivesChat'
+import { ChivesChatAddMember, SendMessageToChivesChat, ChivesChatGetChatRecords, ChivesChatApplyJoin, ChivesChatIsMember } from 'src/functions/AoConnect/ChivesChat'
 import { ansiRegex } from 'src/configs/functions'
 
 const ChivesChatOnlyChat = () => {
@@ -55,29 +55,29 @@ const ChivesChatOnlyChat = () => {
     }))
 
     if(toolInfo.ChivesChatProcessTxId && toolInfo.ChivesChatProcessTxId.length == 43) {
-      const ChivesChatGetInboxsData = await ChivesChatGetInboxs(toolInfo.ChivesChatProcessTxId, toolInfo.ChivesChatProcessTxId, '1', '9')
-      console.log("ChivesChatGetInboxsData", ChivesChatGetInboxsData)
-      if(ChivesChatGetInboxsData && ChivesChatGetInboxsData.status == 'error') {
+      const ChivesChatGetChatRecordsData = await ChivesChatGetChatRecords(toolInfo.ChivesChatProcessTxId, toolInfo.ChivesChatProcessTxId, 'ChannelId', '1', '9')
+      console.log("ChivesChatGetChatRecordsData", ChivesChatGetChatRecordsData)
+      if(ChivesChatGetChatRecordsData && ChivesChatGetChatRecordsData.status == 'error') {
         setToolInfo((prevState: any)=>({
           ...prevState,
-          'ChivesChatGetInboxsMaxRecords': ChivesChatGetInboxsData.status,
-          'ChivesChatGetInboxsListRs': ChivesChatGetInboxsData.msg
+          'ChivesChatGetChatRecordsMaxRecords': ChivesChatGetChatRecordsData.status,
+          'ChivesChatGetChatRecordsListRs': ChivesChatGetChatRecordsData.msg
         }))
       }
       else {
-        const ChivesChatGetInboxsDataJson = JSON.parse(ChivesChatGetInboxsData)
-        const ChivesChatGetInboxsList = ChivesChatGetInboxsDataJson[0]
-        const ChivesChatGetInboxsMaxRecords = ChivesChatGetInboxsDataJson[1]
-        const ChivesChatGetInboxsListRs = ChivesChatGetInboxsList.map((item: any, index: number)=>{
+        const ChivesChatGetChatRecordsDataJson = JSON.parse(ChivesChatGetChatRecordsData)
+        const ChivesChatGetChatRecordsList = ChivesChatGetChatRecordsDataJson[0]
+        const ChivesChatGetChatRecordsMaxRecords = ChivesChatGetChatRecordsDataJson[1]
+        const ChivesChatGetChatRecordsListRs = ChivesChatGetChatRecordsList.map((item: any, index: number)=>{
           
             return {index, Data: item?.Data ?? '', Sender: item?.Tags?.Sender ?? '', NanoId: item?.Tags?.NanoId ?? ''}
         })
-        console.log("ChivesChatGetInboxsDataJson", ChivesChatGetInboxsDataJson)
-        console.log("ChivesChatGetInboxsListRs", ChivesChatGetInboxsListRs)
+        console.log("ChivesChatGetChatRecordsDataJson", ChivesChatGetChatRecordsDataJson)
+        console.log("ChivesChatGetChatRecordsListRs", ChivesChatGetChatRecordsListRs)
         setToolInfo((prevState: any)=>({
           ...prevState,
-          'ChivesChatGetInboxsMaxRecords': ChivesChatGetInboxsMaxRecords,
-          'ChivesChatGetInboxsListRs': JSON.stringify(ChivesChatGetInboxsListRs)
+          'ChivesChatGetChatRecordsMaxRecords': ChivesChatGetChatRecordsMaxRecords,
+          'ChivesChatGetChatRecordsListRs': JSON.stringify(ChivesChatGetChatRecordsListRs)
         }))
       }
     }

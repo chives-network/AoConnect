@@ -183,8 +183,6 @@ const MembersList = (props: any) => {
     else {
       const memberArrayToMap = MembersList
 
-      console.log("MembersList", MembersList)
-
       return memberArrayToMap !== null
         ? memberArrayToMap.map((Member: any, index: number) => {
             const activeCondition = active !== null && active.id === Member.MemberId && active.type === 'Member'

@@ -717,7 +717,6 @@ export const ChivesChatGetChannels = async (TargetTxId: string, currentAddress: 
             data: null,
             tags: [
                 { name: 'Action', value: 'GetChannels' },
-                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -754,7 +753,6 @@ export const ChivesChatGetMembers = async (TargetTxId: string, currentAddress: s
             data: null,
             tags: [
                 { name: 'Action', value: 'GetMembers' },
-                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -796,7 +794,6 @@ export const ChivesChatIsMember = async (TargetTxId: string, currentAddress: str
             data: null,
             tags: [
                 { name: 'Action', value: 'IsMember' },
-                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -838,7 +835,6 @@ export const ChivesChatGetApplicants = async (TargetTxId: string, currentAddress
             data: null,
             tags: [
                 { name: 'Action', value: 'GetApplicants' },
-                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }
@@ -865,7 +861,7 @@ export const ChivesChatGetApplicants = async (TargetTxId: string, currentAddress
     }
 }
 
-export const ChivesChatGetInboxs = async (TargetTxId: string, currentAddress: string, startIndex: string, endIndex: string) => {
+export const ChivesChatGetChatRecords = async (TargetTxId: string, currentAddress: string, ChannelId: string, startIndex: string, endIndex: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -873,10 +869,10 @@ export const ChivesChatGetInboxs = async (TargetTxId: string, currentAddress: st
             Owner: currentAddress,
             process: TargetTxId,
             Id: getNanoid(32),
-            data: "ChivesChatGetInboxs",
+            data: "ChivesChatGetChatRecords",
             tags: [
-                { name: 'Action', value: 'GetInboxs' },
-                { name: 'Target', value: currentAddress },
+                { name: 'Action', value: 'GetChatRecords' },
+                { name: 'ChannelId', value: ChannelId },
                 { name: 'startIndex', value: startIndex },
                 { name: 'endIndex', value: endIndex },
                 { name: 'Data-Protocol', value: 'ao' },
@@ -895,7 +891,7 @@ export const ChivesChatGetInboxs = async (TargetTxId: string, currentAddress: st
         }
     }
     catch(Error: any) {
-        console.error("ChivesChatGetInboxs Error:", Error)
+        console.error("ChivesChatGetChatRecords Error:", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };
@@ -973,7 +969,6 @@ export const AoChatroomInfoDryRun = async (TargetTxId: string) => {
             data: null,
             tags: [
                 { name: 'Action', value: 'Info' },
-                { name: 'Target', value: TargetTxId },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }

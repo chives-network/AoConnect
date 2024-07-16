@@ -91,7 +91,7 @@ const ChannelsList = (props: any) => {
 
       const ChannelsGroupList = Object.keys(getChivesChatGetChannelsMap)
 
-      console.log("getChivesChatGetChannelsValues", getChivesChatGetChannelsValues)
+      //console.log("getChivesChatGetChannelsValues", getChivesChatGetChannelsValues)
 
       setChannelsGroupList(ChannelsGroupList)
       setGetChivesChatGetChannelsMap(getChivesChatGetChannelsMap)
@@ -107,8 +107,6 @@ const ChannelsList = (props: any) => {
   const renderChannels = (ChannelsList: any[]) => {
     if (ChannelsList && ChannelsList.length) {
         const channelArrayToMap = ChannelsList
-
-        console.log("ChannelsList", ChannelsList)
 
         return channelArrayToMap !== null
           ? channelArrayToMap.map((Channel: any, index: number) => {
