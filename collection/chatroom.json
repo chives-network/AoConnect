@@ -1,5 +1,7 @@
 [
-{"id": "mpvh-Y5XT7Zma8b9lO1UUfsRkC4qSmAwhJwstae6CXI", "name": "Chives-Chat-01", "logo":"Default", "intro": "Everyone can chat after registering."},
-{"id": "ZSTindF54oGWM2148lrAJEsG-f71CNG-JLn2nFfT_7E", "name": "Chives-Chat-Test", "logo":"Default", "intro": "The user needs to apply and wait for approval."}
+{"id": "FdYKannCHXRt3humQWw-dkHMFh2I3m6yu5I6gylWIwk", "name": "Chives-Chat-General", "logo":"Default", "intro": "Chives-Chat-General"},
+{"id": "CFAKkdT6aA_1cZfCZ7osgsdzTP639Aao8gdwt3N8fRk", "name": "ArWeave", "logo":"Default", "intro": "ArWeave"},
+{"id": "oZjZabMsBQZEuc-9DSQJXjBrTU1Ip0HGqVVVNeMlohE", "name": "AoConnect", "logo":"Default", "intro": "AoConnect"},
+{"id": "7-0TpO0LSb-IP6hndaghP7duMPem58qKmXVJ0PIuFS8", "name": "AoTokens", "logo":"Default", "intro": "AoTokens"}
 
 ]
