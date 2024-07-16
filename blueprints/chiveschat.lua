@@ -16,33 +16,6 @@
 -- 7. Only members can get information on all members.
 -- 8. This version of the message is public, not encrypted.
 
--- Three Roles Account
--- Owner CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw
--- Admin 4g0crQskU9ikPci3dmrWHHigEn2XCe5bCk_VaSOFa4c
--- Member vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA
-
--- Function Call Examples
--- Send({Target = "chatroom txid", Action = "AddAdmin", AdminId = "admin txid..." }) need owner role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelAdmin", AdminId = "admin txid..." }) need owner role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AddInvite", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "比较感兴趣此群组" }) need admin role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AgreeInvite" }) need user role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "RefuseInvite" }) need user role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "AddMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "比较感兴趣此群组" }) need admin role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "DelMember", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApplyJoin" }) need user role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "ApprovalApply", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA" }) need admin role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "RefuseApply", MemberId = "vn4duuWVuhr88Djustco1ZP_oAMuinJ6OqvazRAnrsA", MemberName = "UserOne用户一", MemberReason = "不满足群组要求" }) need admin role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Broadcast", Data = "ChivesChat: Broadcasting My 1st Message" }) need user role to call
--- Send({Target = "CT8fSMyXjN_MQBGe1vFctW7gyGWneYGscP_jgjPi1yw", Action = "Quit" }) need user role to call
--- Setting Channels (need owner role to call)
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "1", ChannelName = "Announcement", ChannelGroup = "Welcome", ChannelSort = "1", ChannelIntro = "ChannelIntro", ChannelWritePermission = "Owner" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "2", ChannelName = "Rules", ChannelGroup = "Welcome", ChannelSort = "2", ChannelIntro = "ChannelIntro", ChannelWritePermission = "Owner" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "3", ChannelName = "Introduction", ChannelGroup = "Introduction", ChannelSort = "3", ChannelIntro = "ChannelIntro" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "4", ChannelName = "Community", ChannelGroup = "Community", ChannelSort = "4", ChannelIntro = "ChannelIntro" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "5", ChannelName = "Support", ChannelGroup = "Community", ChannelSort = "5", ChannelIntro = "ChannelIntro" })
--- Send({Target = "JA8efCL-pBTkB_wZ0buQDM9guHvqaO2UFBwaw3lrgkE", Action = "AddChannel", ChannelId = "6", ChannelName = "Admin Team", ChannelGroup = "Administrators", ChannelSort = "6", ChannelIntro = "ChannelIntro", ChannelReadPermission = "Owner,Admin" })
-
 Owner = Owner or "OwnerWalletAddress"
 Admins = Admins or {}
 Members = Members or {}
@@ -50,6 +23,7 @@ Invites = Invites or {}
 Applicants = Applicants or {}
 Channels = Channels or {}
 Info = Info or {}
+ChatRecords = ChatRecords or {}
 
 function Welcome()
   return(
@@ -120,30 +94,116 @@ Handlers.add('SetInfo', Handlers.utils.hasMatchingTag('Action', 'SetInfo'), func
 end)
 
 Handlers.add(
-  "GetInboxs",
-  Handlers.utils.hasMatchingTag("Action", "GetInboxs"),
+  "GetChatRecords",
+  Handlers.utils.hasMatchingTag("Action", "GetChatRecords"),
   function (msg)
-    local totalRecords = #Inbox
-    local startIndex = tonumber(msg.Tags.startIndex)
-    local endIndex = tonumber(msg.Tags.endIndex)
-    
-    if startIndex <= 0 or startIndex > totalRecords or endIndex < startIndex then
-        return {}, totalRecords
+    local isAdmin = false
+    if msg.From == Owner then
+      isAdmin = true
     end
-    
-    if endIndex > totalRecords then
-      endIndex = totalRecords
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
     end
-    
-    local records = {}
-    for i = startIndex, endIndex do
-        table.insert(records, Inbox[i])
+    if Members[msg.From] or isAdmin then
+      if msg.ChannelId and #msg.ChannelId == 43 and Channels[msg.ChannelId] then
+        if ChatRecords[msg.ChannelId] == nil then
+          ChatRecords[msg.ChannelId] = {}
+        end
+        
+        local totalRecords = #ChatRecords[msg.ChannelId]
+        local startIndex = tonumber(msg.Tags.startIndex)
+        local endIndex = tonumber(msg.Tags.endIndex)
+        
+        if startIndex <= 0 or startIndex > totalRecords or endIndex < startIndex then
+            ao.send({
+              Target = msg.From,
+              Data = require('json').encode({{}, totalRecords})
+            })
+        else 
+          if endIndex > totalRecords then
+            endIndex = totalRecords
+          end
+          local records = {}
+          for i = startIndex, endIndex do
+              table.insert(records, ChatRecords[msg.ChannelId][i])
+          end
+          ao.send({
+            Target = msg.From,
+            Data = require('json').encode({records, totalRecords})
+          })
+        end
+      else 
+        ao.send({
+          Target = msg.From,
+          Action = 'SendMessage-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'ChannelId not exist ' .. msg.ChannelId
+        })
+      end
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'SendMessage-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'You are not a memeber ' .. msg.Data
+      })
     end
+  end
+)
 
-    ao.send({
-      Target = msg.From,
-      Data = require('json').encode({records, totalRecords})
-    })
+Handlers.add(
+  "SendMessage",
+  Handlers.utils.hasMatchingTag("Action", "SendMessage"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == Owner then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+    if Members[msg.From] or isAdmin then
+      if msg.ChannelId and #msg.ChannelId == 43 and Channels[msg.ChannelId] then
+        if ChatRecords[msg.ChannelId] == nil then
+          ChatRecords[msg.ChannelId] = {}
+        end
+        local message = {
+          Id = msg.Id,
+          From = msg.From,
+          ChannelId = msg.ChannelId,
+          Content = msg.Data,
+          Encrypted = msg.Encrypted,
+          Timestamp = msg.Timestamp,
+          OSTime = tostring(os.time()),
+          Attach = {}
+        }
+        table.insert(ChatRecords[msg.ChannelId], 1, message)
+        ao.send({
+          Target = msg.From,
+          Data = require('json').encode({Data = 'Successful Send Message', Status = 'OK'})
+        })
+      else 
+        ao.send({
+          Target = msg.From,
+          Action = 'SendMessage-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'ChannelId not exist ' .. msg.ChannelId
+        })
+      end
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'SendMessage-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'You are not a memeber ' .. msg.Data
+      })
+    end
   end
 )
 
@@ -867,31 +927,5 @@ Handlers.add(
   end
 )
 
-Handlers.add(
-  "Broadcast",
-  Handlers.utils.hasMatchingTag("Action", "Broadcast"),
-  function (msg)
-    local isAdmin = false
-    if msg.From == Owner then
-      isAdmin = true
-    end
-    for _, Admin in ipairs(Admins) do
-        if Admin == msg.From then
-            isAdmin = true
-            break
-        end
-    end
-    if Members[msg.From] or isAdmin then
-      ao.send({Target = ao.id, Data = msg.Data, Sender = msg.From, NanoId = msg.NanoId})
-    else 
-      ao.send({
-        Target = msg.From,
-        Action = 'Broadcast-Error',
-        ['Message-Id'] = msg.Id,
-        Error = 'You are not a memeber ' .. msg.Data
-      })
-    end
-  end
-)
 
 return Welcome()
