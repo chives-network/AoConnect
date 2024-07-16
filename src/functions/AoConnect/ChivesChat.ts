@@ -585,6 +585,44 @@ export const ChivesChatDelMember = async (currentWalletJwk: any, chatroomTxId: s
   
 }
 
+export const ChivesChatBlockMember = async (currentWalletJwk: any, chatroomTxId: string, MemberId: string) => {
+    try {
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const Data = {
+            process: chatroomTxId,
+            tags: [
+              { name: "Action", value: "BlockMember" },
+              { name: "MemberId", value: MemberId.toString() },
+              ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: "ChivesChatBlockMember"
+        }
+        console.log("ChivesChatAddInvites Data", Data)
+        const GetChivesChatBlockMemberResult = await message(Data);
+
+        console.log("ChivesChatBlockMember GetChivesChatBlockMemberResult", GetChivesChatBlockMemberResult)
+        
+        if(GetChivesChatBlockMemberResult && GetChivesChatBlockMemberResult.length == 43) {
+            const MsgContent = await AoGetRecord(chatroomTxId, GetChivesChatBlockMemberResult)
+
+            return { status: 'ok', id: GetChivesChatBlockMemberResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetChivesChatBlockMemberResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("ChivesChatBlockMember Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
+  
+}
+
 export const ChivesChatAddChannel = async (currentWalletJwk: any, chatroomTxId: string, ChannelId: string, ChannelName: string, ChannelGroup: string, ChannelSort: string, ChannelIntro: string, ChannelWritePermission: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );

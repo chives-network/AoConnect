@@ -82,7 +82,8 @@ const MembersList = (props: any) => {
     setAllMembers,
     handleAddChannelAdmin,
     handleDelChannelAdmin,
-    handleKickOutMember,
+    handleDelMember,
+    handleBlockMember,
     isOwner,
     setOpenMembersInvite,
     setOpenMembersApplicant,
@@ -110,11 +111,11 @@ const MembersList = (props: any) => {
       const Members: any = getChivesChatGetMembers[1] ?? {}
       const Applicants: any = getChivesChatGetMembers[2] ?? {}
       setAdminsTxidList(Admins)
-      console.log("getChivesChatGetMembers11 getChivesChatGetMembers", getChivesChatGetMembers)
-      console.log("getChivesChatGetMembers11 Admins", Admins)
-      console.log("getChivesChatGetMembers11 Members", Members)
-      console.log("getChivesChatGetMembers11 Applicants", Applicants, ApplicantsList)
-
+      console.log("getChivesChatGetMembers11 getChivesChatGetMembers", getChivesChatGetMembers, ApplicantsList)
+      
+      //console.log("getChivesChatGetMembers11 Admins", Admins)
+      //console.log("getChivesChatGetMembers11 Members", Members)
+      //console.log("getChivesChatGetMembers11 Applicants", Applicants, ApplicantsList)
 
       const allMembersTemp: any = {}
       allMembersTemp[id] = {MemberAbout: 'Owner', MemberAvatar: '/images/chives.png', MemberId: id, MemberName: 'Owner', MemberReason: '', MemberRole: 'Admins', MemberStatus: 'online' }
@@ -130,7 +131,6 @@ const MembersList = (props: any) => {
 
       setAllMembers(allMembersTemp)
 
-      console.log("query", query)
       if(query == '') {
         const AdminsListData: any[] = MembersListOriginal.filter((item: any)=> Admins.includes(item.MemberId) )
         const MembersListData: any[] = MembersListOriginal.filter((item: any)=> !Admins.includes(item.MemberId) )
@@ -198,33 +198,6 @@ const MembersList = (props: any) => {
                 }
               },
               {
-                text: 'Message',
-                menuItemProps: {
-                  sx: { py: 2 },
-                  onClick: () => {
-                    navigator.clipboard.writeText(Member.MemberId);
-                  }
-                }
-              },
-              {
-                text: 'Add Friend',
-                menuItemProps: {
-                  sx: { py: 2 },
-                  onClick: () => {
-                    navigator.clipboard.writeText(Member.MemberId);
-                  }
-                }
-              },
-              {
-                text: 'Block',
-                menuItemProps: {
-                  sx: { py: 2 },
-                  onClick: () => {
-                    navigator.clipboard.writeText(Member.MemberId);
-                  }
-                }
-              },
-              {
                 text: 'Copy UserId',
                 menuItemProps: {
                   sx: { py: 2 },
@@ -261,11 +234,24 @@ const MembersList = (props: any) => {
 
             if(isOwner && !AdminsTxidList.includes(Member.MemberId)) {
               optionsMenus.push({
+                text: 'Block',
+                menuItemProps: {
+                  sx: { py: 2 },
+                  onClick: () => {
+                    handleBlockMember(Member.MemberId)
+                  }
+                }
+              })
+            }
+
+            if(isOwner && !AdminsTxidList.includes(Member.MemberId)) {
+              optionsMenus.push({
                 text: 'Kick Out',
                 menuItemProps: {
                   sx: { py: 2 },
                   onClick: () => {
-                    handleKickOutMember(Member.MemberId)
+                    handleBlockMember(Member.MemberId)
+                    handleDelMember(Member.MemberId)
                   }
                 }
               })

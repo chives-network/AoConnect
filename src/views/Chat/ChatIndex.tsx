@@ -30,8 +30,7 @@ import { ChatChatInit } from 'src/functions/ChatBook'
 import { useAuth } from 'src/hooks/useAuth'
 
 import { GetChatRecordsFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels, SaveChatRecordsToStorage } from 'src/functions/AoConnect/MsgReminder'
-import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
-import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember, GetChatroomAvatar, ChivesChatApplyJoin, ChivesChatGetChatRecords } from 'src/functions/AoConnect/ChivesChat'
+import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatBlockMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember, GetChatroomAvatar, ChivesChatApplyJoin, ChivesChatGetChatRecords } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
 import ChannelsList from 'src/views/Chat/ChannelsList'
@@ -223,26 +222,10 @@ const AppChat = (props: any) => {
       return
     }
     const AddAdminByMemberId = await ChivesChatAddAdmin(currentWallet.jwk, id, MemberId)
-    if(AddAdminByMemberId) {
-      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-      console.log("handleAddChannelAdmin AddAdminByMemberId", AddAdminByMemberId)
-      if(AddAdminByMemberId?.msg?.Output?.data?.output)  {
-        const formatText = AddAdminByMemberId?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-          console.log("handleAddChannelAdmin formatText", formatText)
-
-          //Read message from inbox
-          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-            }
-          }
-          setMembersCounter(membersCounter + 1)
-
-        }
-      }
+    console.log("AddAdminByMemberId", AddAdminByMemberId)
+    if(AddAdminByMemberId?.msg?.Messages[0]?.Data)  {
+      toast.success(t(AddAdminByMemberId?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+      setMembersCounter(membersCounter + 1)
     }
   }
 
@@ -254,26 +237,10 @@ const AppChat = (props: any) => {
       return
     }
     const DelAdminByMemberId = await ChivesChatDelAdmin(currentWallet.jwk, id, MemberId)
-    if(DelAdminByMemberId) {
-      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-      console.log("handleDelChannelAdmin DelAdminByMemberId", DelAdminByMemberId)
-      if(DelAdminByMemberId?.msg?.Output?.data?.output)  {
-        const formatText = DelAdminByMemberId?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-          console.log("handleDelChannelAdmin formatText", formatText)
-
-          //Read message from inbox
-          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-            }
-          }
-          setMembersCounter(membersCounter + 1)
-
-        }
-      }
+    console.log("AddAdminByMemberId", DelAdminByMemberId)
+    if(DelAdminByMemberId?.msg?.Messages[0]?.Data)  {
+      toast.success(t(DelAdminByMemberId?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+      setMembersCounter(membersCounter + 1)
     }
   }
 
@@ -285,25 +252,9 @@ const AppChat = (props: any) => {
       return
     }
     const ChivesChatAddInvitesUserOne = await ChivesChatAddInvites(currentWallet.jwk, id, valueMembersInvite.replace(/\n/g, '\\n'), "Invite Member", "Hope you join this chatroom")
-    if(ChivesChatAddInvitesUserOne) {
-      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-      console.log("handleInviteMember ChivesChatAddInvitesUserOne", ChivesChatAddInvitesUserOne)
-      if(ChivesChatAddInvitesUserOne?.msg?.Output?.data?.output)  {
-        const formatText = ChivesChatAddInvitesUserOne?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-          console.log("handleInviteMember formatText", formatText)
-
-          //Read message from inbox
-          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-            }
-          }
-          
-        }
-      }
+    console.log("ChivesChatAddInvitesUserOne", ChivesChatAddInvitesUserOne)
+    if(ChivesChatAddInvitesUserOne?.msg?.Messages[0]?.Data)  {
+      toast.success(t(ChivesChatAddInvitesUserOne?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
     }
   }
 
@@ -330,82 +281,50 @@ const AppChat = (props: any) => {
 
     if(Action == 'Accept')  {
       const ChivesChatApprovalApplyMembers = await ChivesChatApprovalApply(currentWallet.jwk, id, Applicants, "Applicant Member", "Administrator approval your request")
-      if(ChivesChatApprovalApplyMembers) {
-        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-        console.log("handleApplicantMember ChivesChatApprovalApplyMembers", ChivesChatApprovalApplyMembers)
-        if(ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatApprovalApplyMembers?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
-            console.log("handleApplicantMember formatText", formatText)
-
-            //Read message from inbox
-            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-              }
-            }
-            setMembersCounter(membersCounter + 1)
-            
-          }
-        }
+      console.log("ChivesChatApprovalApplyMembers", ChivesChatApprovalApplyMembers)
+      if(ChivesChatApprovalApplyMembers?.msg?.Messages[0]?.Data)  {
+        toast.success(t(ChivesChatApprovalApplyMembers?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+        setMembersCounter(membersCounter + 1)
       }
     }
     if(Action == 'Refuse')  {
       const ChivesChatRefuseApplyMembers = await ChivesChatRefuseApply(currentWallet.jwk, id, Applicants, "Applicant Member", "Administrator approval your request")
       if(ChivesChatRefuseApplyMembers) {
         toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-        console.log("handleApplicantMember ChivesChatRefuseApplyMembers", ChivesChatRefuseApplyMembers)
-        if(ChivesChatRefuseApplyMembers?.msg?.Output?.data?.output)  {
-          const formatText = ChivesChatRefuseApplyMembers?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
-            console.log("handleApplicantMember formatText", formatText)
-
-            //Read message from inbox
-            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-              }
-            }
-            setMembersCounter(membersCounter + 1)
-            
-          }
+        console.log("ChivesChatRefuseApplyMembers", ChivesChatRefuseApplyMembers)
+        if(ChivesChatRefuseApplyMembers?.msg?.Messages[0]?.Data)  {
+          toast.success(t(ChivesChatRefuseApplyMembers?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+          setMembersCounter(membersCounter + 1)
         }
       }
     }
   }
 
-  const handleKickOutMember = async function (MemberId: string) {
-    toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
+  const handleDelMember = async function (MemberId: string) {
     if(currentMemberStatus && currentMemberStatus[0] != true)  {
       toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
 
       return
     }
     const KictOutMemberByMemberId = await ChivesChatDelMember(currentWallet.jwk, id, MemberId)
-    if(KictOutMemberByMemberId) {
-      toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-      console.log("handleKickOutMember KictOutMemberByMemberId", KictOutMemberByMemberId)
-      if(KictOutMemberByMemberId?.msg?.Output?.data?.output)  {
-        const formatText = KictOutMemberByMemberId?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-          console.log("handleKickOutMember formatText", formatText)
+    console.log("KictOutMemberByMemberId", KictOutMemberByMemberId)
+    if(KictOutMemberByMemberId?.msg?.Messages[0]?.Data)  {
+      toast.success(t(KictOutMemberByMemberId?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+      setMembersCounter(membersCounter + 1)
+    }
+  }
 
-          //Read message from inbox
-          const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-          if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-            }
-          }
-          setMembersCounter(membersCounter + 1)
+  const handleBlockMember = async function (MemberId: string) {
+    if(currentMemberStatus && currentMemberStatus[0] != true)  {
+      toast.error(t('You are not a owner') as string, { duration: 2500, position: 'top-center' })
 
-        }
-      }
+      return
+    }
+    const BlockMemberByMemberId = await ChivesChatBlockMember(currentWallet.jwk, id, MemberId)
+    console.log("BlockMemberByMemberId", BlockMemberByMemberId)
+    if(BlockMemberByMemberId?.msg?.Messages[0]?.Data)  {
+      toast.success(t(BlockMemberByMemberId?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+      setMembersCounter(membersCounter + 1)
     }
   }
 
@@ -547,7 +466,7 @@ const AppChat = (props: any) => {
     }
   }
 
-  const handleAddOrEditOrDelChannel = async function (Action: string) {
+  const handleAddOrEditOrDelChannel = async function (Action: string, ChannelId = '') {
     console.log("Action", Action, openChannelEdit)
     if(Action == 'Add')  {
       toast.success(t('Your request is currently being processed.') as string, { duration: 2500, position: 'top-center' })
@@ -557,26 +476,10 @@ const AppChat = (props: any) => {
         return
       }
       const AddChannel = await ChivesChatAddChannel(currentWallet.jwk, id, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
-      if(AddChannel) {
-        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-        console.log("handleAddOrEditOrDelChannel AddChannel", AddChannel)
-        if(AddChannel?.msg?.Output?.data?.output)  {
-          const formatText = AddChannel?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
-            console.log("handleAddOrEditOrDelChannel formatText", formatText)
-
-            //Read message from inbox
-            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-              }
-            }
-            setChannelsCounter(channelsCounter + 1)
-
-          }
-        }
+      console.log("handleEditOrEditOrDelChannel AddChannel", AddChannel)
+      if(AddChannel?.msg?.Messages[0]?.Data)  {
+        toast.success(t(AddChannel?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+        setChannelsCounter(channelsCounter + 1)
       }
     }
 
@@ -588,26 +491,10 @@ const AppChat = (props: any) => {
         return
       }
       const EditChannel = await ChivesChatEditChannel(currentWallet.jwk, id, openChannelEdit.Channel.ChannelId, openChannelEdit.Channel.ChannelName, openChannelEdit.Channel.ChannelGroup, openChannelEdit.Channel.ChannelSort ?? '999', openChannelEdit.Channel.ChannelIntro, "Owner")
-      if(EditChannel) {
-        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-        console.log("handleEditOrEditOrDelChannel EditChannel", EditChannel)
-        if(EditChannel?.msg?.Output?.data?.output)  {
-          const formatText = EditChannel?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
-            console.log("handleEditOrEditOrDelChannel formatText", formatText)
-
-            //Read message from inbox
-            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-              }
-            }
-            setChannelsCounter(channelsCounter + 1)
-
-          }
-        }
+      console.log("handleEditOrEditOrDelChannel EditChannel", EditChannel)
+      if(EditChannel?.msg?.Messages[0]?.Data)  {
+        toast.success(t(EditChannel?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+        setChannelsCounter(channelsCounter + 1)
       }
     }
 
@@ -618,27 +505,11 @@ const AppChat = (props: any) => {
 
         return
       }
-      const DelChannel = await ChivesChatDelChannel(currentWallet.jwk, id, openChannelEdit.Channel.ChannelId)
-      if(DelChannel) {
-        toast.success(t('Your request has been successfully executed.') as string, { duration: 2500, position: 'top-center' })
-        console.log("handleDelOrEditOrDelChannel DelChannel", DelChannel)
-        if(DelChannel?.msg?.Output?.data?.output)  {
-          const formatText = DelChannel?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
-            console.log("handleDelOrEditOrDelChannel formatText", formatText)
-
-            //Read message from inbox
-            const AdminTwoInboxData = await GetMyLastMsg(currentWallet.jwk, id)
-            if(AdminTwoInboxData?.msg?.Output?.data?.output)  {
-              const formatText2 = AdminTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-              }
-            }
-            setChannelsCounter(channelsCounter + 1)
-
-          }
-        }
+      const DelChannel = await ChivesChatDelChannel(currentWallet.jwk, id, ChannelId)
+      console.log("handleEditOrEditOrDelChannel DelChannel", DelChannel)
+      if(DelChannel?.msg?.Messages[0]?.Data)  {
+        toast.success(t(DelChannel?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
+        setChannelsCounter(channelsCounter + 1)
       }
     }
 
@@ -742,6 +613,8 @@ const AppChat = (props: any) => {
             mdAbove={mdAbove}
             statusObj={statusObj}
             userStatus={userStatus}
+            channelId={channelId}
+            setChannelId={setChannelId}
             channelsListWidth={channelsListWidth}
             getChivesChatGetChannels={getChivesChatGetChannels}
             leftSidebarOpen={leftSidebarOpen}
@@ -792,7 +665,8 @@ const AppChat = (props: any) => {
             setAllMembers={setAllMembers}
             handleAddChannelAdmin={handleAddChannelAdmin}
             handleDelChannelAdmin={handleDelChannelAdmin}
-            handleKickOutMember={handleKickOutMember}
+            handleDelMember={handleDelMember}
+            handleBlockMember={handleBlockMember}
             isOwner={currentMemberStatus[0] ? true : false}
             app={app}
             setOpenMembersInvite={setOpenMembersInvite}

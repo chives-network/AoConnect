@@ -43,6 +43,8 @@ const ChannelsList = (props: any) => {
   const {
     hidden,
     mdAbove,
+    channelId,
+    setChannelId,
     channelsListWidth,
     getChivesChatGetChannels,
     leftSidebarOpen,
@@ -63,8 +65,11 @@ const ChannelsList = (props: any) => {
   // ** Hooks
   const router = useRouter()
 
+  console.log("channelId", channelId)
+
   const handleChatClick = (id: string) => {
     setActive(id)
+    setChannelId(id)
     if (!mdAbove) {
       handleLeftSidebarToggle()
     }
@@ -156,7 +161,7 @@ const ChannelsList = (props: any) => {
                         del: true,
                         open: false
                       }))
-                      handleAddOrEditOrDelChannel('Del')
+                      handleAddOrEditOrDelChannel('Del', Channel.ChannelId)
                     }
                   }
                 })

@@ -327,7 +327,7 @@ export const GetChatRecordsFromLocalStorage = (currentAddress: string, channelId
     try {
         const Data: string = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + currentAddress) ?? "{}"
         const RS = JSON.parse(Data)
-        if(RS) {
+        if(RS && RS[channelId]) {
             const ValuesRS = Object.values(RS[channelId])
             const LengthRS = ValuesRS.length
 
@@ -340,10 +340,6 @@ export const GetChatRecordsFromLocalStorage = (currentAddress: string, channelId
     }
     catch(Error: any) {
         console.log("GetChatRecordsFromLocalStorage Error", Error)
-        if(Error && Error.message) {
-
-            return { status: 'error', msg: Error.message };
-        }
         
         return []
     }

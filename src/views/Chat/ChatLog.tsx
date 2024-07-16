@@ -124,8 +124,6 @@ const ChatLog = (props: any) => {
     return formattedChatData().map((item: any, index: number, ChatItemMsgList: any[]) => {
       const isSender = item.Sender === data.userContact.id
 
-      console.log("itemitem", item)
-
       return (
         <Box
           key={index}

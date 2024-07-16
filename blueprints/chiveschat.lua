@@ -24,6 +24,7 @@ Applicants = Applicants or {}
 Channels = Channels or {}
 Info = Info or {}
 ChatRecords = ChatRecords or {}
+BlockMembers = BlockMembers or {}
 
 function Welcome()
   return(
@@ -717,22 +718,69 @@ Handlers.add(
 )
 
 Handlers.add(
+  "BlockMember",
+  Handlers.utils.hasMatchingTag("Action", "BlockMember"),
+  function (msg)
+    local isAdmin = false
+    if msg.From == Owner then
+      isAdmin = true
+    end
+    for _, Admin in ipairs(Admins) do
+        if Admin == msg.From then
+            isAdmin = true
+            break
+        end
+    end
+    
+    if isAdmin and msg.MemberId and #msg.MemberId == 43 then
+      if Members[msg.MemberId] then
+        BlockMembers[msg.MemberId] = Members[msg.MemberId]
+        ao.send({
+          Target = msg.From,
+          Data = "Member successfully blocked"
+        })
+        ao.send({
+          Target = msg.MemberId,
+          Data = "You have been blocked from chatroom " .. ao.id
+        })
+      end
+    else 
+      ao.send({
+        Target = msg.From,
+        Action = 'BlockMember-Error',
+        ['Message-Id'] = msg.Id,
+        Error = 'Only an administrator can block a member'
+      })
+    end
+  end
+)
+
+Handlers.add(
   "ApplyJoin",
   Handlers.utils.hasMatchingTag("Action", "ApplyJoin"),
   function (msg)
-    if not Members[msg.From] then
-      Members[msg.From] = {
-        MemberId = msg.From,
-        MemberName = msg.MemberName,
-        MemberReason = msg.MemberReason
-      }
-      ao.send({Target = msg.From, Data = 'Your application has been submitted and approval.'})
-    else 
+    if not BlockMembers[msg.MemberId] then
+      if not Members[msg.From] then
+        Members[msg.From] = {
+          MemberId = msg.From,
+          MemberName = msg.MemberName,
+          MemberReason = msg.MemberReason
+        }
+        ao.send({Target = msg.From, Data = 'Your application has been submitted and approval.'})
+      else 
+        ao.send({
+          Target = msg.From,
+          Action = 'ApplyJoin-Error',
+          ['Message-Id'] = msg.Id,
+          Error = 'You have already join this chatroom, there is no need to apply again'
+        })
+      end
+    else
       ao.send({
         Target = msg.From,
         Action = 'ApplyJoin-Error',
         ['Message-Id'] = msg.Id,
-        Error = 'You have already join this chatroom, there is no need to apply again'
+        Error = 'You are blocked'
       })
     end
     
