@@ -127,7 +127,6 @@ const MembersList = (props: any) => {
 
         return Member
       })
-      console.log("allMembersTemp", allMembersTemp)
 
       setAllMembers(allMembersTemp)
 

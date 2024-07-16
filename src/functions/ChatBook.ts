@@ -232,8 +232,7 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId:
             "message": PromptTemplate,
             "Timestamp": Date.now(),
             "Sender": ChatroomTxId,
-            "HashId": '0',
-            "NanoId": '0',
+            "Id": '0',
             "question": '',
             "feedback": {
                 "isSent": true,
@@ -245,11 +244,10 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId:
 
     MsgList.map((Item: any)=>{
         ChatLogList.push({
-            "message": Item.Data + " Ref_:" + Item.Ref_,
+            "message": Item.Content,
             "Timestamp": Item.Timestamp,
-            "NanoId": Item.NanoId,
-            "Sender": Item.Sender,
-            "HashId": Item.HashId,
+            "Id": Item.Id,
+            "Sender": Item.From,
             "Item": Item,
             "feedback": {
                 "isSent": true,
@@ -258,6 +256,7 @@ export function ChatChatInit(MsgList: any, PromptTemplate: string, ChatroomTxId:
             }
           })
     })
+    console.log("MsgList", MsgList)
 
     return ChatLogList
 }

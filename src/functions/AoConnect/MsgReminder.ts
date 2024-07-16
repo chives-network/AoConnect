@@ -180,7 +180,7 @@ export const ReminderMsgAndStoreToLocal = async (processTxId: string, reminder =
     return NeedReminderMsg
 }
 
-export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: string, clearDataAndRewrite: boolean) {
+export function ConvertInboxMessageFormatAndStorage(input: string, currentAddress: string, clearDataAndRewrite: boolean) {
 
     // 这是一个非标准化的JSON格式, 源头是Inbox返回的结果, 需要做一下额外的处理才能转换为JSON对像
     // This is a non-standardized JSON format. The source is the result returned by Inbox. Additional processing is required to convert it into a JSON object.
@@ -240,28 +240,28 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
         if(clearDataAndRewrite == false) {
 
             // Add data merge storage data, Not Delete Exist Data
-            const Chat = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + processTxId) ?? ""
+            const Chat = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + currentAddress) ?? ""
             if(InboxMsgMap['Chat']) {
                 const ChatJson = JSON.parse(Chat)
-                window.localStorage.setItem(AoConnectLocalStorage + "_Chat_" + processTxId, JSON.stringify({...ChatJson, ...InboxMsgMap['Chat']}) )
+                window.localStorage.setItem(AoConnectLocalStorage + "_Chat_" + currentAddress, JSON.stringify({...ChatJson, ...InboxMsgMap['Chat']}) )
             }
-            const Message = window.localStorage.getItem(AoConnectLocalStorage + "_Message_" + processTxId) ?? ""
+            const Message = window.localStorage.getItem(AoConnectLocalStorage + "_Message_" + currentAddress) ?? ""
             if(InboxMsgMap['Message']) {
                 const MessageJson = JSON.parse(Message)
-                window.localStorage.setItem(AoConnectLocalStorage + "_Message_" + processTxId, JSON.stringify({...MessageJson, ...InboxMsgMap['Message']}) )
+                window.localStorage.setItem(AoConnectLocalStorage + "_Message_" + currentAddress, JSON.stringify({...MessageJson, ...InboxMsgMap['Message']}) )
             }
-            const Process = window.localStorage.getItem(AoConnectLocalStorage + "_Process_" + processTxId) ?? ""
+            const Process = window.localStorage.getItem(AoConnectLocalStorage + "_Process_" + currentAddress) ?? ""
             if(InboxMsgMap['Process']) {
                 const ProcessJson = JSON.parse(Process)
-                window.localStorage.setItem(AoConnectLocalStorage + "_Process_" + processTxId, JSON.stringify({...ProcessJson, ...InboxMsgMap['Process']}) )
+                window.localStorage.setItem(AoConnectLocalStorage + "_Process_" + currentAddress, JSON.stringify({...ProcessJson, ...InboxMsgMap['Process']}) )
             }
         }
         else {
 
             //Not save local storage data, just save the remote data
-            window.localStorage.setItem(AoConnectLocalStorage + "_Chat_" + processTxId, JSON.stringify(InboxMsgMap['Chat']) )
-            window.localStorage.setItem(AoConnectLocalStorage + "_Message_" + processTxId, JSON.stringify(InboxMsgMap['Message']) )
-            window.localStorage.setItem(AoConnectLocalStorage + "_Process_" + processTxId, JSON.stringify(InboxMsgMap['Process']) )
+            window.localStorage.setItem(AoConnectLocalStorage + "_Chat_" + currentAddress, JSON.stringify(InboxMsgMap['Chat']) )
+            window.localStorage.setItem(AoConnectLocalStorage + "_Message_" + currentAddress, JSON.stringify(InboxMsgMap['Message']) )
+            window.localStorage.setItem(AoConnectLocalStorage + "_Process_" + currentAddress, JSON.stringify(InboxMsgMap['Process']) )
         }
 
         //console.log("ConvertInboxMessageFormatAndStorage InboxMsgMap", InboxMsgMap)
@@ -279,12 +279,56 @@ export function ConvertInboxMessageFormatAndStorage(input: string, processTxId: 
     }
 }
 
-export const GetInboxMsgFromLocalStorage = (processTxId: string, From: number, Counter: number) => {
+export function SaveChatRecordsToStorage(ChatRecordsData: string[], currentAddress: string, clearDataAndRewrite: boolean) {
+
     try {
-        const Data: string = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + processTxId) ?? "{}"
+        
+        const InboxMsgMap: any = {  }
+
+        ChatRecordsData.reverse().map((Item: any)=>{
+            if(InboxMsgMap[Item.ChannelId] == undefined) {
+                InboxMsgMap[Item.ChannelId] = {}
+            }
+            InboxMsgMap[Item.ChannelId][Item.Id] =  {
+                From: Item.From,
+                Id: Item.Id,
+                Timestamp: Item.Timestamp,
+                Content: Item.Content,
+            };
+        })
+
+        if(clearDataAndRewrite == false) {
+            const Chat = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + currentAddress) ?? ""
+            if(InboxMsgMap) {
+                const ChatJson = JSON.parse(Chat)
+                window.localStorage.setItem(AoConnectLocalStorage + "_Chat_" + currentAddress, JSON.stringify({...ChatJson, ...InboxMsgMap}) )
+            }
+        }
+        else {
+            window.localStorage.setItem(AoConnectLocalStorage + "_Chat_" + currentAddress, JSON.stringify(InboxMsgMap) )
+        }
+
+        console.log("SaveChatRecordsToStorage InboxMsgMap", InboxMsgMap)
+
+        return InboxMsgMap
+    }
+    catch(Error: any) {
+        console.log("SaveChatRecordsToStorage Error", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+        
+        return 
+    }
+}
+
+export const GetChatRecordsFromLocalStorage = (currentAddress: string, channelId: string, From: number, Counter: number) => {
+    try {
+        const Data: string = window.localStorage.getItem(AoConnectLocalStorage + "_Chat_" + currentAddress) ?? "{}"
         const RS = JSON.parse(Data)
         if(RS) {
-            const ValuesRS = Object.values(RS)
+            const ValuesRS = Object.values(RS[channelId])
             const LengthRS = ValuesRS.length
 
             return ValuesRS.slice(LengthRS - From - Counter, LengthRS - From)
@@ -295,7 +339,7 @@ export const GetInboxMsgFromLocalStorage = (processTxId: string, From: number, C
         }
     }
     catch(Error: any) {
-        console.log("GetInboxMsgFromLocalStorage Error", Error)
+        console.log("GetChatRecordsFromLocalStorage Error", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };

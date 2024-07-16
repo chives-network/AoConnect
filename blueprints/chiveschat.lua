@@ -108,12 +108,12 @@ Handlers.add(
         end
     end
     if Members[msg.From] or isAdmin then
-      if msg.ChannelId and #msg.ChannelId == 43 and Channels[msg.ChannelId] then
+      if msg.Tags.ChannelId and #msg.Tags.ChannelId == 43 and Channels[msg.Tags.ChannelId] then
         if ChatRecords[msg.ChannelId] == nil then
           ChatRecords[msg.ChannelId] = {}
         end
         
-        local totalRecords = #ChatRecords[msg.ChannelId]
+        local totalRecords = #ChatRecords[msg.Tags.ChannelId]
         local startIndex = tonumber(msg.Tags.startIndex)
         local endIndex = tonumber(msg.Tags.endIndex)
         
@@ -128,7 +128,7 @@ Handlers.add(
           end
           local records = {}
           for i = startIndex, endIndex do
-              table.insert(records, ChatRecords[msg.ChannelId][i])
+              table.insert(records, ChatRecords[msg.Tags.ChannelId][i])
           end
           ao.send({
             Target = msg.From,
@@ -140,7 +140,7 @@ Handlers.add(
           Target = msg.From,
           Action = 'SendMessage-Error',
           ['Message-Id'] = msg.Id,
-          Error = 'ChannelId not exist ' .. msg.ChannelId
+          Error = 'ChannelId not exist ' .. msg.Tags.ChannelId
         })
       end
     else 

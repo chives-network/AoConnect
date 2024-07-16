@@ -54,8 +54,10 @@ const ChivesChatOnlyChat = () => {
       'Create other 5 users': 'UserOne, UserTwo, UserThree, UserFour, UserFive'
     }))
 
+    const channelId = "AAAAAA"
+
     if(toolInfo.ChivesChatProcessTxId && toolInfo.ChivesChatProcessTxId.length == 43) {
-      const ChivesChatGetChatRecordsData = await ChivesChatGetChatRecords(toolInfo.ChivesChatProcessTxId, toolInfo.ChivesChatProcessTxId, 'ChannelId', '1', '9')
+      const ChivesChatGetChatRecordsData = await ChivesChatGetChatRecords(toolInfo.ChivesChatProcessTxId, toolInfo.ChivesChatProcessTxId, channelId, '1', '9')
       console.log("ChivesChatGetChatRecordsData", ChivesChatGetChatRecordsData)
       if(ChivesChatGetChatRecordsData && ChivesChatGetChatRecordsData.status == 'error') {
         setToolInfo((prevState: any)=>({
@@ -379,7 +381,7 @@ const ChivesChatOnlyChat = () => {
     }
     */
 
-    const UserOneSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, "Send message from UserOne Random: " + String(Math.random()))
+    const UserOneSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, channelId, "Send message from UserOne Random: " + String(Math.random()))
     if(UserOneSendMessage) {
         setToolInfo((prevState: any)=>({
             ...prevState,
@@ -387,7 +389,7 @@ const ChivesChatOnlyChat = () => {
         }))
     }
 
-    const UserTwoSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, "Send message from UserTwo Random: " + String(Math.random()))
+    const UserTwoSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, channelId, "Send message from UserTwo Random: " + String(Math.random()))
     if(UserTwoSendMessage) {
         setToolInfo((prevState: any)=>({
             ...prevState,
@@ -395,7 +397,7 @@ const ChivesChatOnlyChat = () => {
         }))
     }
 
-    const UserThreeSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, "Send message from UserThree Random: " + String(Math.random()))
+    const UserThreeSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, channelId, "Send message from UserThree Random: " + String(Math.random()))
     if(UserThreeSendMessage) {
         setToolInfo((prevState: any)=>({
             ...prevState,
@@ -403,7 +405,7 @@ const ChivesChatOnlyChat = () => {
         }))
     }
 
-    const UserFourSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, "Send message from UserFour Hello, AO! Random: " + String(Math.random()))
+    const UserFourSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, channelId, "Send message from UserFour Hello, AO! Random: " + String(Math.random()))
     if(UserFourSendMessage) {
         setToolInfo((prevState: any)=>({
             ...prevState,
@@ -411,7 +413,7 @@ const ChivesChatOnlyChat = () => {
         }))
     }
 
-    const UserFiveSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, "Send message from UserFive 你好, AO! Random: " + String(Math.random()))
+    const UserFiveSendMessage = await SendMessageToChivesChat(currentWallet.jwk, ChivesChatProcessTxId, channelId, "Send message from UserFive 你好, AO! Random: " + String(Math.random()))
     if(UserFiveSendMessage) {
         setToolInfo((prevState: any)=>({
             ...prevState,

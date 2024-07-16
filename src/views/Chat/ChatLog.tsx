@@ -62,14 +62,15 @@ const ChatLog = (props: any) => {
       messages: []
     }
     chatLog.forEach((msg: any, index: number) => {
-      if(msg && msg.NanoId) {
-        HaveLoadingNanoIdList.push(msg.NanoId)
+      if(msg && msg.Id) {
+        HaveLoadingNanoIdList.push(msg.Id)
       }
       if (chatMessageSender === msg.Sender) {
         msgGroup.messages.push({
           Timestamp: msg.Timestamp,
           msg: msg.message,
-          HashId: msg?.HashId,
+          sender: msg.Sender,
+          Id: msg.Id,
           feedback: msg.feedback
         })
       } 
@@ -84,7 +85,8 @@ const ChatLog = (props: any) => {
             {
               Timestamp: msg.Timestamp,
               msg: msg.message,
-              HashId: msg.HashId,
+              sender: msg.Sender,
+              Id: msg.Id,
               feedback: msg.feedback
             }
           ]
@@ -106,7 +108,6 @@ const ChatLog = (props: any) => {
 
     })
 
-
     return formattedChatLog
   }
 
@@ -122,6 +123,8 @@ const ChatLog = (props: any) => {
   const renderChats = () => {
     return formattedChatData().map((item: any, index: number, ChatItemMsgList: any[]) => {
       const isSender = item.Sender === data.userContact.id
+
+      console.log("itemitem", item)
 
       return (
         <Box
@@ -147,7 +150,7 @@ const ChatLog = (props: any) => {
             </Tooltip>
             <Tooltip title={t('Delete')}>
               <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                handleDeleteOneChatLogById(item.messages[0].HashId)
+                handleDeleteOneChatLogById(item.messages[0].Id)
               }}>
                 <Icon icon='mdi:trash-outline' fontSize='inherit' />
               </IconButton>

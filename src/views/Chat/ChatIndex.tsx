@@ -29,8 +29,8 @@ import { ChatChatInit } from 'src/functions/ChatBook'
 // ** Axios Imports
 import { useAuth } from 'src/hooks/useAuth'
 
-import { GetInboxMsgFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels } from 'src/functions/AoConnect/MsgReminder'
-import { GetMyInboxMsg, GetMyInboxLastMsg, sleep, GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
+import { GetChatRecordsFromLocalStorage, GetAoConnectMembers, SetAoConnectMembers, GetAoConnectChannels, SetAoConnectChannels, SaveChatRecordsToStorage } from 'src/functions/AoConnect/MsgReminder'
+import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
 import { SendMessageToChivesChat, ChivesChatGetMembers, ChivesChatGetChannels, ChivesChatAddAdmin, ChivesChatDelAdmin, ChivesChatAddInvites, ChivesChatApprovalApply, ChivesChatRefuseApply, ChivesChatDelMember, ChivesChatAddChannel, ChivesChatEditChannel, ChivesChatDelChannel, ChivesChatIsMember, GetChatroomAvatar, ChivesChatApplyJoin, ChivesChatGetChatRecords } from 'src/functions/AoConnect/ChivesChat'
 import { StatusObjType, StatusType } from 'src/types/apps/chatTypes'
 import MembersList from 'src/views/Chat/MembersList'
@@ -102,7 +102,6 @@ const AppChat = (props: any) => {
   const { id, app, myAoConnectTxId, currentAddress } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
-  const [counter, setCounter] = useState<number>(0)
   const [counter2, setCounter2] = useState<number>(0)
   const [membersCounter, setMembersCounter] = useState<number>(0)
   const [channelsCounter, setChannelsCounter] = useState<number>(0)
@@ -185,7 +184,7 @@ const AppChat = (props: any) => {
         const delay = Math.random() * 10000;
         timeoutId = setTimeout(() => {
           if(channelId != '' && currentAddress && id) {
-            ChivesChatGetChatRecords(id, currentAddress, channelId, '0', '9');
+            getChatLogList(channelId)
             console.log('Finished long running process', channelId);
           }
           timeoutId = setTimeout(CronTaskLastMessage, 10000);
@@ -412,10 +411,8 @@ const AppChat = (props: any) => {
 
   const handleGetAllMessages = async function () {
     setDownloadButtonDisable(true)
-    getChatLogList()
     if(channelId != '') {
-      ChivesChatGetChatRecords(id, currentAddress, channelId, '0', '9')
-      getChatLogList()
+      getChatLogList(channelId)
     }
     setDownloadButtonDisable(false)
   }
@@ -469,17 +466,21 @@ const AppChat = (props: any) => {
     }
   }
 
-  const getChatLogList = async function () {
+  const getChatLogList = async function (channelId: string) {
     if(id && currentAddress) {
-      const GetInboxMsgFromLocalStorageData = GetInboxMsgFromLocalStorage(myAoConnectTxId, 0, 20)
+
+      const ChivesChatGetChatRecordsData = await ChivesChatGetChatRecords(id, currentAddress, channelId, '1', '9')
+      SaveChatRecordsToStorage(ChivesChatGetChatRecordsData[0], currentAddress, true)
+
+      const GetChatRecordsFromLocalStorageData = GetChatRecordsFromLocalStorage(currentAddress, channelId, 0, 20)
       
-      console.log("GetInboxMsgFromLocalStorageData", GetInboxMsgFromLocalStorageData)
-      if(GetInboxMsgFromLocalStorageData)  {
-        const ChatChatInitList = ChatChatInit(GetInboxMsgFromLocalStorageData, app.systemPrompt, id)
+      console.log("GetChatRecordsFromLocalStorageData", GetChatRecordsFromLocalStorageData)
+      if(true)  {
+        const ChatChatInitList = ChatChatInit(GetChatRecordsFromLocalStorageData, app.systemPrompt, currentAddress)
         const selectedChat = {
           "chat": {
               "id": 1,
-              "userId": myAoConnectTxId,
+              "userId": currentAddress,
               "unseenMsgs": 0,
               "chat": ChatChatInitList
           }
@@ -487,12 +488,13 @@ const AppChat = (props: any) => {
         const storeInit = {
           "chats": [],
           "userProfile": {
-              "id": myAoConnectTxId,
+              "id": currentAddress,
               "avatar": "/images/avatars/1.png",
               "fullName": "Current User",
           },
           "selectedChat": selectedChat
         }
+        console.log("GetChatRecordsFromLocalStorageData ChatChatInitList", ChatChatInitList)
         setStore(storeInit)
       }
     }
@@ -675,6 +677,7 @@ const AppChat = (props: any) => {
   //const hidden = false
 
   const sendMsg = async (Obj: any) => {
+    console.log("SendMessageToChatroomDataUserOne", Obj)
     if(currentAddress && t) {
       setSendButtonDisable(true)
       setSendButtonLoading(true)
@@ -682,10 +685,11 @@ const AppChat = (props: any) => {
       setSendInputText(t("Answering...") as string)
       setRefreshChatCounter(refreshChatCounter + 1)
       
-      const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, Obj.message)
-      if(SendMessageToChatroomDataUserOne && SendMessageToChatroomDataUserOne.id && SendMessageToChatroomDataUserOne.NanoId) {
+      const SendMessageToChatroomDataUserOne = await SendMessageToChivesChat(currentWallet.jwk, id, channelId, Obj.message)
+      console.log("SendMessageToChatroomDataUserOne", SendMessageToChatroomDataUserOne)
+      if(SendMessageToChatroomDataUserOne && SendMessageToChatroomDataUserOne.NanoId && SendMessageToChatroomDataUserOne.NanoId) {
         const messageInfor = {
-          Sender: myAoConnectTxId,
+          Sender: currentAddress,
           NanoId: SendMessageToChatroomDataUserOne.NanoId,
           messages: [
             {
@@ -700,7 +704,7 @@ const AppChat = (props: any) => {
           ...prevState,
           messageInfor
         ]))
-        console.log("SendMessageToChatroomDataUserOne.id", SendMessageToChatroomDataUserOne)
+        console.log("SendMessageToChatroomDataUserOne.NanoId", SendMessageToChatroomDataUserOne)
       }
       
 

@@ -864,11 +864,10 @@ export const ChivesChatGetApplicants = async (TargetTxId: string, currentAddress
 export const ChivesChatGetChatRecords = async (TargetTxId: string, currentAddress: string, ChannelId: string, startIndex: string, endIndex: string) => {
     try {
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-
+        
         const result = await dryrun({
             Owner: currentAddress,
             process: TargetTxId,
-            Id: getNanoid(32),
             data: "ChivesChatGetChatRecords",
             tags: [
                 { name: 'Action', value: 'GetChatRecords' },
@@ -883,7 +882,7 @@ export const ChivesChatGetChatRecords = async (TargetTxId: string, currentAddres
 
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
-            return result.Messages[0].Data
+            return JSON.parse(result.Messages[0].Data)
         }
         else {
 
@@ -901,17 +900,24 @@ export const ChivesChatGetChatRecords = async (TargetTxId: string, currentAddres
     }
 }
 
-export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxId: string, Message: string) => {
+export const SendMessageToChivesChat = async (currentWalletJwk: any, chatroomTxId: string, ChannelId: string, Message: string) => {
     try {
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const currentTimestampWithOffset: number = Date.now();
+        const currentTimezoneOffset: number = new Date().getTimezoneOffset();
+        const currentTimestampInZeroUTC: number = currentTimestampWithOffset + (currentTimezoneOffset * 60 * 1000);
 
         const NanoId = getNanoid(32)
 
         const Data = {
             process: chatroomTxId,
             tags: [
-              { name: "Action", value: "Broadcast" },
-              { name: "NanoId", value: NanoId.toString() },
+              { name: "Action", value: "SendMessage" },
+              { name: "ChannelId", value: ChannelId.toString() },
+              { name: "Encrypted", value: "V0" },
+              { name: "NanoId", value: NanoId },
+              { name: "Timestamp", value: currentTimestampInZeroUTC.toString() },
               ],
             signer: createDataItemSigner(currentWalletJwk),
             data: Message
