@@ -42,7 +42,7 @@ import TokenMyAllTransactions from './TokenMyAllTransactions'
 import TokenReceivedTransactions from './TokenReceivedTransactions'
 import TokenSentTransaction from './TokenSentTransaction'
 
-import { GetMyLastMsg, AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
+import { AoCreateProcessAuto, FormatBalance, sleep, isOwner } from 'src/functions/AoConnect/AoConnect'
 import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenAirdrop, AoTokenBalanceDryRun, AoTokenBalancesDryRun, AoTokenBalancesPageDryRun, AoTokenInfoDryRun, AoTokenAllTransactions, AoTokenSentTransactions, AoTokenReceivedTransactions, AoTokenMyAllTransactions, GetTokenAvatar } from 'src/functions/AoConnect/Token'
 
 import { ChivesServerDataGetTokens } from 'src/functions/AoConnect/ChivesServerData'

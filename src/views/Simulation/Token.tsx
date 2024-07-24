@@ -27,7 +27,7 @@ import Avatar from '@mui/material/Avatar'
 import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, generateRandomNumber, sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
-import { AoLoadBlueprintToken, AoTokenBalance, AoTokenTransfer, AoTokenMint, AoTokenBalancesDryRun } from 'src/functions/AoConnect/Token'
+import { AoLoadBlueprintToken, AoTokenTransfer, AoTokenMint, AoTokenBalancesDryRun } from 'src/functions/AoConnect/Token'
 import { ReminderMsgAndStoreToLocal } from 'src/functions/AoConnect/MsgReminder'
 import { ansiRegex } from 'src/configs/functions'
 
@@ -213,37 +213,6 @@ const TokenModel = () => {
 
     await sleep(2000)
 
-    const TokenBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId)
-    if(TokenBalanceData) {
-      console.log("TokenBalanceData", TokenBalanceData)
-      if(TokenBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = TokenBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            TokenBalance: formatText
-          }))
-
-          //Read message from inbox
-          const TokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-          if(TokenInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = TokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                TokenBalance: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(2000)
-
     const SendTokenToUserOneData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserOne, 1001)
     if(SendTokenToUserOneData) {
       console.log("SendTokenToUserOneData", SendTokenToUserOneData)
@@ -270,37 +239,6 @@ const TokenModel = () => {
               setToolInfo((prevState: any)=>({
                 ...prevState,
                 SendUserOne1001: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(2000)
-  
-    const UserOneBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserOne)
-    if(UserOneBalanceData) {
-      console.log("UserOneBalanceData", UserOneBalanceData)
-      if(UserOneBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = UserOneBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserOneBalance: formatText
-          }))
-
-          //Read message from inbox
-          const UserOneInboxData = await GetMyLastMsg(currentWallet.jwk, UserOne)
-          if(UserOneInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                UserOneBalance: formatText2
               }))
             }
           }
@@ -349,37 +287,6 @@ const TokenModel = () => {
 
     await sleep(2000)
 
-    const UserTwoBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserTwo)
-    if(UserTwoBalanceData) {
-      console.log("UserTwoBalanceData", UserTwoBalanceData)
-      if(UserTwoBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = UserTwoBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserTwoBalance: formatText
-          }))
-
-          //Read message from inbox
-          const UserTwoInboxData = await GetMyLastMsg(currentWallet.jwk, UserTwo)
-          if(UserTwoInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = UserTwoInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                UserTwoBalance: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(2000)
-
     const SendTokenToUserThreeData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserThree, 1003)
     if(SendTokenToUserThreeData) {
       console.log("SendTokenToUserThreeData", SendTokenToUserThreeData)
@@ -406,37 +313,6 @@ const TokenModel = () => {
               setToolInfo((prevState: any)=>({
                 ...prevState,
                 SendUserThree1003: formatText2
-              }))
-            }
-          }
-
-        }
-
-      }
-    }
-
-    await sleep(2000)
-
-    const UserThreeBalanceData = await AoTokenBalance(currentWallet.jwk, TokenProcessTxId, UserThree)
-    if(UserThreeBalanceData) {
-      console.log("UserThreeBalanceData", UserThreeBalanceData)
-      if(UserThreeBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = UserThreeBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            UserThreeBalance: formatText
-          }))
-
-          //Read message from inbox
-          const UserThreeInboxData = await GetMyLastMsg(currentWallet.jwk, UserThree)
-          if(UserThreeInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = UserThreeInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                UserThreeBalance: formatText2
               }))
             }
           }

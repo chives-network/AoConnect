@@ -45,24 +45,29 @@ export const MyProcessTxIdsGetTokens = async (TargetTxId: string, processTxId: s
     }
 }
 
-export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxId: string, myAoConnectTxId: string, TokenId: string, TokenSort: string, TokenGroup: string, TokenData: string) => {
+export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxId: string, TokenId: string, TokenSort: string, TokenGroup: string, TokenData: string) => {
     try {
         console.log("MyProcessTxIdsAddToken TokenId", TokenId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '", TokenGroup = "' + TokenGroup + '", TokenData = "' + TokenData + '" })'
-        const Data = {
-            process: myAoConnectTxId,
-            tags: [ { name: 'Action', value: 'Eval' } ],
+
+        const data = {
+            process: MyProcessTxId,
+            tags: [
+              { name: "Action", value: "AddToken" },
+              { name: "TokenId", value: TokenId },
+              { name: "TokenSort", value: TokenSort ?? '100' },
+              { name: "TokenGroup", value: TokenGroup },
+              { name: "TokenData", value: TokenData },
+              ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: SendData,
+            data: ""
         }
-        console.log("MyProcessTxIdsAddToken SendData", SendData)
-        console.log("MyProcessTxIdsAddToken Data", Data)
-        const GetMyProcessTxIdsAddTokenResult = await message(Data);
+        const GetMyProcessTxIdsAddTokenResult = await message(data);
+
         console.log("MyProcessTxIdsAddToken GetMyProcessTxIdsAddTokenResult", GetMyProcessTxIdsAddTokenResult)
         
         if(GetMyProcessTxIdsAddTokenResult && GetMyProcessTxIdsAddTokenResult.length == 43) {
-            const MsgContent = await AoGetRecord(myAoConnectTxId, GetMyProcessTxIdsAddTokenResult)
+            const MsgContent = await AoGetRecord(MyProcessTxId, GetMyProcessTxIdsAddTokenResult)
 
             return { status: 'ok', id: GetMyProcessTxIdsAddTokenResult, msg: MsgContent };
         }
@@ -81,22 +86,24 @@ export const MyProcessTxIdsAddToken = async (currentWalletJwk: any, MyProcessTxI
   
 }
 
-export const MyProcessTxIdsDelToken = async (currentWalletJwk: any, MyProcessTxId: string, myAoConnectTxId: string, TokenId: string) => {
+export const MyProcessTxIdsDelToken = async (currentWalletJwk: any, MyProcessTxId: string, TokenId: string) => {
     try {
         console.log("MyProcessTxIdsDelToken TokenId", TokenId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const Data = {
-            process: myAoConnectTxId,
-            tags: [ { name: 'Action', value: 'Eval' } ],
+        const data = {
+            process: MyProcessTxId,
+            tags: [
+              { name: "Action", value: "DelToken" },
+              { name: "TokenId", value: TokenId },
+              ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelToken", TokenId = "' + TokenId + '" })',
+            data: ""
         }
-        console.log("MyProcessTxIdsDelToken Data", Data)
-        const GetMyProcessTxIdsDelTokenResult = await message(Data);
+        const GetMyProcessTxIdsDelTokenResult = await message(data);
         console.log("MyProcessTxIdsDelToken GetMyProcessTxIdsDelTokenResult", GetMyProcessTxIdsDelTokenResult)
         
         if(GetMyProcessTxIdsDelTokenResult && GetMyProcessTxIdsDelTokenResult.length == 43) {
-            const MsgContent = await AoGetRecord(myAoConnectTxId, GetMyProcessTxIdsDelTokenResult)
+            const MsgContent = await AoGetRecord(MyProcessTxId, GetMyProcessTxIdsDelTokenResult)
 
             return { status: 'ok', id: GetMyProcessTxIdsDelTokenResult, msg: MsgContent };
         }

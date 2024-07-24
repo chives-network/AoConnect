@@ -201,6 +201,6 @@ export const AoLotteryCredit = async (currentWalletJwk: any, LotteryTxId: string
 
 export const AoLotteryDeposit = async (currentWalletJwk: any, LotteryTxId: string, myLotteryProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
 
-    return await AoTokenTransfer(currentWalletJwk, LotteryTxId, myLotteryProcessTxId, sendOutProcessTxId, sendOutAmount)
+    return await AoTokenTransfer(currentWalletJwk, LotteryTxId, sendOutProcessTxId, sendOutAmount)
 }
 

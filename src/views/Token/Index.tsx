@@ -95,7 +95,7 @@ const TokenModel = () => {
 
   const handleGetTokenInfo = async () => {
     setLoadingGetTokens(true)
-    const MyProcessTxIdsGetTokensData = await MyProcessTxIdsGetTokens(authConfig.AoConnectMyProcessTxIds, myAoConnectTxId);
+    const MyProcessTxIdsGetTokensData = await MyProcessTxIdsGetTokens(authConfig.AoConnectMyProcessTxIds, currentAddress);
     if (MyProcessTxIdsGetTokensData) {
         console.log("MyProcessTxIdsGetTokensData", MyProcessTxIdsGetTokensData);
         const TokenList = Object.values(MyProcessTxIdsGetTokensData);
@@ -130,7 +130,7 @@ const TokenModel = () => {
     if(tokenInfo)  {
       setAddTokenButtonDisabled(true)
       setAddTokenButtonText('waiting')
-      const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myAoConnectTxId, WantToSaveTokenProcessTxId, tokenGetInfor?.Sort ?? '10', 'My Tokens', JSON.stringify(tokenInfo).replace(/"/g, '\\"') )
+      const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, WantToSaveTokenProcessTxId, tokenGetInfor?.Sort ?? '10', 'My Tokens', JSON.stringify(tokenInfo).replace(/"/g, '\\"') )
       if(WantToSaveTokenProcessTxIdData) {
         setAddTokenButtonText('Have add')
         console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
@@ -158,7 +158,7 @@ const TokenModel = () => {
   const handleCancelFavoriteToken = async (WantToSaveTokenProcessTxId: string) => {
     setCancelTokenButtonDisabled(true)
     setCancelTokenButtonText('waiting')
-    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsDelToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, myAoConnectTxId, WantToSaveTokenProcessTxId)
+    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsDelToken(currentWallet.jwk, authConfig.AoConnectMyProcessTxIds, WantToSaveTokenProcessTxId)
     if(WantToSaveTokenProcessTxIdData) {
       console.log("WantToSaveTokenProcessTxIdData", WantToSaveTokenProcessTxIdData)
       if(WantToSaveTokenProcessTxIdData?.msg?.Output?.data?.output)  {

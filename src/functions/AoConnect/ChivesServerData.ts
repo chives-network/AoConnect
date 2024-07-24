@@ -2,10 +2,57 @@
 //Due need to use the node esm mode, so have change the package.json and move the repo to this location. Version: 0.0.53
 import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 
-import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, AoLoadBlueprintModule } from 'src/functions/AoConnect/AoConnect'
+import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord } from 'src/functions/AoConnect/AoConnect'
+
+import axios from 'axios'
+import { jwkToAddress } from 'src/functions/ChivesWallets'
 
 export const AoLoadBlueprintChivesServerData = async (currentWalletJwk: any, processTxId: string) => {
-    return await AoLoadBlueprintModule (currentWalletJwk, processTxId, 'chivesserverdata')
+    try {
+        if(processTxId && processTxId.length != 43) {
+
+            return
+        }
+        if(typeof processTxId != 'string') {
+
+            return 
+        }
+
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivesserverdata.lua', { headers: { }, params: { } }).then(res => res.data)
+        
+        const address = await jwkToAddress(currentWalletJwk)
+        if(address && address.length == 43) {
+            Data = Data.replaceAll("AoConnectOwner", address)
+        }
+
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const GetMyLastMsgResult = await message({
+            process: processTxId,
+            tags: [ { name: 'Action', value: 'Eval' } ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: Data,
+        });
+        console.log("AoLoadBlueprintChivesServerData GetMyLastMsg", module, GetMyLastMsgResult)
+        
+        if(GetMyLastMsgResult && GetMyLastMsgResult.length == 43) {
+            const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
+            console.log("AoLoadBlueprintChivesServerData MsgContent", module, MsgContent)
+
+            return { status: 'ok', id: GetMyLastMsgResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: GetMyLastMsgResult };
+        }
+    }
+    catch(Error: any) {
+        console.error("AoLoadBlueprintChatroom Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+    }
 }
 
 export const ChivesServerDataGetTokens = async (TargetTxId: string, processTxId: string) => {
@@ -45,24 +92,27 @@ export const ChivesServerDataGetTokens = async (TargetTxId: string, processTxId:
     }
 }
 
-export const ChivesServerDataAddToken = async (currentWalletJwk: any, MyProcessTxId: string, myAoConnectTxId: string, TokenId: string, TokenSort: string, TokenGroup: string, TokenData: string) => {
+export const ChivesServerDataAddToken = async (currentWalletJwk: any, MyProcessTxId: string, TokenId: string, TokenSort: string, TokenGroup: string, TokenData: string) => {
     try {
         console.log("ChivesServerDataAddToken TokenId", TokenId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const SendData = 'Send({Target = "' + MyProcessTxId + '", Action = "AddToken", TokenId = "' + TokenId + '", TokenSort = "' + TokenSort + '", TokenGroup = "' + TokenGroup + '", TokenData = "' + TokenData + '" })'
-        const Data = {
-            process: myAoConnectTxId,
-            tags: [ { name: 'Action', value: 'Eval' } ],
+        const data = {
+            process: MyProcessTxId,
+            tags: [
+              { name: "Action", value: "AddToken" },
+              { name: "TokenId", value: TokenId },
+              { name: "TokenSort", value: TokenSort ?? '100' },
+              { name: "TokenGroup", value: TokenGroup },
+              { name: "TokenData", value: TokenData },
+              ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: SendData,
+            data: ""
         }
-        console.log("ChivesServerDataAddToken SendData", SendData)
-        console.log("ChivesServerDataAddToken Data", Data)
-        const GetChivesServerDataAddTokenResult = await message(Data);
+        const GetChivesServerDataAddTokenResult = await message(data);
         console.log("ChivesServerDataAddToken GetChivesServerDataAddTokenResult", GetChivesServerDataAddTokenResult)
         
         if(GetChivesServerDataAddTokenResult && GetChivesServerDataAddTokenResult.length == 43) {
-            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChivesServerDataAddTokenResult)
+            const MsgContent = await AoGetRecord(MyProcessTxId, GetChivesServerDataAddTokenResult)
 
             return { status: 'ok', id: GetChivesServerDataAddTokenResult, msg: MsgContent };
         }
@@ -81,22 +131,24 @@ export const ChivesServerDataAddToken = async (currentWalletJwk: any, MyProcessT
   
 }
 
-export const ChivesServerDataDelToken = async (currentWalletJwk: any, MyProcessTxId: string, myAoConnectTxId: string, TokenId: string) => {
+export const ChivesServerDataDelToken = async (currentWalletJwk: any, MyProcessTxId: string, TokenId: string) => {
     try {
         console.log("ChivesServerDataDelToken TokenId", TokenId)
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const Data = {
-            process: myAoConnectTxId,
-            tags: [ { name: 'Action', value: 'Eval' } ],
+        const data = {
+            process: MyProcessTxId,
+            tags: [
+              { name: "Action", value: "DelToken" },
+              { name: "TokenId", value: TokenId },
+              ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({Target = "' + MyProcessTxId + '", Action = "DelToken", TokenId = "' + TokenId + '" })',
+            data: ""
         }
-        console.log("ChivesServerDataDelToken Data", Data)
-        const GetChivesServerDataDelTokenResult = await message(Data);
+        const GetChivesServerDataDelTokenResult = await message(data);
         console.log("ChivesServerDataDelToken GetChivesServerDataDelTokenResult", GetChivesServerDataDelTokenResult)
         
         if(GetChivesServerDataDelTokenResult && GetChivesServerDataDelTokenResult.length == 43) {
-            const MsgContent = await AoGetRecord(myAoConnectTxId, GetChivesServerDataDelTokenResult)
+            const MsgContent = await AoGetRecord(MyProcessTxId, GetChivesServerDataDelTokenResult)
 
             return { status: 'ok', id: GetChivesServerDataDelTokenResult, msg: MsgContent };
         }

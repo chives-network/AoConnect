@@ -53,6 +53,7 @@ const SettingModel = () => {
 
   const auth = useAuth()
   const currentWallet = auth.currentWallet
+  const currentAddress = auth.currentAddress
 
   const [serverModel, setServerModel] = useState<string>("Token")
   const [serverTxId, setServerTxId] = useState<string>("91uljP8YzSKu01C73xDJNlAs6jcZIboWbsgkPnB-Ks4")
@@ -80,7 +81,7 @@ const SettingModel = () => {
     }))
     switch(Model) {
         case 'Token':
-            const ChivesServerDataGetTokensData1 = await ChivesServerDataGetTokens(ChivesServerData, ChivesServerData)
+            const ChivesServerDataGetTokensData1 = await ChivesServerDataGetTokens(ChivesServerData, currentAddress)
             if(ChivesServerDataGetTokensData1) {
                 const dataArray = Object.values(ChivesServerDataGetTokensData1);
                 dataArray.sort((a: any, b: any) => {
@@ -234,7 +235,7 @@ const SettingModel = () => {
     const ChivesServerData = serverTxId
     switch(Model) {
         case 'Token':
-            const ChivesServerDataDelTokenData1 = await ChivesServerDataDelToken(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelTokenData1 = await ChivesServerDataDelToken(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelTokenData1) {
                 console.log("ChivesServerDataDelTokenData1", ChivesServerDataDelTokenData1)
                 if(ChivesServerDataDelTokenData1?.msg?.Output?.data?.output)  {
@@ -426,7 +427,7 @@ const SettingModel = () => {
     const ChivesServerData = serverTxId
     switch(Model) {
         case 'Token':
-            const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddToken1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -852,10 +853,9 @@ const SettingModel = () => {
             {serverData && serverData[serverModel] && serverData[serverModel].map((Item: any, Index: number)=>{
 
                 const Row = Item
-
                 let AvatarLogo = ""
                 try{ 
-                    const ServerModelData = Row[serverModel + 'Data'] && JSON.parse(Row[serverModel + 'Data'])
+                    const ServerModelData = Row[serverModel + 'Data'] && JSON.parse(Row[serverModel + 'Data'].replace(/\\"/g, '"'))
                     if(ServerModelData && ServerModelData.Logo) {
                         AvatarLogo = ServerModelData.Logo
                     }

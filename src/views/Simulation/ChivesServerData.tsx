@@ -110,7 +110,7 @@ const ChivesServerData = () => {
       'Testing Token': '==================================================='
     }))
 
-    const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId1, 'Token666', 'TokenGroup', 'TokenData')
+    const ChivesServerDataAddToken1 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, TokenProcessTxId1, 'Token666', 'TokenGroup', 'TokenData')
     if(ChivesServerDataAddToken1) {
       console.log("ChivesServerDataAddToken1", ChivesServerDataAddToken1)
       if(ChivesServerDataAddToken1?.msg?.Output?.data?.output)  {
@@ -139,7 +139,7 @@ const ChivesServerData = () => {
       }
     }
 
-    const ChivesServerDataAddToken2 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId2, 'Token777', 'TokenGroup', 'TokenData')
+    const ChivesServerDataAddToken2 = await ChivesServerDataAddToken(currentWallet.jwk, ChivesServerData, TokenProcessTxId2, 'Token777', 'TokenGroup', 'TokenData')
     if(ChivesServerDataAddToken2) {
       console.log("ChivesServerDataAddToken2", ChivesServerDataAddToken2)
       if(ChivesServerDataAddToken2?.msg?.Output?.data?.output)  {
@@ -177,7 +177,7 @@ const ChivesServerData = () => {
       }))
     }
 
-    const ChivesServerDataDelToken2 = await ChivesServerDataDelToken(currentWallet.jwk, ChivesServerData, ChivesServerData, TokenProcessTxId2)
+    const ChivesServerDataDelToken2 = await ChivesServerDataDelToken(currentWallet.jwk, ChivesServerData, TokenProcessTxId2)
     if(ChivesServerDataDelToken2) {
       console.log("ChivesServerDataDelToken2", ChivesServerDataDelToken2)
       if(ChivesServerDataDelToken2?.msg?.Output?.data?.output)  {

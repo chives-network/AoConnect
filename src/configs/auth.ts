@@ -1,6 +1,7 @@
 export default {
   productName: 'AoConnect',
   tokenName: 'AR',
+  tokenType: 'AR',
   backEndApi: 'https://arweave.net',
   AoConnectWebSite: "https://www.ao.link",
   AoConnectAoLink: "https://www.ao.link/#",
@@ -22,6 +23,7 @@ export default {
   chivesLanguage: 'ChivesLanguage',
   chivesProfile: 'ChivesProfile',
   chivesReferee: 'ChivesReferee',
+  chivesContacts: 'chivesContacts',
   'App-Name': 'AoConnect',
   'App-Version': '0.1',
   'App-Instance': '',

@@ -103,7 +103,7 @@ const MyProcessTxIds = () => {
       }))
     }
 
-    const MyProcessTxIdsAddToken1 = await MyProcessTxIdsAddToken(currentWallet.jwk, MyProcessTxIds, MyProcessTxIds, TokenProcessTxId1, '666', 'Group', 'Data')
+    const MyProcessTxIdsAddToken1 = await MyProcessTxIdsAddToken(currentWallet.jwk, MyProcessTxIds, TokenProcessTxId1, '666', 'Group', 'Data')
     if(MyProcessTxIdsAddToken1) {
       console.log("MyProcessTxIdsAddToken1", MyProcessTxIdsAddToken1)
       if(MyProcessTxIdsAddToken1?.msg?.Output?.data?.output)  {
@@ -132,7 +132,7 @@ const MyProcessTxIds = () => {
       }
     }
 
-    const MyProcessTxIdsAddToken2 = await MyProcessTxIdsAddToken(currentWallet.jwk, MyProcessTxIds, MyProcessTxIds, TokenProcessTxId2, '777', 'Group', 'Data')
+    const MyProcessTxIdsAddToken2 = await MyProcessTxIdsAddToken(currentWallet.jwk, MyProcessTxIds, TokenProcessTxId2, '777', 'Group', 'Data')
     if(MyProcessTxIdsAddToken2) {
       console.log("MyProcessTxIdsAddToken2", MyProcessTxIdsAddToken2)
       if(MyProcessTxIdsAddToken2?.msg?.Output?.data?.output)  {
@@ -170,7 +170,7 @@ const MyProcessTxIds = () => {
       }))
     }
 
-    const MyProcessTxIdsDelToken2 = await MyProcessTxIdsDelToken(currentWallet.jwk, MyProcessTxIds, MyProcessTxIds, TokenProcessTxId2)
+    const MyProcessTxIdsDelToken2 = await MyProcessTxIdsDelToken(currentWallet.jwk, MyProcessTxIds, TokenProcessTxId2)
     if(MyProcessTxIdsDelToken2) {
       console.log("MyProcessTxIdsDelToken2", MyProcessTxIdsDelToken2)
       if(MyProcessTxIdsDelToken2?.msg?.Output?.data?.output)  {

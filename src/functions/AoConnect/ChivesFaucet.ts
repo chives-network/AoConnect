@@ -156,7 +156,7 @@ export const AoFaucetCredit = async (currentWalletJwk: any, FaucetTxId: string, 
 
 export const AoFaucetDeposit = async (currentWalletJwk: any, FaucetTxId: string, myFaucetProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
 
-    return await AoTokenTransfer(currentWalletJwk, FaucetTxId, myFaucetProcessTxId, sendOutProcessTxId, sendOutAmount)
+    return await AoTokenTransfer(currentWalletJwk, FaucetTxId, sendOutProcessTxId, sendOutAmount)
 }
 
 export const AoFaucetDepositBalances = async (TargetTxId: string, startIndex: string, endIndex: string) => {
