@@ -78,10 +78,11 @@ end
 
 
 -- token should be idempotent and not change previous state updates
-Name = 'AoConnectToken' 
+Owner = Owner or 'AoConnectOwner'
+Name = Name or 'AoConnectToken'
 Ticker = Ticker or 'AOCN'
 Denomination = Denomination or 12
-Balances = Balances or { [msg.From] = utils.toBalanceValue(9999 * 10^Denomination) }
+Balances = Balances or { ['AoConnectOwner'] = utils.toBalanceValue(9999 * 10^Denomination) }
 Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 SentTransactions = SentTransactions or {}
 ReceivedTransactions = ReceivedTransactions or {}
@@ -421,7 +422,7 @@ Handlers.add('ReceivedTransactions',
 )
 
 Handlers.add('Airdrop', Handlers.utils.hasMatchingTag('Action', 'Airdrop'), function(msg)
-  if msg.From == ao.id then
+  if msg.From == Owner then
     local recipientListIds = {}
     for recipientId in string.gmatch(msg.Recipient, '([^*]+)') do
       table.insert(recipientListIds, recipientId)
@@ -508,9 +509,9 @@ Handlers.add('Mint', Handlers.utils.hasMatchingTag('Action', 'Mint'), function(m
   assert(type(msg.Quantity) == 'string', 'Quantity is required!')
   assert(bint(0) < bint(msg.Quantity), 'Quantity must be greater than zero!')
 
-  if not Balances[ao.id] then Balances[ao.id] = "0" end
+  if not Balances[Owner] then Balances[Owner] = "0" end
 
-  if msg.From == ao.id then
+  if msg.From == Owner then
     -- Add tokens to the token pool, according to Quantity
     Balances[msg.From] = utils.add(Balances[msg.From], msg.Quantity) 
     ao.send({
