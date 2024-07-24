@@ -86,6 +86,11 @@ export async function generateNewMnemonicAndGetWalletData (mnemonic: string) {
     }
 };
 
+export async function jwkToAddress (jwk: any) {
+
+    return await arweave.wallets.jwkToAddress(jwk as any)
+}
+
 export async function importWalletJsonFile (wallet: any) {
 
     const mnemonicToJwkValue: any = {}

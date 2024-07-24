@@ -244,7 +244,7 @@ const TokenModel = () => {
 
     await sleep(2000)
 
-    const SendTokenToUserOneData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserOne, 1001)
+    const SendTokenToUserOneData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserOne, 1001)
     if(SendTokenToUserOneData) {
       console.log("SendTokenToUserOneData", SendTokenToUserOneData)
       if(SendTokenToUserOneData?.msg?.error)  {
@@ -312,7 +312,7 @@ const TokenModel = () => {
 
     await sleep(2000)
   
-    const SendTokenToUserTwoData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserTwo, 1002)
+    const SendTokenToUserTwoData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserTwo, 1002)
     if(SendTokenToUserTwoData) {
       console.log("SendTokenToUserTwoData", SendTokenToUserTwoData)
       if(SendTokenToUserTwoData?.msg?.error)  {
@@ -380,7 +380,7 @@ const TokenModel = () => {
 
     await sleep(2000)
 
-    const SendTokenToUserThreeData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserThree, 1003)
+    const SendTokenToUserThreeData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserThree, 1003)
     if(SendTokenToUserThreeData) {
       console.log("SendTokenToUserThreeData", SendTokenToUserThreeData)
       if(SendTokenToUserThreeData?.msg?.error)  {
@@ -486,7 +486,7 @@ const TokenModel = () => {
         ...prevState,
         UserAdd1: UserAdd1
       }))
-      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd1, generateRandomNumber(1111, 9999) )
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserAdd1, generateRandomNumber(1111, 9999) )
     }
 
     await sleep(2000)
@@ -497,7 +497,7 @@ const TokenModel = () => {
         ...prevState,
         UserAdd2: UserAdd2
       }))
-      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd2, generateRandomNumber(1111, 9999) )
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserAdd2, generateRandomNumber(1111, 9999) )
     }
 
     await sleep(2000)
@@ -508,7 +508,7 @@ const TokenModel = () => {
         ...prevState,
         UserAdd3: UserAdd3
       }))
-      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd3, generateRandomNumber(1111, 9999) )
+      await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserAdd3, generateRandomNumber(1111, 9999) )
     }
 
     setToolInfo((prevState: any)=>({

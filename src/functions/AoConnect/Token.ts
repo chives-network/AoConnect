@@ -6,7 +6,7 @@ import authConfig from 'src/configs/auth'
 import axios from 'axios'
 
 import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes10 } from 'src/functions/AoConnect/AoConnect'
-
+import { jwkToAddress } from 'src/functions/ChivesWallets'
 
 
 export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: string, tokenInfo: any) => {
@@ -34,6 +34,10 @@ export const AoLoadBlueprintToken = async (currentWalletJwk: any, processTxId: s
         }
         if(tokenInfo && tokenInfo.Logo) {
             Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", tokenInfo.Logo)
+        }
+        const address = await jwkToAddress(currentWalletJwk)
+        if(address && address.length == 43) {
+            Data = Data.replaceAll("AoConnectOwner", address)
         }
 
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -227,17 +231,17 @@ export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, A
   
 }
 
-export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: string) => {
+export const AoTokenBalanceDryRun = async (TargetTxId: string, currentAddress: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {
 
             return
         }
-        if(processTxId && processTxId.length != 43) {
+        if(currentAddress && currentAddress.length != 43) {
 
             return
         }
-        if(typeof TargetTxId != 'string' || typeof processTxId != 'string') {
+        if(typeof TargetTxId != 'string' || typeof currentAddress != 'string') {
 
             return 
         }
@@ -245,12 +249,12 @@ export const AoTokenBalanceDryRun = async (TargetTxId: string, processTxId: stri
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
         const result = await dryrun({
-            Owner: processTxId,
+            Owner: currentAddress,
             process: TargetTxId,
             data: null,
             tags: [
                 { name: 'Action', value: 'Balance' },
-                { name: 'Target', value: processTxId },
+                { name: 'Target', value: currentAddress },
                 { name: 'Data-Protocol', value: 'ao' },
                 { name: 'Type', value: 'Message' },
                 { name: 'Variant', value: 'ao.TN.1' }

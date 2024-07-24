@@ -170,7 +170,7 @@ const TokenOnlySendAndMintModel = () => {
                 ...prevState,
                 ["User"+i]: UserAdd + " Amount: " + SendAmount
             }));
-            const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, TokenProcessTxId, UserAdd, SendAmount);
+            const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, UserAdd, SendAmount);
             console.log("AoTokenTransferData", AoTokenTransferData)
             const AoTokenBalanceDryRunData = await AoTokenBalanceDryRun(TokenProcessTxId, UserAdd)
             console.log("AoTokenBalanceDryRunData", AoTokenBalanceDryRunData)

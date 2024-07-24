@@ -235,7 +235,7 @@ const TokenIndexModel = (prop: any) => {
     
     console.log("handleTokenSearch tokenGetInfor", tokenGetInfor)
     if(isOwnerData == false) {
-      const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, myProcessTxIdInPage)
+      const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, currentAddress)
       if(AoDryRunBalance && tokenInfo && Denomination) {
         setTokenGetInfor((prevState: any)=>({
           ...prevState,
@@ -246,7 +246,7 @@ const TokenIndexModel = (prop: any) => {
     else {
       if(tokenInfo && Denomination) {
         setMyProcessTxIdInPage(CurrentToken)
-        const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, CurrentToken)
+        const AoDryRunBalance = await AoTokenBalanceDryRun(CurrentToken, currentAddress)
         if(AoDryRunBalance) {
           setTokenGetInfor((prevState: any)=>({
             ...prevState,
@@ -317,7 +317,7 @@ const TokenIndexModel = (prop: any) => {
             console.log("handleTokenCreate LoadBlueprintToken:", LoadBlueprintToken);
           }
   
-          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxIdInPage);
+          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, currentAddress);
           if (AoDryRunBalance) {
             setCounter(counter + 1)
             setTokenGetInfor((prevState: any) => ({
@@ -362,7 +362,7 @@ const TokenIndexModel = (prop: any) => {
       ...prevState,
       AoTokenMyAllTransactionsList: [[],[],[],[],[],[],[],[],[],[]],
     }))
-    const AoDryRunData: any = await AoTokenMyAllTransactions(CurrentToken, myProcessTxIdInPage, String(startIndex), String(endIndex))
+    const AoDryRunData: any = await AoTokenMyAllTransactions(CurrentToken, currentAddress, String(startIndex), String(endIndex))
     console.log("AoDryRunData", AoDryRunData)
     try{
       if(AoDryRunData) {
@@ -384,7 +384,7 @@ const TokenIndexModel = (prop: any) => {
       ...prevState,
       AoTokenSentTransactionsList: [[],[],[],[],[],[],[],[],[],[]],
     }))
-    const AoDryRunData: any = await AoTokenSentTransactions(CurrentToken, myProcessTxIdInPage, String(startIndex), String(endIndex))
+    const AoDryRunData: any = await AoTokenSentTransactions(CurrentToken, currentAddress, String(startIndex), String(endIndex))
     console.log("handleAoTokenSentTransactions AoDryRunData", AoDryRunData)
     try{
       if(AoDryRunData) {
@@ -406,7 +406,7 @@ const TokenIndexModel = (prop: any) => {
       ...prevState,
       AoTokenReceivedTransactionsList: [[],[],[],[],[],[],[],[],[],[]],
     }))
-    const AoDryRunData: any = await AoTokenReceivedTransactions(CurrentToken, myProcessTxIdInPage, String(startIndex), String(endIndex))
+    const AoDryRunData: any = await AoTokenReceivedTransactions(CurrentToken, currentAddress, String(startIndex), String(endIndex))
     console.log("handleAoTokenReceivedTransactions AoDryRunData", AoDryRunData)
     try{
       if(AoDryRunData) {
@@ -521,20 +521,14 @@ const TokenIndexModel = (prop: any) => {
     const MintTokenData = await AoTokenMint(currentWallet.jwk, TokenProcessTxId, MintAmount)
     if(MintTokenData) {
       console.log("MintTokenData", MintTokenData)
-      if(MintTokenData?.msg?.Output?.data?.output)  {
-        const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      if(MintTokenData?.msg?.Messages[0]?.Data)  {
+        const formatText = MintTokenData?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
         if(formatText) {
-          const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-          if(MintTokenInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(formatText2, {
-                duration: 2000
-              })
-            }
-            await handleTokenSearch(TokenProcessTxId)
-          }
+          toast.success(formatText, {
+            duration: 5000
+          })
         }
+        await handleTokenSearch(TokenProcessTxId)
       }
     }
 
@@ -569,21 +563,16 @@ const TokenIndexModel = (prop: any) => {
     const MintTokenData = await AoTokenAirdrop(currentWallet.jwk, TokenProcessTxId, AddressList, AmountList)
     if(MintTokenData) {
       console.log("MintTokenData", MintTokenData)
-      if(MintTokenData?.msg?.Output?.data?.output)  {
-        const formatText = MintTokenData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      if(MintTokenData?.msg?.Messages[0]?.Data)  {
+        const formatText = MintTokenData?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
         if(formatText) {
-          const MintTokenInboxData = await GetMyLastMsg(currentWallet.jwk, TokenProcessTxId)
-          if(MintTokenInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = MintTokenInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(formatText2, {
-                duration: 2000
-              })
-            }
-            await handleTokenSearch(TokenProcessTxId)
-          }
+          toast.success(formatText, {
+            duration: 5000
+          })
         }
+        await handleTokenSearch(TokenProcessTxId)
       }
+      
     }
 
     setIsDisabledButton(false)
@@ -600,38 +589,39 @@ const TokenIndexModel = (prop: any) => {
     
     setIsDisabledButton(true)
 
-    const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, myProcessTxIdInPage, ReceivedAddress, Number(Amount))
+    const AoTokenTransferData = await AoTokenTransfer(currentWallet.jwk, TokenProcessTxId, ReceivedAddress, Number(Amount))
     if(AoTokenTransferData && tokenInfo && tokenInfo.Denomination) {
       console.log("AoTokenTransferData", AoTokenTransferData)
-      if(AoTokenTransferData?.msg?.Output?.data?.output)  {
-        const formatText = AoTokenTransferData?.msg?.Output?.data?.output.replace(ansiRegex, '');
+      if(AoTokenTransferData?.msg?.Messages[0]?.Data)  {
+        const formatText = AoTokenTransferData?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
         if(formatText) {
-          const AoTokenTransferInboxData = await GetMyLastMsg(currentWallet.jwk, myProcessTxIdInPage)
-          if(AoTokenTransferInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = AoTokenTransferInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              toast.success(formatText2, {
-                duration: 5000
-              })
-            }
-            
-            if(tokenInfo && tokenInfo.Release == "ChivesToken") {
-              await handleAoTokenBalancesDryRunChivesToken(TokenProcessTxId, tokenInfo.Denomination)
-            }
-            else {
-              await handleAoTokenBalancesDryRunOfficialToken(TokenProcessTxId, tokenInfo.Denomination)
-            }
+          toast.success(formatText, {
+            duration: 5000
+          })
 
-            const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, myProcessTxIdInPage)
-            if(AoDryRunBalance) {
-              setTokenGetInfor((prevState: any)=>({
-                ...prevState,
-                TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination))
-              }))
-            }
+          //if(AoTokenTransferData?.msg?.Messages[1]?.Data) {
+          //  toast.success(AoTokenTransferData?.msg?.Messages[1]?.Data.replace(ansiRegex, ''), {
+          //    duration: 5000
+          //  })
+          //}
 
+          if(tokenInfo && tokenInfo.Release == "ChivesToken") {
+            await handleAoTokenBalancesDryRunChivesToken(TokenProcessTxId, tokenInfo.Denomination)
           }
+          else {
+            await handleAoTokenBalancesDryRunOfficialToken(TokenProcessTxId, tokenInfo.Denomination)
+          }
+
+          const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, currentAddress)
+          if(AoDryRunBalance) {
+            setTokenGetInfor((prevState: any)=>({
+              ...prevState,
+              TokenBalance: FormatBalance(AoDryRunBalance, Number(tokenInfo.Denomination))
+            }))
+          }
+
         }
+
       }
     }
 
@@ -688,9 +678,6 @@ const TokenIndexModel = (prop: any) => {
                     <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
                       <Typography noWrap variant='body1' sx={{ my: 2, mx: 2 }}>
                           {t("Token Explorer")}
-                      </Typography>
-                      <Typography noWrap variant='body2' sx={{}}>
-                          MyAo: {myProcessTxIdInPage}
                       </Typography>
                       <IconButton sx={{mt: 1, ml: 1}} aria-label='capture screenshot' color='secondary' size='small' onClick={() => {
                           navigator.clipboard.writeText(myProcessTxIdInPage);
