@@ -17,6 +17,7 @@
 -- 7. Save project process tx ids.
 -- 8. Save Faucet process tx ids.
 
+Owner = Owner or "AoConnectOwner"
 Chatrooms = Chatrooms or {}
 Tokens = Tokens or {}
 Lotteries = Lotteries or {}
@@ -57,7 +58,7 @@ Handlers.add(
   "AddChatroom",
   Handlers.utils.hasMatchingTag("Action", "AddChatroom"),
   function (msg)
-        if msg.From == ao.id and msg.ChatroomId and #msg.ChatroomId == 43 then
+        if msg.From == Owner and msg.ChatroomId and #msg.ChatroomId == 43 then
           Chatrooms[msg.ChatroomId] = {
             ChatroomId = msg.ChatroomId,
             ChatroomSort = msg.ChatroomSort,
@@ -84,7 +85,7 @@ Handlers.add(
   "DelChatroom",
   Handlers.utils.hasMatchingTag("Action", "DelChatroom"),
   function (msg)
-    if msg.From == ao.id and msg.ChatroomId then
+    if msg.From == Owner and msg.ChatroomId then
         Chatrooms[msg.ChatroomId] = nil
         Handlers.utils.reply("Has delete chatroom")(msg)
         ao.send({
@@ -118,7 +119,7 @@ Handlers.add(
   "AddToken",
   Handlers.utils.hasMatchingTag("Action", "AddToken"),
   function (msg)
-    if msg.From == ao.id and msg.TokenId and #msg.TokenId == 43 then
+    if msg.From == Owner and msg.TokenId and #msg.TokenId == 43 then
         Tokens[msg.TokenId] = {
             TokenId = msg.TokenId,
             TokenSort = msg.TokenSort,
@@ -145,7 +146,7 @@ Handlers.add(
   "DelToken",
   Handlers.utils.hasMatchingTag("Action", "DelToken"),
   function (msg)
-    if msg.From == ao.id then
+    if msg.From == Owner then
       if Tokens[msg.TokenId] then
         Tokens[msg.TokenId] = nil;
         Handlers.utils.reply("Token deleted")(msg);
@@ -188,7 +189,7 @@ Handlers.add(
   "AddLottery",
   Handlers.utils.hasMatchingTag("Action", "AddLottery"),
   function (msg)
-    if msg.From == ao.id and msg.LotteryId and #msg.LotteryId == 43 then
+    if msg.From == Owner and msg.LotteryId and #msg.LotteryId == 43 then
         Lotteries[msg.LotteryId] = {
           LotteryId = msg.LotteryId,
           LotterySort = msg.LotterySort,
@@ -215,7 +216,7 @@ Handlers.add(
   "DelLottery",
   Handlers.utils.hasMatchingTag("Action", "DelLottery"),
   function (msg)
-    if msg.From == ao.id and msg.LotteryId then
+    if msg.From == Owner and msg.LotteryId then
         Lotteries[msg.LotteryId] = nil
         Handlers.utils.reply("Has delete Lottery")(msg)
         ao.send({
@@ -249,7 +250,7 @@ Handlers.add(
   "AddGuess",
   Handlers.utils.hasMatchingTag("Action", "AddGuess"),
   function (msg)
-    if msg.From == ao.id and msg.GuessId and #msg.GuessId == 43 then
+    if msg.From == Owner and msg.GuessId and #msg.GuessId == 43 then
         Guesses[msg.GuessId] = {
           GuessId = msg.GuessId,
           GuessSort = msg.GuessSort,
@@ -276,7 +277,7 @@ Handlers.add(
   "DelGuess",
   Handlers.utils.hasMatchingTag("Action", "DelGuess"),
   function (msg)
-    if msg.From == ao.id and msg.GuessId then
+    if msg.From == Owner and msg.GuessId then
         Guesses[msg.GuessId] = nil
         Handlers.utils.reply("Has delete Guess")(msg)
         ao.send({
@@ -309,7 +310,7 @@ Handlers.add(
   "AddBlog",
   Handlers.utils.hasMatchingTag("Action", "AddBlog"),
   function (msg)
-    if msg.From == ao.id and msg.BlogId and #msg.BlogId == 43 then
+    if msg.From == Owner and msg.BlogId and #msg.BlogId == 43 then
         Blogs[msg.BlogId] = {
             BlogId = msg.BlogId,
             BlogSort = msg.BlogSort,
@@ -336,7 +337,7 @@ Handlers.add(
   "DelBlog",
   Handlers.utils.hasMatchingTag("Action", "DelBlog"),
   function (msg)
-    if msg.From == ao.id and msg.BlogId then
+    if msg.From == Owner and msg.BlogId then
         Blogs[msg.BlogId] = nil
         Handlers.utils.reply("Has delete Blog")(msg)
         ao.send({
@@ -369,7 +370,7 @@ Handlers.add(
   "AddSwap",
   Handlers.utils.hasMatchingTag("Action", "AddSwap"),
   function (msg)
-    if msg.From == ao.id and msg.SwapId and #msg.SwapId == 43 then
+    if msg.From == Owner and msg.SwapId and #msg.SwapId == 43 then
         Swaps[msg.SwapId] = {
             SwapId = msg.SwapId,
             SwapSort = msg.SwapSort,
@@ -396,7 +397,7 @@ Handlers.add(
   "DelSwap",
   Handlers.utils.hasMatchingTag("Action", "DelSwap"),
   function (msg)
-    if msg.From == ao.id and msg.SwapId then
+    if msg.From == Owner and msg.SwapId then
         Swaps[msg.SwapId] = nil
         Handlers.utils.reply("Has delete Swap")(msg)
         ao.send({
@@ -429,7 +430,7 @@ Handlers.add(
   "AddProject",
   Handlers.utils.hasMatchingTag("Action", "AddProject"),
   function (msg)
-    if msg.From == ao.id and msg.ProjectId and #msg.ProjectId == 43 then
+    if msg.From == Owner and msg.ProjectId and #msg.ProjectId == 43 then
         Projects[msg.ProjectId] = {
             ProjectId = msg.ProjectId,
             ProjectSort = msg.ProjectSort,
@@ -456,7 +457,7 @@ Handlers.add(
   "DelProject",
   Handlers.utils.hasMatchingTag("Action", "DelProject"),
   function (msg)
-    if msg.From == ao.id and msg.ProjectId then
+    if msg.From == Owner and msg.ProjectId then
         Projects[msg.ProjectId] = nil
         Handlers.utils.reply("Has delete Project")(msg)
         ao.send({
@@ -489,7 +490,7 @@ Handlers.add(
   "AddFaucet",
   Handlers.utils.hasMatchingTag("Action", "AddFaucet"),
   function (msg)
-    if msg.From == ao.id and msg.FaucetId and #msg.FaucetId == 43 then
+    if msg.From == Owner and msg.FaucetId and #msg.FaucetId == 43 then
         Faucets[msg.FaucetId] = {
             FaucetId = msg.FaucetId,
             FaucetSort = msg.FaucetSort,
@@ -516,7 +517,7 @@ Handlers.add(
   "DelFaucet",
   Handlers.utils.hasMatchingTag("Action", "DelFaucet"),
   function (msg)
-    if msg.From == ao.id and msg.FaucetId then
+    if msg.From == Owner and msg.FaucetId then
         Faucets[msg.FaucetId] = nil
         Handlers.utils.reply("Has delete Faucet")(msg)
         ao.send({
