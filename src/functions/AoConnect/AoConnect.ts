@@ -352,11 +352,43 @@ export const FormatBalance = (Balance: number, Denomination: number) => {
     return (new BigNumber(Number(Balance))).div(DivValue).toFixed()
 }
 
-export const BalanceTimes = (Balance: number, Denomination: number) => {
+export const BalanceTimes10 = (Balance: number, Denomination: number) => {
     const DenominationNew = Denomination > 0 ? Denomination : 12
     const DivValue = Math.pow(10, DenominationNew)
 
     return (new BigNumber(Number(Balance))).times(DivValue).toString()
+}
+
+export const BalanceTimes = (Balance1: number, Balance2: number) => {
+    const num1 = new BigNumber(Balance1);
+    const num2 = new BigNumber(Balance2);
+    const times = num1.times(num2);
+    
+    return times.toString()
+}
+
+export const BalanceDiv = (Balance1: number, Balance2: number) => {
+    const num1 = new BigNumber(Balance1);
+    const num2 = new BigNumber(Balance2);
+    const div = num1.div(num2);
+    
+    return div.toString()
+}
+
+export const BalancePlus = (Balance1: number, Balance2: number) => {
+    const num1 = new BigNumber(Balance1);
+    const num2 = new BigNumber(Balance2);
+    const sum = num1.plus(num2);
+    
+    return sum.toString()
+}
+
+export const BalanceMinus = (Balance1: number, Balance2: number) => {
+    const num1 = new BigNumber(Balance1);
+    const num2 = new BigNumber(Balance2);
+    const difference = num1.minus(num2);
+
+    return difference.toString()
 }
 
 export const BalanceCompare = (Balance1: number, Balance2: number) => {

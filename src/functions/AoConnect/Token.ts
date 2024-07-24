@@ -5,7 +5,7 @@ import authConfig from 'src/configs/auth'
 
 import axios from 'axios'
 
-import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes } from 'src/functions/AoConnect/AoConnect'
+import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord, BalanceTimes10 } from 'src/functions/AoConnect/AoConnect'
 
 
 
@@ -175,7 +175,7 @@ export const AoTokenTransfer = async (currentWalletJwk: any, tokenTxId: string, 
             process: myTokenProcessTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + tokenTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes(sendOutAmount, Denomination) + '"})',
+            data: 'Send({ Target = "' + tokenTxId + '", Action = "Transfer", Recipient = "' + sendOutProcessTxId + '", Quantity = "' + BalanceTimes10(sendOutAmount, Denomination) + '"})',
         });
         console.log("AoTokenTransfer Transfer", SendTokenResult)
         
@@ -216,7 +216,7 @@ export const AoTokenMint = async (currentWalletJwk: any, tokenTxId: string, mint
             process: tokenTxId,
             tags: [ { name: 'Action', value: 'Eval' } ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + BalanceTimes(mintAmount, Denomination) + '" }})',
+            data: 'Send({ Target = "' + tokenTxId + '", Tags = { Action = "Mint", Quantity = "' + BalanceTimes10(mintAmount, Denomination) + '" }})',
         });
         console.log("AoTokenTransfer Transfer", SendTokenResult)
         
@@ -268,7 +268,7 @@ export const AoTokenAirdrop = async (currentWalletJwk: any, tokenTxId: string, A
             }
         })
         const AmountListArray = AmountList.split('****')
-        const AmountListFilter = AmountListArray.map(item => String(BalanceTimes(Number(item), Denomination)))
+        const AmountListFilter = AmountListArray.map(item => String(BalanceTimes10(Number(item), Denomination)))
         const AmountListString = AmountListFilter.join('****')
         
         

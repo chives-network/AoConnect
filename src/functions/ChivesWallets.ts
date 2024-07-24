@@ -7,6 +7,8 @@ import type { JWKInterface } from 'arweave/web/lib/wallet'
 
 import { TxRecordType } from 'src/types/apps/Chivesweave'
 
+import { BalancePlus } from 'src/functions/AoConnect/AoConnect'
+
 // @ts-ignore
 import { v4 } from 'uuid'
 import BigNumber from 'bignumber.js'
@@ -26,6 +28,8 @@ const chivesTxStatus: string = authConfig.chivesTxStatus
 const chivesLanguage: string = authConfig.chivesLanguage
 const chivesProfile: string = authConfig.chivesProfile
 const chivesReferee: string = authConfig.chivesReferee
+const chivesContacts: string = authConfig.chivesContacts
+
 
 export async function generateNewMnemonicAndGetWalletData (mnemonic: string) {
     try {
@@ -270,25 +274,129 @@ export function deleteWalletById(WalletId: number) {
     return true
 };
 
-export async function getWalletBalance(Address: string) {
+export function deleteWalletByWallet(WalletJwk: any) {
+    const chivesWalletsList = window.localStorage.getItem(chivesWallets)
+    const walletExists = chivesWalletsList ? JSON.parse(chivesWalletsList) : []
+    const leftWallets = walletExists.filter((wallet: any) => wallet.jwk.n !== WalletJwk.n);
+    window.localStorage.setItem(chivesWallets, JSON.stringify(leftWallets))
     
-    return arweave.ar.winstonToAr(await arweave.wallets.getBalance(Address))
+    return true
+};
+
+
+
+export async function getWalletBalance(Address: string) {    
+    try {
+
+        return arweave.ar.winstonToAr(await arweave.wallets.getBalance(Address))
+    } 
+    catch (e) { 
+        console.warn('getWalletBalance failed') 
+    }
 }
 
 export async function getWalletBalanceWinston(Address: string) {
-    
-    return await arweave.wallets.getBalance(Address)
+    try {
+
+        return await arweave.wallets.getBalance(Address)
+    } 
+    catch (e) { 
+        console.warn('getWalletBalance failed') 
+    }
 }
 
 export async function getPrice(byteSize: number) {
-    
-    return arweave.ar.winstonToAr(await arweave.transactions.getPrice(byteSize))
+    try {
+
+        return arweave.ar.winstonToAr(await arweave.transactions.getPrice(byteSize))
+    } 
+    catch (e) { 
+        console.warn('getWalletBalance failed') 
+    }
 }
 
-
 export async function getPriceWinston(byteSize: number) {
-    
-    return await arweave.transactions.getPrice(byteSize)
+    try {
+
+        return await arweave.transactions.getPrice(byteSize)
+    } 
+    catch (e) { 
+        console.warn('getWalletBalance failed') 
+    }
+}
+
+export async function getWalletBalanceReservedRewards(Address: string) {
+    try {
+        const reserved_rewards_total = await axios.get(authConfig.backEndApi + '/wallet/' + Address + '/reserved_rewards_total' ).then(res=>res.data);
+
+        return arweave.ar.winstonToAr(reserved_rewards_total)
+    } 
+    catch (e) { 
+        console.warn('getWalletBalance failed') 
+    }
+}
+
+export async function getTxsInMemory() {
+    try {
+        if(authConfig.tokenType == "XWE")           {
+            const response = await axios.get(authConfig.backEndApi + '/tx/pending/record' ).then(res=>res.data);
+            if(response && response.length>0) {
+                const SendTxsInMemory: any = {}
+                const ReceiveTxsInMemory: any = {}
+                for (const item of response) {
+                    if(SendTxsInMemory[item.owner.address])  {
+                        SendTxsInMemory[item.owner.address] = BalancePlus(Number(item.quantity.xwe), Number(SendTxsInMemory[item.owner.address]))
+                    }
+                    else {
+                        SendTxsInMemory[item.owner.address] = Number(item.quantity.xwe)
+                    }
+                    if(ReceiveTxsInMemory[item.recipient])  {
+                        ReceiveTxsInMemory[item.recipient] = BalancePlus(Number(item.quantity.xwe), Number(ReceiveTxsInMemory[item.recipient]))
+                    }
+                    else {
+                        ReceiveTxsInMemory[item.recipient] = Number(item.quantity.xwe)
+                    }
+                }
+                
+                return {send: SendTxsInMemory, receive: ReceiveTxsInMemory}
+            }
+        }
+    } 
+    catch (e) { 
+        console.warn('getTxsInMemory failed') 
+    }
+}
+
+export async function getXweWalletAllTxs(Address: string, Type: string, pageId = 0, pageSize = 10) {
+
+    let addressApiType = ''
+    switch(Type) {
+        case 'AllTxs':
+            addressApiType = "txsrecord";
+            break;
+        case 'Sent':
+            addressApiType = "send";
+            break;
+        case 'Received':
+            addressApiType = "deposits";
+            break;
+        case 'Files':
+            addressApiType = "datarecord";
+            break;
+    }
+    try {
+        if(addressApiType && addressApiType!="" && Address && Address.length == 43)  {
+            const response = await axios.get(authConfig.backEndApi + '/wallet/' + `${Address}` + '/' + `${addressApiType}` + '/' + `${pageId}` + '/' + pageSize).then(res=>res.data)
+            const NewData: any[] = response.data.filter((record: any) => record.recipient)
+            response.data = NewData
+            
+            return response
+        }
+    } 
+    catch (e) { 
+        console.warn('getXweWalletAllTxs failed') 
+    }
+
 }
 
 export function winstonToAr(winston: string) {
@@ -854,6 +962,68 @@ export function getChivesReferee() {
 
 export function deleteChivesReferee() {
     window.localStorage.removeItem(chivesReferee)
+}
+
+export function setChivesContacts(Address: string, Name: string) {
+    try {
+        const chivesContactsText = window.localStorage.getItem(chivesContacts)      
+        const chivesContactsList = chivesContactsText ? JSON.parse(chivesContactsText) : {}
+        chivesContactsList[Address] = Name
+        window.localStorage.setItem(chivesContacts, JSON.stringify(chivesContactsList))
+
+        return chivesContactsList
+    }
+    catch (error: any) {
+        console.error(`setChivesContacts Error`, error);
+    }
+}
+
+export function deleteChivesContacts(Address: string) {
+    try {
+        const chivesContactsText = window.localStorage.getItem(chivesContacts)      
+        const chivesContactsList = chivesContactsText ? JSON.parse(chivesContactsText) : {}
+        if (Address in chivesContactsList) {
+            delete chivesContactsList[Address];
+        }
+        window.localStorage.setItem(chivesContacts, JSON.stringify(chivesContactsList))
+
+        return chivesContactsList
+    }
+    catch (error: any) {
+        console.error(`deleteChivesContacts Error`, error);
+    }
+}
+
+
+export function searchChivesContacts(searchValue: string) {
+    try {
+        const chivesContactsText = window.localStorage.getItem(chivesContacts)      
+        const chivesContactsList = chivesContactsText ? JSON.parse(chivesContactsText) : {}
+        
+        const result: any = {};
+        for (const key in chivesContactsList) {
+            if (key.toLowerCase().includes(searchValue.toLowerCase()) || chivesContactsList[key].toLowerCase().includes(searchValue.toLowerCase())) {
+                result[key] = chivesContactsList[key]
+            }
+        }
+
+        return result
+    }
+    catch (error: any) {
+        console.error(`deleteChivesContacts Error`, error);
+    }
+}
+
+export function getChivesContacts() {
+    try {
+        const chivesContactsText = window.localStorage.getItem(chivesContacts)      
+        const chivesContactsList = chivesContactsText ? JSON.parse(chivesContactsText) : {}
+
+        return chivesContactsList
+    }
+    catch (error: any) {
+        console.error(`getChivesContacts Error`, error);
+    }
 }
 
 export async function CheckBundleTxStatus() {
