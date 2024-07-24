@@ -123,6 +123,7 @@ export const ChivesEmailReadEmailContent = async (currentWalletJwk: any, TargetT
         //console.log("ChivesEmailReadEmailContent Data", Data)
         //console.log("ChivesEmailReadEmailContent GetChivesEmailReadEmailContentResult", GetChivesEmailReadEmailContentResult)
         
+        
         if(GetChivesEmailReadEmailContentResult && GetChivesEmailReadEmailContentResult.length == 43) {
             const MsgContent = await AoGetRecord(TargetTxId, GetChivesEmailReadEmailContentResult)
 

@@ -2,7 +2,7 @@
 -- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
--- Version: 20240620
+-- Version: 20240725
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/token.lua
 
 -- Function
@@ -67,7 +67,7 @@ local utils = {
 
 function Welcome()
   return(
-      "Welcome to Chives Token V0.2!\n\n" ..
+      "Welcome to Chives Token V0.3!\n\n" ..
       "Main functoin:\n\n" ..
       "1. Support Token Airdrop.\n" ..
       "2. Support Balances.\n" ..
@@ -81,7 +81,7 @@ end
 Name = 'AoConnectToken' 
 Ticker = Ticker or 'AOCN'
 Denomination = Denomination or 12
-Balances = Balances or { [ao.id] = utils.toBalanceValue(9999 * 10^Denomination) }
+Balances = Balances or { [msg.From] = utils.toBalanceValue(9999 * 10^Denomination) }
 Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 SentTransactions = SentTransactions or {}
 ReceivedTransactions = ReceivedTransactions or {}
@@ -105,7 +105,7 @@ Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(m
     TokenHolders = tokenHolders,
     Logo = Logo,
     Release = 'ChivesToken',
-    Version = '20240620'
+    Version = '20240725'
   })
 end)
 
