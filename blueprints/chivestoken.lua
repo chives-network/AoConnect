@@ -79,7 +79,7 @@ end
 
 -- token should be idempotent and not change previous state updates
 Owner = Owner or 'AoConnectOwner'
-Name = Name
+Name = Name -- can not add ' or '
 Ticker = Ticker or 'AOCN'
 Denomination = Denomination or 12
 Balances = Balances or { ['AoConnectOwner'] = utils.toBalanceValue(9999 * 10^Denomination) }
