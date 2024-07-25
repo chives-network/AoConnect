@@ -649,7 +649,7 @@ const TokenIndexModel = (prop: any) => {
 
   const handleGetServerData = async () => {
     
-    const ChivesServerDataGetTokensData1 = await ChivesServerDataGetTokens(authConfig.AoConnectChivesServerData, authConfig.AoConnectChivesServerData)
+    const ChivesServerDataGetTokensData1 = await ChivesServerDataGetTokens(authConfig.AoConnectChivesServerTxId, authConfig.AoConnectChivesServerTxId)
     
     if(ChivesServerDataGetTokensData1) {
         const dataArray = Object.values(ChivesServerDataGetTokensData1);
@@ -679,12 +679,6 @@ const TokenIndexModel = (prop: any) => {
                       <Typography noWrap variant='body1' sx={{ my: 2, mx: 2 }}>
                           {t("Token Explorer")}
                       </Typography>
-                      <IconButton sx={{mt: 1, ml: 1}} aria-label='capture screenshot' color='secondary' size='small' onClick={() => {
-                          navigator.clipboard.writeText(myProcessTxIdInPage);
-                          toast.success(t('Copied success') as string, { duration: 1000 });
-                      }}>
-                          <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
-                      </IconButton>
                     </Grid>
                   </Card>
                 </Grid>
@@ -769,21 +763,6 @@ const TokenIndexModel = (prop: any) => {
 
                       { searchToken && (addTokenFavorite == false || isSearchTokenModelOpen) && tokenGetInfor && tokenGetInfor.CurrentToken && (
                         <Fragment>
-                          {tokenGetInfor && tokenGetInfor.Name && (
-                            <Grid item sx={{ display: 'flex', flexDirection: 'row', m: 2 }}>
-                              <Typography sx={{ fontWeight: 500, fontSize: '0.875rem', pt: 0.8 }}>
-                                  Token: {searchToken}
-                              </Typography>
-                              {searchToken && (
-                                <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                                    navigator.clipboard.writeText(searchToken);
-                                    toast.success(t('Copied success') as string, { duration: 1000 })
-                                }}>
-                                    <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
-                                </IconButton>
-                              )}
-                            </Grid>
-                          )}
                           {tokenGetInfor && tokenGetInfor.Name == null && (
                             <Grid item sx={{ display: 'flex', flexDirection: 'row', m: 2 }}>
                               <Typography sx={{ fontWeight: 500, fontSize: '0.875rem', pt: 0.8, ml: 2, color: `error.main` }}>
@@ -1054,7 +1033,7 @@ const TokenIndexModel = (prop: any) => {
                               let ServerModelData = null
                               let AvatarLogo = ""
                               try{ 
-                                  ServerModelData = Row[serverModel + 'Data'] && JSON.parse(Row[serverModel + 'Data'])
+                                  ServerModelData = Row[serverModel + 'Data'] && JSON.parse(Row[serverModel + 'Data'].replace(/\\"/g, '"'))
                                   if(ServerModelData && ServerModelData.Logo) {
                                       AvatarLogo = ServerModelData.Logo
                                   }

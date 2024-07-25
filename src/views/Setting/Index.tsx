@@ -56,7 +56,7 @@ const SettingModel = () => {
   const currentAddress = auth.currentAddress
 
   const [serverModel, setServerModel] = useState<string>("Token")
-  const [serverTxId, setServerTxId] = useState<string>("91uljP8YzSKu01C73xDJNlAs6jcZIboWbsgkPnB-Ks4")
+  const [serverTxId, setServerTxId] = useState<string>("cC3CM1npsgqmFygx--WUooDj5SQMDEwIBFKiuGuqu5Y")
   const [serverData, setServerData] = useState<any>({})
 
   const [isAllowAddServerData, setIsAllowAddServerData] = useState<boolean>(false)

@@ -12,7 +12,8 @@ export default {
   backEndApiChatBook: '',
   AoConnectChatRoom: 'AoConnectChatRoom',
   AoConnectMyProcessTxIds: 'w6HQkGKz9VKszy1pT9JcqWUlElv5smxDI_Inv1OOeqc', // lua file MyProcessTxIds wallet: t5SrAnDXhQnpzNMBSZB7tU8k3BX7YkGnJFS2O9UgEc4 Demo: h16RkEweAlPfSdQuUprM4vmIkUmU8AzwwqMVmh5KF5M
-  AoConnectChivesServerData: '91uljP8YzSKu01C73xDJNlAs6jcZIboWbsgkPnB-Ks4',
+  AoConnectChivesServerTxId: 'cC3CM1npsgqmFygx--WUooDj5SQMDEwIBFKiuGuqu5Y',
+  AoConnectChivesServerUser: 'B7IT6nWYrkE7JDfSgIM_wiuRylP9W3Tagicl428m1gI',
   AoConnectChivesEmailServerData: 'XfYhx10ueGxMwMWyVKAH2O18LJisSkUQATrga9z9Ggs',
   
   chivesWallets: 'ChivesWallets',
