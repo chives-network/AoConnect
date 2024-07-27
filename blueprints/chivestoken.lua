@@ -190,27 +190,27 @@ Handlers.add('Transfer', Handlers.utils.hasMatchingTag('Action', 'Transfer'), fu
     Balances[msg.From] = utils.subtract(Balances[msg.From], msg.Quantity)
     Balances[msg.Recipient] = utils.add(Balances[msg.Recipient], msg.Quantity)
 
-    table.insert(AllTransactions, { msg.From, msg.Recipient, msg.Quantity, msg.Tags.Ref_ })
+    table.insert(AllTransactions, 1, { msg.From, msg.Recipient, msg.Quantity, msg.Tags.Ref_ })
 
     if not SentTransactions[msg.From] then
       SentTransactions[msg.From] = {}
     end
-    table.insert(SentTransactions[msg.From], { msg.Recipient, msg.Quantity, msg.Tags.Ref_ })
+    table.insert(SentTransactions[msg.From], 1, { msg.Recipient, msg.Quantity, msg.Tags.Ref_ })
 
     if not ReceivedTransactions[msg.Recipient] then
       ReceivedTransactions[msg.Recipient] = {}
     end
-    table.insert(ReceivedTransactions[msg.Recipient], { msg.From, msg.Quantity, msg.Tags.Ref_ })
+    table.insert(ReceivedTransactions[msg.Recipient], 1, { msg.From, msg.Quantity, msg.Tags.Ref_ })
 
     if not MyAllTransactions[msg.From] then
       MyAllTransactions[msg.From] = {}
     end
-    table.insert(MyAllTransactions[msg.From], { msg.Recipient, msg.Quantity, 'Sent', msg.Tags.Ref_ })
+    table.insert(MyAllTransactions[msg.From], 1, { msg.Recipient, msg.Quantity, 'Sent', msg.Tags.Ref_ })
 
     if not MyAllTransactions[msg.Recipient] then
       MyAllTransactions[msg.Recipient] = {}
     end
-    table.insert(MyAllTransactions[msg.Recipient], { msg.From, msg.Quantity, 'Received', msg.Tags.Ref_ })
+    table.insert(MyAllTransactions[msg.Recipient], 1, { msg.From, msg.Quantity, 'Received', msg.Tags.Ref_ })
     
     --[[
          Only send the notifications to the Sender and Recipient
