@@ -238,17 +238,8 @@ const SettingModel = () => {
             const ChivesServerDataDelTokenData1 = await ChivesServerDataDelToken(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelTokenData1) {
                 console.log("ChivesServerDataDelTokenData1", ChivesServerDataDelTokenData1)
-                if(ChivesServerDataDelTokenData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelTokenData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelTokenData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelTokenData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelTokenData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
@@ -257,17 +248,8 @@ const SettingModel = () => {
             const ChivesServerDataDelChatroomData1 = await ChivesServerDataDelChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
             if(ChivesServerDataDelChatroomData1) {
                 console.log("ChivesServerDataDelChatroomData1", ChivesServerDataDelChatroomData1)
-                if(ChivesServerDataDelChatroomData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelChatroomData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelChatroomData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelChatroomData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelChatroomData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelChatroomData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelChatroomData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
@@ -276,17 +258,8 @@ const SettingModel = () => {
             const ChivesServerDataDelLotteryData1 = await ChivesServerDataDelLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
             if(ChivesServerDataDelLotteryData1) {
                 console.log("ChivesServerDataDelLotteryData1", ChivesServerDataDelLotteryData1)
-                if(ChivesServerDataDelLotteryData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelLotteryData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelLotteryData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelLotteryData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelLotteryData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelLotteryData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelLotteryData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
@@ -295,17 +268,8 @@ const SettingModel = () => {
             const ChivesServerDataDelGuessData1 = await ChivesServerDataDelGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
             if(ChivesServerDataDelGuessData1) {
                 console.log("ChivesServerDataDelGuessData1", ChivesServerDataDelGuessData1)
-                if(ChivesServerDataDelGuessData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelGuessData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelGuessData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelGuessData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelGuessData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelGuessData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelGuessData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
@@ -314,17 +278,8 @@ const SettingModel = () => {
             const ChivesServerDataDelBlogData1 = await ChivesServerDataDelBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
             if(ChivesServerDataDelBlogData1) {
                 console.log("ChivesServerDataDelBlogData1", ChivesServerDataDelBlogData1)
-                if(ChivesServerDataDelBlogData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelBlogData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelBlogData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelBlogData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelBlogData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelBlogData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelBlogData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
@@ -333,17 +288,8 @@ const SettingModel = () => {
             const ChivesServerDataDelSwapData1 = await ChivesServerDataDelSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
             if(ChivesServerDataDelSwapData1) {
                 console.log("ChivesServerDataDelSwapData1", ChivesServerDataDelSwapData1)
-                if(ChivesServerDataDelSwapData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelSwapData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelSwapData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelSwapData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelSwapData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelSwapData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelSwapData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
@@ -352,17 +298,8 @@ const SettingModel = () => {
             const ChivesServerDataDelProjectData1 = await ChivesServerDataDelProject(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
             if(ChivesServerDataDelProjectData1) {
                 console.log("ChivesServerDataDelProjectData1", ChivesServerDataDelProjectData1)
-                if(ChivesServerDataDelProjectData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelProjectData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelProjectData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelProjectData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelProjectData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelProjectData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelProjectData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
@@ -371,17 +308,8 @@ const SettingModel = () => {
             const ChivesServerDataDelFaucetData1 = await ChivesServerDataDelFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
             if(ChivesServerDataDelFaucetData1) {
                 console.log("ChivesServerDataDelFaucetData1", ChivesServerDataDelFaucetData1)
-                if(ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output)  {
-                  const formatText = ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                  if(formatText) {
-                    const ChivesServerDataDelFaucetData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                    if(ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output)  {
-                      const formatText2 = ChivesServerDataDelFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                      if(formatText2) {
-                        toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                      }
-                    }
-                  }
+                if(ChivesServerDataDelFaucetData1?.msg?.Messages[0].Data)  {
+                    toast.success(t(ChivesServerDataDelFaucetData1?.msg?.Messages[0].Data) as string, { duration: 2500, position: 'top-center' })
                 }
             }
             handleGetServerData(Model)
