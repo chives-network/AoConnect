@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
-import { AoLoadBlueprintFaucet, AoFaucetCheckFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet } from 'src/functions/AoConnect/ChivesFaucet'
+import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet } from 'src/functions/AoConnect/ChivesFaucet'
 import { ansiRegex } from 'src/configs/functions'
 
 const ChivesFaucetModel = () => {
@@ -42,17 +42,10 @@ const ChivesFaucetModel = () => {
     setIsDisabledButton(true)
     setToolInfo(null)
 
-    /*
-    const FaucetProcessTxId = "MELwrHkq3w74Dc-s5PYgKA-KW-j3Wxk4yZX5j8yXSu4"
-    if(FaucetProcessTxId) {
-        setToolInfo((prevState: any)=>({
-            ...prevState,
-            FaucetProcessTxId: FaucetProcessTxId
-        }))
-    }
-    */
-    
-    const FaucetProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+
+    const FaucetProcessTxId = "rYl15VXlTUkkSHzEkXfdn8XVa1M9VewgfGdVRH2Ob40"
+    //const FaucetProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+
     if(FaucetProcessTxId) {
       setToolInfo((prevState: any)=>({
         ...prevState,
@@ -60,7 +53,7 @@ const ChivesFaucetModel = () => {
       }))
     }
 
-    await sleep(3000)
+    //await sleep(3000)
 
     let LoadBlueprintFaucet: any = await AoLoadBlueprintFaucet(currentWallet.jwk, FaucetProcessTxId, faucetInfo);
     while(LoadBlueprintFaucet && LoadBlueprintFaucet.status == 'ok' && LoadBlueprintFaucet.msg && LoadBlueprintFaucet.msg.error)  {
@@ -81,9 +74,19 @@ const ChivesFaucetModel = () => {
 
     await sleep(3000)
 
-    const Faucet_PROCESS = "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0"
+    const FAUCET_TOKEN_ID = "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q"
 
-    const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, Faucet_PROCESS, FaucetProcessTxId, 2)
+    const AoDryRunBalanceMyAddress = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, currentAddress)
+      if(AoDryRunBalanceMyAddress) {
+        console.log("FaucetProcessTxIdBalance AoDryRunBalanceMyAddress", AoDryRunBalanceMyAddress)
+        setToolInfo((prevState: any)=>({
+            ...prevState,
+            FaucetProcessTxIdBalanceMyAddress: AoDryRunBalanceMyAddress
+      }))
+    }
+
+    const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, FAUCET_TOKEN_ID, 2)
+    console.log("DepositFaucetData", DepositFaucetData)
     if(DepositFaucetData) {
         console.log("DepositFaucetData", DepositFaucetData)
         if(DepositFaucetData?.msg?.error)  {
@@ -93,62 +96,7 @@ const ChivesFaucetModel = () => {
           }))
         }
 
-        if(DepositFaucetData?.msg?.Output?.data?.output)  {
-          const formatText = DepositFaucetData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-          if(formatText) {
-  
-            setToolInfo((prevState: any)=>({
-              ...prevState,
-              DepositFaucetData1: formatText
-            }))
-  
-            //Read message from inbox
-            const UserOneInboxData1 = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
-            if(UserOneInboxData1?.msg?.Output?.data?.output)  {
-              const formatText2 = UserOneInboxData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  FaucetProcessTxId1: formatText2
-                }))
-              }
-            }
-            const UserOneInboxData2 = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
-            if(UserOneInboxData2?.msg?.Output?.data?.output)  {
-              const formatText2 = UserOneInboxData2?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  FaucetProcessTxId2: formatText2
-                }))
-              }
-            }
-            const UserOneInboxData4 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
-            if(UserOneInboxData4?.msg?.Output?.data?.output)  {
-              const formatText2 = UserOneInboxData4?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  SendFrom: formatText2
-                }))
-              }
-            }
-            const UserOneInboxData3 = await GetMyLastMsg(currentWallet.jwk, SendFrom)
-            if(UserOneInboxData3?.msg?.Output?.data?.output)  {
-              const formatText2 = UserOneInboxData3?.msg?.Output?.data?.output.replace(ansiRegex, '');
-              if(formatText2) {
-                setToolInfo((prevState: any)=>({
-                  ...prevState,
-                  SendFrom: formatText2
-                }))
-              }
-            }
-  
-          }
-  
-        }
-
-        const AoDryRunBalance = await AoTokenBalanceDryRun(Faucet_PROCESS, FaucetProcessTxId)
+        const AoDryRunBalance = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, FaucetProcessTxId)
           if(AoDryRunBalance) {
             console.log("FaucetProcessTxIdBalance AoDryRunBalance", AoDryRunBalance)
             setToolInfo((prevState: any)=>({
@@ -163,9 +111,9 @@ const ChivesFaucetModel = () => {
         }))
     }
 
-    const FaucetBalanceData = await AoFaucetCheckFaucetBalance(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId)
+    const FaucetBalanceData = await AoFaucetGetFaucetBalance(FaucetProcessTxId)
     if(FaucetBalanceData) {
-      console.log("AoFaucetCheckFaucetBalance FaucetBalanceData1", FaucetBalanceData)
+      console.log("AoFaucetGetFaucetBalance FaucetBalanceData1", FaucetBalanceData)
       if(FaucetBalanceData?.msg?.Output?.data?.output)  {
         const formatText = FaucetBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
@@ -175,76 +123,16 @@ const ChivesFaucetModel = () => {
             FaucetBalance1: formatText
           }))
 
-          //Read message from inbox
-          const FaucetInboxData = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
-          console.log("AoFaucetCheckFaucetBalance FaucetBalanceData2", FaucetInboxData)
-          if(FaucetInboxData?.msg?.Output?.data?.output)  {
-            const formatText2 = FaucetInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                FaucetBalance2: formatText2
-              }))
-            }
-          }
-
         }
 
       }
     }
-    const UserOne = "t5SrAnDXhQnpzNMBSZB7tU8k3BX7YkGnJFS2O9UgEc4"
 
-    const SendFaucetToUserOneData = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId, UserOne)
+    const SendFaucetToUserOneData = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId)
     if(SendFaucetToUserOneData) {
+      
       console.log("SendFaucetToUserOneData", SendFaucetToUserOneData)
-      if(SendFaucetToUserOneData?.msg?.error)  {
-        setToolInfo((prevState: any)=>({
-          ...prevState,
-          SendFaucetToUserOneData: SendFaucetToUserOneData?.msg?.error
-        }))
-      }
-      if(SendFaucetToUserOneData?.msg?.Output?.data?.output)  {
-        const formatText = SendFaucetToUserOneData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            SendFaucetToUserOneData: formatText
-          }))
-
-          //Read message from inbox
-          const UserOneInboxData1 = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
-          if(UserOneInboxData1?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                SendFaucetToUserOneData: formatText2
-              }))
-            }
-          }
-          const UserOneInboxData5 = await GetMyLastMsg(currentWallet.jwk, UserOne)
-          if(UserOneInboxData5?.msg?.Output?.data?.output)  {
-            const formatText2 = UserOneInboxData5?.msg?.Output?.data?.output.replace(ansiRegex, '');
-            if(formatText2) {
-              setToolInfo((prevState: any)=>({
-                ...prevState,
-                UserOne: formatText2
-              }))
-            }
-          }
-          const AoDryRunBalance = await AoTokenBalanceDryRun(Faucet_PROCESS, UserOne)
-          if(AoDryRunBalance) {
-            console.log("AoTokenBalanceDryRun AoDryRunBalance", AoDryRunBalance)
-            setToolInfo((prevState: any)=>({
-                ...prevState,
-                UserOneBalance: AoDryRunBalance
-            }))
-          }
-
-        }
-
-      }
+      
     }
 
 

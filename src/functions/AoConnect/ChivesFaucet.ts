@@ -29,7 +29,7 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
             Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", FaucetInfo.Logo)
         }
         if(FaucetInfo && FaucetInfo.FAUCET_TOKEN_ID) {
-            Data = Data.replace("jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0", FaucetInfo.FAUCET_TOKEN_ID)
+            Data = Data.replace("Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q", FaucetInfo.FAUCET_TOKEN_ID)
         }
         if(FaucetInfo && FaucetInfo.FAUCET_SEND_AMOUNT) {
             Data = Data.replace("0.123", FaucetInfo.FAUCET_SEND_AMOUNT)
@@ -209,7 +209,7 @@ export const AoFaucetCreditBalances = async (TargetTxId: string, startIndex: str
     }
 }
 
-export const AoFaucetCheckFaucetBalance = async (TargetTxId: string, currentAddress: string) => {
+export const AoFaucetGetFaucetBalance = async (TargetTxId: string) => {
     try {
         if(TargetTxId && TargetTxId.length != 43) {
 
@@ -244,7 +244,7 @@ export const AoFaucetCheckFaucetBalance = async (TargetTxId: string, currentAddr
         }
     }
     catch(Error: any) {
-        console.error("AoFaucetCheckFaucetBalance Error:", Error)
+        console.error("AoFaucetGetFaucetBalance Error:", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };
