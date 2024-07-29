@@ -116,7 +116,6 @@ Handlers.add(
     end,
     function(msg)
         if msg.Tags.Balance then
-          creditBalances[msg.Tags.Ref_] = {msg.Tags.Sender, msg.Tags.Quantity, msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_}
           FAUCET_BALANCE = msg.Tags.Balance
         end
     end
@@ -156,6 +155,8 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
     -- Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From .. ' SendAmount: ' .. SendAmount
     Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
   })
+
+  creditBalances[msg.Tags.Ref_] = {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_, msg}
 
 end)
 
