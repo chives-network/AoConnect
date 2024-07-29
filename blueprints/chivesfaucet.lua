@@ -2,12 +2,12 @@
 -- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
--- Version: 20240620
+-- Version: 20240729
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/chivesfaucet.lua
 
 -- Function
--- 1. Deposit token to faucet.
--- 2. Credit token to user from faucet process tx id.
+-- 1. Deposit token to faucet wallet address.
+-- 2. Credit token to user from faucet wallet addres.
 -- 3. Deposit records
 -- 4. Credit records
 -- 5. Setting rules
@@ -24,10 +24,10 @@ receivedBalances = receivedBalances or {}
 
 FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  0.123
 FAUCET_SEND_RULE = FAUCET_SEND_RULE or  'EveryDay' -- OneTime or EveryDay
-FAUCET_PROCESS = FAUCET_PROCESS or "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0" -- Staking and Received Token Process Tx Id
+FAUCET_TOKEN_ID = FAUCET_TOKEN_ID or "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0" -- Staking and Received Token Process Tx Id
 FAUCET_BALANCE = FAUCET_BALANCE or '-1'
 
-Name = Name or 'AoConnectFaucet' 
+Name = 'AoConnectFaucet' 
 Denomination = Denomination or 12
 Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
 
@@ -60,8 +60,8 @@ function Welcome()
   return(
       "Welcome to ChivesFaucet V0.1!\n\n" ..
       "Main functoin:\n\n" ..
-      "1. Deposit token to faucet.\n" ..
-      "2. Credit token to user from faucet process tx id.\n" ..
+      "1. Deposit token to faucet wallet address.\n" ..
+      "2. Credit token to user from faucet wallet addres.\n" ..
       "3. Deposit records.\n" ..
       "4. Credit records.\n" ..
       "5. Setting rules.\n" ..
@@ -70,21 +70,24 @@ end
 
 Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
   ao.send({
-    Id = FAUCET_PROCESS,
-    Balance = FAUCET_BALANCE,
+    Id = FAUCET_TOKEN_ID,
     Name = Name,
     Logo = Logo,
+    FaucetTokenId = FAUCET_TOKEN_ID,
+    FaucetBalance = FAUCET_BALANCE,
+    FaucetRule = FAUCET_SEND_RULE,
+    FaucetAmount = FAUCET_SEND_AMOUNT,
     Denomination = tostring(Denomination),
     Release = 'ChivesFaucet',
-    Version = '20240620',
+    Version = '20240729',
   })
 end)
 
--- Monitor received txs action from FAUCET_PROCESS & Update faucet balance automation
+-- Monitor received txs action from FAUCET_TOKEN_ID & Update faucet balance automation
 Handlers.add(
     "MonitorReceivedTxActions",
     function(msg)
-      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == FAUCET_PROCESS then
+      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == FAUCET_TOKEN_ID then
         if msg.Tags.Action == 'Credit-Notice' or msg.Tags.Action == 'ChivesToken-Credit-Notice' then
           return true
         else 
@@ -95,9 +98,9 @@ Handlers.add(
       end
     end,
     function(msg)
-      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == FAUCET_PROCESS and msg.Tags.Ref_ then
+      if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == FAUCET_TOKEN_ID and msg.Tags.Ref_ then
         depositBalances[msg.Tags.Ref_] = {msg.Tags.Sender, msg.Tags.Quantity, msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_}
-        Send({ Target = FAUCET_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
+        Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
       end 
     end
 )
@@ -106,7 +109,7 @@ Handlers.add(
 Handlers.add(
     "MonitorSendOutTxActions",
     function(msg)
-      if msg.From == FAUCET_PROCESS and msg.Tags.Balance then
+      if msg.From == FAUCET_TOKEN_ID and msg.Tags.Balance then
           return true
       else
           return false
@@ -120,8 +123,8 @@ Handlers.add(
 )
 
 -- Check faucet balance
-Handlers.add('CheckBalance', Handlers.utils.hasMatchingTag('Action', 'CheckBalance'), function(msg)
-  Send({ Target = FAUCET_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
+Handlers.add('CheckFaucetBalance', Handlers.utils.hasMatchingTag('Action', 'CheckFaucetBalance'), function(msg)
+  Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
   if FAUCET_BALANCE == '-1' then
     ao.send({
       Target = msg.From,
@@ -135,19 +138,18 @@ Handlers.add('CheckBalance', Handlers.utils.hasMatchingTag('Action', 'CheckBalan
   end
 end)
 
--- Credit token one time
-Handlers.add('Credit', Handlers.utils.hasMatchingTag('Action', 'Credit'), function(msg)
-  Send({ Target = FAUCET_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
+-- GetFaucet token one time
+Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), function(msg)
+  Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
   local SendAmount = utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)
-  assert(type(msg.Recipient) == 'string', 'Recipient is required!')
   ao.send({
     Target = msg.From,
     Data = 'Faucet Balance 1: ' .. FAUCET_BALANCE
   })
   assert(bint.__le(bint(SendAmount), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount')
 
-  Send({ Target = FAUCET_PROCESS, Action = "Transfer", Recipient = msg.Recipient, Quantity = SendAmount, Tags = { Target = ao.id } })
-  Send({ Target = FAUCET_PROCESS, Action = "Balance", Tags = { Target = ao.id } })
+  Send({ Target = FAUCET_TOKEN_ID, Action = "Transfer", Recipient = msg.From, Quantity = SendAmount, Tags = { Target = ao.id } })
+  Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
 
   ao.send({
     Target = msg.From,

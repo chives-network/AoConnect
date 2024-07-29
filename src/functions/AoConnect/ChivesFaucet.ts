@@ -28,6 +28,15 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
         if(FaucetInfo && FaucetInfo.Logo) {
             Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", FaucetInfo.Logo)
         }
+        if(FaucetInfo && FaucetInfo.FAUCET_TOKEN_ID) {
+            Data = Data.replace("jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0", FaucetInfo.FAUCET_TOKEN_ID)
+        }
+        if(FaucetInfo && FaucetInfo.FAUCET_SEND_AMOUNT) {
+            Data = Data.replace("0.123", FaucetInfo.FAUCET_SEND_AMOUNT)
+        }
+        if(FaucetInfo && FaucetInfo.FAUCET_SEND_RULE) {
+            Data = Data.replace("EveryDay", FaucetInfo.FAUCET_SEND_RULE)
+        }
 
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -60,103 +69,48 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
     }
 }
 
-export const AoFaucetCheckBalance = async (currentWalletJwk: any, FaucetTxId: string, myAoConnectTxId: string) => {
+export const AoFaucetGetFaucet = async (currentWalletJwk: any, FaucetTxId: string) => {
     try {
         if(FaucetTxId && FaucetTxId.length != 43) {
 
             return
         }
-        if(myAoConnectTxId && myAoConnectTxId.length != 43) {
-
-            return
-        }
-        if(typeof FaucetTxId != 'string' || typeof myAoConnectTxId != 'string') {
-
-            return 
-        }
-        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-
-        const SendFaucetResult = await message({
-            process: myAoConnectTxId,
-            tags: [ { name: 'Action', value: 'Eval' } ],
-            signer: createDataItemSigner(currentWalletJwk),
-            data: 'Send({ Target = "' + FaucetTxId + '", Action = "CheckBalance", Tags = { Target = ao.id } })',
-        });
-        console.log("AoFaucetCheckBalance Balance", SendFaucetResult)
-        
-        if(SendFaucetResult && SendFaucetResult.length == 43) {
-            const MsgContent = await AoGetRecord(myAoConnectTxId, SendFaucetResult)
-            console.log("AoFaucetCheckBalance MsgContent", MsgContent)
-
-            return { status: 'ok', id: SendFaucetResult, msg: MsgContent };
-        }
-        else {
-
-            return { status: 'ok', id: SendFaucetResult };
-        }
-    }
-    catch(Error: any) {
-        console.error("AoFaucetBalance Error:", Error)
-        if(Error && Error.message) {
-
-            return { status: 'error', msg: Error.message };
-        }
-    }
-  
-}
-
-export const AoFaucetCredit = async (currentWalletJwk: any, FaucetTxId: string, myFaucetProcessTxId: string, sendOutProcessTxId: string) => {
-    try {
-        if(FaucetTxId && FaucetTxId.length != 43) {
-
-            return
-        }
-        if(myFaucetProcessTxId && myFaucetProcessTxId.length != 43) {
-
-            return
-        }
-        if(sendOutProcessTxId && sendOutProcessTxId.length != 43) {
-
-            return
-        }
-        if(typeof FaucetTxId != 'string' || typeof myFaucetProcessTxId != 'string' || typeof sendOutProcessTxId != 'string') {
+        if(typeof FaucetTxId != 'string') {
 
             return 
         }
         
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
-        const Data = 'Send({ Target = "' + FaucetTxId + '", Action = "Credit", Recipient = "' + sendOutProcessTxId + '" })'
-        const SendFaucetResult = await message({
-            process: myFaucetProcessTxId,
-            tags: [ { name: 'Action', value: 'Eval' } ],
+        const data = {
+            process: FaucetTxId,
+            tags: [
+              { name: "Action", value: "GetFaucet" },
+              ],
             signer: createDataItemSigner(currentWalletJwk),
-            data: Data,
-        });
-        console.log("AoFaucetCredit Credit", SendFaucetResult, Data)
-        
-        if(SendFaucetResult && SendFaucetResult.length == 43) {
-            const MsgContent = await AoGetRecord(myFaucetProcessTxId, SendFaucetResult)
+            data: ""
+        }
+        const SendTokenResult = await message(data);
 
-            return { status: 'ok', id: SendFaucetResult, msg: MsgContent };
+        if(SendTokenResult && SendTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(FaucetTxId, SendTokenResult)
+
+            return { status: 'ok', id: SendTokenResult, msg: MsgContent };
         }
         else {
 
-            return { status: 'ok', id: SendFaucetResult };
+            return { status: 'ok', id: SendTokenResult };
         }
+
     }
     catch(Error: any) {
-        console.error("AoFaucetCredit Error:", Error)
-        if(Error && Error.message) {
-
-            return { status: 'error', msg: Error.message };
-        }
+        console.error("AoFaucetGetFaucet Error:", Error)
     }
-  
+
 }
 
-export const AoFaucetDeposit = async (currentWalletJwk: any, FaucetTxId: string, myFaucetProcessTxId: string, sendOutProcessTxId: string, sendOutAmount: number) => {
+export const AoFaucetDepositToken = async (currentWalletJwk: any, FaucetTxId: string, DepositAmount: number) => {
 
-    return await AoTokenTransfer(currentWalletJwk, FaucetTxId, sendOutProcessTxId, sendOutAmount)
+    return await AoTokenTransfer(currentWalletJwk, FaucetTxId, FaucetTxId, DepositAmount)
 }
 
 export const AoFaucetDepositBalances = async (TargetTxId: string, startIndex: string, endIndex: string) => {
@@ -246,6 +200,51 @@ export const AoFaucetCreditBalances = async (TargetTxId: string, startIndex: str
     }
     catch(Error: any) {
         console.error("AoFaucetCreditBalances Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
+export const AoFaucetCheckFaucetBalance = async (TargetTxId: string, currentAddress: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        if(typeof TargetTxId != 'string') {
+
+            return 
+        }
+        
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'CheckFaucetBalance' },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+
+            return result.Messages[0].Data
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoFaucetCheckFaucetBalance Error:", Error)
         if(Error && Error.message) {
 
             return { status: 'error', msg: Error.message };

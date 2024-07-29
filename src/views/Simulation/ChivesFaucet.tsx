@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 
 import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
-import { AoLoadBlueprintFaucet, AoFaucetCheckBalance, AoFaucetDeposit, AoFaucetCredit } from 'src/functions/AoConnect/ChivesFaucet'
+import { AoLoadBlueprintFaucet, AoFaucetCheckFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet } from 'src/functions/AoConnect/ChivesFaucet'
 import { ansiRegex } from 'src/configs/functions'
 
 const ChivesFaucetModel = () => {
@@ -81,12 +81,9 @@ const ChivesFaucetModel = () => {
 
     await sleep(3000)
 
-    await sleep(2000)
-
-    const SendFrom = "Et_0JIWXDauOv9lew9NVJ_5P5vOj-jL9u9QpFCjj0GQ"
     const Faucet_PROCESS = "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0"
 
-    const DepositFaucetData = await AoFaucetDeposit(currentWallet.jwk, Faucet_PROCESS, SendFrom, FaucetProcessTxId, 2)
+    const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, Faucet_PROCESS, FaucetProcessTxId, 2)
     if(DepositFaucetData) {
         console.log("DepositFaucetData", DepositFaucetData)
         if(DepositFaucetData?.msg?.error)  {
@@ -166,9 +163,9 @@ const ChivesFaucetModel = () => {
         }))
     }
 
-    const FaucetBalanceData = await AoFaucetCheckBalance(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId)
+    const FaucetBalanceData = await AoFaucetCheckFaucetBalance(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId)
     if(FaucetBalanceData) {
-      console.log("AoFaucetCheckBalance FaucetBalanceData1", FaucetBalanceData)
+      console.log("AoFaucetCheckFaucetBalance FaucetBalanceData1", FaucetBalanceData)
       if(FaucetBalanceData?.msg?.Output?.data?.output)  {
         const formatText = FaucetBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
         if(formatText) {
@@ -180,7 +177,7 @@ const ChivesFaucetModel = () => {
 
           //Read message from inbox
           const FaucetInboxData = await GetMyLastMsg(currentWallet.jwk, FaucetProcessTxId)
-          console.log("AoFaucetCheckBalance FaucetBalanceData2", FaucetInboxData)
+          console.log("AoFaucetCheckFaucetBalance FaucetBalanceData2", FaucetInboxData)
           if(FaucetInboxData?.msg?.Output?.data?.output)  {
             const formatText2 = FaucetInboxData?.msg?.Output?.data?.output.replace(ansiRegex, '');
             if(formatText2) {
@@ -195,21 +192,9 @@ const ChivesFaucetModel = () => {
 
       }
     }
-    
-    const UserOne = await AoCreateProcessAuto(currentWallet.jwk)
-    if(UserOne) {
-      setToolInfo((prevState: any)=>({
-        ...prevState,
-        ReceivedTokenUserOne: UserOne
-      }))
-    }
+    const UserOne = "t5SrAnDXhQnpzNMBSZB7tU8k3BX7YkGnJFS2O9UgEc4"
 
-    await sleep(2000)
-
-    //const SendFrom = "Et_0JIWXDauOv9lew9NVJ_5P5vOj-jL9u9QpFCjj0GQ"
-    //const Faucet_PROCESS = "jsH3PcxiuEEVyiT3fgk648sO5kQ2ZuNNAZx5zOCJsz0"
-
-    const SendFaucetToUserOneData = await AoFaucetCredit(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId, UserOne)
+    const SendFaucetToUserOneData = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId, FaucetProcessTxId, UserOne)
     if(SendFaucetToUserOneData) {
       console.log("SendFaucetToUserOneData", SendFaucetToUserOneData)
       if(SendFaucetToUserOneData?.msg?.error)  {
