@@ -33,7 +33,7 @@ import { formatTimestampLocalTime } from 'src/configs/functions';
 
 import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 
-import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
+import { GetAppAvatarModId } from 'src/functions/AoConnect/Token'
 
 const EmailDetail = (props: EmailDetailType) => {
   // ** Hook

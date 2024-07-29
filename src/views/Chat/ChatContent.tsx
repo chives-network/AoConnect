@@ -12,7 +12,7 @@ import Button from '@mui/material/Button'
 import ChatLog from './ChatLog'
 import { useTranslation } from 'react-i18next'
 import SendMsgForm from 'src/views/Chat/SendMsgForm'
-import { GetAppAvatar } from 'src/functions/AoConnect/MsgReminder'
+import { GetAppAvatar } from 'src/functions/AoConnect/Token'
 
 const ChatContent = (props: any) => {
   // ** Props

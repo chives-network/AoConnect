@@ -245,7 +245,7 @@ const SettingModel = () => {
             handleGetServerData(Model)
             break;
         case 'Chatroom':
-            const ChivesServerDataDelChatroomData1 = await ChivesServerDataDelChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelChatroomData1 = await ChivesServerDataDelChatroom(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelChatroomData1) {
                 console.log("ChivesServerDataDelChatroomData1", ChivesServerDataDelChatroomData1)
                 if(ChivesServerDataDelChatroomData1?.msg?.Messages[0].Data)  {
@@ -255,7 +255,7 @@ const SettingModel = () => {
             handleGetServerData(Model)
             break;
         case 'Lottery':
-            const ChivesServerDataDelLotteryData1 = await ChivesServerDataDelLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelLotteryData1 = await ChivesServerDataDelLottery(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelLotteryData1) {
                 console.log("ChivesServerDataDelLotteryData1", ChivesServerDataDelLotteryData1)
                 if(ChivesServerDataDelLotteryData1?.msg?.Messages[0].Data)  {
@@ -265,7 +265,7 @@ const SettingModel = () => {
             handleGetServerData(Model)
             break;
         case 'Guess':
-            const ChivesServerDataDelGuessData1 = await ChivesServerDataDelGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelGuessData1 = await ChivesServerDataDelGuess(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelGuessData1) {
                 console.log("ChivesServerDataDelGuessData1", ChivesServerDataDelGuessData1)
                 if(ChivesServerDataDelGuessData1?.msg?.Messages[0].Data)  {
@@ -275,7 +275,7 @@ const SettingModel = () => {
             handleGetServerData(Model)
             break;
         case 'Blog':
-            const ChivesServerDataDelBlogData1 = await ChivesServerDataDelBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelBlogData1 = await ChivesServerDataDelBlog(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelBlogData1) {
                 console.log("ChivesServerDataDelBlogData1", ChivesServerDataDelBlogData1)
                 if(ChivesServerDataDelBlogData1?.msg?.Messages[0].Data)  {
@@ -285,7 +285,7 @@ const SettingModel = () => {
             handleGetServerData(Model)
             break;
         case 'Swap':
-            const ChivesServerDataDelSwapData1 = await ChivesServerDataDelSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelSwapData1 = await ChivesServerDataDelSwap(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelSwapData1) {
                 console.log("ChivesServerDataDelSwapData1", ChivesServerDataDelSwapData1)
                 if(ChivesServerDataDelSwapData1?.msg?.Messages[0].Data)  {
@@ -295,7 +295,7 @@ const SettingModel = () => {
             handleGetServerData(Model)
             break;
         case 'Project':
-            const ChivesServerDataDelProjectData1 = await ChivesServerDataDelProject(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelProjectData1 = await ChivesServerDataDelProject(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelProjectData1) {
                 console.log("ChivesServerDataDelProjectData1", ChivesServerDataDelProjectData1)
                 if(ChivesServerDataDelProjectData1?.msg?.Messages[0].Data)  {
@@ -305,7 +305,7 @@ const SettingModel = () => {
             handleGetServerData(Model)
             break;
         case 'Faucet':
-            const ChivesServerDataDelFaucetData1 = await ChivesServerDataDelFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, Id)
+            const ChivesServerDataDelFaucetData1 = await ChivesServerDataDelFaucet(currentWallet.jwk, ChivesServerData, Id)
             if(ChivesServerDataDelFaucetData1) {
                 console.log("ChivesServerDataDelFaucetData1", ChivesServerDataDelFaucetData1)
                 if(ChivesServerDataDelFaucetData1?.msg?.Messages[0].Data)  {
@@ -393,7 +393,7 @@ const SettingModel = () => {
             }
             break;
         case 'Chatroom':
-            const ChivesServerDataAddChatroom1 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddChatroom1 = await ChivesServerDataAddChatroom(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddChatroom1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -418,7 +418,7 @@ const SettingModel = () => {
             }
             break;
         case 'Guess':
-            const ChivesServerDataAddGuess1 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddGuess1 = await ChivesServerDataAddGuess(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddGuess1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -443,7 +443,7 @@ const SettingModel = () => {
             }
             break;
         case 'Lottery':
-            const ChivesServerDataAddLottery1 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddLottery1 = await ChivesServerDataAddLottery(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddLottery1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -468,7 +468,7 @@ const SettingModel = () => {
             }
             break;
         case 'Blog':
-            const ChivesServerDataAddBlog1 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddBlog1 = await ChivesServerDataAddBlog(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddBlog1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -493,7 +493,7 @@ const SettingModel = () => {
             }
             break;
         case 'Swap':
-            const ChivesServerDataAddSwap1 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddSwap1 = await ChivesServerDataAddSwap(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddSwap1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -518,7 +518,7 @@ const SettingModel = () => {
             }
             break;
         case 'Project':
-            const ChivesServerDataAddProject1 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddProject1 = await ChivesServerDataAddProject(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddProject1) {
                 handleGetServerData(Model)
                 setProcessTxId('')
@@ -543,7 +543,7 @@ const SettingModel = () => {
             }
             break;
         case 'Faucet':
-            const ChivesServerDataAddFaucet1 = await ChivesServerDataAddFaucet(currentWallet.jwk, ChivesServerData, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            const ChivesServerDataAddFaucet1 = await ChivesServerDataAddFaucet(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
             if(ChivesServerDataAddFaucet1) {
                 handleGetServerData(Model)
                 setProcessTxId('')

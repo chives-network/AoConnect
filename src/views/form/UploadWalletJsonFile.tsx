@@ -84,7 +84,7 @@ const UploadWalletJsonFile = ( { handleRefreshWalletData }: any ) => {
   
   const handleImportWalletJsonFile = async (file: File) => {
     const jsonFileContent: string = await readFileText(file)
-    const NewWalletData = await importWalletJsonFile(JSON.parse(jsonFileContent))
+    const NewWalletData: any = await importWalletJsonFile(JSON.parse(jsonFileContent))
     if(NewWalletData) {
         setInputMnemonicColor("success")
         setIsLoading(true)

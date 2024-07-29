@@ -42,7 +42,7 @@ import { formatTimestampLocalTime} from 'src/configs/functions';
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetAppAvatarModId } from 'src/functions/AoConnect/MsgReminder'
+import { GetAppAvatarModId } from 'src/functions/AoConnect/Token'
 
 import { GetFileCacheStatus } from 'src/functions/ChivesWallets'
 import { ChivesEmailReadEmailContent } from 'src/functions/AoConnect/ChivesEmail'

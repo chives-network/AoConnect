@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next'
 
 import CircularProgress from '@mui/material/CircularProgress'
 import MuiAvatar from '@mui/material/Avatar'
-import { GetAppAvatar } from 'src/functions/AoConnect/MsgReminder'
+import { GetAppAvatar } from 'src/functions/AoConnect/Token'
 import { formatHash} from 'src/configs/functions';
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {

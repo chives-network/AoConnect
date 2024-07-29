@@ -15,7 +15,7 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { FormatBalance } from 'src/functions/AoConnect/AoConnect'
+import { sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
 
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
 import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet, AoFaucetDepositBalances, AoFaucetCreditBalances } from 'src/functions/AoConnect/ChivesFaucet'
