@@ -18,9 +18,8 @@ local bint = require('.bint')(256)
 local ao = require('ao')
 local json = require('json')
 
-depositBalances = depositBalances or {}
 creditBalances = creditBalances or {}
-receivedBalances = receivedBalances or {}
+depositBalances = depositBalances or {}
 
 FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  0.123
 FAUCET_SEND_RULE = FAUCET_SEND_RULE or  'EveryDay' -- OneTime or EveryDay
@@ -117,6 +116,7 @@ Handlers.add(
     end,
     function(msg)
         if msg.Tags.Balance then
+          creditBalances[msg.Tags.Ref_] = {msg.Tags.Sender, msg.Tags.Quantity, msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_}
           FAUCET_BALANCE = msg.Tags.Balance
         end
     end
@@ -156,7 +156,7 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
     -- Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From .. ' SendAmount: ' .. SendAmount
     Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
   })
-  
+
 end)
 
 Handlers.add('depositBalances', 

@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { GetMyLastMsg, AoCreateProcessAuto, sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
 
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
-import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet } from 'src/functions/AoConnect/ChivesFaucet'
+import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet, AoFaucetDepositBalances, AoFaucetCreditBalances } from 'src/functions/AoConnect/ChivesFaucet'
 import { ansiRegex } from 'src/configs/functions'
 
 const ChivesFaucetModel = () => {
@@ -129,6 +129,24 @@ const ChivesFaucetModel = () => {
       setToolInfo((prevState: any)=>({
           ...prevState,
           FaucetBalanceData: FaucetBalanceData
+      }))
+    }
+
+    const FaucetDepositBalanceData = await AoFaucetDepositBalances(FaucetProcessTxId, '1', '10')
+    console.log("FaucetDepositBalanceData AoFaucetCreditBalances", FaucetBalanceData)
+    if(FaucetDepositBalanceData) {
+      setToolInfo((prevState: any)=>({
+          ...prevState,
+          //FaucetDepositBalanceData: FaucetDepositBalanceData
+      }))
+    }
+
+    const FaucetCreditBalanceData = await AoFaucetCreditBalances(FaucetProcessTxId, '1', '10')
+    console.log("FaucetCreditBalanceData AoFaucetCreditBalances", FaucetBalanceData)
+    if(FaucetCreditBalanceData) {
+      setToolInfo((prevState: any)=>({
+          ...prevState,
+          //FaucetCreditBalanceData: FaucetCreditBalanceData
       }))
     }
 
