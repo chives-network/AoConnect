@@ -146,7 +146,7 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
     Target = msg.From,
     Data = 'Faucet Balance 1: ' .. FAUCET_BALANCE
   })
-  assert(bint.__le(bint(SendAmount), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount')
+  assert(bint.__le(bint(SendAmount), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount. SendAmount: ' .. SendAmount .. ', FAUCET_BALANCE:' .. FAUCET_BALANCE)
 
   Send({ Target = FAUCET_TOKEN_ID, Action = "Transfer", Recipient = msg.From, Quantity = SendAmount, Tags = { Target = ao.id } })
   Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
