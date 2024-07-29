@@ -91,6 +91,7 @@ export const AoFaucetGetFaucet = async (currentWalletJwk: any, FaucetTxId: strin
             data: ""
         }
         const SendTokenResult = await message(data);
+        console.log("AoFaucetGetFaucet SendTokenResult:", SendTokenResult)
 
         if(SendTokenResult && SendTokenResult.length == 43) {
             const MsgContent = await AoGetRecord(FaucetTxId, SendTokenResult)

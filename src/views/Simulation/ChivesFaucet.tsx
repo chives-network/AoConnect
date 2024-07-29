@@ -43,7 +43,7 @@ const ChivesFaucetModel = () => {
     setToolInfo(null)
 
 
-    const FaucetProcessTxId = "rYl15VXlTUkkSHzEkXfdn8XVa1M9VewgfGdVRH2Ob40"
+    const FaucetProcessTxId = "SzmqnTMU5w4f7ySEcJktX3yh3-LhEURZ0d0oz7yF914"
     //const FaucetProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
 
     if(FaucetProcessTxId) {
@@ -77,11 +77,11 @@ const ChivesFaucetModel = () => {
     const FAUCET_TOKEN_ID = "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q"
 
     const MyAddressFaucetBalance = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, currentAddress)
-      if(MyAddressFaucetBalance) {
-        console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance)
-        setToolInfo((prevState: any)=>({
-            ...prevState,
-            MyAddressFaucetBalance: MyAddressFaucetBalance
+    if(MyAddressFaucetBalance) {
+      console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance)
+      setToolInfo((prevState: any)=>({
+          ...prevState,
+          MyAddressFaucetBalance: MyAddressFaucetBalance
       }))
     }
 
@@ -113,29 +113,24 @@ const ChivesFaucetModel = () => {
     }
     */
 
-    const SendFaucetToUserOneData = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId)
-    if(SendFaucetToUserOneData) {
-      
-      console.log("SendFaucetToUserOneData", SendFaucetToUserOneData)
-      
+    const GetFaucetFromFaucetTokenId: any = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId)
+    if(GetFaucetFromFaucetTokenId?.msg?.Messages && GetFaucetFromFaucetTokenId?.msg?.Messages[4]?.Data) {
+      console.log("GetFaucetFromFaucetTokenId", GetFaucetFromFaucetTokenId)
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        GetFaucetFromFaucetTokenId: GetFaucetFromFaucetTokenId?.msg?.Messages[4]?.Data
+      }))
     }
 
     const FaucetBalanceData = await AoFaucetGetFaucetBalance(FaucetProcessTxId)
     if(FaucetBalanceData) {
-      console.log("AoFaucetGetFaucetBalance FaucetBalanceData1", FaucetBalanceData)
-      if(FaucetBalanceData?.msg?.Output?.data?.output)  {
-        const formatText = FaucetBalanceData?.msg?.Output?.data?.output.replace(ansiRegex, '');
-        if(formatText) {
-
-          setToolInfo((prevState: any)=>({
-            ...prevState,
-            FaucetBalance1: formatText
-          }))
-
-        }
-
-      }
+      console.log("FaucetBalanceData AoFaucetGetFaucetBalance", FaucetBalanceData)
+      setToolInfo((prevState: any)=>({
+          ...prevState,
+          FaucetBalanceData: FaucetBalanceData
+      }))
     }
+
 
     setToolInfo((prevState: any)=>({
       ...prevState,

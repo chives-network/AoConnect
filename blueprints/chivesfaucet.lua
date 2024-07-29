@@ -153,7 +153,8 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
 
   ao.send({
     Target = msg.From,
-    Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From .. ' SendAmount: ' .. SendAmount
+    -- Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From .. ' SendAmount: ' .. SendAmount
+    Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
   })
   
 end)
