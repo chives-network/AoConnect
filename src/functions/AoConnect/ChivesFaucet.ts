@@ -8,6 +8,7 @@ import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord } from 'src/functions/AoConnec
 import { AoTokenTransfer } from 'src/functions/AoConnect/Token'
 
 
+
 export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: string, FaucetInfo: any) => {
     try {
         if(processTxId && processTxId.length != 43) {
@@ -108,9 +109,9 @@ export const AoFaucetGetFaucet = async (currentWalletJwk: any, FaucetTxId: strin
 
 }
 
-export const AoFaucetDepositToken = async (currentWalletJwk: any, FaucetTxId: string, DepositAmount: number) => {
-
-    return await AoTokenTransfer(currentWalletJwk, FaucetTxId, FaucetTxId, DepositAmount)
+export const AoFaucetDepositToken = async (currentWalletJwk: any, FAUCET_TOKEN_ID: string, FaucetTxIdAsReceivedAddress: string, DepositAmount: number) => {
+    
+    return await AoTokenTransfer(currentWalletJwk, FAUCET_TOKEN_ID, FaucetTxIdAsReceivedAddress, DepositAmount)
 }
 
 export const AoFaucetDepositBalances = async (TargetTxId: string, startIndex: string, endIndex: string) => {

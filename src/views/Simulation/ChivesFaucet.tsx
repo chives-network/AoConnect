@@ -76,16 +76,17 @@ const ChivesFaucetModel = () => {
 
     const FAUCET_TOKEN_ID = "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q"
 
-    const AoDryRunBalanceMyAddress = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, currentAddress)
-      if(AoDryRunBalanceMyAddress) {
-        console.log("FaucetProcessTxIdBalance AoDryRunBalanceMyAddress", AoDryRunBalanceMyAddress)
+    const MyAddressFaucetBalance = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, currentAddress)
+      if(MyAddressFaucetBalance) {
+        console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance)
         setToolInfo((prevState: any)=>({
             ...prevState,
-            FaucetProcessTxIdBalanceMyAddress: AoDryRunBalanceMyAddress
+            MyAddressFaucetBalance: MyAddressFaucetBalance
       }))
     }
 
-    const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, FAUCET_TOKEN_ID, 2)
+    /*
+    const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, FAUCET_TOKEN_ID, FaucetProcessTxId, 2)
     console.log("DepositFaucetData", DepositFaucetData)
     if(DepositFaucetData) {
         console.log("DepositFaucetData", DepositFaucetData)
@@ -110,6 +111,14 @@ const ChivesFaucetModel = () => {
             Divider: '--------------------------------------'
         }))
     }
+    */
+
+    const SendFaucetToUserOneData = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId)
+    if(SendFaucetToUserOneData) {
+      
+      console.log("SendFaucetToUserOneData", SendFaucetToUserOneData)
+      
+    }
 
     const FaucetBalanceData = await AoFaucetGetFaucetBalance(FaucetProcessTxId)
     if(FaucetBalanceData) {
@@ -127,14 +136,6 @@ const ChivesFaucetModel = () => {
 
       }
     }
-
-    const SendFaucetToUserOneData = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId)
-    if(SendFaucetToUserOneData) {
-      
-      console.log("SendFaucetToUserOneData", SendFaucetToUserOneData)
-      
-    }
-
 
     setToolInfo((prevState: any)=>({
       ...prevState,
