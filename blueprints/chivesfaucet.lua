@@ -156,7 +156,9 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
     Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
   })
 
-  creditBalances[msg.Tags.Ref_] = {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_, msg}
+  table.insert(creditBalances, json.encode(msg))
+
+  -- creditBalances[] = {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_, msg}
 
 end)
 
