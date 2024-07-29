@@ -336,6 +336,19 @@ const SettingModel = () => {
             const ChatroomGetMap: any = await AoChatroomInfoDryRun(processTxId)
             console.log("handleTokenSearch ChatroomGetMap", ChatroomGetMap)
             break;
+        case 'Faucet':
+            const FaucetGetMap: any = await AoChatroomInfoDryRun(processTxId)
+            console.log("handleTokenSearch FaucetGetMap", FaucetGetMap)
+            break;
+        case 'Lottery':
+            const LotteryGetMap: any = await AoChatroomInfoDryRun(processTxId)
+            console.log("handleTokenSearch LotteryGetMap", LotteryGetMap)
+            break;
+        case 'Guess':
+            const GuessGetMap: any = await AoChatroomInfoDryRun(processTxId)
+            console.log("handleTokenSearch LotteryGetMap", GuessGetMap)
+            break;
+            
     }
     setIsDisabledButton(false)
   }
