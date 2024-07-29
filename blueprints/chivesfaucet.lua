@@ -98,7 +98,7 @@ Handlers.add(
     end,
     function(msg)
       if msg.Tags.Sender and msg.Tags.Quantity and msg.Tags['Data-Protocol'] == 'ao' and msg.Tags['From-Process'] == FAUCET_TOKEN_ID and msg.Tags.Ref_ then
-        depositBalances[msg.Tags.Ref_] = {msg.Tags.Sender, msg.Tags.Quantity, msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_}
+        table.insert(depositBalances, 1, {msg.Tags.Sender, utils.divide(msg.Tags.Quantity, 10^Denomination), msg.Timestamp, msg.Id})
         Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
       end 
     end
@@ -149,16 +149,13 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
 
   Send({ Target = FAUCET_TOKEN_ID, Action = "Transfer", Recipient = msg.From, Quantity = SendAmount, Tags = { Target = ao.id } })
   Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
+  
+  table.insert(creditBalances, 1, {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id})
 
   ao.send({
     Target = msg.From,
-    -- Data = 'Faucet Balance 2: ' .. FAUCET_BALANCE .. ' From ' .. msg.From .. ' SendAmount: ' .. SendAmount
     Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
   })
-
-  table.insert(creditBalances, json.encode(msg))
-
-  -- creditBalances[] = {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Tags['From-Process'], msg.Tags.Action, msg.Tags.Ref_, msg}
 
 end)
 
@@ -193,33 +190,43 @@ Handlers.add('depositBalances',
   end
 )
 
+Handlers.add('depositBalances', 
+  Handlers.utils.hasMatchingTag('Action', 'depositBalances'), 
+  function(msg) 
+
+    local totalRecords = #depositBalances
+    local filterDepositBalances = {}
+    local startIndex = tonumber(msg.Tags.startIndex)
+    local endIndex = tonumber(msg.Tags.endIndex)
+    for i = startIndex, endIndex do
+        local record = depositBalances[i]
+        if record then
+          table.insert(filterDepositBalances, record)
+        end
+    end
+
+    ao.send({ Target = msg.From, Data = json.encode({filterDepositBalances, totalRecords}) }) 
+    
+  end
+)
+
+
 Handlers.add('creditBalances', 
   Handlers.utils.hasMatchingTag('Action', 'creditBalances'), 
   function(msg) 
 
-    local circulatingDredit = 0
-    local sortedCreditBalances = {}
-    for id, balance in pairs(creditBalances) do
-        table.insert(sortedCreditBalances, {id, balance})
-        circulatingDredit = circulatingDredit + balance
-    end
-
-    table.sort(sortedCreditBalances, utils.compare)
-    local totalRecords = #sortedCreditBalances
-
+    local totalRecords = #creditBalances
     local filterCreditBalances = {}
     local startIndex = tonumber(msg.Tags.startIndex)
     local endIndex = tonumber(msg.Tags.endIndex)
     for i = startIndex, endIndex do
-        local record = sortedCreditBalances[i]
+        local record = creditBalances[i]
         if record then
-            local id = record[1]
-            local balance = record[2]
-            filterCreditBalances[id] = balance
+          table.insert(filterCreditBalances, record)
         end
     end
 
-    ao.send({ Target = msg.From, Data = json.encode({filterCreditBalances, totalRecords, circulatingDredit}) }) 
+    ao.send({ Target = msg.From, Data = json.encode({filterCreditBalances, totalRecords}) }) 
     
   end
 )

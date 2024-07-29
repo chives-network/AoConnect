@@ -15,7 +15,7 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
+import { FormatBalance } from 'src/functions/AoConnect/AoConnect'
 
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
 import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet, AoFaucetDepositBalances, AoFaucetCreditBalances } from 'src/functions/AoConnect/ChivesFaucet'
@@ -44,7 +44,8 @@ const ChivesFaucetModel = () => {
     setToolInfo(null)
 
 
-    const FaucetProcessTxId = "SzmqnTMU5w4f7ySEcJktX3yh3-LhEURZ0d0oz7yF914"
+    const FaucetProcessTxId = "pIMgbVaMIgYlp7Pv63Y_e5YtdXz0e5RQqkdm4Asa0R8"
+
     //const FaucetProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
 
     if(FaucetProcessTxId) {
@@ -55,7 +56,7 @@ const ChivesFaucetModel = () => {
     }
 
     //await sleep(3000)
-
+    
     let LoadBlueprintFaucet: any = await AoLoadBlueprintFaucet(currentWallet.jwk, FaucetProcessTxId, faucetInfo);
     while(LoadBlueprintFaucet && LoadBlueprintFaucet.status == 'ok' && LoadBlueprintFaucet.msg && LoadBlueprintFaucet.msg.error)  {
       sleep(6000)
@@ -74,6 +75,7 @@ const ChivesFaucetModel = () => {
     console.log("handleSimulatedChivesFaucet LoadBlueprintFaucet", LoadBlueprintFaucet)
 
     await sleep(3000)
+    
 
     const FAUCET_TOKEN_ID = "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q"
 
@@ -86,7 +88,7 @@ const ChivesFaucetModel = () => {
       }))
     }
 
-    /*
+    
     const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, FAUCET_TOKEN_ID, FaucetProcessTxId, 2)
     console.log("DepositFaucetData", DepositFaucetData)
     if(DepositFaucetData) {
@@ -112,7 +114,6 @@ const ChivesFaucetModel = () => {
             Divider: '--------------------------------------'
         }))
     }
-    */
 
     const GetFaucetFromFaucetTokenId: any = await AoFaucetGetFaucet(currentWallet.jwk, FaucetProcessTxId)
     if(GetFaucetFromFaucetTokenId?.msg?.Messages && GetFaucetFromFaucetTokenId?.msg?.Messages[4]?.Data) {
@@ -137,7 +138,7 @@ const ChivesFaucetModel = () => {
     if(FaucetDepositBalanceData) {
       setToolInfo((prevState: any)=>({
           ...prevState,
-          //FaucetDepositBalanceData: FaucetDepositBalanceData
+          FaucetDepositBalanceData: FaucetDepositBalanceData
       }))
     }
 
@@ -146,7 +147,7 @@ const ChivesFaucetModel = () => {
     if(FaucetCreditBalanceData) {
       setToolInfo((prevState: any)=>({
           ...prevState,
-          //FaucetCreditBalanceData: FaucetCreditBalanceData
+          FaucetCreditBalanceData: FaucetCreditBalanceData
       }))
     }
 
