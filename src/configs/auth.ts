@@ -25,6 +25,8 @@ export default {
   chivesProfile: 'ChivesProfile',
   chivesReferee: 'ChivesReferee',
   chivesContacts: 'chivesContacts',
+  chivesMyAoTokens: 'chivesMyAoTokens',
+  chivesAllAoTokens: 'chivesAllAoTokens',
   'App-Name': 'AoConnect',
   'App-Version': '0.1',
   'App-Instance': '',

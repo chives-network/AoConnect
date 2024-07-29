@@ -29,7 +29,23 @@ const chivesLanguage: string = authConfig.chivesLanguage
 const chivesProfile: string = authConfig.chivesProfile
 const chivesReferee: string = authConfig.chivesReferee
 const chivesContacts: string = authConfig.chivesContacts
+const chivesMyAoTokens: string = authConfig.chivesMyAoTokens
+const chivesAllAoTokens: string = authConfig.chivesAllAoTokens
 
+export async function generateArWalletJsonData () {
+    
+    try {
+        const ArWalletJsonData = await arweave.wallets.generate()
+            
+        const ImportJsonFileWalletAddress = await importWalletJsonFile(ArWalletJsonData)
+
+        return ImportJsonFileWalletAddress
+
+    } 
+    catch (error) {
+        console.log('Error generateNewMnemonicAndGetJwk:', error);
+    }
+}
 
 export async function generateNewMnemonicAndGetWalletData (mnemonic: string) {
     try {
@@ -39,9 +55,7 @@ export async function generateNewMnemonicAndGetWalletData (mnemonic: string) {
         }
         const isValidMnemonic = await validateMnemonic(newMnemonic);
         if(isValidMnemonic) {
-            
-            //console.log("validateMnemonic:", newMnemonic)
-            
+
             const mnemonicToJwkValue = await mnemonicToJwk(newMnemonic)
             
             //console.log("mnemonicToJwkValue:", mnemonicToJwkValue)
@@ -100,31 +114,42 @@ export async function importWalletJsonFile (wallet: any) {
     const chivesWalletsList = window.localStorage.getItem(chivesWallets)      
     const walletExists = chivesWalletsList ? JSON.parse(chivesWalletsList) : []
     
-    //Get Wallet Max Id
-    let walletId = 0
-    while (walletExists.find((w: any) => +w.id === walletId)) { walletId++ }
-    
-    //Make walletData
-    const walletData: any = {...mnemonicToJwkValue}
-    walletData.id ??= walletId
-    walletData.uuid ??= v4() as string
-    walletData.settings ??= {}
-    walletData.state ??= {"hot": true}
-    
-    //Make Addresss From Jwk
-    const key = await arweave.wallets.jwkToAddress(walletData.jwk as any)
-    const publicKey = walletData.jwk.n
-    walletData.data ??= {}
-    walletData.data.arweave = { key, publicKey }            
-    
-    //Write New Wallet Data to LocalStorage
-    walletExists.push(walletData)
-    window.localStorage.setItem(chivesWallets, JSON.stringify(walletExists))
+    //Check wallet exist
+    const WalletExistFilter = walletExists.filter((item: any)=>item.jwk.n==wallet.n)
+    console.log("WalletExistFilter", WalletExistFilter)
+    if(WalletExistFilter && WalletExistFilter.length == 0)  {
 
-    //const addFileToJwkValue = await addFileToJwk('')
-    //console.log("addImportDataValue:", addImportDataValue)
+        //Get Wallet Max Id
+        let walletId = 0
+        while (walletExists.find((w: any) => +w.id === walletId)) { walletId++ }
+        
+        //Make walletData
+        const walletData: any = {...mnemonicToJwkValue}
+        walletData.id ??= walletId
+        walletData.uuid ??= v4() as string
+        walletData.settings ??= {}
+        walletData.state ??= {"hot": true}
+    
+        //Make Addresss From Jwk
+        const key = await arweave.wallets.jwkToAddress(walletData.jwk as any)
+        const publicKey = walletData.jwk.n
+        walletData.data ??= {}
+        walletData.data.arweave = { key, publicKey }            
+        
+        //Write New Wallet Data to LocalStorage
+        walletExists.push(walletData)
+        window.localStorage.setItem(chivesWallets, JSON.stringify(walletExists))
+    
+        //const addFileToJwkValue = await addFileToJwk('')
+        //console.log("addImportDataValue:", addImportDataValue)
 
-    return walletData
+        return key
+    }
+    else {
+
+        return ''
+    }
+
 };
 
 export async function checkMnemonicValidity (newMnemonic: string) {
@@ -288,7 +313,91 @@ export function deleteWalletByWallet(WalletJwk: any) {
     return true
 };
 
+export function setMyAoTokens(Address: string, MyAoTokens: any) {
+    if (Address && Address.length === 43) {
+        const chivesMyAoTokensData = window.localStorage.getItem(chivesMyAoTokens)
+        const chivesMyAoTokensObject = chivesMyAoTokensData ? JSON.parse(chivesMyAoTokensData) : {}
+        chivesMyAoTokensObject[Address] = MyAoTokens
+        window.localStorage.setItem(chivesMyAoTokens, JSON.stringify(chivesMyAoTokensObject))
+    }
+    
+    return true
+}
 
+export function addMyAoToken(Address: string, TokenInfor: any) {
+    if (Address && Address.length === 43) {
+        const chivesTokenInforData = window.localStorage.getItem(chivesMyAoTokens)
+        const chivesTokenInforObject = chivesTokenInforData ? JSON.parse(chivesTokenInforData) : {}
+        if(chivesTokenInforObject[Address]) {
+            chivesTokenInforObject[Address] = [...chivesTokenInforObject[Address], ...[TokenInfor]]
+        }
+        else {
+            chivesTokenInforObject[Address] = [TokenInfor]
+        }
+        window.localStorage.setItem(chivesMyAoTokens, JSON.stringify(chivesTokenInforObject))
+    }
+    
+    return true
+}
+
+export function deleteMyAoToken(Address: string, TokenId: string) {
+    if (Address && Address.length === 43) {
+        const chivesMyAoTokensData = window.localStorage.getItem(chivesMyAoTokens)
+        const chivesMyAoTokensObject = chivesMyAoTokensData ? JSON.parse(chivesMyAoTokensData) : {}
+        const MyAoTokens = chivesMyAoTokensObject[Address]
+        const MyAoTokensFilter = MyAoTokens.filter((item: any)=>item.TokenId!=TokenId)
+        chivesMyAoTokensObject[Address] = MyAoTokensFilter
+        window.localStorage.setItem(chivesMyAoTokens, JSON.stringify(chivesMyAoTokensObject))
+    }
+    
+    return true
+}
+
+export function getMyAoTokens(Address: string) {
+    if(typeof window !== 'undefined')  {
+        const chivesMyAoTokensData = window.localStorage.getItem(chivesMyAoTokens)
+        const chivesMyAoTokensObject = chivesMyAoTokensData ? JSON.parse(chivesMyAoTokensData) : {}
+        
+        return chivesMyAoTokensObject[Address] ?? []
+    }
+}
+
+export function setAllAoTokens(Address: string, AllAoTokens: any) {
+    if (Address && Address.length === 43) {
+        const chivesAllAoTokensData = window.localStorage.getItem(chivesAllAoTokens)
+        const chivesAllAoTokensObject = chivesAllAoTokensData ? JSON.parse(chivesAllAoTokensData) : {}
+        chivesAllAoTokensObject[Address] = AllAoTokens
+        window.localStorage.setItem(chivesAllAoTokens, JSON.stringify(chivesAllAoTokensObject))
+    }
+    
+    return true
+}
+
+export function getAllAoTokens(Address: string) {
+    if(typeof window !== 'undefined')  {
+        const chivesAllAoTokensData = window.localStorage.getItem(chivesAllAoTokens)
+        const chivesAllAoTokensObject = chivesAllAoTokensData ? JSON.parse(chivesAllAoTokensData) : {}
+        
+        return chivesAllAoTokensObject[Address] ?? []
+    }
+}
+
+export function setTokenAllHolderTxs(Address: string, AllHolderTxs: any) {
+    if (Address && Address.length === 43 && AllHolderTxs) {
+        window.localStorage.setItem("chivesAllHolderTxs____" + Address, JSON.stringify(AllHolderTxs))
+    }
+    
+    return true
+}
+
+export function getTokenAllHolderTxs(Address: string) {
+    if(typeof window !== 'undefined')  {
+        const chivesAllHolderTxsData = window.localStorage.getItem("chivesAllHolderTxs____" + Address)
+        const chivesAllHolderTxsObject = chivesAllHolderTxsData ? JSON.parse(chivesAllHolderTxsData) : {}
+        
+        return chivesAllHolderTxsObject
+    }
+}
 
 export async function getWalletBalance(Address: string) {    
     try {
@@ -332,7 +441,7 @@ export async function getPriceWinston(byteSize: number) {
 
 export async function getWalletBalanceReservedRewards(Address: string) {
     try {
-        const reserved_rewards_total = await axios.get(authConfig.backEndApi + '/wallet/' + Address + '/reserved_rewards_total' ).then(res=>res.data);
+        const reserved_rewards_total = await axios.get(authConfig.backEndApi + '/wallet/' + Address + '/reserved_rewards_total', { timeout: 10000 } ).then(res=>res.data);
 
         return arweave.ar.winstonToAr(reserved_rewards_total)
     } 
@@ -344,7 +453,7 @@ export async function getWalletBalanceReservedRewards(Address: string) {
 export async function getTxsInMemory() {
     try {
         if(authConfig.tokenType == "XWE")           {
-            const response = await axios.get(authConfig.backEndApi + '/tx/pending/record' ).then(res=>res.data);
+            const response = await axios.get(authConfig.backEndApi + '/tx/pending/record', { timeout: 10000 } ).then(res=>res.data);
             if(response && response.length>0) {
                 const SendTxsInMemory: any = {}
                 const ReceiveTxsInMemory: any = {}
@@ -391,7 +500,7 @@ export async function getXweWalletAllTxs(Address: string, Type: string, pageId =
     }
     try {
         if(addressApiType && addressApiType!="" && Address && Address.length == 43)  {
-            const response = await axios.get(authConfig.backEndApi + '/wallet/' + `${Address}` + '/' + `${addressApiType}` + '/' + `${pageId}` + '/' + pageSize).then(res=>res.data)
+            const response = await axios.get(authConfig.backEndApi + '/wallet/' + `${Address}` + '/' + `${addressApiType}` + '/' + `${pageId}` + '/' + pageSize, { timeout: 10000 }).then(res=>res.data)
             const NewData: any[] = response.data.filter((record: any) => record.recipient)
             response.data = NewData
             
@@ -672,7 +781,7 @@ async function deduplicate (transactions: ArDataItemParams[], trustedAddresses?:
 	while (entries.length) { chunks.push(entries.splice(0, 500)) }
 	
     return (await PromisePool.for(chunks).withConcurrency(3).process(async chunk => {
-        const checkResultOnMainnet: any[] = await axios.get(authConfig.backEndApi + '/statistics_network', { headers: { }, params: { } })
+        const checkResultOnMainnet: any[] = await axios.get(authConfig.backEndApi + '/statistics_network', { timeout: 10000 })
                                 .then(() => {
                                         
                                         //console.log("deduplicate in lib", res.data)
@@ -1006,12 +1115,17 @@ export function searchChivesContacts(searchValue: string) {
         const chivesContactsList = chivesContactsText ? JSON.parse(chivesContactsText) : {}
         
         const result: any = {};
+        
         for (const key in chivesContactsList) {
             if (key.toLowerCase().includes(searchValue.toLowerCase()) || chivesContactsList[key].toLowerCase().includes(searchValue.toLowerCase())) {
                 result[key] = chivesContactsList[key]
             }
         }
 
+        if(Object.keys(result).length == 0 && searchValue && searchValue.length == 43)  {
+            result[searchValue] = 'Input Address'
+        }
+        
         return result
     }
     catch (error: any) {
@@ -1042,7 +1156,7 @@ export async function CheckBundleTxStatus() {
             chivesTxStatusList.map(async (Item: any) => {
                 try {
                     const TxId = Item.TxResult.id;
-                    const response = await axios.get(authConfig.backEndApi + '/tx/' + TxId + '/unbundle/0/9');
+                    const response = await axios.get(authConfig.backEndApi + '/tx/' + TxId + '/unbundle/0/9', { timeout: 10000 });
                     if(response && response.data && response.data.txs && response.data.txs.length > 0) {
                         console.log("response.data", response.data)
                         deleteLockStatus(TxId)
@@ -1063,11 +1177,11 @@ export async function CheckBundleTxStatus() {
 }
 
 export async function parseBundleTx() {
-    const response = await axios.get(authConfig.backEndApi + '/bundletx/0/60' );
+    const response = await axios.get(authConfig.backEndApi + '/bundletx/0/60', { timeout: 10000 } );
     if(response && response.data && response.data.data && response.data.data.length>0) {
         for (const item of response.data.data) {
             try {
-              await axios.get(authConfig.backEndApi + '/tx/' + item.id + '/unbundle/0/6');
+              await axios.get(authConfig.backEndApi + '/tx/' + item.id + '/unbundle/0/6', { timeout: 10000 });
             } 
             catch (error) {
             }
@@ -1077,7 +1191,7 @@ export async function parseBundleTx() {
 }
 
 export async function getWalletProfile(currentAddress: string) {
-    const response = await axios.get(authConfig.backEndApi + '/profile/' + currentAddress );
+    const response = await axios.get(authConfig.backEndApi + '/profile/' + currentAddress, { timeout: 10000 } );
     if(response && response.data && response.data.Profile && response.data.Profile.Name) {
         return response.data
     }
@@ -1087,7 +1201,7 @@ export async function getWalletProfile(currentAddress: string) {
 }
 
 export async function checkNodeStatus() {
-    const response = await axios.get(authConfig.backEndApi + '/info' );
+    const response = await axios.get(authConfig.backEndApi + '/info', { timeout: 10000 } );
     const Node = response.data
     if(Node.height < Node.blocks) {
         return true
@@ -1557,9 +1671,15 @@ function setTag (tags: Tag[], name: string, value?: string) {
 }
 
 export function getChivesLanguage() {
-    const ChivesLanguage = window.localStorage.getItem(chivesLanguage) || "en"
+    if(typeof window !== 'undefined')  {
+        const ChivesLanguage = window.localStorage.getItem(chivesLanguage) || "en"
 
-    return ChivesLanguage
+        return ChivesLanguage
+    }
+    else {
+
+        return "en"
+    }
 };
 
 export function setChivesLanguage(Language: string) {

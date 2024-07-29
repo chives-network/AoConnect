@@ -18,7 +18,7 @@ export const AoLoadBlueprintChivesServerData = async (currentWalletJwk: any, pro
             return 
         }
 
-        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivesserverdata.lua', { headers: { }, params: { } }).then(res => res.data)
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivesserverdata.lua', { timeout: 10000 }).then(res => res.data)
         
         const address = await jwkToAddress(currentWalletJwk)
         if(address && address.length == 43) {

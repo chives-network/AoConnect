@@ -11,7 +11,7 @@ import axios from 'axios'
 
 export const AoLoadBlueprintChivesChat = async (currentWalletJwk: any, currentAddress: string, processTxId: string) => {
     try {
-        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chiveschat.lua', { headers: { }, params: { } }).then(res => res.data)
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chiveschat.lua', { timeout: 10000 }).then(res => res.data)
         Data = Data.replace("OwnerWalletAddress", currentAddress)
     
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );

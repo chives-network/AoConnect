@@ -606,9 +606,9 @@ const SettingModel = () => {
                             {t("Token Data")}
                             </Button>
                             <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                                () => { handleGetServerData('Chatroom') }
+                                () => { handleGetServerData('Faucet') }
                             }>
-                            {t("Chatroom Data")}
+                            {t("Faucet Data")}
                             </Button>
                             <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
                                 () => { handleGetServerData('Lottery') }
@@ -619,6 +619,11 @@ const SettingModel = () => {
                                 () => { handleGetServerData('Guess') }
                             }>
                             {t("Guess Data")}
+                            </Button>
+                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
+                                () => { handleGetServerData('Chatroom') }
+                            }>
+                            {t("Chatroom Data")}
                             </Button>
                             <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={true} variant='outlined' onClick={
                                 () => { handleGetServerData('Blog') }
@@ -634,11 +639,6 @@ const SettingModel = () => {
                                 () => { handleGetServerData('Project') }
                             }>
                             {t("Project Data")}
-                            </Button>
-                            <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                                () => { handleGetServerData('Faucet') }
-                            }>
-                            {t("Faucet Data")}
                             </Button>
                         </Box>
                     </Grid>

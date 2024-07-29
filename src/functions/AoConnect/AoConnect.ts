@@ -299,7 +299,7 @@ export const GetMyLastMsg = async (currentWalletJwk: any, processTxId: string) =
 
 export const AoLoadBlueprintModule = async (currentWalletJwk: any, processTxId: string, module: string) => {
     try {
-        const Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/' + module + '.lua', { headers: { }, params: { } }).then(res => res.data)
+        const Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/' + module + '.lua', { timeout: 10000 }).then(res => res.data)
     
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -343,6 +343,12 @@ export const AoLoadBlueprintChat = async (currentWalletJwk: any, processTxId: st
 export const generateRandomNumber = (min: number, max: number) => {
 
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export const FormatBalanceString = (Balance: number, Denomination: number, Precision: number) => {
+    const FormatBalanceData = FormatBalance(Balance, Denomination)
+
+    return String(Number(FormatBalanceData).toFixed(Precision)).replace(/\.?0+$/, '')
 }
 
 export const FormatBalance = (Balance: number, Denomination: number) => {

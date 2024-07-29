@@ -19,7 +19,7 @@ export const AoLoadBlueprintLottery = async (currentWalletJwk: any, processTxId:
             return 
         }
 
-        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chiveslottery.lua', { headers: { }, params: { } }).then(res => res.data)
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chiveslottery.lua', { timeout: 10000 }).then(res => res.data)
         
         //Filter Lottery Infor
         if(LotteryInfo && LotteryInfo.Name) {
