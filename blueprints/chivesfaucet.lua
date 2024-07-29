@@ -128,12 +128,12 @@ Handlers.add('CheckFaucetBalance', Handlers.utils.hasMatchingTag('Action', 'Chec
   if FAUCET_BALANCE == '-1' then
     ao.send({
       Target = msg.From,
-      Data = '-1'
+      Data = 'Not Deposit'
     })
   else 
     ao.send({
       Target = msg.From,
-      Data = 'Faucet Balance: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
+      Data = utils.divide(FAUCET_BALANCE, 10^Denomination)
     })
   end
 end)

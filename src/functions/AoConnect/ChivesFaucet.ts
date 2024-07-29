@@ -143,6 +143,8 @@ export const AoFaucetDepositBalances = async (TargetTxId: string, startIndex: st
             ]
         });
 
+        console.log("result", result)
+
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
             return result.Messages[0].Data
@@ -191,6 +193,8 @@ export const AoFaucetCreditBalances = async (TargetTxId: string, startIndex: str
             ]
         });
 
+        console.log("result", result)
+
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
             return result.Messages[0].Data
@@ -217,10 +221,6 @@ export const AoFaucetGetFaucetBalance = async (TargetTxId: string) => {
 
             return
         }
-        if(typeof TargetTxId != 'string') {
-
-            return 
-        }
         
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
@@ -236,9 +236,9 @@ export const AoFaucetGetFaucetBalance = async (TargetTxId: string) => {
             ]
         });
 
-        if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
+        if(result && result.Messages && result.Messages[1] && result.Messages[1].Data) {
 
-            return result.Messages[0].Data
+            return result.Messages[1].Data
         }
         else {
 

@@ -15,7 +15,8 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { GetMyLastMsg, AoCreateProcessAuto, sleep } from 'src/functions/AoConnect/AoConnect'
+import { GetMyLastMsg, AoCreateProcessAuto, sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
+
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
 import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet } from 'src/functions/AoConnect/ChivesFaucet'
 import { ansiRegex } from 'src/configs/functions'
@@ -81,7 +82,7 @@ const ChivesFaucetModel = () => {
       console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance)
       setToolInfo((prevState: any)=>({
           ...prevState,
-          MyAddressFaucetBalance: MyAddressFaucetBalance
+          MyAddressFaucetBalance: FormatBalance(MyAddressFaucetBalance, 12)
       }))
     }
 
@@ -123,8 +124,8 @@ const ChivesFaucetModel = () => {
     }
 
     const FaucetBalanceData = await AoFaucetGetFaucetBalance(FaucetProcessTxId)
+    console.log("FaucetBalanceData AoFaucetGetFaucetBalance", FaucetBalanceData)
     if(FaucetBalanceData) {
-      console.log("FaucetBalanceData AoFaucetGetFaucetBalance", FaucetBalanceData)
       setToolInfo((prevState: any)=>({
           ...prevState,
           FaucetBalanceData: FaucetBalanceData
