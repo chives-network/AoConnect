@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
 
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
-import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet, AoFaucetDepositBalances, AoFaucetCreditBalances } from 'src/functions/AoConnect/ChivesFaucet'
+import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet, AoFaucetDepositBalances, AoFaucetCreditBalances, AoFaucetInfo } from 'src/functions/AoConnect/ChivesFaucet'
 import { ansiRegex } from 'src/configs/functions'
 
 const ChivesFaucetModel = () => {
@@ -75,8 +75,16 @@ const ChivesFaucetModel = () => {
     console.log("handleSimulatedChivesFaucet LoadBlueprintFaucet", LoadBlueprintFaucet)
 
     await sleep(3000)
-    
 
+    const AoFaucetInfoData = await AoFaucetInfo(FaucetProcessTxId)
+    console.log("AoFaucetInfoData AoFaucetInfo", AoFaucetInfoData)
+    if(AoFaucetInfoData) {
+      setToolInfo((prevState: any)=>({
+          ...prevState,
+          AoFaucetInfoData: JSON.stringify(AoFaucetInfoData)
+      }))
+    }
+    
     const FAUCET_TOKEN_ID = "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q"
 
     const MyAddressFaucetBalance = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, currentAddress)
@@ -134,7 +142,7 @@ const ChivesFaucetModel = () => {
     }
 
     const FaucetDepositBalanceData = await AoFaucetDepositBalances(FaucetProcessTxId, '1', '10')
-    console.log("FaucetDepositBalanceData AoFaucetCreditBalances", FaucetBalanceData)
+    console.log("FaucetDepositBalanceData AoFaucetDepositBalances", FaucetDepositBalanceData)
     if(FaucetDepositBalanceData) {
       setToolInfo((prevState: any)=>({
           ...prevState,
@@ -143,7 +151,7 @@ const ChivesFaucetModel = () => {
     }
 
     const FaucetCreditBalanceData = await AoFaucetCreditBalances(FaucetProcessTxId, '1', '10')
-    console.log("FaucetCreditBalanceData AoFaucetCreditBalances", FaucetBalanceData)
+    console.log("FaucetCreditBalanceData AoFaucetCreditBalances", FaucetCreditBalanceData)
     if(FaucetCreditBalanceData) {
       setToolInfo((prevState: any)=>({
           ...prevState,

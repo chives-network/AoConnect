@@ -128,7 +128,7 @@ export const AoFaucetDepositBalances = async (TargetTxId: string, startIndex: st
         
         const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
 
-        const result = await dryrun({
+        const result: any = await dryrun({
             Owner: TargetTxId,
             process: TargetTxId,
             data: null,
@@ -143,11 +143,9 @@ export const AoFaucetDepositBalances = async (TargetTxId: string, startIndex: st
             ]
         });
 
-        console.log("result", result)
-
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
-            return result.Messages[0].Data
+            return JSON.parse(result.Messages[0].Data)
         }
         else {
 
@@ -193,11 +191,9 @@ export const AoFaucetCreditBalances = async (TargetTxId: string, startIndex: str
             ]
         });
 
-        console.log("result", result)
-
         if(result && result.Messages && result.Messages[0] && result.Messages[0].Data) {
 
-            return result.Messages[0].Data
+            return JSON.parse(result.Messages[0].Data)
         }
         else {
 
@@ -255,3 +251,53 @@ export const AoFaucetGetFaucetBalance = async (TargetTxId: string) => {
         return 
     }
 }
+
+export const AoFaucetInfo = async (TargetTxId: string) => {
+    try {
+        if(TargetTxId && TargetTxId.length != 43) {
+
+            return
+        }
+        
+        const { dryrun } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+
+        const result = await dryrun({
+            Owner: TargetTxId,
+            process: TargetTxId,
+            data: null,
+            tags: [
+                { name: 'Action', value: 'Info' },
+                { name: 'Data-Protocol', value: 'ao' },
+                { name: 'Type', value: 'Message' },
+                { name: 'Variant', value: 'ao.TN.1' }
+            ]
+        });
+
+        console.log("result", result)
+
+        if(result && result.Messages && result.Messages[0] && result.Messages[0].Tags) {
+            const Tags: any[] = result.Messages[0].Tags
+            const TagsMap: any = {}
+            Tags && Tags.map((Tag: any)=>{
+                TagsMap[Tag.name] = Tag.value
+            })
+
+            return TagsMap
+        }
+        else {
+
+            return 
+        }
+    }
+    catch(Error: any) {
+        console.error("AoFaucetGetFaucetBalance Error:", Error)
+        if(Error && Error.message) {
+
+            return { status: 'error', msg: Error.message };
+        }
+
+        return 
+    }
+}
+
+
