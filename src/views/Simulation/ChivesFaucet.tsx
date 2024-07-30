@@ -2,12 +2,16 @@
 import { useState, useEffect, Fragment } from 'react'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import Tooltip from '@mui/material/Tooltip'
+import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import InputAdornment from '@mui/material/InputAdornment'
+import Icon from 'src/@core/components/icon'
 
 // ** Next Import
 import { useAuth } from 'src/hooks/useAuth'
@@ -15,7 +19,7 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
+import { AoCreateProcessAuto, sleep, FormatBalance } from 'src/functions/AoConnect/AoConnect'
 
 import { AoTokenBalanceDryRun } from 'src/functions/AoConnect/Token'
 import { AoLoadBlueprintFaucet, AoFaucetGetFaucetBalance, AoFaucetDepositToken, AoFaucetGetFaucet, AoFaucetDepositBalances, AoFaucetCreditBalances, AoFaucetInfo } from 'src/functions/AoConnect/ChivesFaucet'
@@ -30,23 +34,37 @@ const ChivesFaucetModel = () => {
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [toolInfo, setToolInfo] = useState<any>()
-  const [faucetInfo, setFaucetInfo] = useState<any>()
+  const [toolInfo, setToolInfo] = useState<any>({FaucetSendRule: 'EveryDay', FaucetSendAmount: '0.123', TokenIdInFaucet:'sdqQuIU6WNT1zVNculn814nVhol2XXhDxqgCrUpCtlA'})
+  const [ChivesFaucetAoConnectTxIdError, setChivesFaucetAoConnectTxIdError] = useState<string>('')
 
   const handleSimulatedChivesFaucet = async function () {
-    console.log("setFaucetInfo", setFaucetInfo, faucetInfo)
+
     if(currentWallet == undefined || currentWallet == null) {
 
       return
     }
-
     setIsDisabledButton(true)
-    setToolInfo(null)
 
+    const TokenIdInFaucet = toolInfo.TokenIdInFaucet
+    if(!TokenIdInFaucet || TokenIdInFaucet == "" || TokenIdInFaucet.length != 43) {
+        setChivesFaucetAoConnectTxIdError('Please set TokenIdInFaucet first!')
 
-    const FaucetProcessTxId = "pIMgbVaMIgYlp7Pv63Y_e5YtdXz0e5RQqkdm4Asa0R8"
+        return 
+    }
+    else {
+        setChivesFaucetAoConnectTxIdError('')
+    }
 
-    //const FaucetProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
+    if(toolInfo.TokenIdInFaucet) {
+      setToolInfo((prevState: any)=>({
+        ...prevState,
+        TokenIdInFaucet: toolInfo.TokenIdInFaucet
+      }))
+    }
+
+    //const FaucetProcessTxId = "pIMgbVaMIgYlp7Pv63Y_e5YtdXz0e5RQqkdm4Asa0R8"
+
+    const FaucetProcessTxId = await AoCreateProcessAuto(currentWallet.jwk)
 
     if(FaucetProcessTxId) {
       setToolInfo((prevState: any)=>({
@@ -57,10 +75,11 @@ const ChivesFaucetModel = () => {
 
     //await sleep(3000)
     
-    let LoadBlueprintFaucet: any = await AoLoadBlueprintFaucet(currentWallet.jwk, FaucetProcessTxId, faucetInfo);
-    while(LoadBlueprintFaucet && LoadBlueprintFaucet.status == 'ok' && LoadBlueprintFaucet.msg && LoadBlueprintFaucet.msg.error)  {
+    let LoadBlueprintFaucet: any = await AoLoadBlueprintFaucet(currentWallet.jwk, FaucetProcessTxId, toolInfo.TokenIdInFaucet, toolInfo.FaucetSendAmount, toolInfo.FaucetSendRule);
+    console.log("handleSimulatedChivesFaucet LoadBlueprintFaucet:", LoadBlueprintFaucet);
+    while(LoadBlueprintFaucet && LoadBlueprintFaucet.status == 'error')  {
       sleep(6000)
-      LoadBlueprintFaucet = await AoLoadBlueprintFaucet(currentWallet.jwk, FaucetProcessTxId, faucetInfo);
+      LoadBlueprintFaucet = await AoLoadBlueprintFaucet(currentWallet.jwk, FaucetProcessTxId, toolInfo.TokenIdInFaucet, toolInfo.FaucetSendAmount, toolInfo.FaucetSendRule);
       console.log("handleSimulatedChivesFaucet LoadBlueprintFaucet:", LoadBlueprintFaucet);
     }
     if(LoadBlueprintFaucet) {
@@ -70,6 +89,21 @@ const ChivesFaucetModel = () => {
           ...prevState,
           LoadBlueprintFaucet: formatText
         }))
+      }
+      if(LoadBlueprintFaucet.Token && LoadBlueprintFaucet.Token.Denomination) {
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          Denomination: LoadBlueprintFaucet.Token.Denomination
+        }))
+      }
+      if(LoadBlueprintFaucet?.status == 'error') {
+        setToolInfo((prevState: any)=>({
+          ...prevState,
+          LoadBlueprintFaucet: LoadBlueprintFaucet?.msg
+        }))
+        setIsDisabledButton(false)
+
+        return 
       }
     }
     console.log("handleSimulatedChivesFaucet LoadBlueprintFaucet", LoadBlueprintFaucet)
@@ -85,19 +119,18 @@ const ChivesFaucetModel = () => {
       }))
     }
     
-    const FAUCET_TOKEN_ID = "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q"
 
-    const MyAddressFaucetBalance = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, currentAddress)
+    const MyAddressFaucetBalance = await AoTokenBalanceDryRun(toolInfo.TokenIdInFaucet, currentAddress)
     if(MyAddressFaucetBalance) {
-      console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance)
+      console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance, Number(toolInfo.Denomination))
       setToolInfo((prevState: any)=>({
           ...prevState,
-          MyAddressFaucetBalance: FormatBalance(MyAddressFaucetBalance, 12)
+          MyAddressFaucetBalance: FormatBalance(MyAddressFaucetBalance, Number(toolInfo.Denomination))
       }))
     }
 
     
-    const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, FAUCET_TOKEN_ID, FaucetProcessTxId, 2)
+    const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, toolInfo.TokenIdInFaucet, FaucetProcessTxId, 2000, Number(toolInfo.Denomination))
     console.log("DepositFaucetData", DepositFaucetData)
     if(DepositFaucetData) {
         console.log("DepositFaucetData", DepositFaucetData)
@@ -108,12 +141,12 @@ const ChivesFaucetModel = () => {
           }))
         }
 
-        const AoDryRunBalance = await AoTokenBalanceDryRun(FAUCET_TOKEN_ID, FaucetProcessTxId)
+        const AoDryRunBalance = await AoTokenBalanceDryRun(toolInfo.TokenIdInFaucet, FaucetProcessTxId)
           if(AoDryRunBalance) {
             console.log("FaucetProcessTxIdBalance AoDryRunBalance", AoDryRunBalance)
             setToolInfo((prevState: any)=>({
                 ...prevState,
-                FaucetProcessTxIdBalance: AoDryRunBalance
+                FaucetProcessTxIdBalance: FormatBalance(AoDryRunBalance, Number(toolInfo.Denomination))
           }))
         }
 
@@ -175,6 +208,8 @@ const ChivesFaucetModel = () => {
     //GetMyInboxMsgFromAoConnect()
   }, [])
 
+  
+
   return (
     <Fragment>
       {currentAddress ?
@@ -182,11 +217,85 @@ const ChivesFaucetModel = () => {
         <Grid item xs={12}>
           <Card>
               <Grid item sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
-                      () => { handleSimulatedChivesFaucet() }
-                  }>
-                  {t("Simulated Faucet")}
-                  </Button>
+                  <Box>
+                    <TextField
+                          sx={{ml: 2, my: 2}}
+                          size="small"
+                          disabled={isDisabledButton}
+                          label={`${t('TokenIdInFaucet')}`}
+                          placeholder={`${t('TokenIdInFaucet')}`}
+                          value={toolInfo.TokenIdInFaucet}
+                          onChange={(e: any)=>{
+                              if(e.target.value && e.target.value.length == 43) {
+                                  setChivesFaucetAoConnectTxIdError('')
+                              }
+                              else {
+                                  setChivesFaucetAoConnectTxIdError('Please set TokenIdInFaucet first!')
+                                  setIsDisabledButton(false)
+                              }
+                              setToolInfo((prevState: any)=>({
+                                  ...prevState,
+                                  TokenIdInFaucet: e.target.value
+                              }))
+                          }}
+                          InputProps={{
+                              startAdornment: (
+                                  <InputAdornment position='start'>
+                                      <Icon icon='mdi:account-outline' />
+                                  </InputAdornment>
+                              )
+                          }}
+                          error={!!ChivesFaucetAoConnectTxIdError}
+                          helperText={ChivesFaucetAoConnectTxIdError}
+                    />
+                    <TextField
+                          sx={{ml: 2, my: 2}}
+                          size="small"
+                          disabled={isDisabledButton}
+                          label={`${t('FaucetSendRule')}`}
+                          placeholder={`${t('FaucetSendRule')}`}
+                          value={toolInfo.FaucetSendRule}
+                          onChange={(e: any)=>{
+                              setToolInfo((prevState: any)=>({
+                                  ...prevState,
+                                  FaucetSendRule: e.target.value
+                              }))
+                          }}
+                          InputProps={{
+                              startAdornment: (
+                                  <InputAdornment position='start'>
+                                      <Icon icon='mdi:account-outline' />
+                                  </InputAdornment>
+                              )
+                          }}
+                    />
+                    <TextField
+                          sx={{ml: 2, my: 2}}
+                          size="small"
+                          disabled={isDisabledButton}
+                          label={`${t('FaucetSendAmount')}`}
+                          placeholder={`${t('FaucetSendAmount')}`}
+                          value={toolInfo.FaucetSendAmount}
+                          onChange={(e: any)=>{
+                              setToolInfo((prevState: any)=>({
+                                  ...prevState,
+                                  FaucetSendAmount: e.target.value
+                              }))
+                          }}
+                          InputProps={{
+                              startAdornment: (
+                                  <InputAdornment position='start'>
+                                      <Icon icon='mdi:account-outline' />
+                                  </InputAdornment>
+                              )
+                          }}
+                    />
+                    <Button sx={{ textTransform: 'none', m: 2 }} size="small" disabled={isDisabledButton} variant='outlined' onClick={
+                        () => { handleSimulatedChivesFaucet() }
+                    }>
+                    {t("Simulated Faucet")}
+                    </Button>
+                  </Box>
                   <Link sx={{mt: 2, mr: 2}} href={`https://github.com/chives-network/AoConnect/blob/main/blueprints/chivesfaucet.lua`} target='_blank'>
                       <Typography variant='body2'>
                         {t("Faucet Lua")}

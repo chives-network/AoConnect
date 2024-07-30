@@ -6,6 +6,7 @@ import { Fragment, memo, useState } from 'react'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
@@ -21,14 +22,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useAuth } from 'src/hooks/useAuth'
 import { GetTokenAvatar } from 'src/functions/AoConnect/Token'
 
-import Grid from '@mui/material/Grid'
-
 import toast from 'react-hot-toast'
 import MuiAvatar from '@mui/material/Avatar'
-
-import TokenSummary from 'src/views/Token/TokenSummary'
-
-import { GetMyLastMsg } from 'src/functions/AoConnect/AoConnect'
 
 import { 
     ChivesServerDataGetTokens, ChivesServerDataAddToken, ChivesServerDataDelToken, 
@@ -43,6 +38,7 @@ import {
 
 import { AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 import { AoChatroomInfoDryRun } from 'src/functions/AoConnect/ChivesChat'
+import { AoFaucetInfo } from 'src/functions/AoConnect/ChivesFaucet'
 
 import { ansiRegex } from 'src/configs/functions'
 
@@ -70,6 +66,8 @@ const SettingModel = () => {
   const [sortValue, setSortValue] = useState<string>("")
   const [groupError, setGroupError] = useState<string>('')
   const [sortError, setSortError] = useState<string>('')
+
+  console.log("processInfo", processInfo)
 
   const handleGetServerData = async (Model: string) => {
     setServerModel(Model)
@@ -334,19 +332,28 @@ const SettingModel = () => {
             break;
         case 'Chatroom':
             const ChatroomGetMap: any = await AoChatroomInfoDryRun(processTxId)
-            console.log("handleTokenSearch ChatroomGetMap", ChatroomGetMap)
+            console.log("AoChatroomInfoDryRun ChatroomGetMap", ChatroomGetMap)
             break;
         case 'Faucet':
-            const FaucetGetMap: any = await AoChatroomInfoDryRun(processTxId)
-            console.log("handleTokenSearch FaucetGetMap", FaucetGetMap)
+            const FaucetGetMap: any = await AoFaucetInfo(processTxId)
+            console.log("AoFaucetInfo FaucetGetMap", FaucetGetMap)
+            if(FaucetGetMap && Number(FaucetGetMap.FaucetBalance) > 0 && Number(FaucetGetMap.FaucetAmount) > 0 && Number(FaucetGetMap.Denomination) > 0 && FaucetGetMap.FaucetRule != "" && FaucetGetMap.Ticker != "" && FaucetGetMap.Name != "" && FaucetGetMap.Release
+            == "ChivesFaucet") {
+                console.log("handleSearchProcessData handleTokenSearch FaucetGetMap", FaucetGetMap)
+                setProcessInfo(FaucetGetMap)
+                setIsAllowAddServerData(true)
+            }
+            else {
+                toast.success(t('This is not a Faucet or FaucetBalance is less than zero') as string, { duration: 2500, position: 'top-center' })
+            }
             break;
         case 'Lottery':
             const LotteryGetMap: any = await AoChatroomInfoDryRun(processTxId)
-            console.log("handleTokenSearch LotteryGetMap", LotteryGetMap)
+            console.log("AoChatroomInfoDryRun LotteryGetMap", LotteryGetMap)
             break;
         case 'Guess':
             const GuessGetMap: any = await AoChatroomInfoDryRun(processTxId)
-            console.log("handleTokenSearch LotteryGetMap", GuessGetMap)
+            console.log("AoChatroomInfoDryRun LotteryGetMap", GuessGetMap)
             break;
             
     }
@@ -375,21 +382,34 @@ const SettingModel = () => {
                 setProcessInfo({})
                 setIsAllowAddServerData(false)
                 console.log("ChivesServerDataAddToken1", ChivesServerDataAddToken1)
-                if(ChivesServerDataAddToken1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddToken1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                if(ChivesServerDataAddToken1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddToken1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
                     if(formatText) {
-                        const ChivesServerDataAddTokenData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddTokenData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddTokenData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
+                        toast.success(formatText, { duration: 5000 })
                     }
                 }
             }
             else {
                 toast.success(t('Exec ChivesServerDataAddToken Failed') as string, { duration: 2500, position: 'top-center' })
+            }
+            break;
+        case 'Faucet':
+            const ChivesServerDataAddFaucet1 = await ChivesServerDataAddFaucet(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
+            if(ChivesServerDataAddFaucet1) {
+                handleGetServerData(Model)
+                setProcessTxId('')
+                setProcessInfo({})
+                setIsAllowAddServerData(false)
+                console.log("ChivesServerDataAddFaucet1", ChivesServerDataAddFaucet1)
+                if(ChivesServerDataAddFaucet1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddFaucet1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
+                    if(formatText) {
+                        toast.success(formatText, { duration: 5000 })
+                    }
+                }
+            }
+            else {
+                toast.success(t('Exec ChivesServerDataAddFaucet Failed') as string, { duration: 2500, position: 'top-center' })
             }
             break;
         case 'Chatroom':
@@ -400,16 +420,10 @@ const SettingModel = () => {
                 setProcessInfo({})
                 setIsAllowAddServerData(false)
                 console.log("ChivesServerDataAddChatroom1", ChivesServerDataAddChatroom1)
-                if(ChivesServerDataAddChatroom1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddChatroom1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                if(ChivesServerDataAddChatroom1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddChatroom1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
                     if(formatText) {
-                        const ChivesServerDataAddChatroomData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddChatroomData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddChatroomData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
+                        toast.success(formatText, { duration: 5000 })
                     }
                 }
             }
@@ -425,16 +439,10 @@ const SettingModel = () => {
                 setProcessInfo({})
                 setIsAllowAddServerData(false)
                 console.log("ChivesServerDataAddGuess1", ChivesServerDataAddGuess1)
-                if(ChivesServerDataAddGuess1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddGuess1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                if(ChivesServerDataAddGuess1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddGuess1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
                     if(formatText) {
-                        const ChivesServerDataAddGuessData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddGuessData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddGuessData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
+                        toast.success(formatText, { duration: 5000 })
                     }
                 }
             }
@@ -450,16 +458,10 @@ const SettingModel = () => {
                 setProcessInfo({})
                 setIsAllowAddServerData(false)
                 console.log("ChivesServerDataAddLottery1", ChivesServerDataAddLottery1)
-                if(ChivesServerDataAddLottery1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddLottery1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                if(ChivesServerDataAddLottery1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddLottery1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
                     if(formatText) {
-                        const ChivesServerDataAddLotteryData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddLotteryData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddLotteryData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
+                        toast.success(formatText, { duration: 5000 })
                     }
                 }
             }
@@ -475,16 +477,10 @@ const SettingModel = () => {
                 setProcessInfo({})
                 setIsAllowAddServerData(false)
                 console.log("ChivesServerDataAddBlog1", ChivesServerDataAddBlog1)
-                if(ChivesServerDataAddBlog1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddBlog1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                if(ChivesServerDataAddBlog1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddBlog1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
                     if(formatText) {
-                        const ChivesServerDataAddBlogData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddBlogData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddBlogData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
+                        toast.success(formatText, { duration: 5000 })
                     }
                 }
             }
@@ -500,16 +496,10 @@ const SettingModel = () => {
                 setProcessInfo({})
                 setIsAllowAddServerData(false)
                 console.log("ChivesServerDataAddSwap1", ChivesServerDataAddSwap1)
-                if(ChivesServerDataAddSwap1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddSwap1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                if(ChivesServerDataAddSwap1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddSwap1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
                     if(formatText) {
-                        const ChivesServerDataAddSwapData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddSwapData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddSwapData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
+                        toast.success(formatText, { duration: 5000 })
                     }
                 }
             }
@@ -525,46 +515,15 @@ const SettingModel = () => {
                 setProcessInfo({})
                 setIsAllowAddServerData(false)
                 console.log("ChivesServerDataAddProject1", ChivesServerDataAddProject1)
-                if(ChivesServerDataAddProject1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddProject1?.msg?.Output?.data?.output.replace(ansiRegex, '');
+                if(ChivesServerDataAddProject1?.msg?.Messages[0]?.Data)  {
+                    const formatText = ChivesServerDataAddProject1?.msg?.Messages[0]?.Data.replace(ansiRegex, '');
                     if(formatText) {
-                        const ChivesServerDataAddProjectData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddProjectData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddProjectData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
+                        toast.success(formatText, { duration: 5000 })
                     }
                 }
             }
             else {
                 toast.success(t('Exec ChivesServerDataAddProject Failed') as string, { duration: 2500, position: 'top-center' })
-            }
-            break;
-        case 'Faucet':
-            const ChivesServerDataAddFaucet1 = await ChivesServerDataAddFaucet(currentWallet.jwk, ChivesServerData, processTxId, sortValue, groupValue, JSON.stringify(processInfo).replace(/"/g, '\\"'))
-            if(ChivesServerDataAddFaucet1) {
-                handleGetServerData(Model)
-                setProcessTxId('')
-                setProcessInfo({})
-                setIsAllowAddServerData(false)
-                console.log("ChivesServerDataAddFaucet1", ChivesServerDataAddFaucet1)
-                if(ChivesServerDataAddFaucet1?.msg?.Output?.data?.output)  {
-                    const formatText = ChivesServerDataAddFaucet1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                    if(formatText) {
-                        const ChivesServerDataAddFaucetData1 = await GetMyLastMsg(currentWallet.jwk, ChivesServerData)
-                        if(ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output)  {
-                            const formatText2 = ChivesServerDataAddFaucetData1?.msg?.Output?.data?.output.replace(ansiRegex, '');
-                            if(formatText2) {
-                                toast.success(t(formatText2) as string, { duration: 2500, position: 'top-center' })
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                toast.success(t('Exec ChivesServerDataAddFaucet Failed') as string, { duration: 2500, position: 'top-center' })
             }
             break;
     }
@@ -758,7 +717,16 @@ const SettingModel = () => {
             </Grid>
         </Grid>
 
-        <TokenSummary tokenGetInfor={processInfo} />
+        {processInfo && processInfo.Name && (
+            <>
+            {Object.keys(processInfo).map((itemName: any, index: number) => (
+                <Typography key={index} noWrap variant='body2' sx={{ color: 'default.main', pr: 3, my: 0, py: 0 }}>
+                    {itemName} : {processInfo[itemName]}
+                </Typography>
+            ))}
+            </>
+        )}
+
 
         <TableContainer>
             <Table>

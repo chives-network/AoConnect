@@ -21,7 +21,7 @@ local json = require('json')
 creditBalances = creditBalances or {}
 depositBalances = depositBalances or {}
 
-FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  0.123
+FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  168
 FAUCET_SEND_RULE = FAUCET_SEND_RULE or  'EveryDay' -- OneTime or EveryDay
 FAUCET_TOKEN_ID = FAUCET_TOKEN_ID or "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q" -- Staking and Received Token Process Tx Id
 FAUCET_BALANCE = FAUCET_BALANCE or '-1'

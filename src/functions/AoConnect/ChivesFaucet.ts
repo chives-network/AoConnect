@@ -5,11 +5,10 @@ import { connect, createDataItemSigner }  from "scripts/@permaweb/aoconnect"
 import axios from 'axios'
 
 import { MU_URL, CU_URL, GATEWAY_URL, AoGetRecord } from 'src/functions/AoConnect/AoConnect'
-import { AoTokenTransfer } from 'src/functions/AoConnect/Token'
+import { AoTokenTransfer, AoTokenInfoDryRun } from 'src/functions/AoConnect/Token'
 
 
-
-export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: string, FaucetInfo: any) => {
+export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: string, TokenIdInFaucet: string, FAUCET_SEND_AMOUNT: string, FAUCET_SEND_RULE: string) => {
     try {
         if(processTxId && processTxId.length != 43) {
 
@@ -20,23 +19,44 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
             return 
         }
 
-        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivesfaucet.lua', { timeout: 10000 }).then(res => res.data)
+        const TokenGetMap: any = await AoTokenInfoDryRun(TokenIdInFaucet)
+        if(TokenGetMap && Number(TokenGetMap.Denomination) >= 0 && TokenGetMap.Name != "" && TokenGetMap.Ticker != "") {
+            
+        }
+        else {
+
+            return  //Not a token
+        }
+
+        let Data = await axios.get('https://raw.githubusercontent.com/chives-network/AoConnect/main/blueprints/chivesfaucet.lua', { timeout: 20000 }).then(res => res.data)
+
+        if(Data == undefined) {
+            console.log("AoLoadBlueprintModule chivesfaucet.lua", module)
+
+            return
+        }
+
+        console.log("AoLoadBlueprintModule TokenGetMap", TokenGetMap)
         
+
         //Filter Faucet Infor
-        if(FaucetInfo && FaucetInfo.Name) {
-            Data = Data.replace("AoConnectFaucet", FaucetInfo.Name)
+        if(TokenGetMap && TokenGetMap.Name) {
+            Data = Data.replace("AoConnectFaucet", TokenGetMap.Name)
         }
-        if(FaucetInfo && FaucetInfo.Logo) {
-            Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", FaucetInfo.Logo)
+        if(TokenGetMap && TokenGetMap.Logo) {
+            Data = Data.replace("dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ", TokenGetMap.Logo)
         }
-        if(FaucetInfo && FaucetInfo.FAUCET_TOKEN_ID) {
-            Data = Data.replace("Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q", FaucetInfo.FAUCET_TOKEN_ID)
+        if(TokenGetMap && TokenGetMap.Denomination) {
+            Data = Data.replace("12", TokenGetMap.Denomination)
         }
-        if(FaucetInfo && FaucetInfo.FAUCET_SEND_AMOUNT) {
-            Data = Data.replace("0.123", FaucetInfo.FAUCET_SEND_AMOUNT)
+        if(TokenIdInFaucet) {
+            Data = Data.replace("Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q", TokenIdInFaucet)
         }
-        if(FaucetInfo && FaucetInfo.FAUCET_SEND_RULE) {
-            Data = Data.replace("EveryDay", FaucetInfo.FAUCET_SEND_RULE)
+        if(Number(FAUCET_SEND_AMOUNT) > 0) {
+            Data = Data.replace("168", String(FAUCET_SEND_AMOUNT))
+        }
+        if(FAUCET_SEND_RULE == "EveryDay" || FAUCET_SEND_RULE == "OneTime") {
+            Data = Data.replace("EveryDay", FAUCET_SEND_RULE)
         }
 
         const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
@@ -54,7 +74,7 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
             const MsgContent = await AoGetRecord(processTxId, GetMyLastMsgResult)
             console.log("AoLoadBlueprintModule MsgContent", module, MsgContent)
 
-            return { status: 'ok', id: GetMyLastMsgResult, msg: MsgContent };
+            return { status: 'ok', id: GetMyLastMsgResult, msg: MsgContent, Token: TokenGetMap };
         }
         else {
 
@@ -110,9 +130,9 @@ export const AoFaucetGetFaucet = async (currentWalletJwk: any, FaucetTxId: strin
 
 }
 
-export const AoFaucetDepositToken = async (currentWalletJwk: any, FAUCET_TOKEN_ID: string, FaucetTxIdAsReceivedAddress: string, DepositAmount: number) => {
+export const AoFaucetDepositToken = async (currentWalletJwk: any, FAUCET_TOKEN_ID: string, FaucetTxIdAsReceivedAddress: string, DepositAmount: number, Denomination: number) => {
     
-    return await AoTokenTransfer(currentWalletJwk, FAUCET_TOKEN_ID, FaucetTxIdAsReceivedAddress, DepositAmount)
+    return await AoTokenTransfer(currentWalletJwk, FAUCET_TOKEN_ID, FaucetTxIdAsReceivedAddress, DepositAmount, Denomination)
 }
 
 export const AoFaucetDepositBalances = async (TargetTxId: string, startIndex: string, endIndex: string) => {
