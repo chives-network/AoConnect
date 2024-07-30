@@ -34,7 +34,7 @@ const ChivesFaucetModel = () => {
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [toolInfo, setToolInfo] = useState<any>({FaucetSendRule: 'EveryDay', FaucetSendAmount: '0.123', TokenIdInFaucet:'sdqQuIU6WNT1zVNculn814nVhol2XXhDxqgCrUpCtlA'})
+  const [toolInfo, setToolInfo] = useState<any>({FaucetSendRule: 'EveryDay', FaucetSendAmount: '0.123', TokenIdInFaucet:'8NtyJMkKt2Q5bshS70K1k52AAiG7qLNm7FU82OIL9hE'})
   const [ChivesFaucetAoConnectTxIdError, setChivesFaucetAoConnectTxIdError] = useState<string>('')
 
   const handleSimulatedChivesFaucet = async function () {
@@ -119,17 +119,15 @@ const ChivesFaucetModel = () => {
       }))
     }
     
-
     const MyAddressFaucetBalance = await AoTokenBalanceDryRun(toolInfo.TokenIdInFaucet, currentAddress)
     if(MyAddressFaucetBalance) {
-      console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance, Number(toolInfo.Denomination))
+      console.log("MyAddressFaucetBalance AoTokenBalanceDryRun", MyAddressFaucetBalance, Number(AoFaucetInfoData.Denomination))
       setToolInfo((prevState: any)=>({
           ...prevState,
-          MyAddressFaucetBalance: FormatBalance(MyAddressFaucetBalance, Number(toolInfo.Denomination))
+          MyAddressFaucetBalance: FormatBalance(MyAddressFaucetBalance, Number(AoFaucetInfoData.Denomination))
       }))
     }
 
-    
     const DepositFaucetData = await AoFaucetDepositToken(currentWallet.jwk, toolInfo.TokenIdInFaucet, FaucetProcessTxId, 2000, Number(toolInfo.Denomination))
     console.log("DepositFaucetData", DepositFaucetData)
     if(DepositFaucetData) {
