@@ -2,7 +2,7 @@
 -- Author: Chives-Network
 -- Email: chivescoin@gmail.com
 -- Copyright: MIT
--- Version: 20240729
+-- Version: 20240808
 -- Github: https://github.com/chives-network/AoConnect/blob/main/blueprints/chivesfaucet.lua
 
 -- Function
@@ -25,6 +25,8 @@ FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  168
 FAUCET_SEND_RULE = FAUCET_SEND_RULE or  'EveryDay' -- OneTime or EveryDay
 FAUCET_TOKEN_ID = FAUCET_TOKEN_ID or "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q" -- Staking and Received Token Process Tx Id
 FAUCET_BALANCE = FAUCET_BALANCE or '-1'
+FAUCET_DAY_RECORD = FAUCET_DAY_RECORD or {}
+FAUCET_ONETIME_RECORD = FAUCET_ONETIME_RECORD or {}
 
 Name = 'AoConnectFaucet' 
 Denomination = Denomination or 12
@@ -52,6 +54,12 @@ local utils = {
   end,
   compare = function (a, b)
     return bint(a[2]) > bint(b[2])
+  end,
+  mod = function (a, b)
+    return tostring(bint(a) % bint(b))
+  end,
+  everyDayHeight = function (a)
+    return tostring(bint(a) - (bint(a) % bint(720)))
   end
 }
 
@@ -68,6 +76,15 @@ function Welcome()
 end
 
 Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(msg)
+
+  local DayHeight = utils.everyDayHeight(tonumber(msg['Block-Height']))
+  local Status = "NO"
+  if FAUCET_SEND_RULE == 'EveryDay' and FAUCET_DAY_RECORD[DayHeight] and FAUCET_DAY_RECORD[DayHeight][msg.From] then
+    Status = "YES"
+  end
+  if FAUCET_SEND_RULE == 'OneTime' and FAUCET_ONETIME_RECORD[msg.From] then
+    Status = "YES"
+  end
   ao.send({
     Id = FAUCET_TOKEN_ID,
     Name = Name,
@@ -78,7 +95,8 @@ Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(m
     FaucetAmount = FAUCET_SEND_AMOUNT,
     Denomination = tostring(Denomination),
     Release = 'ChivesFaucet',
-    Version = '20240729',
+    Version = '20240808',
+    FaucetStatus  = Status
   })
 end)
 
@@ -139,23 +157,76 @@ end)
 
 -- GetFaucet token one time
 Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), function(msg)
-  Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
-  local SendAmount = utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)
-  ao.send({
-    Target = msg.From,
-    Data = 'Faucet Balance 1: ' .. FAUCET_BALANCE
-  })
-  assert(bint.__le(bint(SendAmount), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount. SendAmount: ' .. SendAmount .. ', FAUCET_BALANCE:' .. FAUCET_BALANCE)
-
-  Send({ Target = FAUCET_TOKEN_ID, Action = "Transfer", Recipient = msg.From, Quantity = SendAmount, Tags = { Target = ao.id } })
-  Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
   
-  table.insert(creditBalances, 1, {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id})
+  if FAUCET_SEND_RULE == 'EveryDay' then
+    local DayHeight = utils.everyDayHeight(tonumber(msg['Block-Height']))
+    if FAUCET_DAY_RECORD[DayHeight] and FAUCET_DAY_RECORD[DayHeight][msg.From] then
+      -- Msg
+      ao.send({
+        Target = msg.From,
+        Data = 'You have already applied, please wait 24 hours and try again.'
+      })
+      -- End
+    else
+      -- Check Balance
+      Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
+      local SendAmount = utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)
+      ao.send({
+        Target = msg.From,
+        Data = 'Faucet Balance 1: ' .. FAUCET_BALANCE
+      })
+      assert(bint.__le(bint(SendAmount), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount. SendAmount: ' .. SendAmount .. ', FAUCET_BALANCE:' .. FAUCET_BALANCE)
+      -- Send Coin
+      Send({ Target = FAUCET_TOKEN_ID, Action = "Transfer", Recipient = msg.From, Quantity = SendAmount, Tags = { Target = ao.id } })
+      Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
+      -- All Records
+      table.insert(creditBalances, 1, {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id})
+      -- Every Day Records
+      if not FAUCET_DAY_RECORD[DayHeight] then
+        FAUCET_DAY_RECORD[DayHeight] = {}
+      end
+      FAUCET_DAY_RECORD[DayHeight][msg.From] = {utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id}
+      -- Msg
+      ao.send({
+        Target = msg.From,
+        Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
+      })
+      -- End
+    end
+  end
 
-  ao.send({
-    Target = msg.From,
-    Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
-  })
+  if FAUCET_SEND_RULE == 'OneTime' then
+    if FAUCET_ONETIME_RECORD[msg.From] then
+      -- Msg
+      ao.send({
+        Target = msg.From,
+        Data = 'You have already applied, can not apply again.'
+      })
+      -- End
+    else
+      -- Check Balance
+      Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
+      local SendAmount = utils.multiply(FAUCET_SEND_AMOUNT, 10^Denomination)
+      ao.send({
+        Target = msg.From,
+        Data = 'Faucet Balance 1: ' .. FAUCET_BALANCE
+      })
+      assert(bint.__le(bint(SendAmount), bint(FAUCET_BALANCE)), 'Balance must be greater than faucet amount. SendAmount: ' .. SendAmount .. ', FAUCET_BALANCE:' .. FAUCET_BALANCE)
+      -- Send Coin
+      Send({ Target = FAUCET_TOKEN_ID, Action = "Transfer", Recipient = msg.From, Quantity = SendAmount, Tags = { Target = ao.id } })
+      Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
+      -- All Records
+      table.insert(creditBalances, 1, {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id})
+      -- One Time Records
+      FAUCET_ONETIME_RECORD[msg.From] = {utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id}
+      -- Msg
+      ao.send({
+        Target = msg.From,
+        Data = 'You have received ' .. utils.divide(SendAmount, 10^Denomination) .. ' from Faucet, left: ' .. utils.divide(FAUCET_BALANCE, 10^Denomination)
+      })
+      -- End
+    end
+  end
 
 end)
 
