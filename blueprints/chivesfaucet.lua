@@ -27,6 +27,8 @@ FAUCET_TOKEN_ID = FAUCET_TOKEN_ID or "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1
 FAUCET_BALANCE = FAUCET_BALANCE or '-1'
 FAUCET_DAY_RECORD = FAUCET_DAY_RECORD or {}
 FAUCET_ONETIME_RECORD = FAUCET_ONETIME_RECORD or {}
+FAUCET_MEMBERS = FAUCET_MEMBERS or {}
+FAUCET_SEND_TOTAL = FAUCET_SEND_TOTAL or 0
 
 Name = 'AoConnectFaucet' 
 Denomination = Denomination or 12
@@ -63,6 +65,20 @@ local utils = {
   end
 }
 
+local function insertIfNotExists(tableV, element)
+  local found = false
+  if tableV then
+    for i, v in ipairs(tableV) do
+        if v == element then
+          found = true
+        end
+    end
+  end
+  if found == false then
+    table.insert(tableV, element)
+  end
+end
+
 function Welcome()
   return(
       "Welcome to ChivesFaucet V0.1!\n\n" ..
@@ -96,7 +112,9 @@ Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(m
     Denomination = tostring(Denomination),
     Release = 'ChivesFaucet',
     Version = '20240808',
-    FaucetStatus  = Status
+    FaucetStatus  = Status,
+    Members = #FAUCET_MEMBERS,
+    SendTotal = FAUCET_SEND_TOTAL
   })
 end)
 
@@ -164,7 +182,7 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
       -- Msg
       ao.send({
         Target = msg.From,
-        Data = 'You have already applied, please wait 24 hours and try again.'
+        Error = 'You have already applied, please wait 24 hours and try again.'
       })
       -- End
     else
@@ -181,6 +199,9 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
       Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
       -- All Records
       table.insert(creditBalances, 1, {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id})
+      -- Members
+      insertIfNotExists(FAUCET_MEMBERS, msg.From)
+      utils.add(FAUCET_SEND_TOTAL, SendAmount)
       -- Every Day Records
       if not FAUCET_DAY_RECORD[DayHeight] then
         FAUCET_DAY_RECORD[DayHeight] = {}
@@ -200,7 +221,7 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
       -- Msg
       ao.send({
         Target = msg.From,
-        Data = 'You have already applied, can not apply again.'
+        Error = 'You have already applied, can not apply again.'
       })
       -- End
     else
@@ -217,6 +238,9 @@ Handlers.add('GetFaucet', Handlers.utils.hasMatchingTag('Action', 'GetFaucet'), 
       Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
       -- All Records
       table.insert(creditBalances, 1, {msg.From, utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id})
+      -- Members
+      insertIfNotExists(FAUCET_MEMBERS, msg.From)
+      utils.add(FAUCET_SEND_TOTAL, SendAmount)
       -- One Time Records
       FAUCET_ONETIME_RECORD[msg.From] = {utils.divide(SendAmount, 10^Denomination), msg.Timestamp, msg.Id}
       -- Msg
