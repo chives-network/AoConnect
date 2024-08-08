@@ -189,7 +189,7 @@ Handlers.add(
     end,
     function(msg)
         if msg.From == FAUCET_AO_TOKEN_ID and msg.Target == ao.id then
-          FAUCET_ADDRESS_AO_BALANCE_1[msg.From] = msg.Data
+          FAUCET_ADDRESS_AO_BALANCE_1[msg.From] = msg
         end
     end
 )
@@ -197,7 +197,7 @@ Handlers.add(
 -- Check faucet balance
 Handlers.add('CheckFaucetBalance', Handlers.utils.hasMatchingTag('Action', 'CheckFaucetBalance'), function(msg)
   Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
-  Send({ Target = FAUCET_AO_TOKEN_ID, Action = "Balance", Tags = { Target = msg.From } })
+  Send({ Target = FAUCET_AO_TOKEN_ID, Action = "Balance", Tags = { Target = msg.From, ['X-CheckAddress'] = msg.From } })
   if FAUCET_BALANCE == '-1' then
     ao.send({
       Target = msg.From,
