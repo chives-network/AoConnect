@@ -12,8 +12,6 @@
 -- 4. Credit records
 -- 5. Setting rules
 
---
-
 local bint = require('.bint')(256)
 local ao = require('ao')
 local json = require('json')
@@ -23,16 +21,21 @@ depositBalances = depositBalances or {}
 
 FAUCET_SEND_AMOUNT = FAUCET_SEND_AMOUNT or  168
 FAUCET_SEND_RULE = FAUCET_SEND_RULE or  'EveryDay' -- OneTime or EveryDay
-FAUCET_TOKEN_ID = FAUCET_TOKEN_ID or "Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q" -- Staking and Received Token Process Tx Id
+FAUCET_TOKEN_ID = FAUCET_TOKEN_ID or "8NtyJMkKt2Q5bshS70K1k52AAiG7qLNm7FU82OIL9hE" -- Staking and Received Token Process Tx Id
 FAUCET_BALANCE = FAUCET_BALANCE or '-1'
 FAUCET_DAY_RECORD = FAUCET_DAY_RECORD or {}
 FAUCET_ONETIME_RECORD = FAUCET_ONETIME_RECORD or {}
 FAUCET_MEMBERS = FAUCET_MEMBERS or {}
 FAUCET_SEND_TOTAL = FAUCET_SEND_TOTAL or 0
 
+FAUCET_ADDRESS_AO_BALANCE_1 = FAUCET_ADDRESS_AO_BALANCE_1 or {}
+FAUCET_AO_TOKEN_ID = "Pi-WmAQp2-mh-oWH9lWpz5EthlUDj_W0IusAv-RXhRk"
+
 Name = 'AoConnectFaucet' 
 Denomination = Denomination or 12
 Logo = Logo or 'dFJzkXIQf0JNmJIcHB-aOYaDNuKymIveD2K60jUnTfQ'
+RequirementAR = RequirementAR or '0.1'
+RequirementAO = RequirementAO or '0.01'
 
 local utils = {
   add = function (a,b) 
@@ -79,9 +82,23 @@ local function insertIfNotExists(tableV, element)
   end
 end
 
+local function checkAddressArBalance(Address)
+  local found = false
+  if tableV then
+    for i, v in ipairs(tableV) do
+        if v == element then
+          found = true
+        end
+    end
+  end
+  if found == false then
+    table.insert(tableV, element)
+  end
+end
+
 function Welcome()
   return(
-      "Welcome to ChivesFaucet V0.1!\n\n" ..
+      "Welcome to ChivesFaucet !\n\n" ..
       "Main functoin:\n\n" ..
       "1. Deposit token to faucet wallet address.\n" ..
       "2. Credit token to user from faucet wallet addres.\n" ..
@@ -112,10 +129,13 @@ Handlers.add('Info', Handlers.utils.hasMatchingTag('Action', 'Info'), function(m
     Denomination = tostring(Denomination),
     Release = 'ChivesFaucet',
     Version = '20240808',
+    RequirementAR = RequirementAR,
+    RequirementAO = RequirementAO,
     FaucetStatus  = Status,
     Members = #FAUCET_MEMBERS,
     SendTotal = FAUCET_SEND_TOTAL
   })
+
 end)
 
 -- Monitor received txs action from FAUCET_TOKEN_ID & Update faucet balance automation
@@ -157,9 +177,27 @@ Handlers.add(
     end
 )
 
+-- Monitor send out txs action & faucet balance automation
+Handlers.add(
+    "CheckAddressAoBalanceActions",
+    function(msg)
+      if msg.From == FAUCET_AO_TOKEN_ID and msg.Target == ao.id then
+          return true
+      else
+          return false
+      end
+    end,
+    function(msg)
+        if msg.From == FAUCET_AO_TOKEN_ID and msg.Target == ao.id then
+          FAUCET_ADDRESS_AO_BALANCE_1[msg.From] = msg.Data
+        end
+    end
+)
+
 -- Check faucet balance
 Handlers.add('CheckFaucetBalance', Handlers.utils.hasMatchingTag('Action', 'CheckFaucetBalance'), function(msg)
   Send({ Target = FAUCET_TOKEN_ID, Action = "Balance", Tags = { Target = ao.id } })
+  Send({ Target = FAUCET_AO_TOKEN_ID, Action = "Balance", Tags = { Target = msg.From } })
   if FAUCET_BALANCE == '-1' then
     ao.send({
       Target = msg.From,
@@ -168,7 +206,7 @@ Handlers.add('CheckFaucetBalance', Handlers.utils.hasMatchingTag('Action', 'Chec
   else 
     ao.send({
       Target = msg.From,
-      Data = utils.divide(FAUCET_BALANCE, 10^Denomination)
+      Data = json.encode(FAUCET_ADDRESS_AO_BALANCE_1)
     })
   end
 end)

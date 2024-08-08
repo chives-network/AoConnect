@@ -50,7 +50,7 @@ export const AoLoadBlueprintFaucet = async (currentWalletJwk: any, processTxId: 
             Data = Data.replace("12", TokenGetMap.Denomination)
         }
         if(TokenIdInFaucet) {
-            Data = Data.replace("Yot4NNkLcwWly8OfEQ81LCZuN4i4xysZTKJYuuZvM1Q", TokenIdInFaucet)
+            Data = Data.replace("8NtyJMkKt2Q5bshS70K1k52AAiG7qLNm7FU82OIL9hE", TokenIdInFaucet)
         }
         if(Number(FAUCET_SEND_AMOUNT) > 0) {
             Data = Data.replace("168", String(FAUCET_SEND_AMOUNT))
@@ -126,6 +126,46 @@ export const AoFaucetGetFaucet = async (currentWalletJwk: any, FaucetTxId: strin
     }
     catch(Error: any) {
         console.error("AoFaucetGetFaucet Error:", Error)
+    }
+
+}
+
+export const AoFaucetCheckAddressAoBalanceActions = async (currentWalletJwk: any, FaucetTxId: string) => {
+    try {
+        if(FaucetTxId && FaucetTxId.length != 43) {
+
+            return
+        }
+        if(typeof FaucetTxId != 'string') {
+
+            return 
+        }
+        
+        const { message } = connect( { MU_URL, CU_URL, GATEWAY_URL } );
+        const data = {
+            process: FaucetTxId,
+            tags: [
+              { name: "Action", value: "CheckFaucetBalance" },
+              ],
+            signer: createDataItemSigner(currentWalletJwk),
+            data: ""
+        }
+        const SendTokenResult = await message(data);
+        console.log("AoFaucetCheckAddressAoBalanceActions SendTokenResult:", SendTokenResult)
+
+        if(SendTokenResult && SendTokenResult.length == 43) {
+            const MsgContent = await AoGetRecord(FaucetTxId, SendTokenResult)
+
+            return { status: 'ok', id: SendTokenResult, msg: MsgContent };
+        }
+        else {
+
+            return { status: 'ok', id: SendTokenResult };
+        }
+
+    }
+    catch(Error: any) {
+        console.error("AoFaucetCheckAddressAoBalanceActions Error:", Error)
     }
 
 }
