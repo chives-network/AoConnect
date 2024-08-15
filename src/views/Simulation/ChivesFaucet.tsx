@@ -34,7 +34,7 @@ const ChivesFaucetModel = () => {
   const currentAddress = auth.currentAddress
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [toolInfo, setToolInfo] = useState<any>({FaucetSendRule: 'EveryDay', FaucetSendAmount: '0.123', TokenIdInFaucet:'8NtyJMkKt2Q5bshS70K1k52AAiG7qLNm7FU82OIL9hE'})
+  const [toolInfo, setToolInfo] = useState<any>({FaucetSendRule: 'EveryDay', FaucetSendAmount: '0.123', TokenIdInFaucet:''})
   const [ChivesFaucetAoConnectTxIdError, setChivesFaucetAoConnectTxIdError] = useState<string>('')
 
   const handleSimulatedChivesFaucet = async function () {
@@ -139,6 +139,8 @@ const ChivesFaucetModel = () => {
           }))
         }
 
+        await sleep(3000)
+
         const AoDryRunBalance = await AoTokenBalanceDryRun(toolInfo.TokenIdInFaucet, FaucetProcessTxId)
           if(AoDryRunBalance) {
             console.log("FaucetProcessTxIdBalance AoDryRunBalance", AoDryRunBalance)
@@ -163,6 +165,8 @@ const ChivesFaucetModel = () => {
       }))
     }
 
+    await sleep(3000)
+
     const FaucetBalanceData = await AoFaucetGetFaucetBalance(FaucetProcessTxId)
     console.log("FaucetBalanceData AoFaucetGetFaucetBalance", FaucetBalanceData)
     if(FaucetBalanceData) {
@@ -180,6 +184,8 @@ const ChivesFaucetModel = () => {
           FaucetDepositBalanceData: FaucetDepositBalanceData
       }))
     }
+    
+    await sleep(3000)
 
     const FaucetCreditBalanceData = await AoFaucetCreditBalances(FaucetProcessTxId, '1', '10')
     console.log("FaucetCreditBalanceData AoFaucetCreditBalances", FaucetCreditBalanceData)

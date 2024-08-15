@@ -337,7 +337,7 @@ const SettingModel = () => {
         case 'Faucet':
             const FaucetGetMap: any = await AoFaucetInfo(processTxId)
             console.log("AoFaucetInfo FaucetGetMap", FaucetGetMap)
-            if(FaucetGetMap && Number(FaucetGetMap.FaucetBalance) > 0 && Number(FaucetGetMap.FaucetAmount) > 0 && Number(FaucetGetMap.Denomination) > 0 && FaucetGetMap.FaucetRule != "" && FaucetGetMap.Ticker != "" && FaucetGetMap.Name != "" && FaucetGetMap.Release
+            if(FaucetGetMap && Number(FaucetGetMap.FaucetAmount) > 0 && Number(FaucetGetMap.Denomination) > 0 && FaucetGetMap.FaucetRule != "" && FaucetGetMap.Ticker != "" && FaucetGetMap.Name != "" && FaucetGetMap.Release
             == "ChivesFaucet") {
                 console.log("handleSearchProcessData handleTokenSearch FaucetGetMap", FaucetGetMap)
                 setProcessInfo(FaucetGetMap)
